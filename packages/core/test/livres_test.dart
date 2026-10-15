@@ -16,7 +16,13 @@
 ///        attente avec son texte, ses libellés, ses effets et son payload), et à
 ///        la fin le même état entier et la même frise, sur le bundle fusionné et
 ///        sur le bundle entier — y compris quand la ville s'en mêle (une activité,
-///        une scène de la semaine ou une mission du livre, appliquées aux deux).
+///        une scène de la semaine ou une mission du livre, appliquées aux deux),
+///        quand une carrière hérite des précédentes (`Engine.heritage` : les
+///        fantômes et le dossier 1974, qui réveillent des cartes du livre) et
+///        quand le samedi se joue en direct (`samediDirect`, des décisions rendues
+///        avec la posture) ;
+///   L0 — ce que l'accueil lit sans livre (l'épilogue du dossier 1974, joué
+///        depuis l'accueil) est au commun.
 ///
 /// **Quand ce test devient rouge** après un changement de contenu : un item a
 /// été rangé dans un livre alors qu'un autre livre peut le servir ou le voir
@@ -213,6 +219,14 @@ void main() {
       }
     });
 
+    test('L0 · ce que l\'accueil lit sans livre est au commun (l\'épilogue du dossier 1974)', () {
+      final c = jsonDecode(communJson) as Map<String, dynamic>;
+      final epi = (((entier['ville'] as Map?)?['dossier'] as Map?)?['epilogue'] as Map?)?['cinematique'];
+      if (epi == null) return;
+      final ids = ((c['ville'] as Map)['cinematiques'] as List).map((x) => (x as Map)['id']).toSet();
+      expect(ids, contains(epi), reason: 'la scène $epi se joue depuis l\'accueil, avant tout livre : elle doit être au commun');
+    });
+
     // Les rôles qu'une carrière de chaque livre peut tenir (roles.yaml `transitions`,
     // et les `role:` des items qui jouent un rôle atteint) : la ville tire par rôle.
     final roleDef = {for (final r in (entier['roles'] as List).cast<Map<String, dynamic>>()) r['id'] as String: r};
@@ -306,6 +320,26 @@ void main() {
       });
     }
 
+    // L'héritage des carrières d'avant (`Engine.heritage`), comme la page le passe
+    // (preview_dossier.js `fantomeHeritage`) : un fantôme par livre (`fantome_<livre>`, son nom,
+    // ses années), tous les faits qu'il a pu laisser (`fantome_<fait>`), toutes les pièces du
+    // dossier 1974 (`dossier_<pièce>`) — de quoi réveiller ce qu'un livre garde pour ses fantômes.
+    final villeEntiere = (entier['ville'] as Map?) ?? const {};
+    final heritageDrapeaux = <String>[];
+    final heritageNoms = <String, String>{};
+    (((villeEntiere['fantomes'] as Map?)?['livres'] as Map?) ?? const {}).forEach((livre, def) {
+      heritageDrapeaux.add('fantome_$livre');
+      heritageNoms['fantome_$livre'] = 'Chastain';
+      heritageNoms['fantome_${livre}_annees'] = '1990-1993';
+      for (final f in ((def as Map)['faits'] as List? ?? const [])) {
+        heritageDrapeaux.add('fantome_${(f as Map)['id']}');
+      }
+    });
+    for (final piece in (((villeEntiere['dossier'] as Map?)?['pieces'] as List?) ?? const [])) {
+      heritageDrapeaux.add('dossier_${(piece as Map)['id']}');
+    }
+    heritageDrapeaux.sort();
+
     for (var p = 0; p < posts.length; p++) {
       final id = posts[p]['id'] as String;
       final livre = livres[id];
@@ -360,13 +394,19 @@ void main() {
         }
         // des carrières simulées : des choix tirés d'une graine, la ville qui s'en mêle
         const carrieres = 30;
-        var cartes = 0;
+        var cartes = 0, heritees = 0, directs = 0, fantomes = 0;
         final fins = <String>{};
         for (var k = 0; k < carrieres; k++) {
           final seed = (k + 1) * 2654435761 & 0x7FFFFFFF;
           final choix = Rng(seed ^ 0x5bd1e995);
           var a = engineEntier.start(seed, postulat: p);
           var b = engineLivre.start(seed, postulat: p);
+          // une carrière sur trois hérite des précédentes (les fantômes, le dossier 1974)
+          if (k % 3 == 2) {
+            a = engineEntier.heritage(a, drapeaux: heritageDrapeaux, noms: heritageNoms);
+            b = engineLivre.heritage(b, drapeaux: heritageDrapeaux, noms: heritageNoms);
+            heritees++;
+          }
           for (var step = 0; step < 1400 && !a.over; step++) {
             final ou = '$id · graine $seed · pas $step · carte ${a.pending?.id}';
             expect(b.pending?.id, a.pending?.id, reason: '$ou : la carte servie diffère');
@@ -389,9 +429,20 @@ void main() {
               b = engineLivre.mission(b, m.$1, m.$2, m.$3);
             }
             if (a.over) break;
+            if (a.pending?.id.startsWith('co.fantome.') ?? false) fantomes++;
             final droite = k == 0 ? true : (k == 1 ? false : choix.nextDouble() < 0.5);
-            a = engineEntier.choose(a, droite);
-            b = engineLivre.choose(b, droite);
+            // le samedi en direct, une carrière sur deux : le même script, et des décisions rendues avec la posture
+            MatchDirect? direct;
+            if (k.isOdd && a.pending?.kind == 'match') {
+              final sa = engineEntier.samediDirect(a, droite), sb = engineLivre.samediDirect(b, droite);
+              _pareil(_j(sb?.toJsonVille()), _j(sa?.toJsonVille()), '$ou : le script du samedi en direct diffère');
+              if (sa != null) {
+                direct = MatchDirect([for (final d in sa.decisions) ChoixDirect(d.def.id, droite: choix.nextDouble() < 0.5)]);
+                directs++;
+              }
+            }
+            a = engineEntier.choose(a, droite, direct: direct);
+            b = engineLivre.choose(b, droite, direct: direct);
             cartes++;
           }
           _pareil(_j(b.toJson()), _j(a.toJson()), '$id · graine $seed : l\'état final diffère');
@@ -399,7 +450,8 @@ void main() {
           if (a.endingId != null) fins.add(a.endingId!);
         }
         // ce que le test a vraiment couvert (relu quand on touche à la règle)
-        printOnFailure('$id : $nGoldens goldens, $carrieres carrières, $cartes cartes, fins ${fins.toList()..sort()}');
+        print('L2 · $id : $nGoldens goldens, $carrieres carrières ($heritees avec héritage), $cartes cartes, '
+            '$directs samedis en direct, $fantomes cartes de fantôme, fins ${fins.toList()..sort()}');
         expect(cartes, greaterThan(carrieres * 40), reason: '$id : les carrières simulées sont trop courtes pour prouver quoi que ce soit');
       }, timeout: const Timeout(Duration(minutes: 10)));
     }

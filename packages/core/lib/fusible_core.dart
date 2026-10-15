@@ -11,6 +11,7 @@ export 'src/effects.dart';
 export 'src/engine.dart';
 export 'src/frise.dart';
 export 'src/goldens.dart';
+export 'src/match_direct.dart';
 export 'src/rng.dart';
 export 'src/seed_codec.dart';
 export 'src/sfx.dart';

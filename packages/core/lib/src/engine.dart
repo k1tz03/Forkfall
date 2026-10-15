@@ -11,6 +11,7 @@ import 'content.dart';
 import 'draw/director.dart';
 import 'effects.dart';
 import 'frise.dart';
+import 'match_direct.dart';
 import 'naming.dart';
 import 'rng.dart';
 import 'standings.dart';
@@ -139,7 +140,10 @@ class Engine {
   }
 
   /// Apply a choice (true = right / swipe droit) and present the next card.
-  GameState choose(GameState prev, bool right) {
+  /// [direct] : les décisions prises au bord du terrain pendant le match que
+  /// la ville vient de jouer (le samedi en direct, `match_direct.dart`) ; sans
+  /// elles, rien ne change.
+  GameState choose(GameState prev, bool right, {MatchDirect? direct}) {
     final s = prev.clone();
     final pending = s.pending;
     if (pending == null || s.over) return s;
@@ -148,7 +152,7 @@ class Engine {
     s.swipes.add(right);
     s.lastAnswer = null;
 
-    _applyPending(s, pending, right, rng);
+    _applyPending(s, pending, right, rng, direct: direct);
 
     s.rngState = rng.state;
 
@@ -292,6 +296,35 @@ class Engine {
     return s;
   }
 
+  /// TES FANTÔMES ET LE DOSSIER 1974 (docs/histoires/fantomes.md, dossier_1974.md) : ce que la
+  /// page garde des carrières d'avant, posé au début d'une carrière plus tardive. Des drapeaux
+  /// (`fantome_<livre>`, `fantome_<fait>`, `dossier_<pièce>`) que lisent les `when` et les `si`,
+  /// et des noms (`fantome_<livre>` : un nom de famille ; `fantome_<livre>_annees` : « 1990-1993 »)
+  /// que rendent les textes. Pur comme `activite`, et il ne tire RIEN : ni carte, ni aléa —
+  /// `rngState`, la carte en attente et les jauges ne bougent pas. Il n'écrit que sous ces deux
+  /// préfixes (un héritage ne pose pas un drapeau d'histoire, ne renomme pas le club) ; un nom
+  /// passe par la même normalisation que le nom saisi. Une carrière finie revient telle quelle.
+  ///
+  /// Le Code de Carrière (graine + swipes) ne le rejoue pas : une carrière héritière se rejoue
+  /// avec le même héritage, et sans héritage, la carrière est celle d'avant, carte pour carte.
+  GameState heritage(GameState prev, {Iterable<String> drapeaux = const [], Map<String, String> noms = const {}}) {
+    final s = prev.clone();
+    if (s.over) return s;
+    final cle = RegExp(r'^(fantome|dossier)_[a-z0-9_]{1,40}$');
+    for (final f in drapeaux) {
+      if (cle.hasMatch(f)) s.flags.add(f);
+    }
+    // dans l'ordre des clés : la sauvegarde (toJson) écrit `named` dans l'ordre d'insertion
+    final annees = RegExp(r'^\d{4}(-\d{4})?$');
+    for (final k in noms.keys.where((k) => k.startsWith('fantome_') && cle.hasMatch(k)).toList()..sort()) {
+      final brut = noms[k]!.trim();
+      final v = k.endsWith('_annees') ? (annees.hasMatch(brut) ? brut : '') : normalizeName(brut, max: 16);
+      if (v.isEmpty || isBlacklisted(v, content.blacklist)) continue;
+      s.entities.named[k] = v;
+    }
+    return s;
+  }
+
   void _appliquerVille(GameState s, EffetVille e) {
     final relAvant = Map<String, int>.of(s.relations);
     // Le Rng n'est là que pour la signature : un effet de la ville n'a ni `rand`
@@ -308,7 +341,7 @@ class Engine {
   // Applying the current card.
   // ---------------------------------------------------------------------------
 
-  void _applyPending(GameState s, Pending p, bool right, Rng rng) {
+  void _applyPending(GameState s, Pending p, bool right, Rng rng, {MatchDirect? direct}) {
     switch (p.kind) {
       // Le prologue (spec : « on est jeté dans la fosse aux lions ») : une
       // scène hors créneau. Ses effets s'appliquent — c'est ce qui apprend au
@@ -348,7 +381,7 @@ class Engine {
         _updateCentered(s);
         break;
       case 'match':
-        _resolveMatch(s, right, rng);
+        _resolveMatch(s, right, rng, direct: direct);
         break;
       case 'cup':
         _resolveCup(s, rng);
@@ -555,12 +588,19 @@ class Engine {
   // Match resolution.
   // ---------------------------------------------------------------------------
 
-  void _resolveMatch(GameState s, bool right, Rng rng) {
+  void _resolveMatch(GameState s, bool right, Rng rng, {MatchDirect? direct}) {
     final role = content.roles[s.role]!;
     // Left = first posture (usually Offensif), Right = second (Prudent).
     final offensif = !right;
-    final postureMod = offensif ? 0.05 : -0.08;
-    final block = resolveBlock(rng, s.force, s.world.division, s.gauges, postureMod: postureMod);
+    final postureMod = postureModDe(offensif);
+    // LE SAMEDI EN DIRECT (match_direct.dart) : le script est refait ici, à
+    // l'identique (il ne dépend que de l'état d'avant le bloc), et seules les
+    // décisions qu'il proposait pèsent — sur les bornes de la dernière journée,
+    // jamais sur le nombre de tirages.
+    final sc = direct == null ? null : samediDirect(s, right);
+    final retenues = sc == null ? const <(DecisionPrevue, ChoixDirect)>[] : retenuesDirect(sc, direct!);
+    final block = resolveBlock(rng, s.force, s.world.division, s.gauges,
+        postureMod: postureMod, dernier: sc == null ? null : poidsDirect(retenues));
     s.world.pts += block.points;
     s.world.blocks += 1;
     if (block.losses >= 4) {
@@ -581,10 +621,58 @@ class Engine {
     } else {
       s.gauges['tribunes'] = (s.gauges['tribunes']! - 1).clamp(0, 100);
     }
+    if (sc != null) {
+      s.direct.add(conclureDirect(sc, [for (final r in retenues) r.$2], block.results.split(' ').last, s));
+      while (s.direct.length > kDirectTraces) {
+        s.direct.removeAt(0);
+      }
+      _directEffets(s, [for (final r in retenues) r.$1.def.cote(r.$2.droite).effets]);
+    }
     _updateProvisionalRank(s);
     final posture = offensif ? role.matchPostureLeft : role.matchPostureRight;
     s.lastAnswer = '$posture — ${block.results} · ${block.points} pts';
     _passiveDrift(s);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Le samedi en direct (docs/histoires/samedi_direct.md, match_direct.dart).
+  // ---------------------------------------------------------------------------
+
+  late final CatalogueDirect _catalogueDirect = CatalogueDirect.fromVille(content.ville);
+
+  /// Le script du samedi que la ville met en scène pour la carte de match en
+  /// attente, si le choix de posture est [droite] : le nombre de décisions,
+  /// leurs minutes, le score à chacune, l'adversaire, les textes. Pur : l'état
+  /// ne bouge pas, et le générateur de la carrière n'est lu que sur une copie
+  /// (la lettre que la dernière journée aurait sans décision). null hors d'une
+  /// carte de match, ou quand aucune décision n'est écrite pour ce samedi.
+  ScenarioDirect? samediDirect(GameState s, bool droite) {
+    final p = s.pending;
+    if (s.over || p == null || p.kind != 'match' || _catalogueDirect.vide) return null;
+    final apercu = resolveBlock(Rng.fromState(s.rngState), s.force, s.world.division, s.gauges, postureMod: postureModDe(!droite));
+    final beats = content.seasonBeats[s.role] ?? const <Beat>[];
+    final phase = s.beat < beats.length ? beats[s.beat].phase : '';
+    return construireScenario(
+      content: content,
+      cat: _catalogueDirect,
+      s: s,
+      base: apercu.results.split(' ').last,
+      clubs: [for (final r in standingsOf(s)) if (!r.toi) r.club],
+      phase: phase,
+    );
+  }
+
+  /// Les effets cachés des décisions retenues (un cran de relation, un peu de
+  /// climat), appliqués comme ceux de la ville : sans tirage — un effet de la
+  /// ville n'a ni `rand` ni `react` —, et un palier franchi programme sa carte.
+  void _directEffets(GameState s, List<EffetVille> effets) {
+    if (effets.every((e) => e.vide)) return;
+    final relAvant = Map<String, int>.of(s.relations);
+    for (final e in effets) {
+      if (!e.vide) _applyEffects(s, e.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
+    }
+    final beats = content.seasonBeats[s.role] ?? const <Beat>[];
+    director.relationCrossings(s, relAvant, s.beat < beats.length ? beats[s.beat].phase : '');
   }
 
   void _resolveCup(GameState s, Rng rng) {
@@ -705,6 +793,42 @@ class Engine {
     s.lastAnswer = 'Bilan : ${verdict.rank}e · objectif « ${objectiveLabelFr(s.objectiveTarget)} » '
         '${verdict.objectiveMet ? 'tenu' : 'manqué'}.';
     _checkObjectifs(s, 'bilan');
+    _finDeLivre(s);
+  }
+
+  /// **La fin du livre.** Au verdict de la dernière saison que le postulat
+  /// déclare (`saisons:`, `fin_de_livre:` de postulats.yaml), une carrière qui
+  /// n'a pris aucune fin d'histoire en chemin prend celle du livre : l'histoire
+  /// est racontée, la carrière aussi. Avant, elle continuait dans le contenu
+  /// générique (jusqu'à vingt-deux saisons mesurées, la même Une servie onze
+  /// fois) et ne finissait sur les fins du livre que dans 35 à 58 % des cas
+  /// pour les livres 2, 3 et 4.
+  ///
+  /// Elle se pose **comme toute fin de verdict** (`co.verdict.actionnaires` :
+  /// `endingId` + `over`) : `choose` voit `over` au sortir de `_applyPending`,
+  /// bâtit l'écran de fin (`_buildEndingPending`) et rend la main sans servir
+  /// de carte ; la coquille de la ville fait donc ce qu'elle fait de toute fin.
+  /// Elle tombe APRÈS l'application du verdict — la ligne d'Almanach du Bilan,
+  /// la montée ou la descente, le drapeau `bilan_tenu`/`bilan_manque` sont
+  /// écrits, l'écran de fin les lit — et AVANT la carte du contrat et le
+  /// Carrefour : le livre est fini, on ne propose ni un an de plus ni un autre
+  /// rôle. Un postulat sans `saisons` ni `fin_de_livre` (les contenus de test)
+  /// n'est pas touché.
+  ///
+  /// Aucun tirage : le Rng n'est pas lu. La saison est comptée jouée
+  /// (`stats.saisons`, que le Carrefour aurait incrémenté et que lisent les
+  /// objectifs cachés « trois saisons dans le même club »).
+  void _finDeLivre(GameState s) {
+    if (s.over) return;
+    final post = content.postulats[s.postulatId];
+    if (post == null || !post.livreFiniAuBilan(s.season)) return;
+    // Une fin que le contenu ne déclare pas ne ferme rien : la garde protège
+    // un bundle assemblé à la main (le build, lui, refuse un `fin_de_livre`
+    // inconnu).
+    if (!content.endings.containsKey(post.finDeLivre)) return;
+    s.stats['saisons'] = (s.stats['saisons'] ?? 0) + 1;
+    s.endingId = post.finDeLivre;
+    s.over = true;
   }
 
   /// Objectifs cachés du postulat (spec variété §1.9) : évalués sans Rng au
@@ -1417,10 +1541,24 @@ class Engine {
     );
   }
 
+  /// L'objectif de la saison. **Première saison : celui que le postulat
+  /// déclare** (`objective:` de postulats.yaml), sans aucun tirage — c'est le
+  /// livre qui dit où l'on commence (« Les Deux Téléphones » : la montée, pas
+  /// le maintien). Le test d'avant, `s.postulat >= 2`, jetait la déclaration
+  /// des livres 3 à 10 pour un tirage de `pickObjective` : 59 % des
+  /// carrières du livre 10 s'ouvraient sur « le maintien » alors qu'il
+  /// déclare la montée, et la moitié de celles des livres 6 à 9 sur un Top 5
+  /// ou un Top 10 que personne n'avait écrit.
+  ///
+  /// Coût Rng : **zéro** quand le postulat déclare son objectif en saison 0 ;
+  /// sinon (aucun objectif déclaré, ou toute saison suivante) un seul
+  /// `rng.nextDouble()` (aucun en Division 2 sous forte pression), comme
+  /// `pickObjective` l'a toujours fait. Ni `GameState.objectiveTarget`
+  /// (initialisé à `post.objective ?? 'maintien'`, donc jamais vide) ni le
+  /// rang du postulat ne servent à décider : seule la déclaration compte.
   Pending _objectiveCard(GameState s, Rng rng) {
-    final target = s.objectiveTarget.isEmpty || s.season > 0 || s.postulat >= 2
-        ? pickObjective(s.world.division, s.pression, rng)
-        : s.objectiveTarget;
+    final declare = s.season == 0 ? content.postulats[s.postulatId]?.objective : null;
+    final target = declare ?? pickObjective(s.world.division, s.pression, rng);
     s.objectiveTarget = target;
     s.objectiveLabel = objectiveLabelFr(target);
     final patronId = _patronOf(s);

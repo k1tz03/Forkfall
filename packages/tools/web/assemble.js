@@ -27,8 +27,8 @@
 //                       découpés par docs/design/pixel_iso/accueil.js) ; avec
 //                       --ville, des fichiers à côté de la page (accueil/), que
 //                       l'accueil n'attend pas pour se dessiner
-//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Pixelify
-//                       Sans (la seule ressource externe de tout le fichier)
+//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Jersey 15
+//                       (la seule ressource externe de tout le fichier)
 //   __VILLE_CSS__, __VILLE_JS__ ← vides, sauf avec --ville <dossier> : la
 //                       version jouable (la ville d'Aubérive en pixel art,
 //                       ville.css + ville.js). Le dossier donné porte les
@@ -48,11 +48,11 @@ const ROOT = path.resolve(HERE, '..', '..', '..');
 const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web');
 // Les modules de la ville, insérés dans la fermeture de ville.js (au repère
 // /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
-const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js'];
+const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_album.js', 'ville_direct.js', 'ville_dossier.js'];
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = [];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js'];
 
 // Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
 // un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
@@ -114,6 +114,12 @@ function parseArgs(argv) {
 /// reste lisible à 15,5 px. IBM Plex Mono était plus sage, JetBrains Mono trop
 /// technique.
 ///
+/// La police pixel de l'accueil (et des cartons-titres des scènes jouées) est
+/// Jersey 15, une seule graisse. Pixelify Sans, qu'elle remplace, lisait
+/// « AUGÉRIVE · 20S0 », « FOOTGALL » et « GARRIÈRE » sur un téléphone (ses 5, B
+/// et C ressemblent à un S, un G et un G) ; Jersey 15 garde le pixel et ne confond
+/// plus ni B, C, G, S, ni 5, 8.
+///
 /// La feuille ne bloque rien (`media="print"` puis `all` à son arrivée) : une
 /// feuille ordinaire fait attendre TOUS les scripts qui la suivent, le temps
 /// d'aller chercher un autre serveur — sur un téléphone, une demi-seconde
@@ -121,7 +127,7 @@ function parseArgs(argv) {
 /// le prévoyait déjà.
 function fontsCss() {
   const href = 'https://fonts.googleapis.com/css2?' +
-    'family=Pixelify+Sans:wght@400;500;600;700&' +
+    'family=Jersey+15&' +
     'family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap';
   return [
     '<link rel="preconnect" href="https://fonts.googleapis.com">',
@@ -346,6 +352,8 @@ function main() {
   {
     const repere = '/*__PREVIEW_MODULES__*/';
     if (tpl.indexOf(repere) < 0) throw new Error('gabarit : repère /*__PREVIEW_MODULES__*/ absent');
+    // il est remplacé partout : cité dans un commentaire, il y collerait les modules (SyntaxError au chargement)
+    if (tpl.split(repere).length !== 2) throw new Error('gabarit : le repère /*__PREVIEW_MODULES__*/ ne doit apparaître qu\'une fois');
     const corps = tpl.slice(tpl.lastIndexOf('(function () {'));
     const vus = new Map([...declares(corps)].map((n) => [n, 'preview_template.html']));
     const srcs = PREVIEW_MODULES.map((f) => {
@@ -356,7 +364,10 @@ function main() {
       }
       return src;
     });
-    tpl = tpl.split(repere).join(srcs.join('\n').split('</script').join('<\\/script'));
+    // Le repère se lit aussi dans un commentaire du gabarit (les crochets, plus haut) : seul le dernier est le
+    // bon. Un `split/join` posait les modules dans la ligne de commentaire, et leur fin devenait du code.
+    const iRepere = tpl.lastIndexOf(repere);
+    tpl = tpl.slice(0, iRepere) + srcs.join('\n').split('</script').join('<\\/script') + tpl.slice(iRepere + repere.length);
   }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');

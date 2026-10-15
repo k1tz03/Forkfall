@@ -14,11 +14,16 @@ arcs:
       # et il est rejoué à chaque saison : sans marches, il servait la même
       # carte au slot 1 et la même au slot 17 toute la carrière.
       # Ordre : le contexte du postulat quitté d'abord (une fois, `_vu`), puis
-      # les marches de saison, la plus haute en tête.
+      # les marches de saison, la plus haute en tête. `season` compte à partir
+      # de 0 : la deuxième saison est `season >= 1`, la troisième `season >= 2`,
+      # la quatrième `season >= 3`. La marche « quatrième » était posée à
+      # `season >= 4` : en quatrième saison, « Troisième rentrée » et « Trois
+      # ans que je note la veille » revenaient, et il fallait attendre la
+      # cinquième pour voir la marche d'après.
       - id: rentree
         card:
           - { id: co.script.rentree_survetement, if: "(flag('vers_entraineur') || flag('banc_regarde')) && !flag('rentree_survet_vu')" }
-          - { id: co.script.rentree_quatrieme,   if: "season >= 4" }
+          - { id: co.script.rentree_quatrieme,   if: "season >= 3" }
           - { id: co.script.rentree_troisieme,   if: "season >= 2" }
           - { id: co.script.rentree_encore,      if: "season >= 1" }
           - { id: co.script.rentree }
@@ -27,7 +32,7 @@ arcs:
       - id: veille
         card:
           - { id: co.script.veille_banc,      if: "(flag('vers_entraineur') || flag('banc_regarde') || flag('recule_poste')) && !flag('veille_banc_vu')" }
-          - { id: co.script.veille_quatrieme, if: "season >= 4" }
+          - { id: co.script.veille_quatrieme, if: "season >= 3" }
           - { id: co.script.veille_troisieme, if: "season >= 2" }
           - { id: co.script.veille_encore,    if: "season >= 1" }
           - { id: co.script.veille }

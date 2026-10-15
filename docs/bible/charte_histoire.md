@@ -79,7 +79,7 @@ un objet daté porte la condition d'année (`when: "year >= 2008"`), sinon elle 
 
 **R10. Les noms sont ceux du monde.** Rien de réel : ni club, ni joueur, ni marque, ni
 compétition, ni commune réelle. Les villes viennent de `content/names/fr.yaml` (Villebranle,
-Valdorne, Portclair, Montbéliac, Nerville…) et de la bible ; jamais Villefranche, Beaulieu,
+Valdorne, Portclair, Montelvane, Crevelaine…) et de la bible ; jamais Villefranche, Beaulieu,
 Fontaine, Valmont, Néville (communes réelles).
 
 **R11. La mémoire.** Si une trace ou un drapeau existe, on le lit. Une carte qui peut rappeler un

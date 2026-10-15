@@ -33,7 +33,8 @@
   "use strict";
 
   var BASE = "ville/";
-  var CLE_SAUVE = "fusible.ville.v1";
+  var CLE_SAUVE = "fusible.ville.v1";        // l'ancienne case unique : rangée dans celle de son livre (voir « la sauvegarde »)
+  var CLE_CASE = "fusible.ville.v2.";        // + l'id du livre : une case par livre
   var TRANCHES = ["matin", "midi", "aprem", "soir", "nuit"];
   var TRANCHE_MOT = { matin: "Matin", midi: "Midi", aprem: "Après-midi", soir: "Soir", nuit: "Nuit" };
   var HEURE = { matin: "9 h", midi: "12 h 30", aprem: "15 h", soir: "20 h", nuit: "23 h 40" };
@@ -1059,6 +1060,13 @@
     // comme les cartes (text.dart) : le nom en capitales, les initiales
     M.NOM = (e.nom || "").toLocaleUpperCase("fr-FR");
     M.initiales = ((e.prenom || "").charAt(0) + (e.nom || "").charAt(0)).toLocaleUpperCase("fr-FR");
+    // tes fantômes (preview_dossier.js, Engine.heritage) : le nom d'une carrière d'avant, élidé
+    // comme dans les cartes (« celle d'Ollivier »)
+    var fa = (vue && vue.fantomes) || {};
+    for (var f in fa) M[f] = fa[f];
+    t = String(t).replace(/(^|[\s(«'’-])([Dd]e|[Qq]ue) \{(fantome_\w+)\}/g, function (m, a, w, k) {
+      return M[k] && /^[AEIOUYÀÂÉÈÊËÎÏÔÙÛaeiouyàâéèêëîïôùû]/.test(M[k]) ? a + w.slice(0, -1) + "'" + M[k] : m;
+    });
     for (var k in extra || {}) M[k] = extra[k];
     return articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; }));
   }
@@ -2331,6 +2339,10 @@
   function majMatch(dt, ts) {
     var M = MATCH;
     if (!M) return;
+    // le samedi en direct (ville_direct.js) : l'anneau, les buts ; une décision ouverte ralentit tout
+    if (M.direct) directTic();
+    var dtCam = dt;
+    if (M.gel) dt *= 0.25;
     M.t += dt;
     if (M.liesse > 0) M.liesse -= dt;
     var leg = $("villeMatch").querySelector(".v-match-legende");
@@ -2351,12 +2363,12 @@
         var avant = M.minute;
         M.minute += vit * dt;
         if (avant < 45 && M.minute >= 45 && (!e || e.m > 45)) { M.minute = 45; M.phase = "mi"; M.pause = 1.8; legende("Mi-temps · " + M.score[0] + "-" + M.score[1] + ".", 1800); }
-        else if (e && M.minute >= e.m) { M.minute = e.m; M.prochain++; lancerAction(e); }
+        else if (e && M.minute >= e.m) { M.minute = e.m; M.prochain++; if (e.t === "decision") directMoment(e); else lancerAction(e); }
         else if (M.minute >= 90) { finirMatch(); return; }
         majTableau();
       }
     }
-    if (M.phase === "fin") { cameraMatch(dt); return; }
+    if (M.phase === "fin") { cameraMatch(dtCam); return; }
     // le ballon
     var B = M.ballon;
     if (B.vol) {
@@ -2430,11 +2442,13 @@
         j.pas = ph === 1 ? 1 : ph === 3 ? -1 : 0;
       } else j.pas = 0;
     });
-    cameraMatch(dt);
+    cameraMatch(dtCam);
   }
   function cameraMatch(dt) {
-    var M = MATCH, B = M.ballon, c = aPied(clamp(B.a, 0.15, 0.85), clamp(B.b, 0.1, 0.9)), p = versImage(c[0], c[1], ZSOL);
-    var ty = p[1] - UI.decal / k;
+    // `M.cible` : une décision du direct regarde le banc, la Nord, la loge ou le joueur
+    var M = MATCH, B = M.ballon, c = aPied(clamp(B.a, 0.15, 0.85), clamp(B.b, 0.1, 0.9)), p = M.cible ? versImage(M.cible[0], M.cible[1], M.cible[2]) : versImage(c[0], c[1], ZSOL);
+    // (au-dessus de la carte de décision, à mi-hauteur entre elle et le tableau : `cibleSy`)
+    var ty = M.cible && M.cibleSy ? p[1] + (window.innerHeight / 2 - M.cibleSy) / k : p[1] - UI.decal / k;
     cam.x += (p[0] - cam.x) * Math.min(1, dt * 1.8); cam.y += (ty - cam.y) * Math.min(1, dt * 1.8);
   }
   // les vingt-deux, l'arbitre, le ballon : ajoutés aux gens que la ville dessine
@@ -2443,7 +2457,7 @@
     if (!M) return;
     M.joueurs.concat([M.arbitre]).forEach(function (j) {
       var w = aPied(j.a, j.b);
-      gens.push({ sp: j.sp, x: w[0], y: w[1], miroir: j.miroir, pas: j.pas, pal: j.pal, silhouette: !!j.heros, match: true });
+      gens.push({ sp: j.sp, x: w[0], y: w[1], miroir: j.miroir, pas: j.pas, pal: j.pal, silhouette: !!j.heros, match: true, emote: j.emote });
     });
     var B = M.ballon, wb = aPied(B.a, B.b);
     gens.push({ ballon: true, x: wb[0], y: wb[1], z: B.z });
@@ -2802,7 +2816,7 @@
   }
   function activitesIci(cle) {
     return (D.activites || []).filter(function (a) {
-      return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.jours || a.jours.indexOf(JOURS[S.jour]) >= 0) && (!a.si || siVrai(a.si, cle));
+      return a.lieu === cle && !a.cache && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.jours || a.jours.indexOf(JOURS[S.jour]) >= 0) && (!a.si || siVrai(a.si, cle));
     });
   }
   function pourquoiPas(a, lieuOuvert) {
@@ -3198,16 +3212,70 @@
   }
 
   // ─────────────────────────────────────────────────────────────── la sauvegarde
-  function sauver() {
-    if (!S || !coquille) return;
+  // UNE CASE PAR LIVRE (`fusible.ville.v2.<id du postulat>`) : commencer un livre n'écrase jamais la
+  // carrière d'un autre, et une carrière finie libère sa case. Seul le même livre recommencé efface sa
+  // case, et l'accueil le demande d'abord (preview_template.html : Reprendre, ou Recommencer en deux
+  // gestes). Le contenu d'une case est celui de l'ancienne case unique, inchangé.
+  var sauveFinie = false;        // la carrière en cours est finie : aucune case ne se réécrit sous elle
+  var sauveAvertie = false;      // l'appareil est plein : on l'a déjà dit
+  var sauveMigree = false;
+  function idLivre(index) {
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].index === index) return ps[i].id;
+    return null;
+  }
+  function titreLivre(id) {
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i].title || id;
+    return id;
+  }
+  function lireCase(id) {
+    try { var s = JSON.parse(localStorage.getItem(CLE_CASE + id) || "null"); return s && s.v === 1 && s.moteur ? s : null; } catch (e) { return null; }
+  }
+  // L'ancienne case unique va dans celle de son livre (`graine.postulat` en dit l'index), sans écraser
+  // une partie plus récente de ce livre ; elle ne disparaît qu'une fois la copie faite. Un livre
+  // inconnu ou une case illisible : on n'y touche pas, rien ne se perd.
+  function migrerSauve() {
+    if (sauveMigree || !(window.FusibleApercu && window.FusibleApercu.postulats)) return;
+    sauveMigree = true;
     try {
-      localStorage.setItem(CLE_SAUVE, JSON.stringify({ v: 1, moteur: coquille.sauver(), ville: S, rdv: rdv, graine: coquille.graine(), quand: Date.now() }));
+      var brut = localStorage.getItem(CLE_SAUVE);
+      if (!brut) return;
+      var s = JSON.parse(brut), id = s && s.v === 1 && s.moteur ? idLivre(s.graine && s.graine.postulat) : null;
+      if (!id) return;
+      var la = lireCase(id);
+      if (!la || (la.quand || 0) < (s.quand || 0)) localStorage.setItem(CLE_CASE + id, brut);
+      localStorage.removeItem(CLE_SAUVE);
     } catch (e) {}
   }
-  function lireSauve() {
-    try { var s = JSON.parse(localStorage.getItem(CLE_SAUVE) || "null"); return s && s.v === 1 && s.moteur ? s : null; } catch (e) { return null; }
+  // les cases pleines, la plus récente d'abord : [{ id, s }]
+  function toutesSauves() {
+    migrerSauve();
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [], out = [];
+    ps.forEach(function (p) { var s = lireCase(p.id); if (s) out.push({ id: p.id, s: s }); });
+    out.sort(function (a, b) { return (b.s.quand || 0) - (a.s.quand || 0); });
+    return out;
   }
-  function effacerSauve() { try { localStorage.removeItem(CLE_SAUVE); } catch (e) {} }
+  function sauver() {
+    if (!S || !coquille || sauveFinie) return;
+    migrerSauve();
+    var g = coquille.graine(), id = idLivre(g.postulat);
+    if (!id) return;
+    try {
+      localStorage.setItem(CLE_CASE + id, JSON.stringify({ v: 1, moteur: coquille.sauver(), ville: S, rdv: rdv, graine: g, quand: Date.now() }));
+    } catch (e) {
+      // le navigateur refuse d'écrire (mémoire pleine, navigation privée) : la case des autres livres ne se
+      // touche pas, et on le dit une fois
+      if (!sauveAvertie) { sauveAvertie = true; toast("Sauvegarde impossible : le navigateur refuse (mémoire pleine ou navigation privée)."); }
+    }
+  }
+  // la case d'un livre (par défaut, celui de la carrière en cours)
+  function effacerSauve(id) {
+    try {
+      if (!id && coquille) id = idLivre(coquille.graine().postulat);
+      if (id) localStorage.removeItem(CLE_CASE + id);
+    } catch (e) {}
+  }
 
   // ─────────────────────────────────────────────────────────────── l'entrée
   function brancherEntrees() {
@@ -3331,7 +3399,8 @@
       '<div class="fin" role="dialog" aria-label="Le résultat" hidden><span class="v-match-sur">Fin du match</span><div class="v-match-score"><b class="d"></b><span class="s"></span><b class="e"></b></div><p class="v-match-sifflet"></p><ul></ul>' +
       '<div class="v-match-bloc"></div><p class="v-match-pts"></p><button type="button" class="v-match-quitter">Quitter le stade</button></div>';
     document.body.appendChild(vm);
-    vm.querySelector(".v-match-passer").addEventListener("click", function () { if (MATCH && MATCH.phase !== "fin") finirMatch(); });
+    // (le samedi en direct : « Passer » mène d'abord à la prochaine décision)
+    vm.querySelector(".v-match-passer").addEventListener("click", function () { if (MATCH && MATCH.phase !== "fin" && !(MATCH.direct && directPasser())) finirMatch(); });
     vm.querySelector(".v-match-quitter").addEventListener("click", quitterStade);
     // la bulle de celui qui te parle (au-dessus de sa tête ; un geste la ferme)
     var bu = document.createElement("div"); bu.className = "v-bulle"; bu.id = "villeBulle"; bu.hidden = true; bu.setAttribute("role", "status");
@@ -3408,14 +3477,16 @@
   }
 
   // ─────────────────────────────────────────────────────────────── l'écran titre
+  // « Reprendre », au-dessus du nom : la carrière la plus récente, tous livres confondus (chaque
+  // cartouche de l'accueil porte aussi la sienne : `sauves()`, `reprendreLivre()`)
   function boutonReprendre() {
-    var s = lireSauve(), old = $("villeReprendre");
+    var l = toutesSauves(), old = $("villeReprendre");
     if (old) old.parentNode.removeChild(old);
-    if (!s) return;
+    if (!l.length) return;
+    var s = l[0].s, v = s.ville || {};
     var b = document.createElement("button");
     b.type = "button"; b.className = "v-reprendre"; b.id = "villeReprendre";
-    var v = s.ville || {};
-    b.innerHTML = '<b>Reprendre</b><span>' + esc((v.nom || "") + " · " + (JOUR_MOT[v.jour] || "") + ", semaine " + (v.semaine || 1)) + '</span>';
+    b.innerHTML = '<b>Reprendre</b><span>' + esc((v.nom ? v.nom + " · " : "") + (JOUR_MOT[v.jour] || "") + ", semaine " + (v.semaine || 1)) + '</span><span>' + esc(titreLivre(l[0].id)) + '</span>';
     b.addEventListener("click", function () { reprendre(s); });
     var ident = $("nameForm");
     ident.parentNode.insertBefore(b, ident);
@@ -3437,6 +3508,7 @@
       return;
     }
     var faire = function () {
+      sauveFinie = false;
       S = s.ville; rdv = s.rdv || null;
       S.vus = S.vus || {}; S.faits = S.faits || {}; S.jourFaits = S.jourFaits || {};
       S.biens = S.biens || {}; S.sale = S.sale || 0; S.pont = S.pont || {}; S.missionsFaites = S.missionsFaites || {};
@@ -3517,6 +3589,7 @@
     // une carrière commence (avant la première vue)
     debut: function (v) {
       var faire = function () {
+        sauveFinie = false;
         S = {
           v: 1, nom: (v.entities && v.entities.protagonist) || "", role: v.role,
           // en poche au départ : une semaine de la paie du rôle (le promu n'a pas un sou, son entraîneur si)
@@ -3639,6 +3712,9 @@
       if (pret) go(); else enAttente = go;
     },
     carteVisible: function () { return carteOn; },
+    // le samedi en direct (ville_direct.js) : la coquille propose le choix de posture du
+    // samedi ; true, la ville le garde et joue le match (le moteur l'aura avec les décisions)
+    retenir: function (droite) { return typeof directRetenir === "function" && directRetenir(droite); },
     // pour les essais : ce que le moteur retient de la ville vivante
     _vivant: function () {
       var v = vue || {}, out = { rel: {}, vars: {}, flags: (v.flags || []).filter(function (f) { return /^(rep|tuyau|service|dette)_/.test(f); }) };
@@ -3733,16 +3809,30 @@
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
     // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran
-    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : null }; },
+    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : (typeof directMusique === "function" ? directMusique() : null) }; },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
       if (!g) Object.keys(acteurs).forEach(function (id) { if (acteurs[id].uid === uid) g = acteurs[id]; });
       if (g) toucherQuelquun(g);
       return !!g;
     },
+    // les cases par livre : l'accueil y lit « Reprendre » sur chaque cartouche
+    sauves: function () {
+      var out = {};
+      toutesSauves().forEach(function (e) {
+        var v = e.s.ville || {};
+        out[e.id] = { nom: v.nom || "", semaine: v.semaine || 1, jour: v.jour || 0, role: v.role || "", quand: e.s.quand || 0 };
+      });
+      return out;
+    },
+    reprendreLivre: function (id) { var s = lireCase(id); if (s) reprendre(s); return !!s; },
+    effacerLivre: function (id) { effacerSauve(id); boutonReprendre(); },
+    rafraichirReprise: boutonReprendre,
     fin: function () {
       if (dedans) aDehors(true);
       actif = false; carteOn = false;
+      // une carrière finie libère sa case, et aucun geste en retard (un minuteur) ne la réécrit
+      sauveFinie = true;
       effacerSauve();
       if (cv) cv.hidden = true;
       var c = $("villeCouche"); if (c) c.hidden = true;

@@ -14,12 +14,23 @@
 # l'enveloppe du cousin ou la dette de Dembo), le message de 23 h 47 (« le
 # sien » sur la feuille, sans les deux bancs), le dauphin (la veille d'une
 # saison d'épilogue, quand Vukić demande le banc).
+#
+# Et la fin du livre (`fin_de_livre:` de postulats.yaml, `Engine._finDeLivre`) :
+#   · La carte postale — la porte est le verdict de la dernière saison. Qui a écrit
+#     « le mien » sur la feuille sans que Mercadier soit mort sur le papier (la
+#     casquette s'en va à la mi-temps) n'a aucune des quatre fins ci-dessus ; il
+#     passait à la saison d'épilogue du script (la rentrée, la veille, puis le
+#     générique) et y courait jusqu'à onze saisons. Le livre se ferme maintenant
+#     sur ce que cette saison disait déjà : la carte de la côte au courrier de
+#     sept heures. Le dauphin n'y a plus sa porte d'épilogue (`en.h2.s3.veille_dauphin`) :
+#     la ligne de Vukić passe dans l'épitaphe de cette fin.
 endings:
   - id: interim_revenant
     cause: choix
     rarity: epique
     golden: true
     title: "Le revenant"
+    indice: "Un mardi d'avril, à Portclair, un juge demande un signe de vie."
     epitaph: "{prenom} {nom} a ramené Roland Mercadier du wagon de la friche jusqu'au tribunal de Portclair. Le Racing est descendu sur tapis vert ; Norbert a sorti son ticket de 1987, et Roland a pris la même peine que les joueurs du carnet."
     epitaph_plus:
       - { when: "flag('h2_cassette')",    text: "La cassette de janvier est au dossier, pièce numéro un. Au tribunal, toute la salle a entendu un mort dire : « Garde le banc. »" }
@@ -30,6 +41,7 @@ endings:
     rarity: commune
     golden: false
     title: "La place de l'autre"
+    indice: "Un contrat signé le mercredi, pour un poste devenu libre le mardi."
     epitaph: "Roland Mercadier est mort sur le papier un mardi d'avril, et {prenom} {nom} a signé son contrat le mercredi. Le lundi, à sept heures, le répondeur ne clignote plus ; on le regarde quand même."
     epitaph_plus:
       - { when: "flag('h2_achard_sait')", text: "L'assureur a payé les deux millions sans un mot. Il savait où dormait le mort ; il a pris sa retraite en mai, et n'a plus jamais pris le car." }
@@ -40,6 +52,7 @@ endings:
     rarity: epique
     golden: true
     title: "Les deux bancs"
+    indice: "Au dernier match, une casquette grise au premier rang du virage."
     epitaph: "Le dernier match s'est joué avec deux entraîneurs, l'un sur le banc, l'autre en casquette au premier rang du virage. Au coup de sifflet, la casquette est sortie par la grille de la Nord avant tout le monde ; le sifflet est resté au cou de {prenom} {nom}."
     epitaph_plus:
       - { when: "flag('h2_sifflet_pris')", text: "C'était le sien, le sifflet du tiroir du milieu. La lanière n'était plus raide." }
@@ -51,10 +64,23 @@ endings:
     golden: false
     share: false
     title: "Le suivant"
+    indice: "Une silhouette entre dans la grande halle et se retourne. Elle t'attend."
     epitaph: "Au printemps, un nouvel intérimaire a trouvé une compo punaisée au mur, une cafetière tiède et, sur la place ENTRAÎNEUR, la voiture de {prenom} {nom}. Personne n'avait assisté au départ."
     epitaph_plus:
       - { when: "flag('h2_cabine_vue')", text: "Le lundi suivant, à six heures quarante, la cabine du quai deux a sonné longtemps. Personne n'a décroché." }
       - { when: "flag('h2_cassette')",   text: "La cassette de janvier n'était pas dans les poches de {nom}. Josiane a rebranché le répondeur, au cas où." }
+
+  # La fin du livre : la porte est le verdict de la dernière saison, pas une carte.
+  - id: interim_carte_postale
+    cause: livre
+    rarity: commune
+    golden: false
+    title: "La carte postale"
+    indice: "Tenir le banc jusqu'au dernier match, puis lire le courrier de sept heures."
+    epitaph: "À la mi-temps du dernier match, la casquette grise a quitté le virage sans que personne la voie partir. {prenom} {nom} a gardé le banc ; le lundi suivant, au courrier de sept heures, une carte de la côte, sans signature : une compo en 4-4-2, et un nom souligné deux fois."
+    epitaph_plus:
+      - { when: "relation.vukic >= 2",      text: "Une seconde carte est venue pour Vukić, d'une écriture penchée : « Prends le banc, s'il te le laisse. » Il l'a glissée dans son cahier, sur une page blanche, et il pose les plots à sept heures." }
+      - { when: "flag('h2_vivant_papier')", text: "Le tribunal de Portclair a laissé Roland Mercadier vivant sur le papier. Achard a rangé le dossier à la rubrique des vacances, que sa compagnie ne rembourse pas, et ne l'a pas rouvert." }
 
 epitaph_plus_ajouts:
   - { fin: co_garde_a_vue, when: "flag('histoire_h2') && flag('h2_feu')", text: "Il a fallu expliquer la friche à deux heures du matin, l'odeur d'essence sur les manches de {nom}, et une enveloppe blanche dans la boîte à gants." }

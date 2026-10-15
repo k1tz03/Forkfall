@@ -190,6 +190,7 @@
     S.services[g.id] = saison();
     sonGens("promesse");
     annoncerVivant(avant, vue);
+    albumOffrir("service", g.id, 1800);   // l'album d'Aubérive : une pochette avec le service
     majHud(); sauver();
     var fait = remplir(sv.texte), note = sv.dette ? nomCourt(g.id) + " ne l'oubliera pas. Un jour, il faudra rendre." : null;
     if (cle && LIEU[cle]) ouvrirPorte(cle, fait, undefined, note);
@@ -208,6 +209,7 @@
         html += '<button type="button" class="v-act v-service" data-gens="' + esc(g.id) + '"' + (es.ok ? "" : " disabled") + '><b>' + esc(g.service.label) + '</b>' +
           (es.ok ? '<span class="cout"><span>une fois par saison' + (g.service.dette ? " · à rendre" : "") + '</span></span>' : '<span class="pourquoi">' + esc(es.non) + '</span>') + '</button>';
       }
+      html += albumBloc(g);   // l'album d'Aubérive : « Échanger des vignettes », pour ceux qui en ont
       html += '</div></div>';
     });
     return html + '</div>';
@@ -228,6 +230,13 @@
         if (!g || carteOn || occupe || b.disabled) return;
         if (!b.classList.contains("confirme")) { b.classList.add("confirme"); b.querySelector("b").textContent = "Demander ? " + g.service.label; return; }
         rendreService(g, cle);
+      });
+    });
+    el.querySelectorAll(".v-echange").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var g = gensDe(b.getAttribute("data-gens"));
+        if (!g || carteOn || occupe || b.disabled) return;
+        albumEchanger(g, cle);
       });
     });
   }
@@ -256,13 +265,13 @@
   // après un geste de la ville (une activité, une scène, un service, un tuyau)
   function annoncerVivant(avant, apres) {
     if (!avant || !apres) return;
-    var ra = avant.relations || {}, rb = apres.relations || {}, msgs = [], haut = false, bas = false;
+    var ra = avant.relations || {}, rb = apres.relations || {}, msgs = [], haut = false, bas = false, lienHaut = null;
     Object.keys(rb).concat(Object.keys(ra)).sort().forEach(function (id, i, l) {
       if (l.indexOf(id) !== i) return;
       var a0 = +ra[id] || 0, b0 = +rb[id] || 0;
       if (a0 === b0 || !(gensDe(id) || CHARS[id])) return;
       msgs.push(phrasePalier(id, b0, b0 > a0));
-      if (b0 > a0) haut = true; else bas = true;
+      if (b0 > a0) { haut = true; if (!lienHaut) lienHaut = id; } else bas = true;
     });
     var fa = avant.flags || [];
     (apres.flags || []).forEach(function (f) {
@@ -273,18 +282,27 @@
     if (!msgs.length) return;
     sonGens(bas && !haut ? "palier_bas" : "palier_haut");
     msgs.forEach(function (m, i) { setTimeout(function () { if (!carteOn) toast(m); }, 700 + i * 2600); });
+    // l'album d'Aubérive : un lien qui monte d'un cran, une pochette offerte (après les mots du palier)
+    if (lienHaut) albumOffrir("lien", lienHaut, 700 + msgs.length * 2600);
   }
 
   // ─── le carnet : les gens, ce qu'on t'a confié, le climat, ce qu'on dit de toi
+  // Les onglets qu'un autre module ajoute (ville_dossier.js : le dossier 1974) : { cle, label, ouvrir }.
+  var ONGLETS_CARNET = [];
   function ongletsCarnet(actif) {
-    return '<div class="v-onglets" role="tablist"><button type="button" role="tab" data-onglet="gens"' + (actif === "gens" ? ' class="on" aria-selected="true"' : "") + '>Les gens</button>' +
-      '<button type="button" role="tab" data-onglet="biens"' + (actif === "biens" ? ' class="on" aria-selected="true"' : "") + '>Tes affaires</button></div>';
+    // les onglets des modules (ONGLETS_CARNET : le dossier 1974…) et l'album d'Aubérive (ville_album.js)
+    var album = albumPret(), n = ONGLETS_CARNET.length + (album ? 1 : 0);
+    return '<div class="v-onglets' + (n ? " v-onglets-n" : "") + '" role="tablist"><button type="button" role="tab" data-onglet="gens"' + (actif === "gens" ? ' class="on" aria-selected="true"' : "") + '>Les gens</button>' +
+      '<button type="button" role="tab" data-onglet="biens"' + (actif === "biens" ? ' class="on" aria-selected="true"' : "") + '>Tes affaires</button>' +
+      (album ? '<button type="button" role="tab" data-onglet="album"' + (actif === "album" ? ' class="on" aria-selected="true"' : "") + '>Album</button>' : "") +
+      ONGLETS_CARNET.map(function (o) { return '<button type="button" role="tab" data-onglet="' + o.cle + '"' + (actif === o.cle ? ' class="on" aria-selected="true"' : "") + '>' + esc(o.label) + '</button>'; }).join("") + '</div>';
   }
   function brancherOnglets() {
     document.querySelectorAll(".v-onglets [data-onglet]").forEach(function (b) {
       b.addEventListener("click", function () {
         if (b.classList.contains("on")) return;
-        if (b.getAttribute("data-onglet") === "gens") ouvrirCarnet(); else ouvrirInventaire();
+        var cle = b.getAttribute("data-onglet"), o = ONGLETS_CARNET.filter(function (x) { return x.cle === cle; })[0];
+        if (o) o.ouvrir(); else if (cle === "gens") ouvrirCarnet(); else if (cle === "album") ouvrirAlbum(); else ouvrirInventaire();
       });
     });
   }

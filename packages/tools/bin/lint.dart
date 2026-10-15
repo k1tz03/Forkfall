@@ -13,7 +13,9 @@ import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPref
 import 'package:yaml/yaml.dart';
 
 /// Valeurs de rendu du lint pour la longueur des manchettes (spec variété
-/// §2.4) : un nom de 16 lettres, une ville de 12, le club le plus long.
+/// §2.4) : un nom de 16 lettres, la plus longue ville du pool (`villes` de
+/// content/names/fr.yaml : Villebranle, 11 lettres), le club le plus long
+/// (le plus long préfixe devant elle).
 const Map<String, String> kSampleVars = {
   'NOM': 'BRÉHAUT-LEMOINE',
   'nom': 'Bréhaut-Lemoine',
@@ -24,12 +26,12 @@ const Map<String, String> kSampleVars = {
   'toi': 'monsieur Bréhaut-Lemoine',
   'Toi': 'Monsieur Bréhaut-Lemoine',
   'numero': '10',
-  'VILLE': 'SAINT-ÉTOILE',
-  'ville': 'Saint-Étoile',
-  'CLUB': 'OLYMPIQUE SAINT-ÉTOILE',
-  'club': 'Olympique Saint-Étoile',
-  'clubShort': 'Saint-Étoile',
-  'rival': 'Sporting Valentienne',
+  'VILLE': 'VILLEBRANLE',
+  'ville': 'Villebranle',
+  'CLUB': 'OLYMPIQUE VILLEBRANLE',
+  'club': 'Olympique Villebranle',
+  'clubShort': 'Villebranle',
+  'rival': 'Sporting Villebranle',
   'president': 'Aulard',
   'capitaine': 'Bréhaut',
   'coach': 'Jean-Pierre Vasseur',
@@ -74,9 +76,10 @@ String renderSample(String tpl) {
   return t;
 }
 
-/// Placeholders inconnus d'un gabarit (hors `select`, hors `age_<id>`).
+/// Placeholders inconnus d'un gabarit (hors `select`, hors `age_<id>`, hors `fantome_<livre>` :
+/// le nom d'une carrière d'avant, que pose Engine.heritage — docs/histoires/fantomes.md).
 Iterable<String> unknownPlaceholders(String tpl, Set<String> known) =>
-    placeholdersOf(tpl).where((p) => !known.contains(p) && !p.startsWith('age_'));
+    placeholdersOf(tpl).where((p) => !known.contains(p) && !p.startsWith('age_') && !p.startsWith('fantome_'));
 
 bool hasNamePlaceholder(String tpl) => placeholdersOf(tpl).any(kNamePlaceholders.contains);
 
@@ -113,7 +116,10 @@ const List<String> kEngineFlagPrefixes = ['camille_', 'role_was_',
   'rep_', 'tuyau_', 'service_', 'dette_',
   // le Grand Aubérive : la ville lit `quartier_<clé>` (ville_quartiers.js) ; une histoire peut le
   // poser pour ouvrir un quartier avant son heure, aucune n'y est tenue
-  'quartier_'];
+  'quartier_',
+  // le dossier 1974 et tes fantômes (docs/histoires/dossier_1974.md, fantomes.md) : ce que la
+  // page garde d'une carrière à l'autre, posé au début par Engine.heritage
+  'fantome_', 'dossier_'];
 
 /// Les kinds narratifs : une de leurs sorties sans `answer:` est une erreur
 /// (voir la boucle de cartes). `routine`, `nouvelle` et `passe` en sont hors :
@@ -915,6 +921,9 @@ void main() {
   //   * la jauge à 0 / 100, déclarée dans roles.yaml (`cause: jauge`) ;
   //   * l'effet `end:` d'un choix, d'une variante de set-piece ou d'une étape
   //     d'arc (toute autre `cause:` — choix, chaîne, objectif, destin, âge…) ;
+  //     la fin d'un livre (`fin_de_livre:` d'un postulat, que
+  //     `Engine._finDeLivre` pose au verdict de sa dernière saison,
+  //     `cause: livre`) compte comme un `end:` : c'est la porte de son livre ;
   //   * le moteur lui-même, en Dart : `grand_deballage` (parole ≤ −5),
   //     `jubile` (joueur de 38 ans), `en_retraite` (entraîneur de 65 ans),
   //     `co_banqueroute` (la ruine, que la ville déclare : `Engine.banqueroute`)
@@ -928,6 +937,9 @@ void main() {
     if (node is Map) {
       final e = node['end'];
       if (e is String) endsTargeted.add(e);
+      // la fin du livre d'un postulat : sa porte est le verdict de sa dernière saison
+      final f = node['fin_de_livre'];
+      if (f is String) endsTargeted.add(f);
       for (final v in node.values) {
         collectEnds(v);
       }
@@ -1035,7 +1047,8 @@ int longueurRendue(String t, int toi) {
       n += best;
     } else {
       final cle = inner.trim();
-      n += (cle == 'toi' || cle == 'Toi') ? toi : (_longueurFixe[cle] ?? (cle.startsWith('age_') ? 2 : inner.length + 2));
+      // `{fantome_<livre>}` : un nom de famille saisi, seize lettres au plus (Engine.start)
+      n += (cle == 'toi' || cle == 'Toi') ? toi : (_longueurFixe[cle] ?? (cle.startsWith('age_') ? 2 : cle.startsWith('fantome_') ? 16 : inner.length + 2));
     }
     i = e + 1;
   }

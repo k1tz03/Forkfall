@@ -31,6 +31,14 @@
 /// Les listes « stables » (les variantes de set-piece, dont le moteur garde
 /// l'index ; les paroles de la ville, dont la sauvegarde garde l'index) gardent
 /// leur longueur : un item absent y est remplacé par un bouche-trou inerte.
+///
+/// Les clés de la ville qui ne sont pas découpées — l'album, le samedi en direct
+/// (`match_direct`, que le moteur parcourt dans son ordre), le dossier 1974 et
+/// les fantômes — restent entières au commun, et ce qu'elles nomment parmi les
+/// lots de la ville sert partout : l'épilogue du dossier se joue depuis l'accueil,
+/// avant tout livre. Les cartes des fantômes (`co.fantome.*`) portent la porte de
+/// leur livre (`histoire_hN`) et y vont ; l'héritage (`Engine.heritage`) ne pose
+/// que des drapeaux `fantome_*` et `dossier_*`, jamais une porte de livre.
 library;
 
 /// Les listes compactées : la fusion remet leurs items dans l'ordre du bundle

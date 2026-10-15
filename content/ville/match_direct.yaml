@@ -1,0 +1,1007 @@
+# LE SAMEDI EN DIRECT (docs/histoires/samedi_direct.md) — les décisions du bord du terrain.
+#
+# Le samedi, à la Rive, la ville arrête le match une à trois fois, à la minute où la décision
+# arrive : une carte, deux gestes, cinq secondes. Le moteur (packages/core/lib/src/match_direct.dart)
+# choisit lesquelles selon le rôle, le moment (`premiere` 17e-40e, `heure` 55e-70e, `fin`
+# 76e-85e), la situation au tableau (`menes`, `nul`, `devant` : nous jouons à domicile) et la
+# condition (`when`, la langue des cartes) ; la moins vue de la carrière passe d'abord.
+#
+# Chaque geste : `label` (≤ 28, un acte), `reponse` (≤ 140, ce qui se passe, vu de près — jamais
+# un but : c'est la suite du match qui le dira), `v` et `n` (en points de pourcentage, sur la
+# victoire et le nul de la dernière journée du bloc ; la défaite bouge de −(v + n) ; ±6 au plus),
+# `foule` (leve, siffle, rien) et des effets cachés légers : `jauges` (±1, ±2) et `relation`
+# (±1). `defaut` : le geste passif, quand personne n'a touché l'écran à temps.
+#
+# Écrit selon la charte (docs/bible/charte_histoire.md) : une scène, un geste, une question qui
+# engage ; jamais une formule qui revient. Les époques sont tenues par `when` : deux
+# remplaçants avant 1995, la passe en retrait prise à la main jusqu'en 1991, le portable dans la
+# loge à partir de 1998, l'assistance vidéo à partir de 2019, cinq changements à partir de 2020.
+match_direct:
+
+  # ════════════════════════════════════════════════════════════ l'entraîneur, sur le banc
+
+  - id: ent_capitaine_boite
+    roles: [entraineur]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    texte: "{capitaine} boite depuis un duel au milieu du terrain. Il a chassé le soigneur d'un geste. Le remplaçant s'échauffe le long de la ligne depuis vingt minutes. Tu sors ton capitaine ?"
+    gauche:
+      label: "Je sors le capitaine"
+      reponse: "Il arrache le brassard et le donne au premier venu sans te regarder. Sur le banc, il garde sa serviette sur la tête."
+      v: 3
+      n: 1
+      foule: siffle
+      effets: {jauges: {vestiaire: -1}}
+    droite:
+      label: "Il reste sur la pelouse"
+      reponse: "Il lève le pouce vers le banc et retourne au marquage. Il ne court plus, il se place. Ça tiendra peut-être."
+    defaut: droite
+
+  - id: ent_trois_devant
+    roles: [entraineur]
+    situations: [menes]
+    moments: [fin]
+    texte: "Mené, et le quatrième arbitre a déjà sorti son panneau. Ton adjoint serre la feuille des changements contre sa poitrine. Trois défenseurs sur la pelouse : tu en enlèves un pour un attaquant ?"
+    gauche:
+      label: "Un attaquant de plus"
+      reponse: "Ils ne sont plus que deux derrière, et la Nord se lève d'un bloc. Le premier contre de {adv} passe au ras de ton banc."
+      v: 3
+      foule: leve
+      effets: {jauges: {tribunes: 1}}
+    droite:
+      label: "On garde la défense"
+      reponse: "Ton adjoint replie la feuille. Personne ne bouge. Dans la Nord, quelqu'un crie ton nom, et ce n'est pas pour t'encourager."
+    defaut: droite
+
+  - id: ent_fermer_le_nul
+    roles: [entraineur]
+    situations: [nul]
+    moments: [fin]
+    texte: "Égalité, et ta défense recule d'un mètre à chaque ballon. Sur le banc, ton défenseur remplaçant a déjà retiré sa chasuble. Un point ici, c'est un point de moins à aller chercher ailleurs."
+    gauche:
+      label: "Je ferme la porte"
+      reponse: "Il entre, et le bloc recule encore de dix mètres. La Nord siffle le premier ballon dégagé en touche, puis le deuxième."
+      v: -2
+      n: 5
+      foule: siffle
+    droite:
+      label: "On ne change rien"
+      reponse: "Le remplaçant remet sa chasuble, lentement, pour que tu le voies. Tes latéraux, eux, continuent de monter."
+    defaut: droite
+
+  - id: ent_devant_monter
+    roles: [entraineur]
+    situations: [devant]
+    moments: [heure]
+    texte: "Devant au score, et {adv} ne sort plus de son camp. Ton numéro 9 lève les bras à chaque contre que tu n'ordonnes pas. Tu fais monter le bloc pour en finir ?"
+    gauche:
+      label: "On monte, on les tue"
+      reponse: "Le bloc avance de quinze mètres. Ton 9 ne lève plus les bras : il court, et devant lui il n'y a plus que de l'herbe."
+      v: 3
+      n: -3
+      foule: leve
+    droite:
+      label: "On garde le ballon"
+      reponse: "Ils se passent le ballon devant leur surface. Trois minutes sans une occasion, et personne en tribune ne s'en plaint."
+      n: 1
+    defaut: droite
+
+  - id: ent_gardien_montre
+    roles: [entraineur]
+    situations: [devant]
+    moments: [fin]
+    texte: "Ton gardien met une éternité à dégager, et l'arbitre le regarde en tapotant sa montre. Encore une fois, c'est un jaune. La Nord compte les secondes à voix haute. Tu lui dis de jouer vite ?"
+    gauche:
+      label: "Joue vite, ne prends rien"
+      reponse: "Il relance court, mal. Le ballon revient deux fois dans la surface. Personne ne prend de carton ; tout le monde prend dix ans."
+      n: 2
+      v: -1
+    droite:
+      label: "Prends ton temps"
+      reponse: "Il pose le ballon, recule, le replace. Jaune. Il le prend en souriant : quarante secondes de moins pour {adv}."
+      v: 1
+      foule: leve
+    defaut: droite
+
+  - id: ent_penalty_refuse
+    roles: [entraineur]
+    situations: [menes]
+    moments: [premiere]
+    texte: "Mené avant la demi-heure, et l'arbitre vient de refuser un penalty que toute la Nord a vu. Ton banc est debout, le délégué te fixe depuis la touche. Tu sors de ta zone ?"
+    gauche:
+      label: "Je vais au quatrième"
+      reponse: "Tu cries jusqu'au panneau. Avertissement. La Nord scande ton nom, et sur la pelouse, tes joueurs ont vu quelqu'un se battre."
+      v: 1
+      n: -1
+      foule: leve
+      effets: {jauges: {tribunes: 1, direction: -1}}
+    droite:
+      label: "Je me rassois"
+      reponse: "Tu te rassois. Le délégué hoche la tête et note quelque chose. Derrière le banc, quelqu'un te traite de fonctionnaire."
+    defaut: droite
+
+  - id: ent_dix_entre_les_lignes
+    roles: [entraineur]
+    situations: [nul, devant]
+    moments: [premiere]
+    texte: "Leur numéro 10 décroche entre les lignes, et personne ne le suit. Il a déjà touché vingt ballons. Ton adjoint propose de lui coller ton milieu défensif, à la culotte, jusqu'au vestiaire."
+    gauche:
+      label: "Marquage individuel"
+      reponse: "Ton milieu ne le lâche plus, même quand le ballon est ailleurs. Le 10 finit par cracher par terre et par aller jouer à gauche."
+      v: 1
+      n: 2
+    droite:
+      label: "Chacun sa zone"
+      reponse: "Tu fais non de la tête. Ton adjoint se rassoit. Le 10 touche son vingt et unième ballon, puis son vingt-deuxième."
+    defaut: droite
+
+  - id: ent_gardien_monte
+    roles: [entraineur]
+    situations: [menes]
+    moments: [fin]
+    texte: "Corner pour vous, et le temps fond. Ton gardien regarde le banc, les gants posés sur les genoux, prêt à traverser tout le terrain. Tu le fais monter dans leur surface ?"
+    gauche:
+      label: "Monte, le gardien !"
+      reponse: "Il traverse le terrain en courant, et la Rive fait un bruit que tu n'avais jamais entendu. Le corner part. Tout le monde saute."
+      v: 1
+      n: 3
+      foule: leve
+    droite:
+      label: "Il reste dans ses buts"
+      reponse: "Il reste sur sa ligne et frappe dans ses gants. Le corner part. Leur défenseur dégage loin, très loin, jusque dans la Nord."
+    defaut: droite
+
+  - id: ent_vecchio_dos
+    roles: [entraineur]
+    situations: [nul, devant, menes]
+    moments: [premiere]
+    when: "in_cast('vecchio') && year <= 1992 && chars.vecchio.statut == 'present'"
+    texte: "Vecchio se tient le bas du dos depuis sa sortie aérienne. Il a quarante et un ans et il fait signe que ça va. Ton second gardien a enfilé ses gants sans qu'on le lui demande."
+    gauche:
+      label: "Je change de gardien"
+      reponse: "Vecchio sort sans boiter, exprès, pour que tu le voies. Il s'assoit au bout du banc, loin de toi, les gants encore aux mains."
+      v: 1
+      effets: {relation: {vecchio: -1}}
+    droite:
+      label: "Vecchio reste"
+      reponse: "Il se relève, frappe deux fois ses gants l'un contre l'autre. Au centre suivant, il sort quand même, et il le prend."
+      effets: {relation: {vecchio: 1}}
+    defaut: droite
+
+  - id: ent_mbako_entre
+    roles: [entraineur]
+    situations: [menes, nul]
+    moments: [heure]
+    when: "in_cast('mbako') && year <= 1993 && chars.mbako.statut == 'present'"
+    texte: "Mbako s'échauffe derrière le but depuis la reprise, à petits sauts, sans quitter le banc des yeux. Sa mère est au troisième rang de la tribune Ouest. Tu le fais entrer ?"
+    gauche:
+      label: "Mbako entre"
+      reponse: "Il enlève son survêtement trop grand d'un seul geste. Premier ballon : un crochet, un défenseur assis. La tribune Ouest se lève."
+      v: 2
+      n: -1
+      foule: leve
+      effets: {relation: {mbako: 1}}
+    droite:
+      label: "Pas aujourd'hui"
+      reponse: "Il se rassoit sur le petit banc, le survêtement remonté jusqu'au menton. Sa mère, là-haut, n'a pas bougé non plus."
+    defaut: droite
+
+  - id: ent_vukic_six
+    roles: [entraineur]
+    situations: [nul, devant]
+    moments: [heure]
+    when: "in_cast('vukic') && year <= 1996"
+    texte: "Vukić se penche, la main devant la bouche : « Leur 6 a pris un jaune. Mets le petit ailier sur lui, il va tomber. » C'est la première fois de la saison qu'il propose quelque chose."
+    gauche:
+      label: "Fais comme il dit"
+      reponse: "Tu fais passer le mot. Dix minutes plus tard, leur 6 rate un tacle, regarde l'arbitre, et ne tacle plus. Vukić ne sourit pas."
+      v: 3
+      n: -1
+      effets: {relation: {vukic: 1}}
+    droite:
+      label: "On garde notre plan"
+      reponse: "Vukić se redresse sans rien dire et croise les bras. Il regarde le 6 jusqu'à la fin, comme on regarde une occasion qui passe."
+    defaut: droite
+
+  - id: ent_dernier_remplacant
+    roles: [entraineur]
+    situations: [menes, nul]
+    moments: [heure]
+    when: "year <= 1994"
+    texte: "Deux remplaçants, pas un de plus, et tu en as déjà brûlé un sur blessure. {capitaine} réclame des jambes neuves au milieu, les mains sur les hanches. Tu grilles ton dernier changement ?"
+    gauche:
+      label: "Je le grille maintenant"
+      reponse: "Le dernier remplaçant entre en courant. Si quelqu'un se blesse d'ici la fin, on jouera à dix, et tout le banc le sait."
+      v: 2
+    droite:
+      label: "Je le garde"
+      reponse: "Tu gardes ton dernier changement dans la poche. {capitaine} lève les bras au ciel, puis repart au milieu, plus lentement."
+    defaut: droite
+
+  - id: ent_retrait_main
+    roles: [entraineur]
+    situations: [devant]
+    moments: [fin]
+    when: "year <= 1991"
+    texte: "Devant, et {adv} jette tout dans la surface. Ton libéro peut encore faire tourner en retrait : le gardien prend le ballon à la main, et on compte jusqu'à six. Tu donnes la consigne ?"
+    gauche:
+      label: "Faites tourner"
+      reponse: "Cinq passes en retrait, cinq ballons à la main. L'arbitre regarde sa montre, la tribune visiteuse jette des pièces sur la piste."
+      v: 1
+      n: 2
+      foule: siffle
+    droite:
+      label: "Jouez vers l'avant"
+      reponse: "Ils jouent vers l'avant, perdent le ballon, le récupèrent. Le match reste ouvert jusqu'au bout, et ton estomac aussi."
+      v: 1
+      n: -2
+    defaut: droite
+
+  - id: ent_vestiaire_soude
+    roles: [entraineur]
+    situations: [menes]
+    moments: [premiere, heure]
+    when: "gauges.vestiaire >= 65"
+    texte: "Mené, et personne ne baisse la tête. {capitaine} rassemble les autres au rond central avant l'engagement, sans un regard pour le banc. Tu cries ta consigne, ou tu les laisses faire ?"
+    gauche:
+      label: "Je crie la consigne"
+      reponse: "Ta voix couvre la Nord. Ils se retournent tous vers toi, puis repartent, chacun avec ta consigne et un peu moins de la leur."
+    droite:
+      label: "Je les laisse faire"
+      reponse: "Ils se parlent front contre front. À l'engagement, ils pressent ensemble, comme une seule bête qui aurait faim."
+      v: 3
+      effets: {jauges: {vestiaire: 1}}
+    defaut: droite
+
+  - id: ent_vestiaire_fendu
+    roles: [entraineur]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "gauges.vestiaire <= 35"
+    texte: "Ton milieu et ton défenseur central s'engueulent devant la surface, le doigt pointé, pendant que {adv} remet le ballon en jeu. La Nord l'a vu. Tu sors l'un des deux ?"
+    gauche:
+      label: "Je sors le milieu"
+      reponse: "Il sort sans serrer la main de son remplaçant. Sur la pelouse, plus personne ne crie. Plus personne ne parle non plus."
+      v: 1
+      n: 1
+      effets: {jauges: {vestiaire: -1}}
+    droite:
+      label: "Qu'ils se débrouillent"
+      reponse: "Ils se tournent le dos et retournent à leur poste. Au corner suivant, ni l'un ni l'autre ne monte au duel."
+      v: -2
+    defaut: droite
+
+  # ════════════════════════════════════════════════════════════ le joueur, sur la pelouse
+
+  - id: jou_penalty_gamin
+    roles: [joueur]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    texte: "Penalty. Le gamin entré à l'heure de jeu a déjà le ballon sous le bras : c'est lui qui a obtenu la faute. Mais tout le stade te regarde, toi. Tu le tires, ou tu le laisses au gamin ?"
+    gauche:
+      label: "Je le tire"
+      reponse: "Tu lui prends le ballon des mains, doucement. Il te le laisse. Tu poses le ballon, tu recules de quatre pas, et la Rive se tait."
+      v: 2
+      n: 1
+      effets: {jauges: {vestiaire: -1}}
+    droite:
+      label: "Je le laisse au gamin"
+      reponse: "Tu lui tapes sur l'épaule et tu t'éloignes. Il pose le ballon trois fois avant qu'il tienne. Ses mains tremblent ; ses jambes, on verra."
+      effets: {jauges: {vestiaire: 1}}
+    defaut: droite
+
+  - id: jou_maillot_tenu
+    roles: [joueur]
+    situations: [menes, nul]
+    moments: [premiere, heure]
+    texte: "Leur défenseur te tient le maillot depuis dix minutes. Dans la surface, tu sens sa jambe juste derrière la tienne, et l'arbitre est à trente mètres. Tu te laisses tomber ?"
+    gauche:
+      label: "Je tombe"
+      reponse: "Tu tombes. L'arbitre hésite, le sifflet à la bouche, puis montre le point de corner. Leur défenseur te relève par le col."
+      v: 1
+      n: -1
+      effets: {jauges: {direction: -1, tribunes: 1}}
+    droite:
+      label: "Je reste debout"
+      reponse: "Tu restes debout et tu frappes du gauche, sur le gardien. Leur défenseur te lâche enfin le maillot : il a eu peur, une seconde."
+    defaut: droite
+
+  - id: jou_mur
+    roles: [joueur]
+    situations: [devant, nul]
+    moments: [heure, fin]
+    texte: "Coup franc pour {adv}, à vingt mètres. Ton gardien te place au bout du mur, côté fermé. Leur tireur frappe fort ; tu l'as vu à l'échauffement. Tu restes dans le mur ?"
+    gauche:
+      label: "Je me décale d'un pas"
+      reponse: "Tu fais un pas de côté au moment du coup de sifflet. Personne ne le verra à la télévision. Ton gardien, si."
+      v: -1
+      n: -1
+      effets: {jauges: {vestiaire: -1}}
+    droite:
+      label: "Je reste dans le mur"
+      reponse: "Tu croises les mains devant toi et tu fermes les yeux. Le ballon part. Tu sens le vent passer, ou la balle, tu ne sais pas."
+      n: 1
+    defaut: droite
+
+  - id: jou_touche_lente
+    roles: [joueur]
+    situations: [devant]
+    moments: [fin]
+    texte: "Le ballon sort en touche juste à côté de toi. Le ramasseur te le tend ; leur latéral le réclame en hurlant. Tu prends ton temps ?"
+    gauche:
+      label: "Je prends mon temps"
+      reponse: "Tu lâches le ballon, tu le ramasses, tu le lâches encore. Carton jaune. La Nord applaudit le carton comme un but."
+      v: 1
+      n: 1
+      foule: leve
+    droite:
+      label: "Je le rends vite"
+      reponse: "Tu le rends tout de suite. Leur latéral te remercie d'un geste et relance long, très long, dans votre dos."
+    defaut: droite
+
+  - id: jou_crampe
+    roles: [joueur]
+    situations: [menes, nul]
+    moments: [fin]
+    texte: "Une crampe te mord le mollet, et le banc a encore un changement. Le soigneur est debout au bord de la piste, la bombe de froid à la main. Tu demandes à sortir ?"
+    gauche:
+      label: "Je demande à sortir"
+      reponse: "Tu lèves la main. Le changement se fait en trente secondes. Sur le banc, tu masses ton mollet sans quitter le tableau des yeux."
+      v: 1
+      effets: {jauges: {tribunes: -1}}
+    droite:
+      label: "Je finis le match"
+      reponse: "Tu fais signe que ça va. Tu ne sprintes plus, tu te places. Dans la Nord, quelqu'un a vu que tu boitais, et il applaudit."
+      v: -1
+      effets: {jauges: {tribunes: 1}}
+    defaut: droite
+
+  - id: jou_tribune_touche
+    roles: [joueur]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    texte: "Un homme de la tribune visiteuse crie ton nom de famille à chaque touche, et autre chose après. Le ballon sort de ton côté, juste sous lui. Tu vas le chercher ?"
+    gauche:
+      label: "Je vais le chercher"
+      reponse: "Tu ramasses le ballon à un mètre de lui, sans le regarder. Il se tait. En face, la Nord a vu la scène et chante ton prénom."
+      v: -1
+      foule: leve
+      effets: {jauges: {tribunes: 1}}
+    droite:
+      label: "Je laisse le latéral"
+      reponse: "Tu restes au milieu. Ton latéral va jouer la touche ; l'homme crie quand même, un autre nom. Tu entendras le tien ce soir."
+    defaut: droite
+
+  - id: jou_axe_interdit
+    roles: [joueur]
+    situations: [menes]
+    moments: [premiere]
+    texte: "Mené, et le banc te crie de rester large. Depuis vingt minutes, tu vois l'espace dans l'axe, entre leurs deux milieux, gros comme un garage. Tu désobéis ?"
+    gauche:
+      label: "Je rentre dans l'axe"
+      reponse: "Tu rentres. Deux passes, et tu es face au jeu, enfin. Sur le banc, on jette une bouteille par terre, puis on se tait et on regarde."
+      v: 2
+      n: -1
+      effets: {jauges: {direction: -1}}
+    droite:
+      label: "Je reste collé à la ligne"
+      reponse: "Tu restes collé à ta ligne de touche. Le ballon ne vient pas. Le banc te fait un signe du pouce, pour l'obéissance."
+    defaut: droite
+
+  - id: jou_brassard_cheville
+    roles: [joueur]
+    situations: [nul, devant]
+    moments: [premiere]
+    when: "flag('capitaine')"
+    texte: "Le brassard au bras, et leur numéro 10 vient de découper la cheville de ton arrière droit. L'arbitre n'a sorti qu'un jaune. Les tiens attendent de voir ce que fait leur capitaine."
+    gauche:
+      label: "Je vais voir l'arbitre"
+      reponse: "Tu lui parles bas, à vingt centimètres du visage. Il note ton numéro, puis celui du 10. La suite, il la siffle de plus près."
+      v: 1
+      effets: {jauges: {vestiaire: 1}}
+    droite:
+      label: "Je calme les miens"
+      reponse: "Tu attrapes ton milieu par le maillot avant qu'il fasse une bêtise. Le 10 te remercie d'un clin d'œil. Tu le notes, toi aussi."
+      n: 1
+    defaut: droite
+
+  - id: jou_brehaut_nuque
+    roles: [joueur]
+    situations: [menes, nul]
+    moments: [premiere, heure]
+    when: "in_cast('brehaut') && year <= 1995 && chars.brehaut.statut == 'present'"
+    texte: "Bréhaut te prend par la nuque après une perte de balle : « Tu joues pour toi ou pour nous ? » Ses doigts serrent. La Nord a vu le geste, et le banc aussi."
+    gauche:
+      label: "Je lui rends le geste"
+      reponse: "Tu repousses sa main. Il te regarde une seconde de trop, puis repart en défense en secouant la tête. Ça se reparlera au vestiaire."
+      v: -1
+      effets: {relation: {brehaut: -1}}
+    droite:
+      label: "Je baisse la tête"
+      reponse: "Tu acquiesces. Au ballon suivant, tu le cherches, lui, et il te le rend dans la course. Il ne dit rien ; il lève le pouce."
+      v: 1
+      effets: {relation: {brehaut: 1}}
+    defaut: droite
+
+  - id: jou_genou_craque
+    roles: [joueur]
+    situations: [menes, nul, devant]
+    moments: [heure]
+    when: "flag('genou')"
+    texte: "Ton genou a fait un bruit sec dans le dernier appui. Pas de douleur, pas encore. Le soigneur te regarde depuis la ligne, la main en visière. Tu lui fais signe que ça va ?"
+    gauche:
+      label: "Je demande à sortir"
+      reponse: "Tu lèves la main. En sortant, tu poses le pied comme sur de la glace. Le soigneur appuie au creux du genou, et tu serres les dents."
+      effets: {jauges: {tribunes: -1}}
+    droite:
+      label: "Je fais signe que ça va"
+      reponse: "Tu fais signe que ça va. Au sprint suivant, tu arrives en même temps que le ballon. Le genou n'a rien dit. Pas encore."
+      v: 1
+    defaut: droite
+
+  - id: jou_jambes_steph
+    roles: [joueur]
+    situations: [menes, nul]
+    moments: [fin]
+    when: "relation.steph >= 2 && year <= 2014"
+    texte: "Le dernier quart d'heure, et tu as encore des jambes : les séances du mardi soir chez Steph. Leur latéral, lui, marche les mains sur les hanches. Tu le provoques à chaque ballon ?"
+    gauche:
+      label: "Je le prends à chaque fois"
+      reponse: "Tu le prends de vitesse une fois, deux fois. Au troisième ballon, il te regarde arriver comme on regarde un train."
+      v: 4
+      n: -1
+      foule: leve
+    droite:
+      label: "Je joue simple"
+      reponse: "Tu joues en une touche, sans forcer. Les séances de Steph serviront un autre samedi, ou jamais."
+    defaut: droite
+
+  # ════════════════════════════════════════════════════════════ le président, en loge
+
+  - id: pre_envahissement
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [fin]
+    texte: "La Nord a sauté la grille : une trentaine d'hommes courent vers le rond central, et l'arbitre rentre ses joueurs. Le délégué monte l'escalier de la loge, vers toi. Tu descends ?"
+    gauche:
+      label: "Je descends sur la pelouse"
+      reponse: "Tu traverses la piste en costume. Ils te reconnaissent, ralentissent. Le premier te serre la main, le deuxième crache, le troisième rentre."
+      foule: leve
+      effets: {jauges: {tribunes: 2, direction: -1}}
+    droite:
+      label: "Je reste en loge"
+      reponse: "Tu restes assis. Les stadiers mettent vingt minutes à vider la pelouse. Quand le jeu reprend, tes joueurs ont froid, et toi aussi."
+      v: -1
+      effets: {jauges: {tribunes: -1}}
+    defaut: droite
+
+  - id: pre_adjoint_subvention
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    texte: "L'adjoint aux sports s'est assis à côté de toi sans y être invité. Il parle de la subvention de la tribune Est entre deux actions, la main posée sur ton genou. Tu lui réponds ?"
+    gauche:
+      label: "Je lui réponds"
+      reponse: "Tu tournes le dos au match pour parler chiffres. Dans la Nord, on voit ta nuque, et on se met à siffler ta loge."
+      effets: {jauges: {caisse: 1, tribunes: -1}}
+    droite:
+      label: "Je regarde le match"
+      reponse: "Tu fixes la pelouse sans répondre. Il retire sa main de ton genou et s'en va avant la fin, sans dire au revoir."
+    defaut: droite
+
+  - id: pre_telephone_banc
+    roles: [president]
+    situations: [menes]
+    moments: [heure]
+    texte: "Le téléphone de la loge sonne : c'est le banc. Ton entraîneur veut savoir si tu as une préférence pour le prochain changement. Il n'a jamais demandé ça. Tu en as une ?"
+    gauche:
+      label: "Fais entrer le gamin"
+      reponse: "Au bout du fil, un silence, puis : « Bien, président. » Le gamin entre deux minutes plus tard, et tout le banc sait d'où vient l'ordre."
+      v: 1
+      n: -1
+      effets: {jauges: {vestiaire: -1}}
+    droite:
+      label: "C'est ton équipe"
+      reponse: "Tu raccroches sans dire de nom. En bas, tu le vois reposer le combiné, regarder longtemps sa feuille, puis choisir seul."
+    defaut: droite
+
+  - id: pre_banderole
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [premiere]
+    texte: "Une banderole descend devant la Nord, peinte la nuit sur un drap : ton nom, et un mot qui rime avec. La caméra de la télé a déjà pivoté. Tu la fais décrocher ?"
+    gauche:
+      label: "Je la fais décrocher"
+      reponse: "Deux stadiers montent dans la tribune. Le drap descend sous les sifflets. Il reviendra au prochain match, deux fois plus long."
+      effets: {jauges: {tribunes: -1, direction: 1}}
+    droite:
+      label: "Je la regarde en face"
+      reponse: "Tu laisses pendre le drap. Tu le regardes même, longtemps, pour que la caméra le voie. À la mi-temps, quelqu'un l'a roulé."
+      effets: {jauges: {tribunes: 1}}
+    defaut: droite
+
+  - id: pre_couloir_arbitre
+    roles: [president]
+    situations: [menes]
+    moments: [premiere]
+    texte: "Deux penaltys refusés, et le couloir des vestiaires passe sous ta loge. Le délégué te prévient : un président dans le couloir à la mi-temps, c'est un rapport. Tu y descendras ?"
+    gauche:
+      label: "J'irai dans le couloir"
+      reponse: "Tu le lui diras à voix basse, dans le couloir. Le délégué note l'heure. Après la pause, l'arbitre siffle tout, des deux côtés."
+      v: 1
+      effets: {jauges: {direction: -1, tribunes: 1}}
+    droite:
+      label: "Je resterai en loge"
+      reponse: "Tu restes à ta place. Le délégué range son carnet et te remercie d'un signe. L'arbitre ne lève plus jamais les yeux vers la loge."
+    defaut: droite
+
+  - id: pre_fumigenes_gege
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    when: "year <= 2019 && chars.gege.statut == 'present'"
+    texte: "Gégé allume le premier fumigène au-dessus de la Nord, puis dix autres. La fumée rouge passe sur la pelouse et l'arbitre arrête le jeu. Le délégué de la Ligue sort son carnet."
+    gauche:
+      label: "J'envoie quelqu'un à Gégé"
+      reponse: "Le gardien du stade traverse la piste jusqu'à la grille. Gégé l'écoute, éteint le sien dans le gazon, et lève les yeux vers ta loge."
+      effets: {relation: {gege: -1}, jauges: {direction: 1}}
+    droite:
+      label: "Je laisse brûler"
+      reponse: "La fumée met dix minutes à se lever. Le délégué remplit une page entière. Là-bas, Gégé lève son écharpe vers ta loge."
+      effets: {relation: {gege: 1}, jauges: {direction: -1}}
+    defaut: droite
+
+  - id: pre_portable_actionnaire
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    when: "year >= 1998"
+    texte: "Ton portable vibre dans la poche intérieure : l'actionnaire principal, depuis un aéroport, veut le score et ton avis sur l'entraîneur. Toute la loge écoute. Tu décroches ?"
+    gauche:
+      label: "Je décroche"
+      reponse: "Tu décroches en te tournant vers le mur. Tu dis le score, puis « on verra ». Derrière la vitre, la Nord t'a vu le téléphone à l'oreille."
+      effets: {jauges: {direction: 1, tribunes: -1}}
+    droite:
+      label: "Je le laisse vibrer"
+      reponse: "Il vibre trois fois, puis s'arrête. Un message arrive à la mi-temps : ton prénom, suivi d'un point. Rien d'autre."
+      effets: {jauges: {direction: -1}}
+    defaut: droite
+
+  - id: pre_vialat_calepin
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [heure]
+    when: "in_cast('vialat') && chars.vialat.statut == 'present'"
+    texte: "Madame Vialat a demandé une place en loge « pour voir ce qu'on achète ». Elle note chaque changement sur un calepin, avec l'heure. Tu lui expliques ce que coûtent ceux qui entrent ?"
+    gauche:
+      label: "Je lui explique"
+      reponse: "Tu lui dis le contrat de chaque joueur qui entre. Elle écrit tout, puis souligne un nom deux fois, et referme le calepin."
+      effets: {relation: {vialat: 1}, jauges: {direction: -1}}
+    droite:
+      label: "Je regarde le match"
+      reponse: "Tu regardes le match. Elle note l'heure à laquelle tu as cessé de lui parler, puis celle où tu as souri."
+    defaut: droite
+
+  - id: pre_dembo_penalty
+    roles: [president]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "in_cast('dembo') && chars.dembo.statut == 'present'"
+    texte: "Penalty. Dembo pose le ballon, puis lève les yeux vers ta loge : son agent t'a dit vendredi qu'il voulait partir en janvier. Tu te lèves pour l'applaudir avant qu'il tire ?"
+    gauche:
+      label: "Je l'applaudis"
+      reponse: "Tu te lèves seul dans la loge et tu frappes dans tes mains. Dembo baisse les yeux, recule de quatre pas, et prend son élan."
+      v: 1
+      effets: {relation: {dembo: 1}}
+    droite:
+      label: "Je ne bouge pas"
+      reponse: "Tu ne bouges pas. Dembo te regarde une seconde de plus, puis fixe le gardien. Toute la loge a vu qu'il t'avait cherché."
+    defaut: droite
+
+  - id: pre_video_but
+    roles: [president]
+    situations: [menes, nul, devant]
+    moments: [heure, fin]
+    when: "year >= 2019"
+    texte: "L'assistance vidéo revoit un but de {adv} depuis deux minutes. La Nord siffle l'écran géant, et ton voisin de loge, un élu, te demande si le club va « déposer quelque chose »."
+    gauche:
+      label: "On déposera une réserve"
+      reponse: "Tu le dis assez fort pour que la loge l'entende. L'élu hoche la tête. Demain, le communiqué partira avant ton café."
+      effets: {jauges: {tribunes: 1, direction: -1}}
+    droite:
+      label: "On attend la décision"
+      reponse: "Tu croises les bras et tu regardes l'écran comme tout le monde. L'élu se tourne vers quelqu'un d'autre pour poser sa question."
+    defaut: droite
+
+  # ════════════════════════════════════════════════════════════ le directeur sportif, en tribune
+
+  - id: ds_recruteur_carnet
+    roles: [ds]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    texte: "Deux rangs devant toi, le recruteur de {adv} prend des notes sur ton milieu défensif. Il ne s'en cache pas : il tourne même son carnet pour que tu le voies. Tu vas t'asseoir à côté ?"
+    gauche:
+      label: "Je m'assois à côté"
+      reponse: "Il ferme son carnet, sourit, et demande ton prix « pour parler ». Tu dis un chiffre. Il ne rit pas, il le note."
+      effets: {jauges: {caisse: 1, vestiaire: -1}}
+    droite:
+      label: "Je le laisse écrire"
+      reponse: "Tu le laisses remplir sa page. À la mi-temps, il en a écrit deux, et il est parti avant la reprise."
+    defaut: droite
+
+  - id: ds_recrue_sifflee
+    roles: [ds]
+    situations: [menes]
+    moments: [heure]
+    texte: "Le coach se retourne et te cherche dans la tribune : il veut faire entrer ta recrue de janvier, celle que L'Écho appelle « l'erreur du DS ». Il attend ton signe."
+    gauche:
+      label: "Je fais oui de la tête"
+      reponse: "Ta recrue entre sous les sifflets. Premier ballon perdu. Le deuxième, un contrôle, une passe, et les sifflets s'arrêtent. Pour l'instant."
+      v: 1
+      foule: siffle
+    droite:
+      label: "Je ne bouge pas"
+      reponse: "Le coach attend, puis se retourne. Il fait entrer un autre joueur. Ta recrue se rassoit, la chasuble pliée sur les genoux."
+    defaut: droite
+
+  - id: ds_journaliste_rambarde
+    roles: [ds]
+    situations: [menes]
+    moments: [fin]
+    texte: "La journaliste de L'Écho se penche par-dessus la rambarde de la tribune de presse : « Si vous perdez, vous restez ? Un oui ou un non, pour l'édition de demain. »"
+    gauche:
+      label: "Je réponds oui"
+      reponse: "« Oui. » Elle écrit le mot, le souligne, et retourne à son siège. Demain, ce oui sera en page trois, avec ta photo."
+      effets: {jauges: {tribunes: 1, direction: -1}}
+    droite:
+      label: "Je regarde la pelouse"
+      reponse: "Tu fixes la pelouse. Elle attend dix secondes, puis écrit quelque chose quand même. Un silence aussi, ça s'imprime."
+    defaut: droite
+
+  - id: ds_prime_doublee
+    roles: [ds]
+    situations: [nul]
+    moments: [heure]
+    texte: "Égalité. Pendant un arrêt de jeu, le capitaine te fait un signe depuis la touche : trois doigts, puis le pouce vers le bas. La prime de match. Tu la doubles, là, maintenant ?"
+    gauche:
+      label: "Je la double"
+      reponse: "Tu lèves deux doigts. Il hoche la tête et le dit aux autres en passant. On court plus vite, ou c'est l'impression qu'on veut donner."
+      v: 2
+      n: -1
+      effets: {jauges: {caisse: -1, vestiaire: 1}}
+    droite:
+      label: "Elle ne bouge pas"
+      reponse: "Tu ne fais aucun signe. Il crache dans l'herbe et repart au milieu. Les primes se discutent le lundi, pas pendant le match."
+    defaut: droite
+
+  - id: ds_programme_signe
+    roles: [ds]
+    situations: [nul, devant]
+    moments: [fin]
+    texte: "Un abonné de la tribune Ouest te reconnaît, se lève et te tend son programme à signer, en plein temps fort. Toute sa rangée te regarde, et la tienne aussi. Tu signes ?"
+    gauche:
+      label: "Je signe"
+      reponse: "Tu signes sans quitter la pelouse des yeux. Il te remercie trois fois. Sa rangée applaudit, puis le stade entier, mais pas pour toi."
+      effets: {jauges: {tribunes: 1}}
+    droite:
+      label: "Plus tard"
+      reponse: "Tu lui fais signe d'attendre. Il se rassoit, le programme sur les genoux. Il sera encore là au coup de sifflet, au même endroit."
+    defaut: droite
+
+  - id: ds_fardelli_stylo
+    roles: [ds]
+    situations: [menes, nul, devant]
+    moments: [heure]
+    when: "in_cast('fardelli') && year <= 2010"
+    texte: "Fardelli s'assoit à ta droite sans un mot et pose un stylo sur tes genoux : « Leur numéro 10. Il signe ce soir, si tu veux. Regarde-le encore cinq minutes. »"
+    gauche:
+      label: "Je regarde le 10"
+      reponse: "Tu ne regardes plus que lui. Il ne fait rien pendant cinq minutes, puis un contrôle orienté qui lève la Nord. Fardelli sourit à la pelouse."
+      effets: {relation: {fardelli: 1}, jauges: {caisse: -1}}
+    droite:
+      label: "Je rends le stylo"
+      reponse: "Tu poses le stylo sur l'accoudoir, entre vous deux. Il le reprend sans rancune apparente. Fardelli n'a jamais de rancune apparente."
+    defaut: droite
+
+  - id: ds_kara_chiffres
+    roles: [ds]
+    situations: [menes, nul, devant]
+    moments: [heure, fin]
+    when: "in_cast('kara') && chars.kara.statut == 'present'"
+    texte: "Dans ton oreillette, Inès Kara récite des chiffres : la distance parcourue de ton latéral gauche a chuté d'un cinquième depuis la reprise. Elle propose d'appeler le banc."
+    gauche:
+      label: "Appelle le banc"
+      reponse: "Elle appelle. En bas, l'adjoint décroche, écoute, regarde ton latéral. Deux minutes plus tard, le changement est fait, sans un mot pour toi."
+      v: 2
+      effets: {relation: {kara: 1}, jauges: {vestiaire: -1}}
+    droite:
+      label: "On ne touche à rien"
+      reponse: "Elle se tait. Tu l'entends respirer dans l'oreillette jusqu'à la fin du match, et taper ses chiffres quand même."
+    defaut: droite
+
+  - id: ds_ober_infiltration
+    roles: [ds]
+    situations: [menes, nul, devant]
+    moments: [premiere]
+    when: "in_cast('ober') && chars.ober.statut == 'present'"
+    texte: "Message du docteur Ober : ton défenseur central joue sous infiltration, il ne l'a pas dit au staff. Ober peut le sortir à la mi-temps « pour raisons médicales ». Tu valides ?"
+    gauche:
+      label: "Sortez-le"
+      reponse: "Ober répond d'un seul mot : « Noté. » À la mi-temps, ton défenseur ne ressort pas du vestiaire. Il ne te regardera pas lundi."
+      v: 1
+      effets: {relation: {ober: 1}}
+    droite:
+      label: "Il finit la mi-temps"
+      reponse: "Tu ne réponds pas. Ton défenseur reprend sa place après la pause, et à chaque appui, il serre les dents un peu plus fort."
+      v: -1
+    defaut: droite
+
+  - id: ds_vogler_ailier
+    roles: [ds]
+    situations: [menes, nul]
+    moments: [premiere, heure]
+    when: "in_cast('klopf') && chars.klopf.statut == 'present'"
+    texte: "Vogler te cherche dans la tribune et montre ton ailier du menton : il veut le sortir. Trois clubs l'observent ce soir, et tu dois vendre. Tu lui fais non de la tête ?"
+    gauche:
+      label: "Je fais non"
+      reponse: "Vogler hausse les épaules et le laisse sur la pelouse. L'ailier ne sait pas qu'il joue pour trois tribunes. Toi, si."
+      v: -1
+      effets: {relation: {klopf: -1}, jauges: {caisse: 1}}
+    droite:
+      label: "Je le laisse faire"
+      reponse: "Vogler fait le changement. L'ailier sort en cherchant la loge des yeux. Dans la tribune, trois hommes rangent leur carnet."
+      v: 1
+    defaut: droite
+
+  # ════════════════════════════════════════════════════════════ le sélectionneur, sur le banc
+
+  - id: sel_hymne_siffle
+    roles: [selectionneur]
+    situations: [menes, nul, devant]
+    moments: [premiere]
+    texte: "La Nord a sifflé leur hymne, et leur capitaine le rappelle à l'arbitre à chaque contact. À la prochaine sortie de balle, tu peux marcher jusqu'à la piste et calmer la tribune."
+    gauche:
+      label: "Je marche vers la Nord"
+      reponse: "Tu marches jusqu'à la piste, les paumes vers le bas. Les sifflets baissent d'un ton. Leur capitaine te salue, de loin."
+      effets: {jauges: {tribunes: -1, direction: 1}}
+    droite:
+      label: "Je reste au banc"
+      reponse: "Tu restes assis. La Nord siffle chaque ballon de leur capitaine jusqu'à la mi-temps. Lui joue de mieux en mieux."
+      v: -1
+    defaut: droite
+
+  - id: sel_avant_siffle
+    roles: [selectionneur]
+    situations: [menes, nul]
+    moments: [heure]
+    texte: "La Rive siffle ton avant-centre à chaque ballon : en club, il joue chez le rival de la ville. Il a perdu ses trois derniers duels et il ne regarde plus la tribune. Tu le sors ?"
+    gauche:
+      label: "Je le sors"
+      reponse: "Il sort sous des applaudissements qui n'en sont pas. Il ne te serre pas la main. Sur le banc, il remet sa veste sans s'asseoir."
+      v: 2
+      foule: leve
+      effets: {jauges: {vestiaire: -1, tribunes: 1}}
+    droite:
+      label: "Il reste"
+      reponse: "Tu le laisses. Au duel suivant, il gagne le ballon et se tourne vers la Nord, le doigt sur la bouche."
+      effets: {jauges: {vestiaire: 1}}
+    defaut: droite
+
+  - id: sel_premiere_cape
+    roles: [selectionneur]
+    situations: [nul, devant]
+    moments: [heure]
+    texte: "Le gamin de la première convocation s'échauffe depuis la reprise. Ses parents ont fait huit heures de car pour être là, en tribune Ouest, avec un drap à son nom. Tu le fais entrer ?"
+    gauche:
+      label: "Il entre"
+      reponse: "Il entre trop vite, en courant, et salue la tribune Ouest avant de toucher un ballon. Le drap tremble. Toute la Rive a compris."
+      v: 1
+      n: -1
+      foule: leve
+      effets: {jauges: {vestiaire: 1, tribunes: 1}}
+    droite:
+      label: "Pas ce soir"
+      reponse: "Il se rassoit. Là-haut, ses parents gardent le drap déroulé jusqu'au coup de sifflet final, au cas où."
+    defaut: droite
+
+  - id: sel_troisieme_central
+    roles: [selectionneur]
+    situations: [devant]
+    moments: [fin]
+    texte: "Devant, et {adv} envoie ses grands dans la surface à chaque coup de pied arrêté. Ton adjoint propose un troisième défenseur central, celui qui n'a pas joué depuis deux fenêtres."
+    gauche:
+      label: "Le troisième central"
+      reponse: "Il entre en se signant. Le bloc recule, les dégagements montent jusqu'au ciel de la Rive, et la Nord compte les minutes à voix haute."
+      v: -1
+      n: 4
+    droite:
+      label: "On reste comme ça"
+      reponse: "Tu ne changes rien. Ton adjoint plie sa feuille en quatre et la glisse dans sa poche, avec les autres."
+    defaut: droite
+
+  - id: sel_le_vieux
+    roles: [selectionneur]
+    situations: [menes, nul]
+    moments: [fin]
+    texte: "Il reste dix minutes, et ton banc ne compte plus qu'un attaquant : le vieux, rappelé pour l'expérience, que personne n'a vu courir depuis l'automne. Tu le lances ?"
+    gauche:
+      label: "Je lance le vieux"
+      reponse: "Il enlève son survêtement lentement, comme avant. La Rive l'applaudit avant qu'il touche un ballon : elle se souvient de lui."
+      v: 3
+      foule: leve
+      effets: {jauges: {vestiaire: 1}}
+    droite:
+      label: "J'attends encore"
+      reponse: "Tu attends. Le vieux se rassoit, les coudes sur les genoux. Il a compris avant toi qu'il n'entrerait pas."
+    defaut: droite
+
+  - id: sel_message_federation
+    roles: [selectionneur]
+    situations: [menes, nul, devant]
+    moments: [premiere, heure]
+    when: "year >= 2000"
+    texte: "Ton téléphone s'allume sur le banc : le secrétaire général de la Fédération, depuis la tribune officielle. « Le président s'interroge sur ton milieu gauche. » En plein match."
+    gauche:
+      label: "Je lui réponds"
+      reponse: "Tu tapes trois mots sous le banc. Ton adjoint a vu l'écran par-dessus ton épaule. Le milieu gauche, lui, n'a rien vu."
+      effets: {jauges: {direction: 1, vestiaire: -1}}
+    droite:
+      label: "Je retourne le téléphone"
+      reponse: "Tu le poses écran contre le bois. Il vibre encore deux fois. Le message suivant, après le match, ne demandera plus rien."
+      effets: {jauges: {direction: -1}}
+    defaut: droite
+
+  - id: sel_vandel_cuisse
+    roles: [selectionneur]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "in_cast('vandel') && chars.vandel.statut == 'present'"
+    texte: "Vandel se tient la cuisse, le brassard de travers. Il évite le banc du regard pour ne pas avoir à te dire non. Tout le pays le regarde boiter. Tu le sors ?"
+    gauche:
+      label: "Je sors Vandel"
+      reponse: "Il arrache son brassard et le tend au plus jeune sans le regarder. En passant devant toi, il dit seulement : « Pas devant eux. »"
+      v: 2
+      effets: {relation: {vandel: -1}}
+    droite:
+      label: "Vandel reste"
+      reponse: "Tu le laisses. Il finit le match en marchant, le brassard bien droit. Le pays a vu qu'il boitait, et que tu l'as laissé."
+      v: -1
+      effets: {relation: {vandel: 1}}
+    defaut: droite
+
+  - id: sel_ferrol_ballon
+    roles: [selectionneur]
+    situations: [menes, nul, devant]
+    moments: [heure]
+    when: "in_cast('ferrol') && chars.ferrol.statut == 'present'"
+    texte: "Ferrol réclame le ballon à chaque relance et ne le rend plus. Les journaux ont écrit qu'il joue pour lui depuis le fiasco. Tu lui cries de jouer simple, devant tout le monde ?"
+    gauche:
+      label: "Je lui crie dessus"
+      reponse: "Il entend, se retourne vers le banc, et joue en une touche, rageusement, jusqu'à la fin. Il ne te regarde plus de la soirée."
+      v: 1
+      effets: {relation: {ferrol: -1}}
+    droite:
+      label: "Je le laisse jouer"
+      reponse: "Il garde le ballon, dribble un, deux, trois joueurs, et le perd au quatrième. La Rive se lève quand même, à moitié."
+      v: 1
+      n: -2
+      effets: {relation: {ferrol: 1}}
+    defaut: droite
+
+  - id: sel_micro_bord
+    roles: [selectionneur]
+    situations: [menes, nul, devant]
+    moments: [fin]
+    when: "year >= 2000"
+    texte: "Le reporter de Télé-Stade est descendu au bord de la piste, micro tendu, en direct : « Un mot sur vos changements ? » La caméra rouge est déjà sur toi."
+    gauche:
+      label: "Je réponds en direct"
+      reponse: "Tu dis deux phrases sans quitter la pelouse des yeux. Ce soir, elles passeront en boucle, coupées au milieu de la seconde."
+      effets: {jauges: {tribunes: 1, direction: -1}}
+    droite:
+      label: "Je montre la pelouse"
+      reponse: "Tu montres le terrain du doigt, sans un mot. Le reporter le dit à l'antenne. Demain, ce doigt tendu sera une photo."
+    defaut: droite
+
+  - id: sel_video_penalty
+    roles: [selectionneur]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "year >= 2019"
+    texte: "L'arbitre porte la main à l'oreille : l'assistance vidéo revoit le penalty sifflé contre vous. Ton banc se lève d'un bloc. Tu fais le geste de l'écran ?"
+    gauche:
+      label: "Je dessine l'écran"
+      reponse: "Tu traces un rectangle dans l'air. Jaune pour toi, et la Nord qui chante ton nom pendant que l'arbitre court vers l'écran."
+      effets: {jauges: {tribunes: 1, direction: -1}}
+    droite:
+      label: "Je me rassois"
+      reponse: "Tu restes assis, les mains sous les cuisses. L'arbitre court vers l'écran. La Rive retient son souffle, toi aussi."
+    defaut: droite
+
+  - id: sel_triple_changement
+    roles: [selectionneur]
+    situations: [menes, nul, devant]
+    moments: [heure]
+    when: "year >= 2020"
+    texte: "Cinq changements, et tu n'en as fait aucun. Ton adjoint a préparé un triple changement sur sa tablette : trois numéros, et trois minutes de désordre. Tu fais tout entrer d'un coup ?"
+    gauche:
+      label: "Les trois d'un coup"
+      reponse: "Trois joueurs entrent ensemble, trois sortent en traînant les pieds. Le temps que tout le monde retrouve sa place, {adv} a tiré deux fois."
+      v: 2
+      n: -1
+    droite:
+      label: "Un par un"
+      reponse: "Tu fais entrer un seul joueur. Ton adjoint range la tablette sans un mot ; les deux autres ont déjà remis leur chasuble."
+    defaut: droite
+
+  # ════════════════════════════════════════════════════════════ ce que la semaine a préparé
+
+  # le jardinier de la Rive (la ville vivante, gens_club.yaml) : un lien de deux crans, et
+  # il te dit où la pelouse a bu
+  - id: tous_vidalie_flaque
+    roles: [entraineur, selectionneur]
+    situations: [menes, nul]
+    moments: [premiere, heure]
+    when: "relation.vidalie >= 2 && year <= 2012"
+    texte: "Vidalie t'a prévenu jeudi : le côté gauche, devant la Nord, a bu tout l'arrosage de la semaine. Les ballons y meurent dans l'herbe. Tu fais tout passer par la droite ?"
+    gauche:
+      label: "Tout par la droite"
+      reponse: "Tes ailiers changent de côté. À droite, le ballon roule enfin. Au bord de la piste, Vidalie hoche la tête sans lâcher son râteau."
+      v: 4
+      effets: {relation: {vidalie: 1}}
+    droite:
+      label: "On ne change rien"
+      reponse: "Le ballon s'arrête deux fois dans la flaque, côté gauche. Au bord de la piste, Vidalie s'appuie sur son râteau et regarde ailleurs."
+    defaut: droite
+
+  - id: tous_vidalie_fils_capteurs
+    roles: [entraineur, selectionneur]
+    situations: [menes, nul]
+    moments: [premiere, heure]
+    when: "relation.vidalie_fils >= 2 && year >= 2013"
+    texte: "Thomas Vidalie a glissé une feuille sous ta porte vendredi : selon ses capteurs, la pelouse est plus lente d'un tiers côté Nord. Leur latéral droit y joue depuis le début."
+    gauche:
+      label: "On attaque côté Nord"
+      reponse: "Tu fais basculer le jeu. Leur latéral droit s'enfonce dans l'herbe lourde, et ton ailier passe. Thomas Vidalie a déjà sorti son téléphone."
+      v: 4
+      effets: {relation: {vidalie_fils: 1}}
+    droite:
+      label: "On garde le plan"
+      reponse: "Tu replies la feuille dans ta poche sans la relire. Côté Nord, leur latéral droit tient bon, les crampons pleins de terre."
+    defaut: droite
+
+  # le capo de la Nord, quand la semaine t'a rapproché de lui
+  - id: tous_gege_trois_chants
+    roles: [entraineur, president, ds]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "relation.gege >= 2 && year <= 2019 && chars.gege.statut == 'present'"
+    texte: "Depuis la grille de la Nord, Gégé lève trois doigts : trois chants qu'on garde pour les fins de match difficiles. Il attend ton signe, un seul, pour les lancer."
+    gauche:
+      label: "Je lève le bras"
+      reponse: "Le premier chant part de la Nord, puis de l'Ouest. Pendant dix minutes, {adv} joue dans un bruit qui n'est pas le sien."
+      v: 2
+      n: 1
+      foule: leve
+      effets: {jauges: {tribunes: 1}}
+    droite:
+      label: "Pas maintenant"
+      reponse: "Tu fais non de la main. Gégé baisse les trois doigts, un par un, et se retourne vers sa tribune sans rien dire."
+    defaut: droite
+
+  - id: tous_nino_megaphone
+    roles: [president, ds]
+    situations: [menes, nul]
+    moments: [heure, fin]
+    when: "relation.nino >= 2 && year >= 2020 && chars.nino.statut == 'present'"
+    texte: "Nino est monté sur la balustrade de la Nord, le mégaphone tourné vers ta loge. Ses socios attendent un geste de toi pour chanter jusqu'au bout, ou pour se taire."
+    gauche:
+      label: "Je lui fais signe"
+      reponse: "Tu lèves la main. Nino se retourne vers les siens et le mégaphone part. La Nord chante debout, et les sièges ne servent plus à rien."
+      v: 2
+      foule: leve
+      effets: {relation: {nino: 1}, jauges: {tribunes: 1}}
+    droite:
+      label: "Je reste immobile"
+      reponse: "Tu ne bouges pas. Nino baisse le mégaphone et descend de la balustrade. Il ne regarde plus ta loge jusqu'au coup de sifflet."
+    defaut: droite
