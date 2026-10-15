@@ -895,6 +895,10 @@
   //              (0 à 1), relâche], en secondes
   //   `ton`      le filtre de l'instrument : [ouverture, palier, temps] (Hz, Hz, s)
   //   `duty`     la largeur du carré de `pulse` (0,5 : carré ; 0,125 : nasillard)
+  //   `plancher` une note ('E1') : quand la basse d'un accord tomberait dessous, ses
+  //              degrés (et `X`) montent d'une octave — une basse en `oct: 1` reste
+  //              entre mi 1 et ré dièse 2, au lieu de descendre à do 1 (33 Hz)
+  //              qu'aucun téléphone ne rend
   //   supersaw : `scies` (5 ou 7), `desaccord` (cents, défaut 18), `large` (0 à 1)
   //   reese :    `desaccord` (cents, défaut 9 : le battement), `chaleur` (1 à 3)
   //   vox :      `voyelle` ('a', 'o', 'ou', 'e', 'eu'), `vers` (la voyelle d'arrivée)
@@ -947,8 +951,11 @@
     var basse = m[4] ? (PC[m[4]] + (m[5] === '#' ? 1 : m[5] === 'b' ? -1 : 0) + 12) % 12 : pc;
     return (CACHE_ACCORDS[sym] = { pc: pc, iv: QUALITES[m[3] || ''], basse: basse });
   }
-  function degreMidi(acc, d, oct) {
+  // `plancher` (un numéro MIDI) : si la basse de l'accord tomberait dessous, tout le cadre monte
+  // d'une octave (le motif « R 8 » reste une octave, juste plus haut)
+  function degreMidi(acc, d, oct, plancher) {
     var base = 12 * (oct + 1), iv = acc.iv;
+    if (plancher != null) while (base + acc.basse < plancher) base += 12;
     switch (d) {
       case 'R': return base + acc.basse;
       case '1': return base + acc.pc;
@@ -1069,6 +1076,8 @@
       var tr = th.transpose || 0;
       Object.keys(th.voix).forEach(function (vn) {
         var voix = th.voix[vn];
+        var plancher = voix.plancher ? midiDe(voix.plancher) : null;
+        if (voix.plancher && plancher == null) throw new Error(nom + '.voix.' + vn + ' : plancher illisible « ' + voix.plancher + ' »');
         var src = vn === 'harmo' ? (sec.harmo ? sec.lead : null) : sec[vn];
         var bars = mesures(src, nb);
         if (!bars) return;
@@ -1091,10 +1100,11 @@
           var mt = /^(~?)(.+?)(!?)$/.exec(c), corps = mt[2];
           var hauteurs = [];
           if (corps === 'X') {
-            var a = sous[i], o = voix.oct || 4;
-            a.iv.forEach(function (iv) { hauteurs.push(12 * (o + 1) + a.pc + iv + tr); });
+            var a = sous[i], o = voix.oct || 4, bx = 12 * (o + 1);
+            if (plancher != null) while (bx + a.pc < plancher) bx += 12;
+            a.iv.forEach(function (iv) { hauteurs.push(bx + a.pc + iv + tr); });
           } else if (/^[R135789]$/.test(corps)) {
-            var m = degreMidi(sous[i], corps, voix.oct || 3);
+            var m = degreMidi(sous[i], corps, voix.oct || 3, plancher);
             if (m != null) hauteurs.push(m + tr);
           } else {
             var mm = midiDe(corps);

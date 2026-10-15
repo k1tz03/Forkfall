@@ -108,8 +108,8 @@
       stab:  { inst: 'stab', vol: 0.08, oct: 4, echo: 0.22, rev: 0.25, pompe: true, pan: -0.2 },
       nappe: { inst: 'supersaw', vol: 0.08, oct: 3, rev: 0.35, pompe: true, flotte: { prof: 10, vit: 0.42 }, filtre: 3200, scies: 5, large: 0.8, env: [0.25, 0.8, 0.85, 0.4] },
       aah:   { inst: 'vox', vol: 0.085, oct: 3, voyelle: 'a', vers: 'o', rev: 0.5, flotte: { prof: 12, vit: 0.35 }, pompe: true },
-      reese: { inst: 'reese', vol: 0.12, oct: 1, desaccord: 10, pompe: true },
-      basse: { inst: 'basse', vol: 0.09, oct: 1, pompe: true, drive: 1.6, filtre: 2400, ton: [2000, 650, 0.07] },
+      reese: { inst: 'reese', vol: 0.12, oct: 1, plancher: 'G1', desaccord: 10, pompe: true },
+      basse: { inst: 'basse', vol: 0.09, oct: 1, plancher: 'E1', pompe: true, drive: 1.6, filtre: 2400, ton: [2000, 650, 0.07] },
       batt:  { vol: 0.7, porte: 0.5, tenue: 0.22, rev: 0.15, filtre: 15000 }
     },
     sections: {

@@ -31,10 +31,10 @@ function fichiers() {
 // une faute de syntaxe se lit ici, avec le fichier et la ligne
 function verifier(nom, src) {
   try {
-    new vm.Script(src, { filename: 'musique/' + nom });
+    new vm.Script(src, { filename: 'fichier-de-musique' });
   } catch (e) {
-    const ligne = /musique\/[^:]+:(\d+)/.exec(String(e.stack || '')) || [];
-    throw new Error('musique/' + nom + (ligne[1] ? ', ligne ' + ligne[1] : '') + ' : ' + e.message);
+    const ligne = /fichier-de-musique:(\d+)/.exec(String(e.stack || '')) || [];
+    throw new Error(nom + (ligne[1] ? ', ligne ' + ligne[1] : '') + ' : ' + e.message);
   }
 }
 
@@ -42,7 +42,7 @@ function texte() {
   const morceaux = [fs.readFileSync(path.join(ICI, 'audio.js'), 'utf8')];
   for (const f of fichiers()) {
     const src = fs.readFileSync(f.chemin, 'utf8');
-    verifier(f.nom, src);
+    verifier('musique/' + f.nom, src);
     morceaux.push(
       '/* ── musique/' + f.nom + ' ── */\ntry {\n' + src + '\n} catch (e) {\n' +
       '  if (typeof FusibleAudio === "object" && FusibleAudio._erreur) FusibleAudio._erreur("musique/' + f.nom + '", e);\n' +
@@ -52,4 +52,11 @@ function texte() {
   return morceaux.join('\n');
 }
 
-module.exports = { fichiers, texte, DOSSIER };
+// un brouillon hors de musique/ (le banc et le juke-box, --avec) : vérifié, puis dans son filet
+function enveloppe(chemin) {
+  const nom = path.basename(chemin), src = fs.readFileSync(chemin, 'utf8');
+  verifier(chemin, src);
+  return '\n/* ── ' + nom + ' ── */\ntry {\n' + src + '\n} catch (e) { FusibleAudio._erreur(' + JSON.stringify(nom) + ', e); }';
+}
+
+module.exports = { fichiers, texte, enveloppe, DOSSIER };

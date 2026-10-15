@@ -325,7 +325,7 @@ async function main() {
   const { chromium } = require('playwright');
   fs.mkdirSync(o.out, { recursive: true });
   let texte = MUSIQUE.texte();
-  for (const f of o.avec) texte += '\ntry {\n' + fs.readFileSync(f, 'utf8') + '\n} catch (e) { FusibleAudio._erreur(' + JSON.stringify(path.basename(f)) + ', e); }';
+  for (const f of o.avec) texte += MUSIQUE.enveloppe(f);
   const exe = fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
   const page = await browser.newPage();

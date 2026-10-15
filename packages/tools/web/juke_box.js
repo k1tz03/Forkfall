@@ -47,12 +47,9 @@ function polices() {
 
 function main() {
   const o = args();
+  // une faute de syntaxe, dans musique/ ou dans un brouillon, arrête l'assemblage ici (le fichier, la ligne)
   let musique = MUSIQUE.texte();
-  for (const f of o.avec) {
-    const src = fs.readFileSync(f, 'utf8');
-    new (require('vm').Script)(src, { filename: path.basename(f) });   // une faute de syntaxe s'arrête ici
-    musique += '\ntry {\n' + src + '\n} catch (e) { FusibleAudio._erreur(' + JSON.stringify(path.basename(f)) + ', e); }';
-  }
+  for (const f of o.avec) musique += MUSIQUE.enveloppe(f);
   let version = '';
   try { version = execFileSync('git', ['-C', ICI, 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim(); } catch (e) { /* hors dépôt */ }
   const themes = MUSIQUE.fichiers().map((f) => f.nom.replace(/\.js$/, '')).concat(o.avec.map((f) => path.basename(f, '.js')));
