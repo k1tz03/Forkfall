@@ -14,6 +14,9 @@ import 'package:yaml/yaml.dart';
 
 import 'src/condition_parser.dart';
 
+// L'album d'Aubérive (content/ville/album.yaml) : sa validation vit dans son fichier.
+part 'src/album.dart';
+
 final String contentDir = _findContentDir();
 
 String _findContentDir() {
@@ -1553,6 +1556,16 @@ void main() {
   // (les paroles des gens, les missions, la boutique).
   final ville = _compileVille(errors, roleById, characterIds,
       endingIds: endingIdsSeen.keys.toSet(), arcIds: arcs.map((a) => a['id'].toString()).toSet(), cards: cards);
+  // L'album d'Aubérive : une section sous `ville`, et les missions d'une étape que le moteur applique
+  // quand une page est finie (son argent, son quartier, son tuyau).
+  final albumMissions = <Map<String, dynamic>>[];
+  final album = ville.isEmpty
+      ? const <String, dynamic>{}
+      : _compileAlbum(errors, ville: ville, characters: characters, gensBruts: gensBruts, postulats: postulats, missionsOut: albumMissions);
+  if (album.isNotEmpty) {
+    ville['album'] = album;
+    if (albumMissions.isNotEmpty) ville['gens_effets'] = [...((ville['gens_effets'] as List?) ?? const []), ...albumMissions];
+  }
 
   final bundle = <String, dynamic>{
     'version': (_loadYaml('meta.yaml') as Map?)?['version'] ?? 1,
@@ -1957,7 +1970,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       if (v.isEmpty || v.length > 200) errors.add('$where: une variante de `textes` vide ou de plus de 200 caractères');
       textes.add(v);
     }
-    const jeux = {'flechettes', 'des', 'jongles', 'babyfoot', 'flipper', 'cartes', 'penalty'};
+    const jeux = {'flechettes', 'des', 'jongles', 'babyfoot', 'flipper', 'cartes', 'penalty', 'pochette'};
     final jeu = a['jeu']?.toString();
     if (jeu != null && !jeux.contains(jeu)) errors.add('$where: jeu « $jeu » inconnu (${jeux.join(' ')})');
     const speciaux = {'dormir', 'tele', 'telephone', 'journal'};
@@ -1986,6 +1999,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       if (special != null) 'special': special,
       if (a['si'] != null) 'si': a['si'].toString(),
       if (a['nuit'] == true) 'nuit': true,
+      // sans bouton : un geste que seul un module de la ville joue (l'échange de vignettes de l'album)
+      if (a['cache'] == true) 'cache': true,
       'tranches': entier('tranches', 1),
       'francs': entier('francs', 0),
       if (a['max_jour'] != null) 'max_jour': entier('max_jour', 1),

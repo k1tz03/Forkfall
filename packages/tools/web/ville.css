@@ -592,3 +592,252 @@ body.v-cine-on #villeCouche .v-lieu,body.v-cine-on .v-cartouche,body.v-cine-on .
 .v-q.v-q-grand{font-size:12px;letter-spacing:.16em}
 .v-q.v-q-grand.ferme{opacity:.9}
 .v-q.v-q-grand small{display:block;font-size:9.5px;font-style:italic;letter-spacing:.02em;text-transform:none;opacity:.85}
+
+/* ═══ L'ALBUM D'AUBÉRIVE (preview_album.js, ville_album.js) ═══════════════════════════════════════
+   Les vignettes du tabac-presse, d'une carrière à l'autre. Une vignette est un petit objet des
+   années 90 : une bordure blanche, un numéro, une photo, une bande aux couleurs de sa page, un nom,
+   une étiquette, une année. Elle se mesure à sa propre largeur (`cqw`) : la même vignette tient dans
+   une grille de trois, dans la loupe, et dans la pochette qu'on retourne. Une brillante a une
+   feuille d'or et un reflet qui passe ; une vignette qui manque est une silhouette numérotée. */
+.alb-vg{
+  --f:#7B1E34;--b:#F2E8CE;--t:#1B1109;
+  position:relative;display:flex;flex-direction:column;width:100%;aspect-ratio:5 / 7;container-type:inline-size;
+  background:#fff;border-radius:4px;padding:4px 4px 0;overflow:hidden;text-align:left;color:var(--t);
+  box-shadow:0 1px 0 rgba(0,0,0,.45),0 4px 10px -4px rgba(0,0,0,.7);
+  font-family:"Pixelify Sans","Space Mono",ui-monospace,monospace;
+}
+.alb-ph{position:relative;display:block;flex:0 0 auto;aspect-ratio:1 / 1;background:var(--f);overflow:hidden;border-radius:2px}
+.alb-ph svg{display:block;width:100%;height:100%}
+.alb-init{display:grid;place-items:center;width:100%;height:100%;font-size:40cqw;font-weight:700;color:var(--b)}
+.alb-bd{
+  position:relative;display:flex;flex-direction:column;justify-content:center;flex:1 1 auto;min-height:0;
+  margin:3px -4px 0;padding:1.5cqw 5cqw 2cqw;background:var(--b);box-shadow:inset 0 .9cqw 0 var(--f);
+}
+.alb-nom{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;
+  font-size:9.6cqw;font-weight:700;line-height:1.02;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance;
+}
+.alb-lab{
+  display:block;margin-top:1cqw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-style:normal;font-size:7cqw;line-height:1.1;letter-spacing:.03em;opacity:.8;
+}
+.alb-n{
+  position:absolute;z-index:2;left:4px;top:4px;min-width:14cqw;padding:1cqw 2.2cqw 0;text-align:center;
+  font-size:8cqw;font-weight:700;line-height:1.5;color:var(--b);background:var(--f);border-radius:0 0 3px 0;
+}
+.alb-an{
+  position:absolute;z-index:2;right:4px;top:4px;padding:.4cqw 2cqw 0;font-size:7cqw;line-height:1.5;color:#fff;background:rgba(10,6,4,.62);
+}
+.alb-x{
+  position:absolute;z-index:2;right:4px;top:calc(4px + 12cqw);padding:.4cqw 2.4cqw 0;font-size:9cqw;font-weight:700;line-height:1.4;color:#fff;
+  background:#E0164B;border-radius:3px 0 0 3px;
+}
+.alb-neuf{
+  position:absolute;z-index:2;left:4px;top:calc(4px + 14.5cqw);padding:.4cqw 2.4cqw 0;font-size:7.5cqw;font-weight:700;line-height:1.4;letter-spacing:.06em;
+  color:#1B1109;background:#FFD84D;border-radius:0 3px 3px 0;
+}
+/* les chiffres en monospace : en pixel, un 2 se lit comme un 8 à cette taille (032 contre 038, ×2 contre ×8) */
+.alb-n,.alb-an,.alb-x{font-family:"Space Mono",ui-monospace,monospace;letter-spacing:0}
+.alb-bave{filter:blur(.9px);opacity:.7;letter-spacing:-.02em;font-weight:400}
+/* la brillante : une feuille d'or autour, un reflet qui traverse la photo */
+.alb-br{background:linear-gradient(135deg,#fff3b0 0%,#f3c53b 22%,#fffbe8 45%,#d9a521 70%,#fff0a0 100%)}
+.alb-foil{
+  position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:overlay;
+  background:linear-gradient(115deg,transparent 16%,rgba(255,255,255,.85) 32%,rgba(255,110,210,.55) 42%,rgba(90,240,255,.55) 52%,rgba(255,255,255,.7) 62%,transparent 78%);
+  background-size:280% 100%;background-position:130% 0;animation:albFoil 3.6s ease-in-out infinite;
+}
+@keyframes albFoil{0%{background-position:130% 0}55%,100%{background-position:-40% 0}}
+/* une vignette qui manque : un numéro et une silhouette, dans un cadre qui attend */
+.alb-vide{background:rgba(242,232,206,.05);box-shadow:inset 0 0 0 2px rgba(242,232,206,.2);outline:2px dashed rgba(242,232,206,.22);outline-offset:-5px}
+.alb-vide .alb-n{left:50%;top:auto;bottom:9cqw;transform:translateX(-50%);min-width:0;padding:0;background:none;color:var(--creme3);font-size:17cqw}
+.alb-sil{position:absolute;inset:14% 18% 24%;color:rgba(242,232,206,.13)}
+.alb-sil svg{display:block;width:100%;height:100%;fill:currentColor}
+/* le dos : le numéro, le nom, ce qu'on sait */
+.alb-dos{padding:5cqw;gap:3cqw;background:#FBF6E6;box-shadow:inset 0 0 0 1.6cqw var(--f),0 1px 0 rgba(0,0,0,.45),0 4px 10px -4px rgba(0,0,0,.7)}
+.alb-dos.alb-br{background:linear-gradient(135deg,#fff7cd,#f5d878 50%,#fff3b8)}
+.alb-dos > span{display:block}
+.alb-dos-n{margin-top:3cqw;font-size:8cqw;font-weight:700;letter-spacing:.08em;color:var(--f)}
+.alb-dos-t{font-size:10.5cqw;font-weight:700;line-height:1.05;text-transform:uppercase;text-wrap:balance}
+.alb-dos-l{font-size:7cqw;letter-spacing:.04em;opacity:.8}
+.alb-dos-p{flex:1 1 auto;margin-top:2cqw;font-family:"Space Mono",ui-monospace,monospace;font-size:7.4cqw;line-height:1.38;text-wrap:pretty}
+.alb-dos-b{font-size:6.4cqw;letter-spacing:.04em;opacity:.65;margin-bottom:2.5cqw}
+
+/* ── l'album qu'on feuillette ─────────────────────────────────────────────────────────────────── */
+.alb{max-width:430px;margin:0 auto;display:flex;flex-direction:column;gap:2px}
+.alb-racine{margin:0 auto;max-width:430px}
+.alb-tete{display:flex;align-items:flex-end;gap:14px;padding:4px 0 6px;border-bottom:1px solid var(--fond3)}
+.alb-gros{display:flex;align-items:baseline;gap:3px;flex:0 0 auto}
+.alb-gros b{font-size:34px;line-height:1;font-weight:700;color:var(--creme);font-variant-numeric:tabular-nums}
+.alb-gros small{font-size:14px;color:var(--creme3)}
+.alb-tete-d{flex:1 1 auto;display:flex;flex-direction:column;gap:6px;padding-bottom:4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--creme3)}
+.alb-barre{display:block;height:5px;background:var(--fond3);border-radius:3px;position:relative;overflow:hidden}
+.alb-barre::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--creme2);border-radius:3px}
+.alb-stats{margin:6px 0 0;font-size:11.5px;letter-spacing:.04em;color:var(--creme3)}
+.alb-offerte{
+  display:flex;flex-direction:column;gap:2px;text-align:left;margin:12px 0 0;padding:11px 13px;min-height:52px;
+  background:rgba(224,22,75,.14);border:1px solid var(--framboise);border-radius:3px;
+}
+.alb-offerte b{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--creme)}
+.alb-offerte span{font-size:11.5px;font-style:italic;color:var(--creme2)}
+.alb-offerte:hover,.alb-offerte:focus-visible{background:rgba(224,22,75,.24);outline:0}
+.alb-h3{margin:20px 0 8px;font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--creme3)}
+.alb-pages{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.alb-page{
+  --f:#7B1E34;--b:#F2E8CE;
+  display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 10px;text-align:left;
+  background:var(--fond);border:1px solid var(--fond3);border-radius:3px;
+}
+.alb-page:hover,.alb-page:focus-visible{border-color:var(--creme3);outline:0}
+.alb-puce{display:block;width:22px;height:30px;border-radius:2px;background:linear-gradient(160deg,var(--f) 0 58%,var(--b) 58%);box-shadow:0 0 0 2px #fff}
+.alb-pt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.alb-pt b{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;
+  font-size:13px;font-weight:700;line-height:1.25;letter-spacing:.03em;color:var(--creme);
+}
+.alb-pn{display:flex;align-items:center;gap:6px;font-size:12px;font-variant-numeric:tabular-nums;color:var(--creme2)}
+.alb-pn em{font-style:normal;font-size:10px;font-weight:700;padding:1px 5px;border-radius:8px;background:#FFD84D;color:#1B1109}
+.alb-page.fait .alb-pn{color:var(--vert);font-size:15px}
+.alb-page.fait .alb-barre::after{background:var(--vert)}
+.alb-retour{align-self:flex-start;min-height:44px;margin:0 0 2px -4px;padding:0 4px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--creme2)}
+.alb-retour:hover,.alb-retour:focus-visible{color:var(--creme);outline:0}
+.alb-ph-t{
+  --f:#7B1E34;--b:#F2E8CE;--t:#1B1109;
+  padding:12px 14px 12px;background:var(--b);color:var(--t);border-radius:3px;box-shadow:inset 0 5px 0 var(--f);
+}
+.alb-ph-t h2{margin:4px 0 0;font-size:16px;line-height:1.2;font-weight:700;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance}
+.alb-ph-t p{margin:6px 0 0;font-size:12px;line-height:1.45;font-style:italic;opacity:.82;text-wrap:pretty}
+.alb-prog{display:flex;align-items:center;gap:10px;margin:10px 0 0;font-size:12px}
+.alb-prog b{font-variant-numeric:tabular-nums}
+.alb-prog .alb-barre{flex:1 1 auto;background:rgba(0,0,0,.18)}
+.alb-prog .alb-barre::after{background:var(--f)}
+.alb-grille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;margin:14px 0 0}
+.alb-c{display:block;width:100%;padding:0;text-align:left;border-radius:4px;transition:transform 120ms ease}
+.alb-c:hover,.alb-c:focus-visible{transform:translateY(-2px);outline:0}
+.alb-c:focus-visible .alb-vg{outline:2px solid var(--framboise);outline-offset:1px}
+.alb-recomp{margin:16px 0 0;padding:10px 12px;border-left:2px solid var(--creme3);background:var(--fond2);font-size:12.5px;line-height:1.5;color:var(--creme2)}
+.alb-recomp b{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--creme3);margin-bottom:3px}
+.alb-recomp em{display:block;margin-top:6px;font-size:12px;color:var(--creme)}
+.alb-recomp.fait{border-left-color:var(--vert)}
+.alb-recomp.fait b{color:var(--vert)}
+.alb-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 4px}
+.alb-nav button{min-width:56px;min-height:44px;font-size:22px;color:var(--creme2);border:1px solid var(--fond3);border-radius:3px;background:var(--fond)}
+.alb-nav button:hover:not([disabled]),.alb-nav button:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
+.alb-nav button[disabled]{opacity:.3;cursor:default}
+.alb-nav span{font-size:11.5px;letter-spacing:.14em;color:var(--creme3);font-variant-numeric:tabular-nums}
+/* la loupe : une vignette en grand, qu'on retourne */
+.alb-zoom{display:flex;flex-direction:column;align-items:center;gap:12px;margin:6px 0 0}
+.alb-flip{perspective:1000px;width:min(66vw,250px)}
+.alb-flip-in{position:relative;width:100%;aspect-ratio:5 / 7;transform-style:preserve-3d;transition:transform 560ms cubic-bezier(.3,.7,.2,1)}
+.alb-flip.dos .alb-flip-in{transform:rotateY(180deg)}
+.alb-flip-f,.alb-flip-d{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.alb-flip-d{transform:rotateY(180deg)}
+.alb-zoom-t{margin:0;max-width:34ch;text-align:center;font-size:12.5px;line-height:1.5;font-style:italic;color:var(--creme2);text-wrap:pretty}
+.alb-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:6px 0 0}
+.alb-b{
+  min-height:46px;padding:0 18px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+  color:var(--creme);background:transparent;border:1px solid var(--creme3);border-radius:3px;
+}
+.alb-b:hover:not([disabled]),.alb-b:focus-visible{border-color:var(--creme);outline:0}
+.alb-b[disabled]{opacity:.35;cursor:default}
+.alb-pri{background:var(--framboise);border-color:var(--framboise)}
+.alb-pri:hover:not([disabled]),.alb-pri:focus-visible{background:#F2285E;border-color:#F2285E}
+
+/* l'échange dans le panneau de la personne : une ligne à lui, sous « Parler » */
+.v-gen-b .v-echange{flex:1 1 100%}
+/* ── la pochette, l'échange : un voile plein écran, par-dessus tout ──────────────────────────── */
+.alb-ov{
+  position:fixed;inset:0;z-index:60;display:flex;overflow-y:auto;overflow-x:hidden;background:rgba(8,5,3,.97);
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));
+}
+.alb-ov-in{margin:auto;width:min(100%,380px)}
+.alb-ov-scene{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.alb-h{margin:0;font-size:15px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--creme);text-wrap:balance}
+.alb-sous{margin:0;font-size:12px;letter-spacing:.06em;color:var(--creme2)}
+.alb-scene{margin:0;max-width:36ch;font-size:13px;line-height:1.5;font-style:italic;color:var(--creme2);text-wrap:pretty}
+.alb-prix{margin:0;font-size:20px;font-weight:700;letter-spacing:.04em;color:var(--creme);font-variant-numeric:tabular-nums}
+.alb-compte{margin:0;font-size:11px;letter-spacing:.22em;color:var(--creme3);font-variant-numeric:tabular-nums}
+.alb-vide-t{margin:8px 0;max-width:32ch;font-size:13px;line-height:1.5;font-style:italic;color:var(--creme2)}
+/* le sachet : une feuille froissée, des dents en haut et en bas */
+.alb-sachet-w{filter:drop-shadow(0 10px 14px rgba(0,0,0,.65));margin:10px 0 4px}
+.alb-sachet{
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  width:min(54vw,200px);aspect-ratio:3 / 4.2;color:#F6E9CF;
+  background:linear-gradient(100deg,#9c2a44 0%,#c8405c 18%,#7B1E34 38%,#a53250 58%,#6a1830 80%,#8c2640 100%);
+  clip-path:polygon(0 3%,5% 0,10% 3%,15% 0,20% 3%,25% 0,30% 3%,35% 0,40% 3%,45% 0,50% 3%,55% 0,60% 3%,65% 0,70% 3%,75% 0,80% 3%,85% 0,90% 3%,95% 0,100% 3%,
+    100% 97%,95% 100%,90% 97%,85% 100%,80% 97%,75% 100%,70% 97%,65% 100%,60% 97%,55% 100%,50% 97%,45% 100%,40% 97%,35% 100%,30% 97%,25% 100%,20% 97%,15% 100%,10% 97%,5% 100%,0 97%);
+}
+.alb-sachet b{font-size:20px;letter-spacing:.16em;color:#FFE9A8;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.alb-sachet i{font-style:normal;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.alb-sachet-h,.alb-sachet-b{position:absolute;left:0;right:0;height:11%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.2) 0 2px,transparent 2px 6px)}
+.alb-sachet-h{top:3%}
+.alb-sachet-b{bottom:3%}
+/* la vignette qu'on retourne : le dos d'une carte à jouer, une vignette dessous */
+.alb-carte{perspective:1000px;width:min(62vw,232px);margin:4px 0 0;cursor:pointer;animation:albArrive 320ms ease-out}
+.alb-carte-in{position:relative;width:100%;aspect-ratio:5 / 7;transform-style:preserve-3d;transition:transform 620ms cubic-bezier(.3,.7,.2,1)}
+.alb-retournee .alb-carte-in{transform:rotateY(180deg)}
+.alb-recto,.alb-verso{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.alb-verso{transform:rotateY(180deg)}
+.alb-recto{
+  display:grid;place-items:center;border:4px solid #fff;border-radius:4px;font-size:64px;font-weight:700;color:rgba(255,255,255,.7);
+  background:repeating-linear-gradient(135deg,#7B1E34 0 10px,#5E1527 10px 20px);box-shadow:0 4px 12px -4px rgba(0,0,0,.7);
+}
+/* le halo va sur le parent : un filtre sur l'élément qui tourne aplatit les deux faces */
+.alb-brillante.alb-retournee{filter:drop-shadow(0 0 16px rgba(255,214,90,.85))}
+@keyframes albArrive{from{transform:translateY(34px) scale(.92);opacity:0}to{transform:none;opacity:1}}
+.alb-legende{margin:0;min-height:1.6em;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--creme)}
+.alb-legende.neuf{color:#FFD84D}
+.alb-legende.br{color:#FFE27A;text-shadow:0 0 12px rgba(255,214,90,.7)}
+.alb-legende.dbl{color:var(--creme2);font-weight:400}
+.alb-eclat::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at 50% 46%,rgba(255,244,176,.9),rgba(255,204,70,.38) 34%,transparent 66%);animation:albEclat 900ms ease-out forwards;
+}
+@keyframes albEclat{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.alb-ov > .alb-ov-in{position:relative;z-index:2}
+.alb-recap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px;width:min(100%,300px);margin:4px 0 0}
+.alb-recap-c{display:flex;flex-direction:column;align-items:center;gap:5px}
+.alb-recap-c em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.alb-recap-c em.neuf{color:#FFD84D}
+.alb-recap-c em.dbl{color:var(--creme3)}
+.alb-fini{width:100%;margin:6px 0 0;padding:10px 12px;text-align:left;border-left:3px solid var(--vert);background:rgba(78,148,72,.14);display:flex;flex-direction:column;gap:4px}
+.alb-fini b{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--vert)}
+.alb-fini span{font-size:12.5px;line-height:1.5;color:var(--creme)}
+.alb-fini em{font-style:normal;font-size:11.5px;color:var(--creme2)}
+/* l'échange : ce qu'on donne, ce qu'on reçoit */
+.alb-echange .alb-h3{align-self:stretch;display:flex;justify-content:space-between;align-items:baseline;text-align:left;margin:12px 0 2px}
+.alb-echange .alb-h3 small{font-size:11px;letter-spacing:.1em;color:var(--creme2)}
+.alb-mini-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;width:100%}
+.alb-mini{display:flex;flex-direction:column;gap:4px;padding:0;text-align:center;border-radius:4px}
+.alb-mini em{font-style:normal;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--creme3)}
+.alb-mini:focus-visible{outline:0}
+.alb-mini:focus-visible .alb-vg{outline:2px solid var(--creme)}
+.alb-mini.sel .alb-vg{outline:3px solid var(--framboise);outline-offset:1px}
+.alb-mini.sel em{color:#FF5C7F;font-weight:700}
+/* les boutons de l'échange restent sous le pouce, même au bout d'une longue liste */
+.alb-echange .alb-ov-scene{align-items:stretch}
+.alb-echange .alb-h,.alb-echange .alb-scene,.alb-echange .alb-vide-t{text-align:center;align-self:center}
+.alb-echange .alb-btns{
+  position:sticky;bottom:calc(-14px - env(safe-area-inset-bottom));z-index:3;margin:8px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,rgba(8,5,3,1) 70%,rgba(8,5,3,0));
+}
+
+/* ── l'entrée de l'accueil, et l'annonce ──────────────────────────────────────────────────────── */
+.alb-bt{position:relative}
+.alb-pastille{
+  position:absolute;top:3px;right:1px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;
+  font-size:10px;font-weight:700;line-height:17px;text-align:center;color:#fff;background:var(--framboise);box-shadow:0 0 0 2px rgba(6,4,11,.85);
+}
+.alb-pastille[hidden]{display:none}
+.alb-annonce{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));z-index:61;transform:translateX(-50%);width:min(386px,calc(100vw - 44px));
+  background:rgba(20,13,8,.96);border-left:2px solid #FFD84D;padding:10px 12px;font-size:12.5px;font-style:italic;line-height:1.45;color:var(--creme);
+  opacity:0;transition:opacity 260ms linear;pointer-events:none;
+}
+.alb-annonce.on{opacity:1}
+/* trois onglets au Carnet : on serre les lettres, pas les doigts */
+.v-onglets button{letter-spacing:.07em;padding:0 4px;font-size:10.5px}
+@media (prefers-reduced-motion:reduce){
+  .alb-foil,.alb-carte,.alb-eclat::before{animation:none}
+  .alb-carte-in,.alb-flip-in{transition:none}
+  .alb-c{transition:none}
+}
