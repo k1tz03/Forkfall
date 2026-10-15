@@ -996,6 +996,22 @@ __VILLE_CSS__
   };
 
   function $(id) { return document.getElementById(id); }
+  // ═══ LES CROCHETS ═══════════════════════════════════════════════════════
+  // Les modules de l'aperçu (assemble.js, PREVIEW_MODULES, insérés au repère
+  // /*__PREVIEW_MODULES__*/ plus bas) et ceux de la ville s'abonnent aux moments
+  // du jeu au lieu de réécrire ce fichier :
+  //   'accueil'  l'accueil vient d'être dessiné
+  //   'debut'    une carrière commence (la vue)
+  //   'carte'    une carte vient d'être dessinée (la vue)
+  //   'reponse'  un choix vient d'être appliqué ({ droite, avant, apres } : les vues)
+  //   'fin'      l'écran de fin vient d'être dessiné (la vue)
+  //   'reprise'  une carrière sauvée reprend (la vue)
+  // Un crochet qui lève une erreur ne casse pas le jeu (elle part dans la console).
+  var CROCHETS = {};
+  function crochet(nom, fn) { (CROCHETS[nom] = CROCHETS[nom] || []).push(fn); }
+  function annoncer(nom, a) {
+    (CROCHETS[nom] || []).forEach(function (fn) { try { fn(a); } catch (e) { if (window.console) console.error("crochet " + nom, e); } });
+  }
   function escapeHtml(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) {
       return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[m];
@@ -1269,6 +1285,7 @@ __VILLE_CSS__
     show("game");
     elGame.scrollTop = 0;
     window.scrollTo(0, 0);
+    annoncer("debut", view);
     if (VILLE) VILLE.debut(view);
     presenter();
   }
@@ -1282,9 +1299,11 @@ __VILLE_CSS__
   }
 
   function advance(right) {
+    var avant = view;
     view = JSON.parse(window.fusibleChoose(!!right));
     busy = false;
     logAnswer(view.lastAnswer);
+    annoncer("reponse", { droite: !!right, avant: avant, apres: view });
     if (view.over) {
       advanceEnd();
     } else {
@@ -1747,6 +1766,7 @@ __VILLE_CSS__
     renderCimetiere();
     if (audio) { audio.setAmbiance("maison"); audio.setTension(0); if (audio.setTheme) audio.setTheme("accueil"); }
     show("title");
+    annoncer("accueil");
   }
   function renderCimetiere() {
     var cim = $("cimetiere");
@@ -1990,6 +2010,7 @@ __VILLE_CSS__
       if (c.kind === "alarme") setTimeout(function () { card.classList.remove("pop"); void card.offsetWidth; card.classList.add("shake"); }, 200);
     }
     ajusterCarte();
+    annoncer("carte", view);
   }
   // Sur un petit écran, un texte de scène long poussait les choix et le bandeau
   // hors de l'écran : l'illustration rapetisse (jamais sous 180 px), et le texte,
@@ -2203,6 +2224,7 @@ __VILLE_CSS__
     window.scrollTo(0, 0);
     $("seedline").textContent = "Graine " + fmtNumber(currentSeed) + " · postulat " + (currentPostulat + 1) + " · carrière n° " + runCount;
     renderCimetiere();
+    annoncer("fin", view);
   }
 
   function renderAlmanach(e, ent) {
@@ -2436,6 +2458,7 @@ __VILLE_CSS__
         closeAll(); lastCard = null; answerLog = []; prevGauge = null; gaugeDelta = {}; vueJaugee = null;
         friseSeen = ""; dangerSeen = {};
         show("game");
+        annoncer("reprise", view);
         if (view.over) { advanceEnd(); return view; }
         presenter();
         return view;
@@ -2469,6 +2492,27 @@ __VILLE_CSS__
     show("ending");
     if (view.frise_auto) openFrise(null);
   }
+
+  // L'aperçu, pour les modules de la ville (ils ne partagent pas cette fermeture).
+  window.FusibleApercu = {
+    crochet: crochet,
+    vue: function () { return view; },
+    profil: function () { return profile; },
+    sauverProfil: function () { saveProfile(profile); },
+    contenu: content,
+    postulats: postulats,
+    histoires: HISTOIRES,
+    graine: function () { return { seed: currentSeed, postulat: currentPostulat }; },
+    demarrer: function (postulat, seed) { startRun(postulat, seed); },
+    panneau: function (kind, titre, html, opener) { openPanel(kind, titre, html, opener || null); },
+    fermer: closeAll,
+    accueil: function () { renderTitle(); },
+    echapper: escapeHtml
+  };
+
+  // ═══ LES MODULES DE L'APERÇU ═══ (assemble.js, PREVIEW_MODULES) : ils voient tout ce que
+  // voit cette fermeture, et s'abonnent aux crochets avant le premier dessin.
+  /*__PREVIEW_MODULES__*/
 
   // --- c'est parti ---
   renderTitle();

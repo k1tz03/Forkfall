@@ -54,6 +54,22 @@
   var TOLERANCE = 1.6;         // un trottoir n'avale pas les pieds
   var STADE_JOURS = { match: 5, cup: 2 };   // samedi, mercredi
 
+  // ─────────────────────────────────────────────────────────────── les crochets
+  // Les modules de la ville (assemble.js, VILLE_MODULES) s'abonnent aux moments de la
+  // ville au lieu de réécrire ce fichier :
+  //   'debut'       une carrière commence en ville (la vue)
+  //   'reprise'     une partie sauvée reprend (la sauvegarde lue)
+  //   'jour'        un nouveau jour se lève (S.jour vient de changer)
+  //   'semaine'     une nouvelle semaine commence (S.semaine vient de changer)
+  //   'match'       le match du samedi commence (M, l'état de la mise en scène)
+  //   'apres_match' on quitte le stade (la vue)
+  // Un crochet qui lève une erreur ne casse pas la ville (elle part dans la console).
+  var CROCHETS_VILLE = {};
+  function crochetVille(nom, fn) { (CROCHETS_VILLE[nom] = CROCHETS_VILLE[nom] || []).push(fn); }
+  function annoncerVille(nom, a) {
+    (CROCHETS_VILLE[nom] || []).forEach(function (fn) { try { fn(a); } catch (e) { if (window.console) console.error("crochet ville " + nom, e); } });
+  }
+
   // ─────────────────────────────────────────────────────────────── l'état
   var D = null;                // la section `ville` du bundle
   var L = null;                // lieux.json (portes, projection)
@@ -2135,6 +2151,7 @@
     M.remplissage = Math.round(clamp(0.35 + ((tr ? tr.value : 50) / 100) * 0.55, 0.3, 0.92) * 20) / 20;
     M.minute = 0; M.vitesse = 0; M.score = [0, 0]; M.prochain = 0; M.liesse = 0; M.pause = 0;
     M.enCours = true; M.phase = "entree"; M.t = 0; M.ensuite = ensuite;
+    annoncerVille("match", M);
     M.lignes = [];
     // les vingt-deux, l'arbitre ; le protagoniste joueur porte le numéro 9 de chez nous
     var rj = de(hache(g.seed || 0, "maillots", v.season));
@@ -2417,6 +2434,7 @@
     cam.libre = false;
     S.sortieStade = tDe(S.semaine, S.jour, 3);
     var ensuite = M.ensuite;
+    annoncerVille("apres_match", vue);
     if (ensuite) ensuite();
   }
   // le samedi avant le match : la ville va au stade
@@ -2585,9 +2603,11 @@
     S.jourFaits = {};
     S.scenesJour = null;
     if (S.jour > 6) { S.jour = 0; nouvelleSemaine(); }
+    annoncerVille("jour");
   }
   function nouvelleSemaine(sansFondu) {
     S.semaine++;
+    annoncerVille("semaine");
     S.cartesSemaine = 0;
     S.auMatch = false;
     var j = (vue && vue.journee) || 0, dj = j - (S.journeeDebut || 0);
@@ -3348,6 +3368,7 @@
       var p = visee(); cam.x = p[0]; cam.y = p[1];
       vue = coquille.reprendre(s.moteur, s.graine && s.graine.postulat, s.graine && s.graine.seed);
       if (S.blocsVus == null) S.blocsVus = (vue && vue.blocs) || 0;
+      annoncerVille("reprise", s);
       acteurs = {};
       recaler();
       // on était dans une pièce : on y est encore
@@ -3422,6 +3443,7 @@
         recaler();
         // l'introduction de l'histoire (une scène jouée, `quand: debut`) remplace l'arrivée en ville
         vue = v;
+        annoncerVille("debut", v);
         var intro = cineIntro();
         if (intro) { jouerCine(intro, function () { toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend."); }); return; }
         var club = (v.entities && v.entities.club) || "club", leClub = (/^[AEIOUYÉÈÊaeiouyéèê]/.test(club) ? "L'" : "Le ") + club;

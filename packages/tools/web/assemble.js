@@ -38,6 +38,33 @@ const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web
 // Les modules de la ville, insérés dans la fermeture de ville.js (au repère
 // /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
 const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js'];
+// Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
+// /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
+// (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
+const PREVIEW_MODULES = [];
+
+// Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
+// un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
+// autre module (une `function lancer` y remplacerait celle qui démarre la ville, en silence).
+function declares(src) {
+  const out = new Set();
+  for (const m of src.matchAll(/^  function\s+([A-Za-z_$][\w$]*)\s*\(/gm)) out.add(m[1]);
+  // `var a = …, b = …` : les noms en tête de chaque segment de profondeur nulle
+  for (const m of src.matchAll(/^  var\s/gm)) {
+    let i = m.index + m[0].length, prof = 0, debut = true, chaine = null;
+    for (; i < src.length; i++) {
+      const c = src[i];
+      if (chaine) { if (c === '\\') i++; else if (c === chaine) chaine = null; continue; }
+      if (debut) { const n = /^\s*([A-Za-z_$][\w$]*)/.exec(src.slice(i, i + 80)); if (n) out.add(n[1]); debut = false; }
+      if (c === '"' || c === "'" || c === '`') chaine = c;
+      else if ('([{'.includes(c)) prof++;
+      else if (')]}'.includes(c)) prof--;
+      else if (c === ',' && prof === 0) debut = true;
+      else if (c === ';' && prof === 0) break;
+    }
+  }
+  return out;
+}
 
 function parseArgs(argv) {
   const opts = { engine: path.join(BUILD_DIR, 'engine.js'), out: path.join(BUILD_DIR, 'fusible_preview.html'), ville: null };
@@ -112,6 +139,21 @@ function main() {
   const contentPath = opts.content ? path.resolve(opts.content) : path.join(ROOT, 'app', 'assets', 'content.json');
 
   let tpl = fs.readFileSync(tplPath, 'utf8');
+  {
+    const repere = '/*__PREVIEW_MODULES__*/';
+    if (tpl.indexOf(repere) < 0) throw new Error('gabarit : repère /*__PREVIEW_MODULES__*/ absent');
+    const corps = tpl.slice(tpl.lastIndexOf('(function () {'));
+    const vus = new Map([...declares(corps)].map((n) => [n, 'preview_template.html']));
+    const srcs = PREVIEW_MODULES.map((f) => {
+      const src = fs.readFileSync(path.join(HERE, f), 'utf8');
+      for (const n of declares(src)) {
+        if (vus.has(n)) throw new Error(`${f} redéclare « ${n} », déjà déclaré par ${vus.get(n)}`);
+        vus.set(n, f);
+      }
+      return src;
+    });
+    tpl = tpl.split(repere).join(srcs.join('\n').split('</script').join('<\\/script'));
+  }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
   const audio = fs.readFileSync(audioPath, 'utf8');
@@ -151,25 +193,6 @@ function main() {
     let villeSrc = fs.readFileSync(path.join(HERE, 'ville.js'), 'utf8');
     // un module partage la fermeture : il ne redéclare jamais un nom de la ville ou d'un autre
     // module (une `function lancer` y remplacerait celle qui démarre la ville, en silence)
-    const declares = (src) => {
-      const out = new Set();
-      for (const m of src.matchAll(/^  function\s+([A-Za-z_$][\w$]*)\s*\(/gm)) out.add(m[1]);
-      // `var a = …, b = …` : les noms en tête de chaque segment de profondeur nulle
-      for (const m of src.matchAll(/^  var\s/gm)) {
-        let i = m.index + m[0].length, prof = 0, debut = true, chaine = null;
-        for (; i < src.length; i++) {
-          const c = src[i];
-          if (chaine) { if (c === '\\') i++; else if (c === chaine) chaine = null; continue; }
-          if (debut) { const n = /^\s*([A-Za-z_$][\w$]*)/.exec(src.slice(i, i + 80)); if (n) out.add(n[1]); debut = false; }
-          if (c === '"' || c === "'" || c === '`') chaine = c;
-          else if ('([{'.includes(c)) prof++;
-          else if (')]}'.includes(c)) prof--;
-          else if (c === ',' && prof === 0) debut = true;
-          else if (c === ';' && prof === 0) break;
-        }
-      }
-      return out;
-    };
     const vus = new Map([...declares(villeSrc)].map((n) => [n, 'ville.js']));
     for (const f of VILLE_MODULES) {
       for (const n of declares(fs.readFileSync(path.join(HERE, f), 'utf8'))) {
