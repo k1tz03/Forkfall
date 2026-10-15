@@ -213,6 +213,15 @@ Ce que la ville porte en plus des cartes :
   le contenu (condition évaluée à trois valeurs : rien n'est attribué à tort), mémoire par carrière
   (`fusible.echos.v1:<livre>:<graine>`, bornée, effacée à la fin). Rythme : ≈ 3 lignes et ≈ 1 ruban
   par quart d'heure (`node packages/tools/web/mesure_echos.js --engine <engine.js> --assert`).
+- **Le partage** (`preview_partage.js`) : « Partager ma Une » compose une affiche (story 1080×1920 ou
+  carré 1080×1080) sur un canvas à partir de l'écran de fin, envoyée par le partage du téléphone, sinon
+  la capacité `downloads`, sinon l'appui long ; « Fais mieux que moi » : un code de défi de 16 signes
+  (livre, graine, fin, cartes, avec une somme de contrôle) et le prénom, en lien `?defi=` ou collé sur
+  l'accueil ; le défi relevé finit sur la comparaison des deux fins ; le livre du jour (la date locale
+  donne le livre et la graine, les mêmes pour tous) et, dans l'artefact, la part des joueurs par fin
+  (base partagée : un document `jour/<id>` par joueur). Un défi ou le livre du jour part sans héritage
+  des fantômes. À la publication : `capabilities: {db: {rules: [{path: "jour", read: "view", write:
+  "owner"}, {path: "jour/{self}", write: "interact"}]}, user: {}, downloads: true}`.
 - **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
   et une histoire peut en décider autrement par un drapeau.
 - **Loin d'Aubérive** (`ville.yaml` `loin`) : un drapeau d'histoire dit qu'on est parti (le
