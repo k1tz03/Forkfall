@@ -11,6 +11,7 @@ import 'content.dart';
 import 'draw/director.dart';
 import 'effects.dart';
 import 'frise.dart';
+import 'match_direct.dart';
 import 'naming.dart';
 import 'rng.dart';
 import 'standings.dart';
@@ -139,7 +140,10 @@ class Engine {
   }
 
   /// Apply a choice (true = right / swipe droit) and present the next card.
-  GameState choose(GameState prev, bool right) {
+  /// [direct] : les décisions prises au bord du terrain pendant le match que
+  /// la ville vient de jouer (le samedi en direct, `match_direct.dart`) ; sans
+  /// elles, rien ne change.
+  GameState choose(GameState prev, bool right, {MatchDirect? direct}) {
     final s = prev.clone();
     final pending = s.pending;
     if (pending == null || s.over) return s;
@@ -148,7 +152,7 @@ class Engine {
     s.swipes.add(right);
     s.lastAnswer = null;
 
-    _applyPending(s, pending, right, rng);
+    _applyPending(s, pending, right, rng, direct: direct);
 
     s.rngState = rng.state;
 
@@ -308,7 +312,7 @@ class Engine {
   // Applying the current card.
   // ---------------------------------------------------------------------------
 
-  void _applyPending(GameState s, Pending p, bool right, Rng rng) {
+  void _applyPending(GameState s, Pending p, bool right, Rng rng, {MatchDirect? direct}) {
     switch (p.kind) {
       // Le prologue (spec : « on est jeté dans la fosse aux lions ») : une
       // scène hors créneau. Ses effets s'appliquent — c'est ce qui apprend au
@@ -348,7 +352,7 @@ class Engine {
         _updateCentered(s);
         break;
       case 'match':
-        _resolveMatch(s, right, rng);
+        _resolveMatch(s, right, rng, direct: direct);
         break;
       case 'cup':
         _resolveCup(s, rng);
@@ -555,12 +559,19 @@ class Engine {
   // Match resolution.
   // ---------------------------------------------------------------------------
 
-  void _resolveMatch(GameState s, bool right, Rng rng) {
+  void _resolveMatch(GameState s, bool right, Rng rng, {MatchDirect? direct}) {
     final role = content.roles[s.role]!;
     // Left = first posture (usually Offensif), Right = second (Prudent).
     final offensif = !right;
-    final postureMod = offensif ? 0.05 : -0.08;
-    final block = resolveBlock(rng, s.force, s.world.division, s.gauges, postureMod: postureMod);
+    final postureMod = postureModDe(offensif);
+    // LE SAMEDI EN DIRECT (match_direct.dart) : le script est refait ici, à
+    // l'identique (il ne dépend que de l'état d'avant le bloc), et seules les
+    // décisions qu'il proposait pèsent — sur les bornes de la dernière journée,
+    // jamais sur le nombre de tirages.
+    final sc = direct == null ? null : samediDirect(s, right);
+    final retenues = sc == null ? const <(DecisionPrevue, ChoixDirect)>[] : retenuesDirect(sc, direct!);
+    final block = resolveBlock(rng, s.force, s.world.division, s.gauges,
+        postureMod: postureMod, dernier: sc == null ? null : poidsDirect(retenues));
     s.world.pts += block.points;
     s.world.blocks += 1;
     if (block.losses >= 4) {
@@ -581,10 +592,58 @@ class Engine {
     } else {
       s.gauges['tribunes'] = (s.gauges['tribunes']! - 1).clamp(0, 100);
     }
+    if (sc != null) {
+      s.direct.add(conclureDirect(sc, [for (final r in retenues) r.$2], block.results.split(' ').last, s));
+      while (s.direct.length > kDirectTraces) {
+        s.direct.removeAt(0);
+      }
+      _directEffets(s, [for (final r in retenues) r.$1.def.cote(r.$2.droite).effets]);
+    }
     _updateProvisionalRank(s);
     final posture = offensif ? role.matchPostureLeft : role.matchPostureRight;
     s.lastAnswer = '$posture — ${block.results} · ${block.points} pts';
     _passiveDrift(s);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Le samedi en direct (docs/histoires/samedi_direct.md, match_direct.dart).
+  // ---------------------------------------------------------------------------
+
+  late final CatalogueDirect _catalogueDirect = CatalogueDirect.fromVille(content.ville);
+
+  /// Le script du samedi que la ville met en scène pour la carte de match en
+  /// attente, si le choix de posture est [droite] : le nombre de décisions,
+  /// leurs minutes, le score à chacune, l'adversaire, les textes. Pur : l'état
+  /// ne bouge pas, et le générateur de la carrière n'est lu que sur une copie
+  /// (la lettre que la dernière journée aurait sans décision). null hors d'une
+  /// carte de match, ou quand aucune décision n'est écrite pour ce samedi.
+  ScenarioDirect? samediDirect(GameState s, bool droite) {
+    final p = s.pending;
+    if (s.over || p == null || p.kind != 'match' || _catalogueDirect.vide) return null;
+    final apercu = resolveBlock(Rng.fromState(s.rngState), s.force, s.world.division, s.gauges, postureMod: postureModDe(!droite));
+    final beats = content.seasonBeats[s.role] ?? const <Beat>[];
+    final phase = s.beat < beats.length ? beats[s.beat].phase : '';
+    return construireScenario(
+      content: content,
+      cat: _catalogueDirect,
+      s: s,
+      base: apercu.results.split(' ').last,
+      clubs: [for (final r in standingsOf(s)) if (!r.toi) r.club],
+      phase: phase,
+    );
+  }
+
+  /// Les effets cachés des décisions retenues (un cran de relation, un peu de
+  /// climat), appliqués comme ceux de la ville : sans tirage — un effet de la
+  /// ville n'a ni `rand` ni `react` —, et un palier franchi programme sa carte.
+  void _directEffets(GameState s, List<EffetVille> effets) {
+    if (effets.every((e) => e.vide)) return;
+    final relAvant = Map<String, int>.of(s.relations);
+    for (final e in effets) {
+      if (!e.vide) _applyEffects(s, e.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
+    }
+    final beats = content.seasonBeats[s.role] ?? const <Beat>[];
+    director.relationCrossings(s, relAvant, s.beat < beats.length ? beats[s.beat].phase : '');
   }
 
   void _resolveCup(GameState s, Rng rng) {

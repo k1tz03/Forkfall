@@ -1299,6 +1299,9 @@ __VILLE_CSS__
   }
 
   function advance(right) {
+    // le samedi en direct (ville_direct.js, preview_direct.js) : la ville garde le choix de
+    // posture du samedi, joue le match, puis le rend au moteur avec les décisions
+    if (VILLE && VILLE.retenir && VILLE.retenir(!!right)) { busy = false; return; }
     var avant = view;
     view = JSON.parse(window.fusibleChoose(!!right));
     busy = false;

@@ -30,19 +30,43 @@ class BlockResult {
   final int losses;
   final int points;
   final int derbyGainT;
-  const BlockResult(this.results, this.wins, this.draws, this.losses, this.points, this.derbyGainT);
+  /// Le samedi en direct : la lettre que la dernière journée aurait eue sans
+  /// les décisions du bord du terrain (null sans `dernier`).
+  final String? sansDirect;
+  const BlockResult(this.results, this.wins, this.draws, this.losses, this.points, this.derbyGainT, {this.sansDirect});
+}
+
+/// The posture's weight on every game of the block (Offensif / Prudent).
+double postureModDe(bool offensif) => offensif ? 0.05 : -0.08;
+
+/// LE SAMEDI EN DIRECT (docs/histoires/samedi_direct.md) : ce que les décisions
+/// prises au bord du terrain font à la dernière journée du bloc — celle que la
+/// ville met en scène —, en points de pourcentage : `v` sur la victoire, `n`
+/// sur le nul (la défaite bouge de −(v + n)).
+class DernierMatch {
+  final int v;
+  final int n;
+  const DernierMatch(this.v, this.n);
 }
 
 /// Resolve a block of six league games. [postureMod] comes from the chosen
-/// posture (Offensif / Prudent).
-BlockResult resolveBlock(Rng rng, int force, int division, Map<String, int> gauges, {double postureMod = 0}) {
+/// posture (Offensif / Prudent). [dernier] moves the thresholds of the sixth
+/// game only, after its two draws: the block consumes exactly the same draws
+/// with or without it, and without it nothing changes at all.
+BlockResult resolveBlock(Rng rng, int force, int division, Map<String, int> gauges, {double postureMod = 0, DernierMatch? dernier}) {
   int w = 0, d = 0, l = 0, pts = 0;
   final letters = <String>[];
+  String? sans;
   for (int i = 0; i < 6; i++) {
     final opp = divisionBaseForce(division) + rng.range(-10, 10);
-    final pw = pWin(force, opp, gauges, postureMod: postureMod);
-    final pn = pNul(force, opp);
+    var pw = pWin(force, opp, gauges, postureMod: postureMod);
+    var pn = pNul(force, opp);
     final roll = rng.nextDouble();
+    if (i == 5 && dernier != null) {
+      sans = roll < pw ? 'V' : (roll < pw + pn ? 'N' : 'D');
+      pw = _clampD(pw + dernier.v / 100.0, 0.05, 0.90);
+      pn = _clampD(pn + dernier.n / 100.0, 0.02, 0.40);
+    }
     if (roll < pw) {
       w++;
       pts += 3;
@@ -56,7 +80,7 @@ BlockResult resolveBlock(Rng rng, int force, int division, Map<String, int> gaug
       letters.add('D');
     }
   }
-  return BlockResult(letters.join(' '), w, d, l, pts, 0);
+  return BlockResult(letters.join(' '), w, d, l, pts, 0, sansDirect: sans);
 }
 
 class CupResult {

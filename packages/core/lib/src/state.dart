@@ -135,6 +135,72 @@ class LastStoryCard {
   factory LastStoryCard.fromJson(Map<String, dynamic> j) => LastStoryCard(j['id'] as String, j['answer'] as String?);
 }
 
+/// LE SAMEDI EN DIRECT (docs/histoires/samedi_direct.md) : une décision prise
+/// au bord du terrain — son id (content/ville/match_direct.yaml), le côté
+/// retenu, et si c'est le temps qui l'a prise (le geste passif : personne n'a
+/// touché l'écran).
+class ChoixDirect {
+  final String id;
+  final bool droite;
+  final bool temps;
+  const ChoixDirect(this.id, {required this.droite, this.temps = false});
+  Map<String, dynamic> toJson() => {'id': id, 'c': droite ? 'd' : 'g', if (temps) 't': 1};
+  factory ChoixDirect.fromJson(Map<String, dynamic> j) =>
+      ChoixDirect(j['id'] as String? ?? '', droite: j['c'] == 'd', temps: j['t'] == 1 || j['t'] == true);
+}
+
+/// La trace d'un samedi joué en direct : de quoi refaire le match à l'identique
+/// (l'adversaire, les buts à leur minute, la minute de la dernière décision
+/// prévue) et ce qu'on y a décidé. Immuable ; l'état en garde trente au plus.
+class TraceDirect {
+  final int saison;
+  /// Les blocs déjà joués dans la saison avant ce samedi.
+  final int blocs;
+  /// La lettre de la dernière journée sans décision, puis celle qui a été jouée.
+  final String base;
+  final String lettre;
+  final String adversaire;
+  final int fin;
+  /// `[minute, 1]` pour un but à nous, `[minute, 0]` pour eux, dans l'ordre.
+  final List<List<int>> buts;
+  final List<ChoixDirect> choix;
+  const TraceDirect({
+    required this.saison,
+    required this.blocs,
+    required this.base,
+    required this.lettre,
+    required this.adversaire,
+    required this.fin,
+    required this.buts,
+    required this.choix,
+  });
+
+  int get pour => buts.where((b) => b[1] == 1).length;
+  int get contre => buts.length - pour;
+
+  Map<String, dynamic> toJson() => {
+        's': saison,
+        'b': blocs,
+        'base': base,
+        'l': lettre,
+        'adv': adversaire,
+        'fin': fin,
+        'buts': buts,
+        'd': [for (final c in choix) c.toJson()],
+      };
+
+  factory TraceDirect.fromJson(Map<String, dynamic> j) => TraceDirect(
+        saison: (j['s'] as num?)?.toInt() ?? 0,
+        blocs: (j['b'] as num?)?.toInt() ?? 0,
+        base: j['base'] as String? ?? '',
+        lettre: j['l'] as String? ?? '',
+        adversaire: j['adv'] as String? ?? '',
+        fin: (j['fin'] as num?)?.toInt() ?? 0,
+        buts: [for (final b in (j['buts'] as List? ?? const [])) [for (final x in (b as List)) (x as num).toInt()]],
+        choix: [for (final c in (j['d'] as List? ?? const [])) ChoixDirect.fromJson((c as Map).cast<String, dynamic>())],
+      );
+}
+
 class WorldState {
   int division; // 1 or 2
   int pts;
@@ -543,6 +609,12 @@ class GameState {
   /// raconte.
   List<String> annonces;
 
+  /// **Le samedi en direct** (docs/histoires/samedi_direct.md) : les derniers
+  /// samedis joués en direct, dans l'ordre, trente au plus. Vide pour une
+  /// carrière qui n'a jamais décidé au bord du terrain — et alors absente de
+  /// la sauvegarde : une telle carrière sérialise exactement comme avant.
+  List<TraceDirect> direct;
+
   Pending? pending;
   String? endingId;
   String? lastAnswer;
@@ -621,6 +693,7 @@ class GameState {
     Map<String, String>? photoAnswers,
     Map<String, CharState>? chars,
     List<String>? annonces,
+    List<TraceDirect>? direct,
     required this.pending,
     required this.endingId,
     required this.lastAnswer,
@@ -642,7 +715,8 @@ class GameState {
         journal = journal ?? [],
         photoAnswers = photoAnswers ?? {},
         chars = chars ?? {},
-        annonces = annonces ?? [];
+        annonces = annonces ?? [],
+        direct = direct ?? [];
 
   GameState clone() => GameState(
         contentVersion: contentVersion,
@@ -717,6 +791,7 @@ class GameState {
         photoAnswers: Map.of(photoAnswers),
         chars: chars.map((k, v) => MapEntry(k, v.clone())),
         annonces: List.of(annonces),
+        direct: List.of(direct), // traces immuables : copie superficielle
         pending: pending,
         endingId: endingId,
         lastAnswer: lastAnswer,
@@ -797,6 +872,7 @@ class GameState {
         if (photoAnswers.isNotEmpty) 'photoAnswers': {for (final k in photoAnswers.keys.toList()..sort()) k: photoAnswers[k]},
         'chars': {for (final k in chars.keys.toList()..sort()) k: chars[k]!.toJson()},
         'annonces': annonces,
+        if (direct.isNotEmpty) 'direct': [for (final t in direct) t.toJson()],
         'pending': pending?.toJson(),
         'endingId': endingId,
         'lastAnswer': lastAnswer,
@@ -879,6 +955,7 @@ class GameState {
         photoAnswers: (j['photoAnswers'] as Map?)?.map((k, v) => MapEntry(k.toString(), v.toString())),
         chars: ((j['chars'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharState.fromJson((v as Map).cast<String, dynamic>()))),
         annonces: (j['annonces'] as List?)?.cast<String>(),
+        direct: (j['direct'] as List?)?.map((e) => TraceDirect.fromJson((e as Map).cast<String, dynamic>())).toList(),
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
         endingId: j['endingId'] as String?,
         lastAnswer: j['lastAnswer'] as String?,
