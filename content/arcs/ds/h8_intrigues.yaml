@@ -50,7 +50,11 @@ arcs:
       journal: "{annee} : Erwan Kerdal, soixante-dix matchs en une saison, une ligne rouge sur un écran."
     steps:
       - id: trois_fois
-        card: ds.h8.kerdal.trois_fois
+        # La rampe du terrain annexe (le prologue) : tu as répondu pour la machine, ou pour toi.
+        card:
+          - { id: ds.h8.kerdal.trois_fois_machine, if: "flag('h8_rampe_machine')" }
+          - { id: ds.h8.kerdal.trois_fois_moi, if: "flag('h8_rampe_moi')" }
+          - { id: ds.h8.kerdal.trois_fois }
         next: [ { step: casier, in: [2, 4] } ]
       - id: casier
         card:
@@ -66,8 +70,13 @@ arcs:
           - { id: ds.h8.kerdal.lundi }
         next: [ { step: apres, in: [1, 2] } ]
       - id: apres
+        # Mbako au parking (ds.h8.re.mbako_refus) : « il dormira ici », ou « la machine voulait vendre ».
         card:
+          - { id: ds.h8.kerdal.apres_vit_ici, if: "flag('h8_kerdal_vit') && flag('h8_refus_ici')" }
+          - { id: ds.h8.kerdal.apres_vit_porte, if: "flag('h8_kerdal_vit') && flag('h8_refus_porte')" }
           - { id: ds.h8.kerdal.apres_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.kerdal.apres_ici, if: "flag('h8_refus_ici')" }
+          - { id: ds.h8.kerdal.apres_porte, if: "flag('h8_refus_porte')" }
           - { id: ds.h8.kerdal.apres }
         next: []
 
@@ -105,6 +114,9 @@ arcs:
       - id: deuxieme
         card:
           - { id: ds.h8.cp.deuxieme_boite, if: "flag('h8_comprimes')" }
+          # la montre qui ne transmet plus (ds.h8.re.ober_montre) : « perdue », ou le refus noté
+          - { id: ds.h8.cp.deuxieme_poutres_perdue, if: "flag('h8_montre_perdue')" }
+          - { id: ds.h8.cp.deuxieme_poutres_refus, if: "flag('h8_montre_refus')" }
           - { id: ds.h8.cp.deuxieme_poutres }
         next: [ { step: poignet, at_season: "+1", at: [2, 6] } ]
       - id: poignet
@@ -137,7 +149,11 @@ arcs:
       h8_cadence_refuse: "{annee} : {nom} a refusé les bracelets de Cadence au virage. Ils les ont donnés à la buvette."
     steps:
       - id: offre
-        card: ds.h8.cd.offre
+        # la bâche de Vollaire (ds.h8.re.gege_bache) : laissée à Gégé, ou « brûlez-la »
+        card:
+          - { id: ds.h8.cd.offre_gardee, if: "flag('h8_bache_gardee')" }
+          - { id: ds.h8.cd.offre_pliee, if: "flag('h8_bache_pliee')" }
+          - { id: ds.h8.cd.offre }
         next: [ { step: buvette, in: [2, 4] } ]
       - id: buvette
         card:
@@ -145,7 +161,11 @@ arcs:
           - { id: ds.h8.cd.buvette }
         next: [ { step: nuits, in: [2, 5] } ]
       - id: nuits
-        card: ds.h8.cd.nuits
+        # le stand Cadence à la buvette (ds.h8.cd.buvette) : fermé, ou laissé
+        card:
+          - { id: ds.h8.cd.nuits_ferme, if: "flag('h8_stand_ferme')" }
+          - { id: ds.h8.cd.nuits_laisse, if: "flag('h8_stand_laisse')" }
+          - { id: ds.h8.cd.nuits }
         next: []
 
   # =============================================================== PARI-RIVE
