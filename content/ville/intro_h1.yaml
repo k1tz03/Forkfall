@@ -1,0 +1,146 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : l'introduction distillée, et ce que la ville dit des
+# choix du prologue (format : docs/histoires/scenes_jouees.md ; la charte : docs/bible/charte_histoire.md).
+#
+# L'introduction jouée tient en trois répliques (cinematiques_h1.yaml, h1.ci.intro) : le
+# club-house à huit heures, puis la première carte. Ce qu'elle disait avant — la buvette et son
+# carton, la rue des Lilas et l'homme en écharpe — vient ici, après les premiers choix : la
+# buvette quand le chant est joué (elle ne dit pas la même chose à qui a demandé pourquoi on
+# l'aime déjà et à qui n'a pas voulu savoir), la rue des Lilas quand la lettre est rangée.
+#
+# Plus bas, ce que les gens disent en ville des choix de la première semaine et de la saison :
+# une réplique ne fait pas avancer l'intrigue, elle prouve que le choix a été vu.
+cinematiques:
+  # Après le chant : la buvette, le carton, Gigi. Quand tu as demandé pourquoi on t'aime déjà.
+  - id: h1.ci.carton
+    quand: carte
+    prefixe: "en.h1.pro2_chant"
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_chant_su)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vecchio, place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+      - {qui: gege, place: fond}
+    etapes:
+      - {fondu: "Le soir, à la buvette du kop."}
+      - {narration: "Minuit passé. Le néon du zinc grésille. Sous la table du fond, un carton fermé au scotch large : CARTONNAGES DE LA RIVE."}
+      - {qui: toi, va: zinc_3}
+      - {qui: patron, dit: "On sert jusqu'à une heure. Après aussi, mais on ne le dit pas."}
+      - {qui: gege, dit: "Tu voulais savoir pourquoi on t'aime déjà : il y a ta photo dans L'Écho de juin. Tu es moins pâle en vrai, coach.", ton: sourire}
+      - {qui: vecchio, regarde: toi}
+      - {qui: vecchio, emote: choc}
+      - {qui: vecchio, sort: true}
+      - {qui: patron, dit: "Gigi qui laisse un fond de verre. Ça, je ne l'avais jamais vu."}
+      - {qui: toi, pense: "Gigi Vecchio. Il avait vingt-cinq ans, en 1974. C'est lui qui était dans les buts, ce jour-là."}
+      - {qui: gege, dit: "Le carton, c'est pour le premier match. On ne l'ouvre pas avant. Ça porte malheur."}
+      - {narration: "Gégé pose le pied sur le carton, doucement, comme sur un chien qui dort."}
+
+  # La même buvette, quand tu n'as pas voulu savoir : Gégé se tait, et c'est Gigi qui répond.
+  - id: h1.ci.carton_sourd
+    quand: carte
+    prefixe: "en.h1.pro2_chant"
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h1) && !flag(h1_chant_su)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vecchio, place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+      - {qui: gege, place: fond}
+    etapes:
+      - {fondu: "Le soir, à la buvette du kop."}
+      - {narration: "Minuit passé. Le néon du zinc grésille. Sous la table du fond, un carton fermé au scotch large : CARTONNAGES DE LA RIVE."}
+      - {qui: toi, va: zinc_3}
+      - {qui: patron, dit: "On sert jusqu'à une heure. Après aussi, mais on ne le dit pas."}
+      - {qui: gege, dit: "Tu n'as pas voulu savoir pourquoi on t'aime déjà, coach. Je ne te le dirai pas. Regarde plutôt Gigi."}
+      - {qui: vecchio, regarde: toi}
+      - {qui: vecchio, emote: choc}
+      - {qui: vecchio, sort: true}
+      - {qui: patron, dit: "Gigi qui laisse un fond de verre. Ça, je ne l'avais jamais vu."}
+      - {qui: toi, pense: "Gigi Vecchio. Il avait vingt-cinq ans, en 1974. C'est lui qui était dans les buts, ce jour-là."}
+      - {qui: gege, dit: "Le carton, c'est pour le premier match. On ne l'ouvre pas avant. Ça porte malheur."}
+      - {narration: "Gégé pose le pied sur le carton, doucement, comme sur un chien qui dort."}
+
+  # Après la lettre : la rue des Lilas, la fenêtre, l'homme en écharpe. La graine du mardi à minuit.
+  - id: h1.ci.echarpe
+    quand: carte
+    cartes: [en.h1.pro4_lettre]
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h1) && !flag(divorce)"
+    lieu: appartement
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: camille, place: fauteuil}
+    etapes:
+      - {fondu: "La nuit tombée, rue des Lilas."}
+      - {narration: "Au troisième, des cartons partout, le lit monté de travers. Camille n'a pas allumé : elle regarde la rue par la fente du rideau."}
+      - {qui: camille, dit: "Un homme en écharpe est passé deux fois sous la fenêtre. Il a levé la tête vers le troisième, et il est reparti."}
+      - {qui: toi, va: fenetre}
+      - {qui: toi, pense: "Une journée. Il a suffi d'une journée pour qu'on sache où je dors."}
+      - {qui: toi, pense: "Le car de six heures. Ma mère tenait les deux billets dans son gant ; elle n'a jamais regardé en arrière. Moi, si."}
+      - {qui: camille, dit: "Je ne te demande rien. Je te dis seulement qu'il est repassé."}
+      - {narration: "Camille tire le rideau. En bas, le réverbère éclaire une rue vide et, sur le trottoir d'en face, un mégot qui fume encore."}
+
+paroles:
+  # Le chant : Gégé n'a dit que la moitié.
+  - qui: gege
+    sujet: toi
+    si: "flag(histoire_h1) && flag(h1_chant_su) && saison == 1"
+    texte: "Tu as voulu savoir pourquoi on t'aime. Je t'ai dit la moitié. L'autre moitié, c'est Gigi qui la garde, au fond d'un placard."
+  # Le café de Vukić : l'heure d'arrivée, vue du bureau du président.
+  - qui: aulard
+    sujet: toi
+    si: "flag(histoire_h1) && flag(h1_matin_tot) && saison == 1"
+    texte: "Vous arrivez avant moi, vous. J'ai eu un entraîneur comme ça, en 1983. Il me rapportait mon journal. Il est parti en juin."
+  # Les deux clés : celle du bureau est dans ta poche, le président demande à qui Josiane donne les doubles.
+  - qui: josiane
+    sujet: club
+    si: "flag(histoire_h1) && flag(h1_cle_bureau)"
+    texte: "Votre clé du bureau, vous l'avez prise le premier matin, avant de monter. Le président m'a demandé à qui je donnais les doubles."
+  # Le placard : Gigi n'a pas oublié qu'on lui a demandé ses filets.
+  - qui: vecchio
+    sujet: toi
+    si: "flag(histoire_h1) && flag(h1_placard_force)"
+    texte: "Tu as voulu voir mes filets. Personne ne me l'avait demandé depuis seize ans. Je n'ai pas su si c'était une insulte."
+  # « Demandez au virage » : l'inspecteur a pris la parole au pied de la Nord.
+  - qui: gege
+    sujet: toi
+    si: "flag(histoire_h1) && flag(h1_virage_temoin)"
+    texte: "Le policier de Portclair est venu demander au grillage qui t'avait vu au parking. On a répondu : tous. Il a noté : personne."
+  # « Je leur parlerai » : le virage a répondu au président par la boutique.
+  - qui: aulard
+    sujet: toi
+    si: "flag(histoire_h1) && flag(h1_promesse_virage) && saison == 1"
+    texte: "Tu devais leur parler de moi. Le virage m'a répondu par mille masques de plus au compte de Pradel. Je dis ça, je ne dis rien."
+  # Le ticket laissé au-dessus du bar du local.
+  - qui: gege
+    sujet: club
+    si: "flag(histoire_h1) && flag(h1_ticket_mur)"
+    texte: "Le ticket de ton père, au-dessus du bar : les petits le lisent à voix haute. Ils croient que c'est une cote. C'en est une."
+
+# Les scènes de la semaine qui répondent aux choix du prologue, pour que la première semaine
+# n'attende pas la saison d'après pour s'en souvenir.
+scenes:
+  - id: h1.sc.double
+    titre: "Le double"
+    roles: [entraineur]
+    lieu: clubhouse
+    tranches: [matin, midi]
+    qui: josiane
+    poids: 3
+    si: "flag('histoire_h1') && flag('h1_cle_bureau') && saison == 1"
+    texte: "Madame Josiane t'attend au guichet, la boîte à clés ouverte. « Le président me demande un double de la clé de votre bureau, pour le courrier. Je lui dis que c'est à vous de voir. »"
+    choix:
+      - label: "Pas de double"
+        reponse: "Elle referme la boîte à clés d'un doigt. « Je le lui dirai comme ça. Il notera que ça vient de vous, et pas de moi. »"
+        effets: {jauges: {direction: -1}}
+      - label: "Donnez-le-lui"
+        reponse: "Elle sort la clé, la regarde, la repose sur le feutre. « Je le ferai faire jeudi. Je vous dirai chez quel serrurier. »"
+        effets: {jauges: {direction: 1}}

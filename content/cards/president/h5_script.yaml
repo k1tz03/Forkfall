@@ -63,8 +63,26 @@ cards:
       answer: "« Le Conseil. » Un silence où l'on entend une cuillère tourner dans une tasse, puis la tonalité."
     right:
       label: "Je raccroche"
-      effects: {direction: "+", set: [h5_conseil_entendu], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
+      effects: {direction: "+", set: [h5_conseil_entendu, h5_raccroche], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
       answer: "Le combiné retombe. Le téléphone ne sonne plus de la soirée ; tu restes jusqu'à vingt heures à le regarder."
+
+  # Variante de la clé : tu avais demandé à Josiane qui avait celle du bureau (h5_cle_demandee).
+  - id: pr.h5.a2_mardi_cle
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures pile. Le téléphone beige sonne, dans le bureau dont Vaubourg a gardé la clé. Une voix d'homme : « Ici le Conseil. Vendez votre gardien avant jeudi. Nous rappellerons mardi. »"
+    left:
+      label: "Qui êtes-vous ?"
+      effects: {direction: "-", set: [h5_conseil_entendu], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
+      answer: "« Le Conseil. » Un silence où l'on entend une cuillère tourner dans une tasse, puis la tonalité. La serrure est neuve ; la ligne, non."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "+", set: [h5_conseil_entendu, h5_raccroche], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
+      answer: "Le combiné retombe. Le téléphone ne sonne plus de la soirée ; tu restes jusqu'à vingt heures à le regarder, et à penser à la serrure qu'on a changée pour rien."
 
   # A3 — La caution (créneau 7). La graine de la saisie (S1, 17). La cuillère
   # du mardi est dans la tasse de Dorian ; « Josie » est pour Josiane.
@@ -154,7 +172,7 @@ cards:
     text: "Fin de saison. Madame Vialat, le sac à l'épaule, pose une feuille à l'envers sur ton bureau. « Premier solde négatif, {toi}. Il est écrit en bas, au crayon. Le second, je l'écrirai à l'encre. »"
     left:
       label: "Montrez-moi le chiffre"
-      effects: {caisse: "-", relation: {vialat: 1}, set: [h5_solde_negatif]}
+      effects: {caisse: "-", relation: {vialat: 1}, set: [h5_solde_negatif, h5_solde_regarde]}
       answer: "Elle retourne la feuille. Le chiffre est rouge, et petit. Elle a laissé de la place en dessous, pour l'autre."
     right:
       label: "La tribune a brûlé"
@@ -172,7 +190,7 @@ cards:
     text: "Fin de saison. Madame Vialat recompte deux fois, la seconde à voix basse. « Premier solde positif, {toi}. Je ne comprends pas comment, et c'est mon métier de comprendre. Vous m'expliquez ? »"
     left:
       label: "Je vous explique"
-      effects: {direction: "+", relation: {vialat: 1}, set: [h5_solde_positif]}
+      effects: {direction: "+", relation: {vialat: 1}, set: [h5_solde_positif, h5_solde_regarde]}
       answer: "Tu expliques pendant une heure. Elle note trois lignes et souligne la deuxième ; tu ne sauras pas laquelle."
     right:
       label: "Cherchez"
@@ -269,7 +287,7 @@ cards:
     text: "Hôtel de la Rive, vingt et une heures. Sandrine fait rouler son fauteuil jusqu'au tableau des clés et te donne celle du petit salon. Il est vide. Un magnétophone tourne : « Merci d'être là. »"
     left:
       label: "J'emporte la cassette"
-      effects: {direction: "-", set: [h5_cassette], react: [{card: pr.h5.re.josiane_cassette, if: "!seen('pr.h5.re.josiane_cassette') && relation.josiane >= 0"}]}
+      effects: {direction: "-", set: [h5_cassette], react: [{card: pr.h5.re.josiane_cassette_bal, if: "flag('h5_josie_bal')"}, {card: pr.h5.re.josiane_cassette}]}
       answer: "La bande s'arrête au milieu d'une phrase quand tu appuies sur STOP. Dans ta poche, la cassette est encore tiède."
     right:
       label: "J'écoute jusqu'au bout"
@@ -306,7 +324,7 @@ cards:
     text: "Ta maison, vingt heures. Un huissier et deux déménageurs : la caution signée pour le club. En tête de l'ordre, CABINET {NOM}, AVOCATS. Camille, dans l'entrée, ne lit pas l'en-tête. Elle le connaît."
     left:
       label: "Je montre l'ordre"
-      effects: {direction: "-", relation: {camille: -1}, var: {saisie_logement: "+1"}, set: [h5_maison_saisie, h5_ordre_cabinet]}
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_logement: "+1"}, set: [h5_maison_saisie, h5_ordre_cabinet, h5_camille_prevenue]}
       answer: "Camille prend la feuille, la plie en deux, en quatre. « Je n'ai pas tapé celle-là. J'ai tapé les autres. »"
     right:
       label: "Je signe le procès-verbal"
@@ -323,7 +341,7 @@ cards:
     text: "Ton dépôt de la zone, vingt heures. Un huissier, deux plateaux : la banque a dénoncé les découverts de l'entreprise. En tête de l'ordre, CABINET {NOM}, AVOCATS. Ils prennent les engins, et ta berline."
     left:
       label: "J'appelle Camille"
-      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet, h5_camille_prevenue]}
       answer: "Elle décroche à la première sonnerie, comme si elle attendait. « Je sais. Rentre à pied, il ne pleut pas. »"
     right:
       label: "Je signe le procès-verbal"
@@ -341,7 +359,7 @@ cards:
     text: "Ton dépôt de la zone, vingt heures. Un huissier, deux plateaux, et en tête de l'ordre : CABINET {NOM}, AVOCATS. Ils prennent les engins, et ta berline ; sous le lavage, on lit encore VENDU."
     left:
       label: "J'appelle Camille"
-      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet, h5_camille_prevenue]}
       answer: "Elle décroche à la première sonnerie, comme si elle attendait. « Je sais. Rentre à pied, il ne pleut pas. »"
     right:
       label: "Je signe le procès-verbal"

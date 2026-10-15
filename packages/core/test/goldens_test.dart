@@ -173,6 +173,23 @@
 ///   « quatrième », pas 4 : aucune des vingt carrières n'atteint plus la
 ///   quatrième saison). Codes **retirés à neuf** (`--goldens --write
 ///   --recode`), et les vingt atteignent une fin.
+/// · **Les introductions et les fourches des livres 1 à 5** (lot « écriture »,
+///   branche `lot-ecriture-livres-1-5`, 15 octobre 2026). Les introductions
+///   jouées des cinq premiers livres tiennent en trois ou quatre répliques (le
+///   reste est rendu à la première semaine, en scènes jouées : le moteur n'en
+///   sait rien) ; les prologues ne disent plus que quatre jauges décident ; et
+///   une trentaine de cartes à deux boutons qui ne bougeaient que des jauges
+///   posent maintenant un drapeau (`h1_` à `h5_`) que lit une variante de
+///   carte, de réaction ou de scène. Une variante remplace une carte : aucune
+///   carte de plus, aucun tirage de plus. Les vingt carrières gardent leur fin
+///   et leur nombre de cartes ; dix-huit voient bouger leur empreinte (les
+///   drapeaux que les nouveaux choix posent), treize le hachage des ids servis
+///   (la variante servie à la place de la carte d'origine). Les swipes ont
+///   toujours un sens : mêmes codes, `--goldens --write` sans `--recode`, et
+///   quinze carrières sur vingt portent toujours une fin. À la fusion avec
+///   les correctifs du moteur (même jour), les codes retirés par la clôture
+///   des livres sont gardés et réécrits une fois encore (`--goldens --write`) :
+///   dix-huit empreintes bougent pour les mêmes drapeaux, aucune fin.
 library;
 
 import 'dart:io';

@@ -9,93 +9,43 @@
 # qui regarde. Personne n'accorde rien au héros sans {pg, select, …} ; Bréhaut et le Doc ne
 # disent jamais {toi} (leur adresse neutre, « petit », est fausse à trente et un ans).
 #
-#   l'introduction    le Corner, le tabac du Quai, la cuisine — la veille de la reprise, 1990
+#   l'introduction    le club-house à sept heures, la reprise : quatre répliques, puis la première carte
 #   saison 1 (1990)   la quinzième (les radios du Doc) · le 14 mai (la grille du cimetière)
 #   saison 2 (1991)   la brasserie du Pont · le standard · le capot gravé · le corbeau ·
 #                     la chevalière · le tabac, le lendemain du square
 #   saison 3 (1992)   la poire du Corner · le coffre · la nuit du 14 · le tunnel du jubilé ·
 #                     merci (l'épilogue de qui s'est tu)
 #
+# L'introduction jouée tient en quatre répliques : le club-house à sept heures, les peintres au
+# premier étage ; la première carte (le carton ARCHIVES) est jouée là. Ce que la veille disait —
+# le Corner et la chevalière de Bréhaut, le tabac du Quai et la mobylette, la rue des Lilas et la
+# montre qui retarde — est distribué sur la première semaine, après les premiers choix
+# (content/ville/intro_h4.yaml). Les scènes qui suivent un choix du prologue ou du livre (la
+# place de Mbako, le cadre, « j'étais au volant », le discours du jubilé) ont deux versions, ou
+# une de plus : celle de la variante d'abord, celle du défaut ensuite.
+#
 # Saisons de la ville (1, 2, 3, 4) = saisons du moteur (0, 1, 2, 3).
 cinematiques:
-  # ═════════════════════════════════════════════ L'INTRODUCTION : la veille de la reprise
-  # Qui : un vétéran de trente et un ans, le capitaine qui le ramène depuis 1984, le buraliste
-  # qui lui vend le journal, sa famille. Le crochet : la montée, le pont, une mobylette sans
-  # lumière. La scène mène à l'escalier du club-house, demain à sept heures, sans le dire.
+  # ═════════════════════════════════════════════ L'INTRODUCTION : le club-house à sept heures
+  # Qui : un vétéran de trente et un ans, Josiane au guichet. Où : le club-house de la Rive, au pied
+  # de l'escalier. Pourquoi maintenant : la reprise, la dernière année d'un contrat. La scène
+  # s'arrête sur le seuil du couloir des anciens : la première carte (le carton) est jouée là.
   - id: h4.ci.intro
     quand: debut
     roles: [joueur]
     si: "flag(histoire_h4)"
     titre: "La Route de la Rive"
     sous: "Aubérive, juillet 1990"
-    lieu: bar
-    tranche: soir
-    suite: h4.ci.intro_2
-    acteurs:
-      - {qui: toi, place: comptoir_1}
-      - {qui: brehaut, place: comptoir_2}
-      - {id: patron, qui: commercant, nom: "Le patron du Corner", place: patron}
-    etapes:
-      - {narration: "Le Corner, la veille de la reprise. Un flipper qui clignote pour personne, la télé sur les résultats d'hier. Trente et un ans, et la dernière année d'un contrat."}
-      - {qui: patron, dit: "Une poire, pour les anciens de 84 ? La maison offre, comme à chaque reprise."}
-      - {qui: brehaut, dit: "Deux bières. Pas de poire."}
-      - {narration: "Le patron remonte la bouteille sur l'étagère du haut, l'étiquette tournée contre le mur. Il ne discute pas. Il a l'habitude."}
-      - {qui: brehaut, geste: boit}
-      - {narration: "Titi Bréhaut, trente-trois ans, capitaine. À son annulaire, une chevalière accroche le néon de la vitrine chaque fois qu'il lève son verre."}
-      - {qui: brehaut, dit: "Ta dernière année, alors. Fardelli me l'a dit avant toi. Il me dit souvent les choses avant toi."}
-      - {qui: brehaut, regarde: toi}
-      - {qui: brehaut, dit: "Et le genou ? Et tu dors, en ce moment ?"}
-      - {qui: toi, pense: "Je dors bien. J'ai toujours bien dormi. C'est le matin, le problème."}
-      - {qui: brehaut, dit: "Je te ramène ? J'ai la voiture devant."}
-      - {qui: toi, dit: "Je rentre à pied."}
-      - {qui: brehaut, dit: "Comme tu veux.", ton: sourire}
-      - {qui: brehaut, sort: true}
-      - {narration: "Sur le zinc, sous son verre vide, un billet plié en quatre. La chevalière a laissé un rond dans la buée."}
-
-  - id: h4.ci.intro_2
-    quand: suite
-    lieu: tabac
-    tranche: soir
-    suite: h4.ci.intro_3
-    acteurs:
-      - {qui: toi, place: visiteur}
-      - {qui: lavergne, place: patron}
-      - {id: marinier, qui: ancien, nom: "Un marinier", place: marinier_1}
-      - {id: autre, qui: passant, nom: "Un autre marinier", place: marinier_2}
-    etapes:
-      - {narration: "Le tabac du Quai, à l'heure où l'on baisse le rideau. Deux mariniers finissent une partie de dés sur le comptoir. Ici, on parie sur tout."}
-      - {qui: marinier, dit: "Quinze matchs, c'est la clause, à ce qu'on dit. {pg, select, f{Elle} other{Il}} les fait, cette année ?"}
-      - {qui: autre, dit: "Avec ce genou ? Cinquante francs qu'{pg, select, f{elle} other{il}} s'arrête avant Noël.", geste: pointe}
-      - {narration: "Il glisse un billet sous le gobelet des dés. Personne ne baisse la voix."}
-      - {son: argent}
-      - {qui: lavergne, regarde: toi}
-      - {qui: lavergne, dit: "Bonsoir, {toi}. Vous pariez sur vous, ce soir ?"}
-      - {qui: toi, pense: "Jean Lavergne. Il me vend L'Écho tous les matins depuis 1985. Il ne m'a jamais rien demandé d'autre que le prix."}
-      - {narration: "Par la porte de la cour, un moteur de mobylette tourne au ralenti. Personne ne va voir."}
-      - {qui: lavergne, dit: "L'Écho de demain parlera de votre dernière année. Je vous le garde sous le comptoir ?"}
-      - {narration: "Lavergne tire le rideau de fer à mi-hauteur, et attend que tu te baisses pour passer dessous."}
-
-  - id: h4.ci.intro_3
-    quand: suite
-    lieu: appartement
-    tranche: nuit
+    lieu: clubhouse
+    tranche: matin
     acteurs:
       - {qui: toi, place: porte}
-      - {qui: camille, place: fauteuil, pose: assis}
-      - {qui: sacha, place: fenetre}
+      - {qui: josiane, place: secretaire, pose: assis}
     etapes:
-      - {narration: "Chez toi, rue des Lilas, minuit passé. Sur la table, la montre de la montée, gravée au dos : « Montée — merci ». Elle retarde de deux minutes. Tu ne l'as jamais fait régler."}
-      - {qui: camille, dit: "Tu sens le Corner. Et le quai, aussi. Tu es {pg, select, f{rentrée} other{rentré}} par le pont ?"}
-      - {qui: toi, va: table_1}
-      - {qui: camille, dit: "Fardelli a appelé deux fois. Il t'emmène au restaurant la semaine prochaine. Il dit : une dernière année, ça se soigne comme une première."}
-      - {qui: toi, pense: "Camille ne sait rien de 1984. Elle sait seulement qu'un jour par an, je pars avec des fleurs, et que je rentre sans rien dire."}
-      - {qui: sacha, dit: "Il y a une mobylette, en bas. Elle n'a pas de lumière. Elle attend."}
-      - {qui: toi, va: fenetre}
-      - {narration: "La rue des Lilas est vide. Le réverbère grésille au-dessus d'un trottoir où il n'y a personne. Plus loin, un moteur s'éloigne vers le quai."}
-      - {qui: camille, dit: "Au lit, Sacha. Demain, c'est le centre aéré. Et toi, sept heures au club-house."}
-      - {qui: sacha, dit: "Demain, tu m'emmènes en voiture ? C'est moi qui dis où on tourne."}
-      - {qui: sacha, va: milieu}
-      - {qui: toi, pense: "Sept heures. L'escalier du club-house, le genou d'abord. Le reste suivra, comme à chaque reprise."}
+      - {narration: "Sept heures, le club-house de la Rive : la reprise. Trente et un ans, un genou qui a un avis, la dernière année d'un contrat."}
+      - {qui: josiane, dit: "Les peintres sont là depuis six heures, {toi}. Le président veut le couloir neuf avant la reprise : ils décrochent les anciens."}
+      - {qui: toi, pense: "À la reprise, je compte les dernières fois : la dernière montée d'escalier, le dernier maillot neuf, la dernière radio du genou."}
+      - {narration: "Au premier étage, des échelles, des bâches, une odeur de peinture qui ne séchera pas avant le premier match. Le couloir des anciens est ouvert."}
 
   # ═════════════════════════════════════════════ SAISON 1 (1990-1991) — LA FAUTE
   # Avant la quinzième : les radios alignées, un chiffre qui ne bouge pas d'une année sur l'autre.
@@ -363,6 +313,33 @@ cinematiques:
       - {qui: toi, va: porte}
       - {narration: "La porte se referme. Dans le fauteuil, Camille attend le bruit du moteur. Il tarde à venir."}
 
+  # Le jubilé, quand tu as dit à Léa que tu lirais le tien (h4_discours_a_moi) : deux colonnes blanches.
+  - id: h4.ci.tunnel_a_moi
+    quand: carte
+    prefixe: "jp.h4.a11_"
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_discours_a_moi)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: brehaut, place: coach}
+      - {qui: lea, place: porte}
+      - {qui: vukic, place: [2, 3]}
+    etapes:
+      - {narration: "Le 15 mai, quatorze heures cinquante. Au-dessus des têtes, la tribune gronde, comme un orage qui passe et ne passe pas. Les autres sont déjà sur la pelouse : c'est toi qu'on attend."}
+      - {qui: lea, dit: "Deux colonnes blanches, lundi, comme vous l'aviez demandé. Votre papier est dans votre poche ? Le micro est branché sur la sono : on vous entendra jusqu'au pont."}
+      - {qui: brehaut, va: doc}
+      - {narration: "Bréhaut, en costume, redresse ton col du bout des doigts, comme on remet droit un cadre au mur. La chevalière t'effleure la nuque."}
+      - {qui: brehaut, dit: "Trois minutes au micro, après le tour. Vaubourg veut les buvettes ouvertes avant seize heures."}
+      - {qui: vukic, dit: "Ton sac reste sous mon banc. Il y a un survêtement de la réserve dedans, si tu en as besoin ce soir."}
+      - {qui: toi, pense: "Ma page est pliée en quatre contre ma cuisse. Elle ne dit rien de ce que je dirai. Elle dit seulement que j'ai refusé la sienne."}
+      - {qui: lea, dit: "On y va. Ne tapotez pas le micro pour voir s'il marche : il marche.", geste: pointe}
+      - {qui: toi, va: porte}
+      - {narration: "Le couloir monte vers la lumière. Au bout, le bruit devient un mur, et le mur s'ouvre."}
+
+  # Le jubilé, avant le rond central : le micro branché « jusqu'au pont », le col redressé.
   # Le jubilé, avant le rond central : le micro branché « jusqu'au pont », le col redressé.
   - id: h4.ci.tunnel
     quand: carte
@@ -379,7 +356,7 @@ cinematiques:
       - {qui: vukic, place: [2, 3]}
     etapes:
       - {narration: "Le 15 mai, quatorze heures cinquante. Au-dessus des têtes, la tribune gronde, comme un orage qui passe et ne passe pas. Les autres sont déjà sur la pelouse : c'est toi qu'on attend."}
-      - {qui: lea, dit: "Le micro est branché sur la sono du stade. Ce que vous direz, on l'entendra jusqu'au pont."}
+      - {qui: lea, dit: "La page de Vaubourg est dans votre poche : trois remerciements, 1984 deux fois. Le micro est branché sur la sono : on vous entendra jusqu'au pont."}
       - {qui: brehaut, va: doc}
       - {narration: "Bréhaut, en costume, redresse ton col du bout des doigts, comme on remet droit un cadre au mur. La chevalière t'effleure la nuque."}
       - {qui: brehaut, dit: "Trois minutes au micro, après le tour. Vaubourg veut les buvettes ouvertes avant seize heures."}

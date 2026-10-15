@@ -25,7 +25,26 @@ cards:
     lieu: buvette
     tone: strategique
     once: true
-    text: "La buvette, le soir du match. Gégé pose une bière tiède et un masque plié en quatre : « Le premier sorti de l'imprimerie. Ceux de 74 n'ont jamais payé, {toi}. Tu le sais, ça ? »"
+    text: "La buvette, le soir du match. Gégé pose une bière tiède et un masque plié en quatre : « Tu n'as pas voulu savoir pourquoi on t'aime. Premier sorti de l'imprimerie. Ceux de 74 n'ont jamais payé. »"
+    left:
+      label: "Ils paieront"
+      effects: {relation: {gege: 1}, set: [h1_phrase_buvette], schedule: [{card: en.h1.gigi.placard, in: [5, 6]}]}
+      answer: "Gégé ne répond pas. Au bout du comptoir, un ancien écrit tes deux mots au stylo sur un sous-bock, et le glisse dans sa poche."
+    right:
+      label: "74, c'est fini"
+      effects: {direction: "+", schedule: [{card: en.h1.gigi.placard, in: [5, 6]}]}
+      answer: "« Pour toi, peut-être. » Il déplie le masque sur le zinc, ton visage tourné vers le plafond, et sort en le laissant là."
+
+  # Variante de la première bière : tu as demandé à Gégé pourquoi on t'aime déjà (le chant).
+  - id: en.h1.masques.biere_su
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "La buvette, le soir du match. Gégé pose une bière tiède et un masque plié en quatre : « Tu voulais savoir pourquoi on t'aime. Le voilà, le premier de l'imprimerie. Ceux de 74 n'ont jamais payé. »"
     left:
       label: "Ils paieront"
       effects: {relation: {gege: 1}, set: [h1_phrase_buvette], schedule: [{card: en.h1.gigi.placard, in: [5, 6]}]}
@@ -64,6 +83,25 @@ cards:
     tone: strategique
     once: true
     text: "Vaubourg fait entrer Monsieur Pradel, des Cartonnages de la Rive, un short de démonstration à la main, son nom sur la hanche : « Il vend tes masques à la boutique, {toi}. Quinze francs pièce. »"
+    left:
+      label: "Vendez-les"
+      effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}, var: {ville_francs: "+15000"}, set: [h1_sp_cartons], outcome: vendus}
+      answer: "Pradel signe au stylo-plume, Vaubourg contresigne. La semaine suivante, ton visage est en vitrine de la boutique, sous une étiquette rouge."
+    right:
+      label: "Ce visage n'est pas à vendre"
+      effects: {tribunes: "+", caisse: "-", relation: {aulard: -1}, outcome: gardes}
+      answer: "Pradel replie son short sans se vexer. « Le virage me paie l'encre en liquide, vous savez. » Vaubourg, lui, ne replie rien."
+
+  # Variante de l'imprimeur : tu avais promis à Vaubourg de parler au virage.
+  - id: en.h1.masques.imprimeur_promesse
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vaubourg fait entrer Monsieur Pradel, des Cartonnages de la Rive, un short à la main : « Tu devais leur parler, {toi}. Pradel vend déjà ta tête à la boutique. Quinze francs pièce, pour ta peine. »"
     left:
       label: "Vendez-les"
       effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}, var: {ville_francs: "+15000"}, set: [h1_sp_cartons], outcome: vendus}
@@ -144,7 +182,7 @@ cards:
       answer: "« Pour ta mère. » Il répète les mots comme on vérifie une addition. Puis il enlève la punaise et te rend le ticket, plié en quatre."
     right:
       label: "Laissez-le au mur"
-      effects: {vestiaire: "+", relation: {gege: -1}}
+      effects: {vestiaire: "+", relation: {gege: -1}, set: [h1_ticket_mur]}
       answer: "Il le laisse. Les jours de match, les plus jeunes le lisent en attendant les cartons. Personne ne leur dit de qui c'est l'écriture."
 
   # ══════════════════════════════════════════════════════════ LA PLAQUE SANS NOM
@@ -234,7 +272,7 @@ cards:
     text: "Au fond de la buvette, Gigi Vecchio tourne une clé dans le placard du fond, puis la remet à son cou sans l'avoir ouvert : « Des filets. Les vieux. On ne jette pas un filet qui a servi. »"
     left:
       label: "Montrez-les-moi"
-      effects: {relation: {vecchio: -1}}
+      effects: {relation: {vecchio: -1}, set: [h1_placard_force]}
       answer: "« Un autre jour. » Il tapote la porte du plat de la main, comme on rassure un cheval. La clé ne quitte plus son cou."
     right:
       label: "Gardez vos filets"
@@ -438,7 +476,7 @@ cards:
       answer: "« Seul{pg, select, f{e} other{}} ? » Il ne note pas la réponse. Il retourne le masque face contre le bureau, et le laisse là en partant."
     right:
       label: "Demandez au virage"
-      effects: {relation: {lhoste: -1, gege: 1}}
+      effects: {relation: {lhoste: -1, gege: 1}, set: [h1_virage_temoin]}
       answer: "« J'ai demandé. Trois mille personnes m'ont donné votre nom. » Il range le masque dans un sac plastique, et le sac dans sa poche."
 
   - id: en.h1.lhoste.bureau_police
@@ -456,7 +494,7 @@ cards:
       answer: "« Je sais. J'ai fait surveiller votre porte. » Il le dit comme une politesse, et c'en est peut-être une."
     right:
       label: "Demandez au virage"
-      effects: {relation: {lhoste: -1, gege: 1}}
+      effects: {relation: {lhoste: -1, gege: 1}, set: [h1_virage_temoin]}
       answer: "« Le virage m'a dit de chercher rue des Lilas. » Il remet le masque dans son sac, sans le fermer."
 
   # 2/3 · Le mur des guichets. Seulement si la phrase a été dite à la buvette.
@@ -469,6 +507,25 @@ cards:
     tone: leger
     once: true
     text: "Sur le mur des guichets, en rouge, à hauteur d'homme : CEUX DE 74 PAIERONT. Lhoste te le lit à voix haute, puis il sort d'un sachet un sous-bock de la buvette, tes deux mots au stylo."
+    left:
+      label: "C'était une phrase"
+      effects: {direction: "+", relation: {lhoste: 1}, set: [h1_mur]}
+      answer: "« Ici, une phrase, ça se peint. » Il range le sous-bock. Le lendemain, on passe le mur au blanc ; le rouge revient sous les trois couches."
+    right:
+      label: "Elle est de moi"
+      effects: {tribunes: "+", relation: {lhoste: -1, gege: 1}, set: [h1_mur]}
+      answer: "Lhoste écrit dans son carnet : « {nom}, reconnaît la phrase. » Puis, sans lever les yeux : « Alors c'est vous qui leur avez donné la date. »"
+
+  # Variante du mur : tu avais dit à Lhoste de demander au virage ; il l'a fait.
+  - id: en.h1.lhoste.mur_virage
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, ultras]
+    speaker: lhoste
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Sur le mur des guichets, en rouge : CEUX DE 74 PAIERONT. Lhoste a fait le tour du virage, comme tu l'y invitais : « Trois mille alibis pour vous. Aucun pour cette phrase. » Il sort ton sous-bock."
     left:
       label: "C'était une phrase"
       effects: {direction: "+", relation: {lhoste: 1}, set: [h1_mur]}

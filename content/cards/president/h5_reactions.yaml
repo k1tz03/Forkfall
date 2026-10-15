@@ -43,7 +43,7 @@ cards:
     text: "Madame Josiane lève les yeux de sa machine à écrire. « Il a dit Josie ? Personne ne m'appelle comme ça depuis le bal de la Coupe, en 1966. Il dansait mal, et il marchait sur les robes. »"
     left:
       label: "Il dansait avec vous ?"
-      effects: {relation: {josiane: 1}}
+      effects: {relation: {josiane: 1}, set: [h5_josie_bal]}
       answer: "« Avec toutes. Moi, je tenais le vestiaire. » Elle se remet à taper, plus vite qu'avant, sans une faute de frappe."
     right:
       label: "Ça ne veut rien dire"
@@ -72,9 +72,29 @@ cards:
     arc: president
     tags: [direction, objet]
     speaker: josiane
+    when: "relation.josiane >= 0"
     tone: strategique
     once: true
     text: "Madame Josiane écoute la cassette au secrétariat, le volume au plus bas. À la troisième phrase, elle appuie sur STOP. « C'est le directeur de la banque. Il m'appelle Josie depuis trente ans. »"
+    left:
+      label: "Écoutez la fin"
+      effects: {direction: "-", set: [h5_josie, h5_fin_de_bande]}
+      answer: "Elle laisse tourner. Une chaise, puis une voix de femme : « …signe en bas, pas en marge. » Josiane te regarde, toi, pas la cassette."
+    right:
+      label: "Ça suffit"
+      effects: {relation: {josiane: 1}, set: [h5_josie]}
+      answer: "Elle rembobine jusqu'au début, exactement, et te rend la cassette dans un mouchoir en papier, sans y toucher."
+
+  # Variante du bal : le directeur de la banque lui avait tendu son ticket de vestiaire en 1966 (h5_josie_bal).
+  - id: pr.h5.re.josiane_cassette_bal
+    roles: [president]
+    arc: president
+    tags: [direction, objet]
+    speaker: josiane
+    when: "relation.josiane >= 0"
+    tone: strategique
+    once: true
+    text: "Madame Josiane écoute la cassette au plus bas. À la troisième phrase, elle appuie sur STOP. « C'est le directeur de la banque. En 1966, au vestiaire, il m'a tendu son ticket en disant Josie. »"
     left:
       label: "Écoutez la fin"
       effects: {direction: "-", set: [h5_josie, h5_fin_de_bande]}
@@ -145,7 +165,7 @@ cards:
     text: "Vukić, le soir, au bord du terrain annexe, le cahier ouvert : « Tu as vendu Oudart un jeudi. Je l'écris. Je n'écris pas pourquoi : je ne le sais pas. Toi, tu le sais ? »"
     left:
       label: "Écris pourquoi"
-      effects: {vestiaire: "+", relation: {vukic: 1}}
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h5_conseil_ecrit]}
       answer: "Tu dictes. Il écrit, puis il raye un mot, « Conseil », et le récrit au-dessus, plus petit, entre guillemets."
     right:
       label: "N'écris rien"

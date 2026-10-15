@@ -1,0 +1,194 @@
+# HISTOIRE 3 — « LA SIRÈNE » : l'introduction distillée, et ce que la ville dit des choix du
+# prologue et du livre (format : docs/histoires/scenes_jouees.md ; la charte :
+# docs/bible/charte_histoire.md).
+#
+# L'introduction jouée tient en quatre répliques (cinematiques_h3.yaml, h3.ci.intro) : le
+# vestiaire à seize heures moins une, la sirène qui monte, puis la première carte. Ce qu'elle
+# disait avant vient ici, après les premiers choix : la friche et l'homme à la craie après le
+# crochet, la cuisine de la cité avant l'appel de Fardelli, la voiture de Portclair sous le
+# réverbère juste après, avec ou sans le téléphone débranché.
+#
+# Plus bas, ce que les gens disent en ville des choix de la première semaine et de la saison :
+# une réplique ne fait pas avancer l'intrigue, elle prouve que le choix a été vu.
+cinematiques:
+  # Après le crochet : le soir, par la friche. L'ouvrier, le gamin d'avant, la craie.
+  - id: h3.ci.friche_soir
+    quand: carte
+    prefixe: "jp.h3.pro_crochet"
+    moment: apres
+    roles: [joueur]
+    si: "flag(histoire_h3)"
+    lieu: friche
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: ouvrier, qui: ancien, nom: "Un ouvrier du bâtiment C", place: [-2, -4]}
+      - {id: capote, qui: inconnu, nom: "Un homme en capote", place: [-1, -6]}
+    etapes:
+      - {fondu: "Le soir. La friche de la Tréfilerie."}
+      - {narration: "Pour rentrer à la cité, tu coupes par la friche : les halles mortes depuis 1984, le bâtiment C qui tourne encore, et au-dessus de tout, la tour de la sirène."}
+      - {qui: toi, va: [0, -3]}
+      - {qui: ouvrier, dit: "Tu coupes par la friche, comme ton père. Lui, il passait sous la tour pour gagner trois minutes sur la pointeuse.", geste: fume}
+      - {qui: ouvrier, dit: "Pro, il paraît. {pg, select, f{La première} other{Le premier}} de la cité depuis le gamin qu'ils ont vendu à l'étranger, l'an dernier."}
+      - {qui: toi, pense: "Trois lettres sous mon nom, au crochet du fond. Dans le vestiaire, personne n'a regardé de ce côté-là."}
+      - {narration: "Près du feu de palettes, un homme en capote militaire s'agenouille et trace quelque chose sur le béton, à la craie, sans lever la tête."}
+      - {qui: capote, geste: genou}
+      - {qui: ouvrier, dit: "Ne le regarde pas. Il n'aime pas qu'on le regarde, et il ne demande jamais rien à personne."}
+      - {qui: capote, geste: debout}
+      - {qui: capote, sort: true}
+      - {narration: "Sur le béton, une ligne blanche, droite, longue d'un mètre, tirée au cordeau. Rien d'autre."}
+
+  # Avant l'appel de Fardelli : la cuisine de la cité, L'Écho découpé, le porte-monnaie sous la photo.
+  - id: h3.ci.cite_ciseaux
+    quand: carte
+    prefixe: "jp.h3.pro_cuisine"
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h3)"
+    lieu: appartement
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: odile, place: table_1, pose: assis}
+    etapes:
+      - {fondu: "Le soir. La cité de la Tréfilerie."}
+      - {narration: "Troisième maison à gauche, les volets verts. Sur le buffet, ton père en bleu de travail, mort à la tréfileuse en 1986."}
+      - {qui: odile, geste: ecrit}
+      - {narration: "Ta mère découpe L'Écho aux ciseaux à ongles : la page des sports, la liste des pros de la saison. Ton nom, tout en bas."}
+      - {qui: toi, va: table_2}
+      - {qui: odile, dit: "Depuis 1971, je pointe la sortie à seize heures moins une. Ton père disait : à seize heures, l'usine rend les gens à leur maison."}
+      - {qui: toi, pense: "Elle a sorti la nappe du dimanche, un soir de semaine. Je n'ai pas osé demander."}
+      - {narration: "Elle range son porte-monnaie dans le tiroir du buffet, sous la photo, et tourne la petite clé."}
+      - {son: sonnerie}
+
+  # Après l'appel, quand ta mère a débranché le téléphone (h3_fil_debranche) : Fardelli le sait déjà.
+  - id: h3.ci.voiture_nuit_fil
+    quand: carte
+    prefixe: "jp.h3.pro_cuisine"
+    moment: apres
+    roles: [joueur]
+    si: "flag(histoire_h3) && flag(h3_fil_debranche)"
+    lieu: voiture
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: fardelli}
+      - {qui: aulard}
+    etapes:
+      - {fondu: "Plus tard. Dans la rue."}
+      - {narration: "Tu descends sortir la poubelle. En face de chez ta mère, sous le réverbère, une voiture de Portclair attend, moteur allumé, vitre à moitié baissée."}
+      - {qui: aulard, dit: "Rocco. Tu as vu la réserve, dimanche ?", geste: fume}
+      - {qui: fardelli, dit: "J'ai vu {pg, select, f{une seule fille} other{un seul garçon}}. {pg, select, f{Elle} other{Il}} boite de la gauche quand personne ne regarde."}
+      - {qui: aulard, dit: "L'usine ne paiera plus les maillots, l'an prochain. Il faudra bien que quelqu'un les paie."}
+      - {qui: fardelli, dit: "À Noël, la Tréfilerie ferme. Après, il restera une seule chose à vendre dans cette ville, Jean-Marie. Et elle court vite.", ton: sourire}
+      - {qui: fardelli, regarde: toi}
+      - {qui: fardelli, dit: "Le téléphone de ta mère est coupé depuis neuf heures. Elle ne l'a jamais coupé pour ton père. Huit heures, au parking : je ne suis pas rancunier.", ton: sourire}
+      - {qui: aulard, sort: true}
+      - {qui: toi, pense: "Il a dit « rancunier » comme on pose une carte face contre la table."}
+      - {narration: "La vitre remonte. Le moteur tourne encore quand tu rentres. Dans la cuisine, le téléphone débranché pend au bout de son fil, et ta mère n'a pas levé les yeux."}
+
+  # Après l'appel : la voiture de Portclair sous le réverbère, Fardelli et le président.
+  - id: h3.ci.voiture_nuit
+    quand: carte
+    prefixe: "jp.h3.pro_cuisine"
+    moment: apres
+    roles: [joueur]
+    si: "flag(histoire_h3)"
+    lieu: voiture
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: fardelli}
+      - {qui: aulard}
+    etapes:
+      - {fondu: "Plus tard. Dans la rue."}
+      - {narration: "Tu descends sortir la poubelle. En face de chez ta mère, sous le réverbère, une voiture de Portclair attend, moteur allumé, vitre à moitié baissée."}
+      - {qui: aulard, dit: "Rocco. Tu as vu la réserve, dimanche ?", geste: fume}
+      - {qui: fardelli, dit: "J'ai vu {pg, select, f{une seule fille} other{un seul garçon}}. {pg, select, f{Elle} other{Il}} boite de la gauche quand personne ne regarde."}
+      - {qui: aulard, dit: "L'usine ne paiera plus les maillots, l'an prochain. Il faudra bien que quelqu'un les paie."}
+      - {qui: fardelli, dit: "À Noël, la Tréfilerie ferme. Après, il restera une seule chose à vendre dans cette ville, Jean-Marie. Et elle court vite.", ton: sourire}
+      - {qui: fardelli, regarde: toi}
+      - {qui: fardelli, dit: "Huit heures, alors. Bonsoir.", ton: sourire}
+      - {qui: aulard, sort: true}
+      - {qui: toi, pense: "Il a dit bonsoir comme on referme une porte derrière quelqu'un."}
+      - {narration: "La vitre remonte. Le moteur tourne encore quand tu rentres. Tu ne l'entends partir qu'une fois en haut."}
+
+paroles:
+  # Le casier : Bréhaut a compté ceux qui se sont baissés.
+  - qui: brehaut
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_casier_pose)"
+    texte: "Le casier, tu l'as posé au milieu du couloir. J'ai compté ceux qui se sont baissés. Je ne te dis pas les noms : ils le savent."
+  # Le fil du téléphone : Odile le rebranchera quand elle aura décidé.
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_fil_debranche) && saison == 1"
+    texte: "Je rebrancherai le téléphone quand j'aurai décidé quoi dire à Fardelli. Pas avant. Si c'est lui qui appelle, tu décrocheras."
+  # La licence lue : le point d'encre de Josiane.
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_licence_lue) && saison <= 2"
+    texte: "Vous avez lu avant de signer, ou demandé. Personne ne le fait. J'ai mis un point d'encre dans la marge, à votre lettre. Pour moi seule."
+  # Le seau de glace : la question posée à Gigi a fait le tour du vestiaire.
+  - qui: vecchio
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_didier_demande)"
+    texte: "Tu m'as demandé où il était, un soir, au seau de glace. Je t'ai répondu ce qu'on a écrit. Redemande-moi, un jour. Je serai peut-être prêt."
+  - qui: steph
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_didier_demande)"
+    texte: "Tu as demandé à Gigi où était Didier. Ça se sait vite, un vestiaire. Moi, je ne réponds que sur les boîtes."
+  # Les cartons du garage : CUISINE n'est pas refermé.
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_cartons_defaits) && !flag(h3_maison_perdue)"
+    texte: "Le carton CUISINE, je ne l'ai pas refermé. Les trois assiettes sont dedans, comme tu les as vues. Je les sortirai le jour où j'aurai un placard à moi."
+  # Le coupé : la banquette, ou le mot « prêt ».
+  - qui: gege
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_nord_ramenee)"
+    texte: "Quatre de la Nord dans ton coupé, un samedi. Ils en parlent encore au local. La banquette sentait le cuir neuf et l'huissier."
+  - qui: gege
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_coupe_pret)"
+    texte: "« Un prêt. » On le chante sur l'air d'une berceuse, au virage. Pas méchamment. Mais on le chante."
+  # La phrase de Gigi, dans la page de Léa.
+  - qui: lea
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_gigi_a_parle)"
+    texte: "Un ancien du club m'a donné une phrase, sans signer : « Didier était brun. » Je la garde entre guillemets. Une phrase ne fait pas un nom."
+
+# Les scènes de la semaine qui répondent aux choix du prologue et du livre.
+scenes:
+  - id: h3.sc.casier
+    titre: "Le casier de bouteilles"
+    roles: [joueur]
+    lieu: stade
+    tranches: [matin]
+    qui: vecchio
+    poids: 3
+    si: "flag('histoire_h3') && flag('h3_casier_pose') && saison == 1"
+    texte: "Gigi porte le casier de bouteilles tout seul jusqu'au terrain annexe, le dos raide, depuis le jour où tu l'as posé dans le couloir. Bréhaut regarde faire, et regarde surtout qui ne bouge pas."
+    choix:
+      - label: "Je prends l'autre anse"
+        reponse: "Gigi ne dit rien. À deux, le casier ne pèse presque rien. Bréhaut décroche son regard de ton dos."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je laisse faire"
+        reponse: "Le casier passe devant toi, bouteille après bouteille. Bréhaut note que tu as regardé."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: h3.sc.marge
+    titre: "Un point d'encre"
+    roles: [joueur]
+    lieu: clubhouse
+    tranches: [matin, midi]
+    qui: josiane
+    poids: 3
+    si: "flag('histoire_h3') && flag('h3_licence_lue') && saison <= 2"
+    texte: "Josiane ouvre le classeur des pros à ta lettre et te montre la marge : un point d'encre, tout petit. « Vous avez lu avant de signer, ou demandé. J'en ai noté trois depuis 1971, moi comprise. »"
+    choix:
+      - label: "Qui sont les deux autres ?"
+        reponse: "« Le fils du Doc, qui est devenu médecin. Moi, en 1971. » Elle referme le classeur d'un doigt, avant que tu demandes ce qu'elle avait lu, ce jour-là."
+      - label: "Je lis rarement, d'habitude"
+        reponse: "« Ça se voit sur les autres, pas sur vous. » Elle sourit pour la première fois depuis juin, et cache le sourire derrière le classeur."
+        effets: {jauges: {direction: 1}}

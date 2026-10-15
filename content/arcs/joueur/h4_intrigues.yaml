@@ -82,6 +82,8 @@ arcs:
           # Si la file a débordé et que le capot est passé avant : on sait déjà.
           - { id: jp.h4.morceaux.entiere_su, if: "flag('h4_capot')" }
           - { id: jp.h4.morceaux.entiere_sacha, if: "flag('h4_puzzle_sacha') && !flag('divorce')" }
+          # « Quelqu'un de 1984 » : Camille a recollé les morceaux sans toi.
+          - { id: jp.h4.morceaux.entiere_camille, if: "flag('h4_camille_1984') && !flag('divorce')" }
           - { id: jp.h4.morceaux.entiere_archives, if: "flag('h4_photo_archives')" }
           - { id: jp.h4.morceaux.entiere_cadre }
         next: []
@@ -230,6 +232,8 @@ arcs:
         next: [ { step: onze, at_season: 1, at: [2, 5], if: "season == 1" }, { step: onze, in: [3, 6] } ]
       - id: onze
         card:
+          # Tu sais qui a demandé de barrer : la onzième lui sera lue avant l'imprimeur.
+          - { id: jp.h4.deux_lignes.onze_appel, if: "flag('h4_massenet_appel')" }
           - { id: jp.h4.deux_lignes.onze }
         next: [ { step: epreuve, in: [2, 5] } ]
       - id: epreuve
@@ -325,6 +329,8 @@ arcs:
       - id: propose
         card:
           - { id: jp.h4.capot.propose_menace, if: "flag('h4_menace_dire')" }
+          # « Laisse ma maison » : Bréhaut en présente la facture.
+          - { id: jp.h4.capot.propose_maison, if: "flag('h4_maison_epargnee')" }
           - { id: jp.h4.capot.propose }
         next: []
 
