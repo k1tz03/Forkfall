@@ -19,9 +19,9 @@
  *   A      16 m.  la course : basse, arpège en croches, l'accroche en fin de phrase
  *   B       8 m.  le refrain : claps, stabs à contretemps, la mélodie en marches
  *   B2      8 m.  le refrain, harmonisé
- *   pont   16 m.  le creux : la reese seule, une voix « aah », le tic, l'accroche
- *                 lente ; quatre mesures pour remonter
- *   A2     16 m.  la course, plus nerveuse (arpège en triolets contre la mesure)
+ *   pont   16 m.  le creux : la reese, une voix « aah », l'arpège au loin, le tic,
+ *                 l'accroche lente ; quatre mesures pour remonter
+ *   A2     16 m.  la course, plus nerveuse (l'arpège à trois notes contre quatre temps)
  *   C       8 m.  l'envolée : la grande scie, la majeure volée (do, sol), l'accroche
  *                 à l'octave
  *   C2      8 m.  l'envolée, harmonisée
