@@ -175,7 +175,7 @@
     voix: {
       sirene: { inst: 'vox', vol: 0.2, voyelle: 'ou', vers: 'a', env: [0.012, 0.3, 0.92, 0.12], rev: 0.5, echo: 0.18, flotte: { prof: 6, vit: 0.5 }, pan: 0.05 },
       envol:  { inst: 'supersaw', vol: 0.07, scies: 5, desaccord: 18, large: 0.85, rev: 0.45, flotte: { prof: 7, vit: 0.45 }, filtre: 3600, env: [0.012, 0.4, 0.85, 0.22] },
-      lead:   { inst: 'lead', vol: 0.1, rev: 0.4, echo: 0.25, flotte: { prof: 7, vit: 0.5 }, filtre: 2600, pan: -0.1 },
+      lead:   { inst: 'lead', vol: 0.12, rev: 0.4, echo: 0.25, flotte: { prof: 7, vit: 0.5 }, filtre: 2600, pan: -0.1 },
       velours: { inst: 'vox', vol: 0.09, oct: 3, voyelle: 'o', vers: 'ou', rev: 0.55, pompe: true, flotte: { prof: 12, vit: 0.3 }, env: [0.3, 0.8, 0.85, 0.4] },
       fil:    { inst: 'pluck2', vol: 0.075, oct: 3, echo: 0.35, rev: 0.15, pompe: true, pan: 0.3, filtre: 2600 },
       stab:   { inst: 'stab', vol: 0.08, oct: 4, echo: 0.2, rev: 0.3, pompe: true, pan: -0.2 },
