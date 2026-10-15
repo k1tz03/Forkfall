@@ -118,7 +118,12 @@ button{background:none;border:0;padding:0;cursor:pointer}
   --a-texte2:#CBC1E2;   /* 10,6:1 sur le panneau */
   --a-texte3:#A79CC4;   /* 7,1:1 sur le fond */
   --a-or:#FFC94D;
-  --pix:"Pixelify Sans","Space Mono","DejaVu Sans Mono",ui-monospace,monospace;
+  /* La police pixel de l'accueil. Pixelify Sans, à 13-15 px sur un téléphone, lisait « AUGÉRIVE ·
+     20S0 », « FOOTGALL », « GARRIÈRE » : ses 5, B et C ressemblent à un S, un G et un G. Jersey 15
+     garde le pixel, et ses B, C, G, S, 5, 8 ne se confondent plus. Une seule graisse : pas de gras
+     fabriqué (`font-synthesis`), il ne ferait que baver les pixels. */
+  --pix:"Jersey 15","Space Mono","DejaVu Sans Mono",ui-monospace,monospace;
+  font-synthesis:style;
   background:var(--a-fond);color:var(--a-texte);
   padding-top:0;gap:0;
 }
@@ -166,10 +171,10 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 }
 @keyframes accMeche{from{left:0}to{left:calc(100% - 12px)}}
 .acc-tag{
-  margin:10px 0 0;font-family:var(--pix);font-size:15px;line-height:1.35;letter-spacing:.05em;
+  margin:10px 0 0;font-family:var(--pix);font-size:18px;line-height:1.3;letter-spacing:.06em;
   text-transform:uppercase;color:var(--a-texte);text-shadow:2px 2px 0 var(--a-ombre);
 }
-.acc-tag b{color:var(--a-or);font-weight:600}
+.acc-tag b{color:var(--a-or);font-weight:400}
 
 /* le nom : une ligne, deux champs, deux boutons, dans un panneau au pixel */
 .ident{display:flex;flex-direction:column;gap:6px}
@@ -189,21 +194,21 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
   margin:14px 0 0;padding:12px 14px 4px;background:var(--a-fond2);
   box-shadow:0 0 0 2px var(--a-ligne),4px 4px 0 2px var(--a-ombre);
 }
-#titleScreen .ident .lab{font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte2)}
+#titleScreen .ident .lab{font-family:var(--pix);font-size:17px;letter-spacing:.08em;color:var(--a-texte2)}
 #titleScreen .ident input{border-bottom:2px solid var(--a-ligne);color:var(--a-texte)}
 #titleScreen .ident input::placeholder{color:var(--a-texte3)}
 #titleScreen .ident input:focus{border-bottom-color:var(--a-or)}
-#titleScreen .ident .tools button{font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte2)}
+#titleScreen .ident .tools button{font-family:var(--pix);font-size:17px;letter-spacing:.08em;color:var(--a-texte2)}
 #titleScreen .ident .tools button:hover,#titleScreen .ident .tools button:focus-visible{color:var(--a-or)}
-#titleScreen .ident .who{font-family:var(--pix);color:var(--a-texte3);font-style:normal;letter-spacing:.08em}
+#titleScreen .ident .who{font-family:var(--pix);font-size:17px;color:var(--a-texte3);font-style:normal;letter-spacing:.08em}
 
 /* les histoires : des cartouches, chacune sa couleur (--acc) */
 .starts{margin:18px 0 0;display:flex;flex-direction:column;flex:1 1 auto}
 .acc-h{
   display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-  margin:6px 0 12px;font-family:var(--pix);font-size:21px;font-weight:600;line-height:1.2;color:var(--a-texte);
+  margin:6px 0 12px;font-family:var(--pix);font-size:26px;font-weight:400;line-height:1.15;color:var(--a-texte);
 }
-.acc-h small{font-size:13px;font-weight:400;letter-spacing:.06em;color:var(--a-texte3);text-transform:uppercase}
+.acc-h small{font-size:17px;font-weight:400;letter-spacing:.06em;color:var(--a-texte3);text-transform:uppercase}
 .acc-liste{display:flex;flex-direction:column;gap:20px;padding:0 5px 6px 0}
 .postulat{
   --acc:#F6E9CF;
@@ -221,19 +226,19 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
   background:linear-gradient(180deg,rgba(28,22,48,0),rgba(28,22,48,.85));
 }
 .postulat .num,.postulat .neuf,.postulat .heure{position:absolute;z-index:2;font-family:var(--pix);line-height:1}
-.postulat .num{left:0;top:0;background:var(--acc);color:#0B0814;font-size:13px;font-weight:700;letter-spacing:.06em;padding:5px 8px 4px}
-.postulat .neuf{right:0;top:0;background:var(--a-or);color:#0B0814;font-size:12px;font-weight:700;letter-spacing:.08em;padding:5px 8px 4px;text-transform:uppercase}
+.postulat .num{left:0;top:0;background:var(--acc);color:#0B0814;font-size:17px;font-weight:400;letter-spacing:.06em;padding:5px 8px 4px}
+.postulat .neuf{right:0;top:0;background:var(--a-or);color:#0B0814;font-size:16px;font-weight:400;letter-spacing:.08em;padding:5px 8px 4px;text-transform:uppercase}
 .postulat .heure{
   right:9px;bottom:9px;background:rgba(6,4,11,.82);color:var(--acc);
-  font-size:15px;letter-spacing:.08em;padding:4px 7px 3px;box-shadow:0 0 0 2px rgba(6,4,11,.82);
+  font-size:20px;letter-spacing:.08em;padding:4px 7px 3px;box-shadow:0 0 0 2px rgba(6,4,11,.82);
 }
 .postulat .heure i{font-style:normal;animation:accClign 1s steps(1) infinite}
 @keyframes accClign{50%{opacity:0}}
 .postulat .corps{display:block;padding:13px 14px 15px}
-.postulat .t{display:block;font-family:var(--pix);font-size:22px;font-weight:600;line-height:1.15;color:var(--a-texte)}
+.postulat .t{display:block;font-family:var(--pix);font-size:28px;font-weight:400;line-height:1.1;color:var(--a-texte)}
 .postulat .puces{display:flex;flex-wrap:wrap;gap:8px 9px;margin-top:9px}
 .postulat .puce{
-  display:inline-flex;align-items:center;gap:6px;font-family:var(--pix);font-size:13px;line-height:1;
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--pix);font-size:17px;line-height:1;
   letter-spacing:.05em;text-transform:uppercase;padding:4px 7px 3px;background:#0F0C18;color:var(--a-texte2);
   box-shadow:0 0 0 2px var(--a-ligne);
 }
@@ -245,6 +250,76 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 }
 .postulat.go{animation:accGo 300ms steps(3) both}
 @keyframes accGo{40%{filter:brightness(1.7)}100%{filter:brightness(1);opacity:.45}}
+
+/* « Commence ici » : la première visite (aucune carrière jouée, aucune sauvegarde), sur le livre 1 ;
+   les autres livres restent ouverts. Une plaque d'or au pixel, sa flèche qui clignote, et le cadre
+   de la cartouche qui passe de sa couleur à l'or. */
+.postulat .ici{
+  position:absolute;z-index:2;right:0;top:0;display:flex;align-items:center;gap:8px;
+  background:var(--a-or);color:#0B0814;font-family:var(--pix);font-size:20px;line-height:1;letter-spacing:.08em;
+  padding:6px 11px 5px;text-transform:uppercase;
+}
+.postulat .ici svg{display:block;width:12px;height:12px;flex:0 0 auto;animation:accClign 1s steps(1) infinite}
+.postulat.premier{animation:accPremier 1.4s steps(1) infinite}
+@keyframes accPremier{50%{box-shadow:0 0 0 3px var(--a-or),6px 6px 0 3px var(--a-ombre)}}
+
+/* une carrière en cours dans ce livre : sa cartouche porte « Reprendre » (le nom, la semaine), tout
+   d'une touche ; toucher la cartouche elle-même ouvre le dialogue (Reprendre / Recommencer) */
+.pw{display:flex;flex-direction:column}
+.pw .reprise{
+  display:flex;align-items:center;gap:10px;width:calc(100% + 6px);min-height:52px;margin:15px -3px 6px;padding:7px 15px 6px;text-align:left;
+  background:var(--acc);color:#0B0814;font-family:var(--pix);box-shadow:4px 4px 0 2px var(--a-ombre);
+  transition:transform 120ms steps(2),box-shadow 120ms steps(2);
+}
+.pw .reprise:hover,.pw .reprise:focus-visible{outline:0;transform:translate(-2px,-2px);box-shadow:6px 6px 0 2px var(--a-ombre)}
+.pw .reprise:active{transform:translate(2px,2px);box-shadow:1px 1px 0 2px var(--a-ombre)}
+.pw .reprise svg{display:block;width:13px;height:13px;flex:0 0 auto}
+.pw .reprise b{font-weight:400;font-size:22px;line-height:1;letter-spacing:.08em;text-transform:uppercase;flex:0 0 auto}
+.pw .reprise .qui{flex:1 1 auto;min-width:0;text-align:right;font-size:18px;line-height:1.05;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* « Reprendre » du haut : la carrière la plus récente, tous livres confondus */
+#titleScreen .v-reprendre{
+  margin:16px 0 0;padding:11px 14px 10px;gap:2px;background:var(--a-fond2);border:0;border-radius:0;
+  box-shadow:0 0 0 2px var(--a-or),4px 4px 0 2px var(--a-ombre);
+}
+#titleScreen .v-reprendre b{font-family:var(--pix);font-size:22px;font-weight:400;letter-spacing:.1em;color:var(--a-or)}
+#titleScreen .v-reprendre span{font-size:12.5px;letter-spacing:.02em;color:var(--a-texte2)}
+#titleScreen .v-reprendre:hover,#titleScreen .v-reprendre:focus-visible{outline:0;box-shadow:0 0 0 2px #FFE08A,6px 6px 0 2px var(--a-ombre)}
+
+/* le dialogue d'un livre déjà en cours : au pixel, comme l'accueil (ses propres couleurs : il
+   s'ouvre aussi depuis l'écran de fin) */
+.dlg{
+  --pix:"Jersey 15","Space Mono","DejaVu Sans Mono",ui-monospace,monospace;
+  --a-fond2:#1C1630;--a-ligne:#352B52;--a-ombre:#06040B;--a-texte:#F6E9CF;--a-texte2:#CBC1E2;--a-texte3:#A79CC4;--a-or:#FFC94D;
+  position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+  padding:calc(18px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom));
+  background:rgba(6,4,11,.82);font-synthesis:style;
+}
+.dlg[hidden]{display:none}
+.dlg-boite{
+  --acc:#F6E9CF;width:min(360px,100%);max-height:100%;overflow:auto;background:var(--a-fond2);color:var(--a-texte);
+  padding:16px 16px 6px;box-shadow:0 0 0 3px var(--acc),7px 7px 0 3px var(--a-ombre);
+}
+.dlg-boite:focus{outline:0}
+.dlg-livre{margin:0 0 8px;font-family:var(--pix);font-size:20px;line-height:1.1;letter-spacing:.07em;text-transform:uppercase;color:var(--acc)}
+.dlg-texte{margin:0 0 16px;font-size:14.5px;line-height:1.5;color:var(--a-texte)}
+.dlg-actions{display:flex;gap:12px}
+.dlg-actions button{
+  flex:1 1 0;min-width:0;min-height:52px;padding:6px 8px 5px;display:grid;place-items:center;text-align:center;
+  font-family:var(--pix);font-size:20px;line-height:1.05;letter-spacing:.06em;text-transform:uppercase;
+}
+.dlg-reprendre{background:var(--acc);color:#0B0814;box-shadow:3px 3px 0 2px var(--a-ombre)}
+.dlg-recommencer{background:transparent;color:var(--a-texte);box-shadow:inset 0 0 0 2px var(--a-ligne),3px 3px 0 2px var(--a-ombre)}
+.dlg-recommencer.confirme{background:#E0164B;color:#F6E9CF;box-shadow:3px 3px 0 2px var(--a-ombre)}
+.dlg-actions button:hover,.dlg-actions button:focus-visible{outline:0;filter:brightness(1.18)}
+.dlg-actions button:active{transform:translate(2px,2px)}
+.dlg-avert{margin:12px 0 0;font-size:12.5px;line-height:1.45;color:#FF5C7F}
+.dlg-avert[hidden]{display:none}
+.dlg-retour{
+  display:block;width:100%;min-height:46px;margin-top:6px;font-family:var(--pix);font-size:19px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--a-texte3);
+}
+.dlg-retour:hover,.dlg-retour:focus-visible{outline:0;color:var(--a-or)}
 
 /* la vie dans les vignettes : la pluie sur la gare, le feu de la friche, le fumigène du kop */
 .fx-pluie::after{
@@ -263,12 +338,12 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 
 #titleScreen .cimetiere{
   margin-top:22px;padding-top:12px;border-top:2px solid var(--a-ligne);
-  font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte3);
+  font-family:var(--pix);font-size:17px;letter-spacing:.08em;color:var(--a-texte3);
 }
-#titleScreen .cimetiere b{color:var(--a-or);font-weight:600}
+#titleScreen .cimetiere b{color:var(--a-or);font-weight:400}
 
 @media (prefers-reduced-motion:reduce){
-  .acc-pano,.acc-meche i,.postulat .heure i,.fx-pluie::after,.fx-feu::after,.fx-fumigene::after{animation:none}
+  .acc-pano,.acc-meche i,.postulat .heure i,.postulat.premier,.postulat .ici svg,.fx-pluie::after,.fx-feu::after,.fx-fumigene::after{animation:none}
 }
 
 /* le mode histoire : plus de jauges à l'écran (le rail du haut, les jauges
@@ -403,27 +478,47 @@ body.mode-histoire #rail,body.mode-histoire #deadRail{display:none}
 .marks .sab[hidden]{display:none}
 .marks .sab svg{display:block;width:14px;height:14px}
 .marks .num{
-  margin-left:auto;flex:0 0 auto;font-size:11.5px;letter-spacing:.1em;color:var(--creme2);
+  margin-left:auto;flex:0 0 auto;font-size:var(--plaque);letter-spacing:.1em;color:var(--creme2);
   background:rgba(27,17,9,.86);padding:3px 6px;border-radius:2px;white-space:nowrap;
 }
 /* Le nom du locuteur tenait sur une ligne et finissait par « … » neuf fois
    sur dix : on n'apprenait jamais qui étaient les gens. Deux lignes — le nom
    en crème et en capitales, le rôle dessous, dans sa casse d'origine (deux
-   fois plus de caractères pour la même largeur). */
+   fois plus de caractères pour la même largeur).
+   Sur un petit écran (360 × 640), la carte rapetisse jusqu'à 180 px et la
+   plaque n'avait plus que 97 px, à côté du compteur : « MADAME JOSI… »,
+   « SECRÉTAIRE DE… ». Le nom et la fonction passent donc à la ligne (trois
+   lignes pour le nom, quatre pour la fonction : le plus long nom du jeu en
+   fait trois, la plus longue fonction quatre sur la plus petite carte), sans
+   jamais passer sous 11 px (le plancher de lisibilité de check_preview.js).
+   La plaque et le compteur sont deux boîtes d'une même ligne : elle
+   rétrécit, il ne bouge pas, ils ne se recouvrent pas. */
+.marks{--plaque:11.5px}
 .marks .who{
   background:rgba(18,11,5,.88);padding:5px 8px 6px;border-radius:2px;
   max-width:80%;min-width:0;
 }
 .marks .who[hidden]{display:none}
+.marks .who b,.marks .who i{
+  display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word;
+  font-size:var(--plaque);
+}
 .marks .who b{
-  display:block;font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  -webkit-line-clamp:3;font-weight:700;letter-spacing:.13em;
   text-transform:uppercase;color:var(--creme);line-height:1.2;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .marks .who i{
-  display:block;font-style:normal;font-size:11.5px;letter-spacing:.02em;
+  -webkit-line-clamp:4;font-style:normal;letter-spacing:.02em;
   color:var(--creme2);line-height:1.25;margin-top:1px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+/* petite carte : le même texte, un peu plus serré, pour que la plaque prenne moins de portrait */
+@media (max-height:700px),(max-width:380px){
+  .marks{--plaque:11px}
+  .marks.bot{padding-left:8px;padding-right:8px;gap:6px}
+  .marks .who{padding:4px 6px 5px}
+  .marks .who b{letter-spacing:.08em}
+  .marks .who i{letter-spacing:.01em}
+  .marks .num{padding:3px 4px;letter-spacing:.06em}
 }
 
 /* ── le bandeau d'annonce : une bande pleine qui traverse la carte ───────── */
@@ -559,15 +654,35 @@ table.tbl tr.toi td.r{color:var(--framboise)}
 .plein .pbody{flex:1 1 auto;padding:14px 0 8px}
 .plein .note{font-size:12.5px;font-style:italic;color:var(--creme2);line-height:1.55}
 
-/* le cimetière des fins */
+/* le cimetière des fins : l'échelle des récompenses, puis les fins rangées par livre */
+.paliers{margin:14px 0 2px;padding:11px 12px 7px;background:var(--fond2);border-left:2px solid var(--framboise)}
+.paliers .encore{margin:0 0 8px;font-size:12.5px;line-height:1.5;color:var(--creme)}
+.paliers .encore.ok{color:var(--vert)}
+.paliers ul{list-style:none;margin:0;padding:0}
+.paliers li{display:flex;gap:9px;align-items:baseline;padding:4px 0;font-size:11.5px;line-height:1.45;color:var(--creme3)}
+.paliers li i{font-style:normal;color:var(--framboise);width:11px;flex:0 0 11px}
+.paliers li em{font-style:normal;flex:0 0 4.8em;letter-spacing:.06em}
+.paliers li span{flex:1 1 auto;min-width:0;color:var(--creme2)}
+.paliers li.ok span{color:var(--creme)}
+.grp{margin-top:20px}
+.grp summary{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:6px 0;list-style:none;
+  border-bottom:1px solid var(--trait);cursor:pointer;
+  font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--creme);
+}
+.grp summary::-webkit-details-marker{display:none}
+.grp summary::after{content:"";flex:0 0 7px;width:7px;height:7px;margin:0 3px 3px 0;border:solid var(--creme3);border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform var(--t) ease}
+.grp[open] summary::after{transform:rotate(-135deg);margin-bottom:-3px}
+.grp summary:focus-visible{outline:1px solid var(--framboise);outline-offset:2px}
+.grp summary b{color:var(--creme2);font-weight:400;letter-spacing:.06em}
 .fins{list-style:none;margin:0;padding:0;columns:1}
 .fins li{
   display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--fond3);
-  font-size:12.5px;color:var(--creme3);
+  font-size:12.5px;line-height:1.45;color:var(--creme3);
 }
-.fins li b{font-weight:400;color:var(--creme);flex:1 1 auto}
-.fins li i{font-style:normal;color:var(--framboise);width:11px}
-.fins li.off b{color:var(--creme3);font-style:italic;letter-spacing:.18em}
+.fins li b{font-weight:400;color:var(--creme);flex:1 1 auto;min-width:0}
+.fins li i{font-style:normal;color:var(--framboise);width:11px;flex:0 0 11px}
+.fins li.off b{color:var(--creme3);font-style:italic}
 
 /* les réglages */
 .reglages{display:flex;flex-direction:column;gap:2px}
@@ -710,6 +825,8 @@ table.tbl tr.toi td.r{color:var(--framboise)}
 .columns{margin-top:14px;border-top:1px solid var(--fond3);padding-top:11px}
 .columns p{margin:0 0 10px;font-size:12px;line-height:1.55;color:var(--creme2)}
 .columns p b{color:var(--creme);font-weight:700;letter-spacing:.04em}
+/* la fonction de celui qui parle : ses capitales d'origine, en petit et espacées (jamais en minuscules) */
+.columns .qlab{font-size:.84em;letter-spacing:.07em;color:var(--creme3)}
 
 /* ═══ 4. FIN ════════════════════════════════════════════════════════════ */
 #endingScreen{gap:0}
@@ -720,6 +837,12 @@ table.tbl tr.toi td.r{color:var(--framboise)}
 }
 .fin-verdict .stamp.gold{color:var(--creme)}
 .fin-verdict .sub{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--creme3);margin-top:7px}
+/* une fin de plus au cimetière : son rang, et les récompenses qu'elle ouvre */
+.fin-verdict .gain{margin-top:12px;padding:9px 11px 8px;background:var(--fond2);border-left:2px solid var(--framboise);font-size:11.5px;line-height:1.5;color:var(--creme2)}
+.fin-verdict .gain[hidden]{display:none}
+.fin-verdict .gain b{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--creme)}
+.fin-verdict .gain span{margin-left:8px;letter-spacing:.08em;color:var(--creme3)}
+.fin-verdict .gain em{display:block;margin-top:4px;font-style:normal;color:var(--creme)}
 .dead{display:flex;gap:16px;align-items:center;margin:16px 0 0}
 .dead .mini{color:var(--creme);opacity:.3;position:relative}
 .dead .mini svg{display:block;width:26px;height:26px}
@@ -732,6 +855,8 @@ table.tbl tr.toi td.r{color:var(--framboise)}
   background:rgba(27,17,9,.82);display:flex;justify-content:space-between;gap:10px;
   font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--creme2);
 }
+/* le numéro de la carte reste d'un bloc (« N° 1 » se coupait en deux) : c'est le nom qui passe à la ligne */
+.fatal .fw #fatalNumber{flex:0 0 auto;white-space:nowrap}
 .fin-actions{margin-top:20px;display:flex;flex-direction:column;gap:2px}
 .fin-actions button{
   width:100%;text-align:left;min-height:52px;border-top:1px solid var(--fond3);
@@ -881,6 +1006,7 @@ __VILLE_CSS__
     <div class="fin-verdict">
       <div class="stamp" id="banner">Viré</div>
       <div class="sub" id="finHint"></div>
+      <div class="gain" id="finGain" hidden></div>
     </div>
 
     <div class="dead" id="deadRail" aria-label="Les jauges à la fin"></div>
@@ -946,6 +1072,22 @@ __VILLE_CSS__
   <div class="plein" id="panel" role="dialog" aria-modal="true" tabindex="-1" hidden>
     <div class="ph"><b id="panelTitle"></b><button class="close" id="btnPanelClose" type="button" aria-label="Refermer"></button></div>
     <div class="pbody" id="panelBody"></div>
+  </div>
+
+  <!-- ===================================================== 7. UN LIVRE EN COURS -->
+  <!-- On touche un livre où une carrière est déjà en cours : la reprendre, ou la recommencer (deux
+       gestes : la première touche demande, la seconde efface — la case de ce livre seulement). -->
+  <div class="dlg" id="dlgLivre" hidden>
+    <div class="dlg-boite" role="dialog" aria-modal="true" aria-labelledby="dlgTexte" tabindex="-1">
+      <p class="dlg-livre" id="dlgLivreNom"></p>
+      <p class="dlg-texte" id="dlgTexte"></p>
+      <div class="dlg-actions">
+        <button type="button" class="dlg-reprendre" id="dlgReprendre">Reprendre</button>
+        <button type="button" class="dlg-recommencer" id="dlgRecommencer">Recommencer</button>
+      </div>
+      <p class="dlg-avert" id="dlgAvert" role="status" hidden>Cette carrière sera effacée. Touche encore pour confirmer.</p>
+      <button type="button" class="dlg-retour" id="dlgRetour">Retour</button>
+    </div>
   </div>
 </div>
 
@@ -1110,8 +1252,44 @@ __VILLE_CSS__
   var profile = loadProfile();
   if (!profile.endings || typeof profile.endings !== "object") profile.endings = {};
   var runCount = profile.runs | 0;
-  function discovered() { return Object.keys(profile.endings).length; }
+  // les fins trouvées qui comptent : celles du Cimetière (une fin dormante n'y figure pas, elle ne compte pas)
+  function discovered() {
+    var n = 0;
+    endingsList.forEach(function (e) { if (profile.endings[e.id]) n++; });
+    return n;
+  }
   if (!profile.name || typeof profile.name !== "object") profile.name = { prenom: "", nom: "", genre: "m" };
+
+  // LES RÉCOMPENSES DU CIMETIÈRE — une petite table : à `n` fins trouvées, un cadeau, rangé dans le
+  // profil (`profile.recompenses`), d'où le lisent l'album (`pochettes`) et la ville (`quartiers` :
+  // ville_quartiers.js ouvre ces quartiers dès la première semaine). Chaque palier se donne une fois
+  // (`jalons` garde ceux qui l'ont été). `acquis` se lit une fois le palier franchi, `bientot` après
+  // « Encore n fins : » quand il reste à franchir.
+  var JALONS_FINS = [
+    { n: 3,  acquis: "Une pochette brillante", bientot: "une pochette brillante", pochette: 1 },
+    { n: 5,  acquis: "Le port s'ouvre dès la première semaine", bientot: "le port s'ouvrira dès la première semaine", quartiers: ["port"] },
+    { n: 8,  acquis: "Les Tilleuls aussi", bientot: "les Tilleuls s'ouvriront eux aussi dès la première semaine", quartiers: ["tilleuls"] },
+    { n: 12, acquis: "Tous les quartiers ouverts d'emblée", bientot: "tous les quartiers s'ouvriront d'emblée", quartiers: ["port", "tilleuls", "hauts", "campagne"] }
+  ];
+  function donnerRecompenses() {
+    if (!profile.recompenses || typeof profile.recompenses !== "object") profile.recompenses = {};
+    var r = profile.recompenses, n = discovered(), neufs = [];
+    if (!Array.isArray(r.jalons)) r.jalons = [];
+    JALONS_FINS.forEach(function (j) {
+      if (n < j.n || r.jalons.indexOf(j.n) >= 0) return;
+      r.jalons.push(j.n);
+      if (j.pochette) r.pochettes = (r.pochettes || 0) + j.pochette;
+      if (j.quartiers) {
+        if (!Array.isArray(r.quartiers)) r.quartiers = [];
+        j.quartiers.forEach(function (k) { if (r.quartiers.indexOf(k) < 0) r.quartiers.push(k); });
+      }
+      neufs.push(j);
+    });
+    if (neufs.length) saveProfile(profile);
+    return neufs;
+  }
+  // un profil d'avant les récompenses reçoit ce qu'il a déjà gagné
+  donnerRecompenses();
 
   // --- le son (audio.js) : les ambiances, la nappe, les gestes ---
   var SON_MODES = ["tout", "gestes", "muet"];
@@ -1581,17 +1759,46 @@ __VILLE_CSS__
     $("panel").hidden = false;
     $("panel").focus();
   }
+  // LE CIMETIÈRE : les fins rangées par livre (« Trois mille visages · 3/5 »), puis celles qui
+  // appartiennent à toutes les histoires. Une fin trouvée porte son titre, une fin à trouver son
+  // indice (content/endings, `indice:`) ; en tête, l'échelle des récompenses (JALONS_FINS) et le
+  // prochain palier.
+  var INDICE_DEFAUT = "Une fin que tu n'as pas encore trouvée.";
+  function ligneFin(e) {
+    var got = !!profile.endings[e.id];
+    return '<li class="' + (got ? "" : "off") + '"><i>' + (got ? "×" : "·") + '</i><b>' +
+      escapeHtml(got ? (e.title || e.id) : (e.indice || INDICE_DEFAUT)) + "</b></li>";
+  }
+  function htmlCimetiere() {
+    var n = discovered(), prochain = null;
+    JALONS_FINS.forEach(function (j) { if (!prochain && n < j.n) prochain = j; });
+    var html = '<p class="note">' + plural(n, "fin", "fins") + " sur " + ENDINGS_TOTAL + ". Chaque carrière en referme une.</p>";
+    html += '<div class="paliers">' + (prochain
+      ? '<p class="encore">Encore ' + plural(prochain.n - n, "fin", "fins") + " : " + escapeHtml(prochain.bientot) + ".</p>"
+      : '<p class="encore ok">Tous les paliers sont franchis.</p>');
+    html += "<ul>" + JALONS_FINS.map(function (j) {
+      var ok = n >= j.n;
+      return '<li class="' + (ok ? "ok" : "") + '"><i>' + (ok ? "×" : "·") + "</i><em>" + j.n + " fins</em><span>" + escapeHtml(j.acquis) + "</span></li>";
+    }).join("") + "</ul></div>";
+    var groupes = [], parLivre = {};
+    postulats.forEach(function (p) {
+      if (p.chantier && !/[?&]chantier/.test(location.search)) return;
+      parLivre[p.id] = { titre: p.title, fins: [] };
+      groupes.push(parLivre[p.id]);
+    });
+    var communes = { titre: "Toutes les histoires", fins: [] };
+    groupes.push(communes);
+    endingsList.forEach(function (e) { (parLivre[e.livre] || communes).fins.push(e); });
+    groupes.forEach(function (g) {
+      if (!g.fins.length) return;
+      var vues = g.fins.filter(function (e) { return profile.endings[e.id]; }).length;
+      html += '<details class="grp" open><summary><span>' + escapeHtml(g.titre) + " · <b>" + vues + "/" + g.fins.length +
+        '</b></span></summary><ul class="fins">' + g.fins.map(ligneFin).join("") + "</ul></details>";
+    });
+    return html;
+  }
   $("btnCimetiere").addEventListener("click", function () {
-    var li = endingsList.slice().sort(function (a, b) {
-      return String(a.title || a.id) < String(b.title || b.id) ? -1 : 1;
-    }).map(function (e) {
-      var got = !!profile.endings[e.id];
-      return '<li class="' + (got ? "" : "off") + '"><i>' + (got ? "×" : "·") + '</i><b>' +
-        escapeHtml(got ? (e.title || e.id) : "· · · · · ·") + "</b></li>";
-    }).join("");
-    openPanel("cimetiere", "Le cimetière",
-      '<p class="note">' + discovered() + " fin" + (discovered() > 1 ? "s" : "") + " sur " + ENDINGS_TOTAL +
-      ". Chaque carrière en referme une.</p><ul class=\"fins\">" + li + "</ul>", $("btnCimetiere"));
+    openPanel("cimetiere", "Le cimetière", htmlCimetiere(), $("btnCimetiere"));
   });
   function renderReglages() {
     var html = '<div class="reglages">' +
@@ -1640,6 +1847,8 @@ __VILLE_CSS__
     ds:            ["######...", "#....##..", "#.....##.", "#.###..#.", "#.......#", "#.####..#", "#.......#", "#.##.##.#", "#########"],
     selectionneur: ["##.......", "######...", "#########", "######...", "##.......", "#........", "#........", "#........", "#........"]
   };
+  // la flèche de l'accueil (« Commence ici », « Reprendre ») : 7 × 7, pointe à droite
+  var FLECHE = ["#......", "###....", "#####..", "#######", "#####..", "###....", "#......"];
   function svgPixels(rows, couleur) {
     var r = "";
     rows.forEach(function (ligne, y) {
@@ -1707,6 +1916,11 @@ __VILLE_CSS__
     // « Nouveau » : une histoire qui n'était pas là la dernière fois que tu as
     // vu l'accueil (rien au tout premier passage : tout serait nouveau).
     var vues = Array.isArray(profile.accueilVues) ? profile.accueilVues : null, ici = [];
+    // LES CASES PAR LIVRE (ville.js) : une carrière en cours par livre, reprise d'une touche depuis sa
+    // cartouche ; et, tant qu'on n'a jamais joué (aucune carrière, aucune sauvegarde), « Commence ici »
+    // sur le livre 1 — les autres livres restent ouverts.
+    var sauves = (VILLE && VILLE.sauves) ? VILLE.sauves() : {};
+    var premier = !runCount && !Object.keys(sauves).length;
     postulats.forEach(function (p) {
       // une histoire en chantier attend d'être écrite (?chantier pour la voir quand même)
       if (p.chantier && !/[?&]chantier/.test(location.search)) return;
@@ -1715,8 +1929,12 @@ __VILLE_CSS__
       var couleur = h.c || ROLE_COULEUR[p.role] || "#F6E9CF";
       var couv = ACCUEIL.couv[p.id] || ACCUEIL.couv.promu || "";
       var joue = profile.histoires[p.id] | 0;
+      var enCours = sauves[p.id] || null;
+      var depart = premier && p.index === 0;
+      var pw = document.createElement("div");
+      pw.className = "pw";
       var b = document.createElement("button");
-      b.className = "postulat";
+      b.className = "postulat" + (depart ? " premier" : "");
       b.type = "button";
       b.setAttribute("data-index", String(p.index));
       b.style.setProperty("--acc", couleur);
@@ -1724,7 +1942,8 @@ __VILLE_CSS__
         '<span class="cov' + (h.fx ? " fx-" + h.fx : "") + '">' +
           (couv ? '<img alt="" src="' + couv + '" decoding="async">' : "") +
           '<span class="num">N° ' + pad2(p.index + 1) + '</span>' +
-          (vues && vues.indexOf(p.id) < 0 ? '<span class="neuf">Nouveau</span>' : "") +
+          (depart ? '<span class="ici">' + svgPixels(FLECHE) + 'Commence ici</span>' :
+            (vues && vues.indexOf(p.id) < 0 ? '<span class="neuf">Nouveau</span>' : "")) +
           (h.h ? '<span class="heure">' + heureHtml(h.h) + '</span>' : "") +
         '</span>' +
         '<span class="corps"><span class="t"></span><span class="puces"></span><span class="q"></span></span>';
@@ -1747,18 +1966,27 @@ __VILLE_CSS__
       var q = b.querySelector(".q");
       // la quatrième de couverture quand l'histoire en a une, sinon sa question
       if (p.pitch) q.textContent = p.pitch; else if (p.question) q.textContent = p.question; else q.hidden = true;
-      b.setAttribute("aria-label", p.title + ", " + (p.roleName || p.role) + (p.role === "selectionneur" ? "" : ", division " + p.division) + (p.year ? ", " + p.year : ""));
+      b.setAttribute("aria-label", p.title + ", " + (p.roleName || p.role) + (p.role === "selectionneur" ? "" : ", division " + p.division) + (p.year ? ", " + p.year : "") +
+        (depart ? ". Commence ici" : "") + (enCours ? ". Une carrière est en cours" : ""));
+      // la cartouche lance le livre ; si une carrière y est déjà en cours, le dialogue demande d'abord
       b.addEventListener("click", function () {
         if (busy) return;
-        busy = true;
-        b.classList.add("go");
-        profile.histoires[p.id] = (profile.histoires[p.id] | 0) + 1;
-        saveProfile(profile);
-        if (audio && audio.jingle) audio.jingle("depart");
-        var go = function () { b.classList.remove("go"); busy = false; startRun(p.index); };
-        if (reduce) go(); else setTimeout(go, 300);
+        if (enCours) { dialogueLivre(p, couleur, enCours, function () { lancerLivre(p, b); }); return; }
+        lancerLivre(p, b);
       });
-      wrap.appendChild(b);
+      pw.appendChild(b);
+      if (enCours) {
+        var r = document.createElement("button");
+        r.type = "button";
+        r.className = "reprise";
+        r.style.setProperty("--acc", couleur);
+        r.innerHTML = svgPixels(FLECHE) + '<b>Reprendre</b><span class="qui"></span>';
+        r.querySelector(".qui").textContent = (enCours.nom ? enCours.nom + " · " : "") + "sem. " + enCours.semaine;
+        r.setAttribute("aria-label", "Reprendre la carrière de ce livre" + (enCours.nom ? " : " + enCours.nom : "") + ", semaine " + enCours.semaine);
+        r.addEventListener("click", function () { if (!busy) reprendreLivre(p); });
+        pw.appendChild(r);
+      }
+      wrap.appendChild(pw);
     });
     profile.accueilVues = ici;
     saveProfile(profile);
@@ -1772,6 +2000,93 @@ __VILLE_CSS__
     var cim = $("cimetiere");
     cim.innerHTML = '<span>Cimetière · <b>' + discovered() + '</b>/' + ENDINGS_TOTAL + ' fins</span><span>' + plural(runCount, "carrière", "carrières") + '</span>';
   }
+
+  // ── commencer, reprendre, recommencer un livre ───────────────────────────
+  // Le départ d'un livre depuis sa cartouche : le jingle, la cartouche qui clignote, puis la carrière.
+  function lancerLivre(p, b) {
+    if (busy) return;
+    busy = true;
+    if (b) b.classList.add("go");
+    if (!profile.histoires || typeof profile.histoires !== "object") profile.histoires = {};
+    profile.histoires[p.id] = (profile.histoires[p.id] | 0) + 1;
+    saveProfile(profile);
+    if (audio && audio.jingle) audio.jingle("depart");
+    var go = function () { if (b) b.classList.remove("go"); busy = false; startRun(p.index); };
+    if (reduce) go(); else setTimeout(go, 300);
+  }
+  function reprendreLivre(p) {
+    if (VILLE && VILLE.reprendreLivre) VILLE.reprendreLivre(p.id);
+  }
+  // Commencer un livre sans passer par sa cartouche (Successeur, Rejouer cette graine,
+  // `FusibleApercu.demarrer`) : s'il y a déjà une carrière en cours dedans, on le demande d'abord. La
+  // case d'un livre ne s'efface jamais sans un mot ; celle d'un autre livre n'est jamais en jeu.
+  function demarrerLivre(index, seed) {
+    var p = postulats[index];
+    var enCours = (p && VILLE && VILLE.sauves) ? VILLE.sauves()[p.id] : null;
+    if (!enCours) { startRun(index, seed); return; }
+    var h = HISTOIRES[p.id] || {};
+    dialogueLivre(p, h.c || ROLE_COULEUR[p.role] || "#F6E9CF", enCours, function () { startRun(index, seed); });
+  }
+  // Le dialogue d'un livre déjà en cours : Reprendre, ou Recommencer — qui demande une seconde touche
+  // (la première arme le bouton, la seconde efface la case de CE livre et recommence ; une touche qui
+  // suit de trop près la première, un double-tap, ne compte pas).
+  var dlg = { p: null, recommencer: null, confirme: 0, minuteur: 0, focus: null };
+  function dialogueLivre(p, couleur, enCours, recommencer) {
+    var d = $("dlgLivre");
+    d.querySelector(".dlg-boite").style.setProperty("--acc", couleur);
+    $("dlgLivreNom").textContent = "N° " + pad2(p.index + 1) + " · " + p.title;
+    $("dlgTexte").textContent = "Une carrière est en cours dans ce livre : " + (enCours.nom ? enCours.nom + ", " : "") + "semaine " + enCours.semaine + ".";
+    dlg.p = p; dlg.recommencer = recommencer; dlg.focus = document.activeElement;
+    dlgDesarmer();
+    d.hidden = false;
+    $("dlgReprendre").focus();
+  }
+  function dlgDesarmer() {
+    clearTimeout(dlg.minuteur);
+    dlg.confirme = 0;
+    $("dlgRecommencer").classList.remove("confirme");
+    $("dlgRecommencer").textContent = "Recommencer";
+    $("dlgAvert").hidden = true;
+  }
+  function dlgFermer() {
+    dlgDesarmer();
+    $("dlgLivre").hidden = true;
+    if (dlg.focus && dlg.focus.focus) { try { dlg.focus.focus(); } catch (e) {} }
+    dlg.p = null; dlg.recommencer = null; dlg.focus = null;
+  }
+  $("dlgReprendre").addEventListener("click", function () {
+    var p = dlg.p;
+    dlgFermer();
+    if (p) reprendreLivre(p);
+  });
+  $("dlgRecommencer").addEventListener("click", function () {
+    if (!dlg.p) return;
+    var maintenant = Date.now();
+    if (!dlg.confirme) {
+      dlg.confirme = maintenant;
+      $("dlgRecommencer").classList.add("confirme");
+      $("dlgRecommencer").textContent = "Effacer et recommencer";
+      $("dlgAvert").hidden = false;
+      dlg.minuteur = setTimeout(dlgDesarmer, 6000);
+      return;
+    }
+    if (maintenant - dlg.confirme < 450) return;
+    var p = dlg.p, go = dlg.recommencer;
+    dlgFermer();
+    if (VILLE && VILLE.effacerLivre) VILLE.effacerLivre(p.id);
+    if (go) go();
+  });
+  $("dlgRetour").addEventListener("click", dlgFermer);
+  // toucher le fond referme (au `click`, pas au `pointerdown` : le dialogue disparu, la même touche
+  // retomberait sur la cartouche dessous et le rouvrirait)
+  $("dlgLivre").addEventListener("click", function (e) { if (e.target === $("dlgLivre")) dlgFermer(); });
+  $("dlgLivre").addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); dlgFermer(); return; }
+    if (e.key !== "Tab") return;
+    var bs = [$("dlgReprendre"), $("dlgRecommencer"), $("dlgRetour")], i = bs.indexOf(document.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); bs[bs.length - 1].focus(); }
+    else if (!e.shiftKey && i === bs.length - 1) { e.preventDefault(); bs[0].focus(); }
+  });
 
   // ═══ 2. JEU ═════════════════════════════════════════════════════════════
   var card = $("card"), text = $("cardText");
@@ -2224,6 +2539,7 @@ __VILLE_CSS__
     window.scrollTo(0, 0);
     $("seedline").textContent = "Graine " + fmtNumber(currentSeed) + " · postulat " + (currentPostulat + 1) + " · carrière n° " + runCount;
     renderCimetiere();
+    renderGain();
     annoncer("fin", view);
   }
 
@@ -2301,6 +2617,28 @@ __VILLE_CSS__
     };
   }
 
+  // Les voix d'« En coulisses » : des gens de CETTE carrière. D'abord le casting du livre (`view.cast`) ;
+  // si deux ne suffisent pas, les gens d'Aubérive. Jamais quelqu'un qui n'est pas de l'époque (une
+  // personne de la ville a ses `annees` : l'année de la carrière doit y tomber), jamais un mort
+  // (`view.statuts`), ni celui qui vient de parler, ni la sélection. Le choix suit la graine.
+  function voixDeCoulisses(sp) {
+    var an = view.year || SIECLE_DEBUT, statuts = view.statuts || {}, annees = {};
+    ((content.ville && content.ville.gens) || []).forEach(function (g) { annees[g.id] = g.annees; });
+    function de(id) {
+      var c = CHARS[id], a = annees[id];
+      if (!c || !c.tic || !c.label || c.camp === "selection" || id === (sp && sp.id) || statuts[id] === "mort") return false;
+      return !Array.isArray(a) || (an >= a[0] && an <= a[1]);
+    }
+    var pool = (Array.isArray(view.cast) ? view.cast.slice().sort() : []).filter(de);
+    if (pool.length < 2) {
+      Object.keys(annees).sort().forEach(function (id) { if (pool.indexOf(id) < 0 && de(id)) pool.push(id); });
+    }
+    if (!pool.length) return [];
+    var i0 = (currentSeed >>> 0) % pool.length, out = [CHARS[pool[i0]]];
+    if (pool.length > 1) out.push(CHARS[pool[(i0 + 1 + ((currentSeed >>> 7) % (pool.length - 1))) % pool.length]]);
+    return out;
+  }
+
   function renderColumns(e, golden, sp) {
     var cols = $("columns");
     cols.innerHTML = "";
@@ -2324,20 +2662,23 @@ __VILLE_CSS__
     var heard = answerLog.slice(0, -1).filter(function (a) { return !/\bpts\b/.test(a); }).slice(-2);
     if (heard.length) para("Ce qu'on a entendu.", heard.join(" "));
 
-    var voices = Object.keys(CHARS).map(function (k) { return CHARS[k]; }).filter(function (c) {
-      return c && c.tic && c.label && c.camp !== "selection" && c.id !== (sp && sp.id);
-    }).sort(function (a, b) { return a.id < b.id ? -1 : 1; });
-    var quotes = [];
-    if (voices.length) {
-      var i0 = (currentSeed >>> 0) % voices.length;
-      for (var k = 0; k < Math.min(2, voices.length); k++) {
-        var c = voices[(i0 + k * 7) % voices.length];
-        if (quotes.length && quotes[0].id === c.id) c = voices[(i0 + 1) % voices.length];
-        quotes.push(c);
-      }
-    }
-    var hors = quotes.map(function (c) { return c.name + " (" + String(c.label).toLowerCase() + ") : « " + c.tic + " »"; }).join(" ");
-    para("En coulisses,", (hors ? hors + " " : "") + "le vestiaire parle déjà du suivant.");
+    // « En coulisses » : deux voix de CETTE carrière (voir voixDeCoulisses), leur fonction gardée en
+    // capitales, en petit, entre parenthèses — le texte n'est plus passé en minuscules
+    var quotes = voixDeCoulisses(sp);
+    var hors = document.createElement("p");
+    var tete = document.createElement("b");
+    tete.textContent = "En coulisses,";
+    hors.appendChild(tete);
+    quotes.forEach(function (c) {
+      hors.appendChild(document.createTextNode(" " + c.name + " "));
+      var lab = document.createElement("span");
+      lab.className = "qlab";
+      lab.textContent = "(" + etiquette(c) + ")";
+      hors.appendChild(lab);
+      hors.appendChild(document.createTextNode(" : « " + c.tic + " »"));
+    });
+    hors.appendChild(document.createTextNode(" le vestiaire parle déjà du suivant."));
+    cols.appendChild(hors);
 
     para("Et maintenant ?", (golden
       ? "On a mis un banc à son nom derrière le but. " + (fem ? "Elle" : "Il") + " s'y assied à chaque échauffement."
@@ -2352,9 +2693,9 @@ __VILLE_CSS__
       i = (i + 1) % n;
       if (!postulats[i] || !postulats[i].chantier || /[?&]chantier/.test(location.search)) break;
     }
-    startRun(i);
+    demarrerLivre(i);   // le livre suivant a peut-être une carrière en cours : on le demande d'abord
   });
-  $("btnReplay").addEventListener("click", function () { startRun(currentPostulat, currentSeed); });
+  $("btnReplay").addEventListener("click", function () { demarrerLivre(currentPostulat, currentSeed); });
 
   // ═══ LE GESTE ═══════════════════════════════════════════════════════════
   var dragging = false, startX = 0, dx = 0, pid = null;
@@ -2484,9 +2825,23 @@ __VILLE_CSS__
       ecran: show
     };
   }
+  // ce que cette fin rapporte au Cimetière quand elle y entre : son rang, et les paliers franchis
+  var gainFin = null;
+  function renderGain() {
+    var g = $("finGain");
+    if (!gainFin) { g.hidden = true; g.innerHTML = ""; return; }
+    var h = "<b>Nouvelle fin au cimetière</b><span>" + gainFin.n + " sur " + ENDINGS_TOTAL + "</span>";
+    gainFin.jalons.forEach(function (j) { h += "<em>Récompense · " + escapeHtml(j.acquis) + "</em>"; });
+    g.innerHTML = h;
+    g.hidden = false;
+  }
   function advanceEnd() {
     var eid = view.ending && view.ending.id;
-    if (eid && !profile.endings[eid]) { profile.endings[eid] = 1; saveProfile(profile); }
+    gainFin = null;
+    if (eid && !profile.endings[eid]) {
+      profile.endings[eid] = 1; saveProfile(profile);
+      if (ENDINGS[eid] && !ENDINGS[eid].dormante) gainFin = { n: discovered(), jalons: donnerRecompenses() };
+    }
     if (VILLE) VILLE.fin(view);
     renderEnding();
     show("ending");
@@ -2503,10 +2858,13 @@ __VILLE_CSS__
     postulats: postulats,
     histoires: HISTOIRES,
     graine: function () { return { seed: currentSeed, postulat: currentPostulat }; },
-    demarrer: function (postulat, seed) { startRun(postulat, seed); },
+    // commencer un livre (avec la graine, si on la donne) ; une carrière déjà en cours dans ce livre
+    // se demande d'abord (dialogue : Reprendre / Recommencer), elle ne s'efface jamais sans un mot
+    demarrer: function (postulat, seed) { demarrerLivre(postulat, seed); },
     panneau: function (kind, titre, html, opener) { openPanel(kind, titre, html, opener || null); },
     fermer: closeAll,
-    accueil: function () { renderTitle(); },
+    // redessiner l'accueil (au démarrage, `VILLE.pret()` pose déjà le « Reprendre » du haut : ici, il suit les cases)
+    accueil: function () { renderTitle(); if (VILLE && VILLE.rafraichirReprise) VILLE.rafraichirReprise(); },
     echapper: escapeHtml
   };
 

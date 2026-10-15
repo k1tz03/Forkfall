@@ -12,6 +12,18 @@
 # Où écrire : ici, ou dans `content/endings/<lot>.yaml` (même clef `endings:`).
 # Le build lit les deux et refuse un id déclaré deux fois : deux salles peuvent
 # écrire leurs fins en même temps sans se marcher dessus.
+#
+# `indice` (le Cimetière) : une ligne, 90 caractères au plus, aucun {placeholder},
+# qui tient la place d'une fin pas encore trouvée. Elle donne envie sans dire ce
+# qui arrive, dans la voix des indices d'objectifs (un objet, un lieu, une heure),
+# et ne reprend pas les mots du titre. Une fin jouable sans `indice` est signalée
+# par build_content (« Avertissement : … sans `indice` ») et se montre sous une
+# ligne par défaut ; une fin dormante n'en a pas besoin.
+# `livre` n'est pas écrit à la main : build_content le déduit du lot (le postulat
+# qui porte le drapeau `histoire_h<N>` pour `content/endings/h<N>.yaml`) ; une fin
+# des lots communs (ce fichier, joueur, police, roles_bureau, ruine,
+# setpieces_fins, sponsors) n'en a pas, et le Cimetière la range sous « Toutes les
+# histoires ».
 endings:
   # --- Entraîneur ---
   - id: en_bus
@@ -52,6 +64,7 @@ endings:
     side: vide
     rarity: commune
     title: "Le message de 23h47"
+    indice: "Trois lignes tapées tard le soir, et une faute d'orthographe dans la dernière."
     epitaph: "Viré{pg, select, f{e} other{}} par un message de trois lignes, à 23 h 47, entre la conférence de presse et le parking. Il contenait une faute d'orthographe. Tu l'as corrigée."
     epitaph_plus:
       - { when: "flag('vukic_dauphin')", text: "Zoran Vukić a pris le banc le lendemain. Il avait gardé le cahier de {nom}." }
@@ -60,6 +73,7 @@ endings:
     gauge: direction
     side: plein
     title: "Promotion-placard"
+    indice: "Un beau titre sur la porte, un bureau sans fenêtre, des maillots entassés."
     epitaph: "Nommé{pg, select, f{e} other{}} Directeur du Développement International. Ton bureau n'a pas de fenêtre ; on y range les maillots de la saison dernière."
     epitaph_plus:
       - { when: "flag('club_actif')",       text: "Ilyas a signé la plaque : « ambassadeur ». Sur l'organigramme du fonds, {nom} est une ligne entre la billetterie et les parkings." }
@@ -76,6 +90,7 @@ endings:
     gauge: caisse
     side: plein
     title: "Le coupable désigné"
+    indice: "Un relevé qui pèse trois saisons de salaires, et ta signature au bas."
     epitaph: "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."
     epitaph_plus:
       - { when: "flag('nassir_pret')",     text: "Page trois du prêt : le nom du responsable. {prenom} {nom} l'avait signée sans la lire." }
@@ -86,6 +101,7 @@ endings:
     rarity: rare
     share: false
     title: "La tribune"
+    indice: "« L'été prochain », avais-tu dit. Un soir de match, la Nord était pleine et chantait."
     epitaph: "La tribune Nord est tombée à la soixante-douzième minute, avec ceux qui chantaient dedans. Tu avais dit : l'été prochain."
     epitaph_plus:
       - { when: "flag('tribune_a_renover')", text: "{prenom} {nom} avait préféré garder la tribune Nord, ses fissures et son nom." }
@@ -94,6 +110,7 @@ endings:
     golden: true
     rarity: rare
     title: "Le banc en bois"
+    indice: "Rester assez longtemps pour qu'on t'installe quelque chose à ton nom derrière le but."
     epitaph: "Soixante-cinq ans. On a mis un banc à ton nom derrière le but. Tu t'y assois à chaque échauffement et tu donnes des consignes que personne n'entend."
     epitaph_plus:
       - { when: "objectif('promu_banc_gigi')", text: "Gigi Vecchio a le banc d'à côté. Ils regardent l'échauffement sans se parler ; {nom} apporte le thermos." }
@@ -103,6 +120,7 @@ endings:
     side: vide
     rarity: rare
     title: "La valise"
+    indice: "Trois joueurs d'en face, une enveloppe, et un tampon posé à plat en salle 3."
     epitaph: "Trois joueurs adverses, une enveloppe, un maintien. La Fédération a « examiné ». Elle a trouvé {prenom} {nom}."
     epitaph_plus:
       - { when: "flag('pari_promu')",      text: "Cent francs sur le maintien à cinq mille contre un. L'enveloppe pesait plus lourd ; {nom} le savait." }
@@ -112,6 +130,7 @@ endings:
     side: vide
     rarity: rare
     title: "Le dauphin"
+    indice: "Quelqu'un relit tes discours avant toi, depuis novembre."
     epitaph: "Remplacé{pg, select, f{e} other{}} par ton adjoint. Il « réfléchissait » depuis novembre."
     epitaph_plus:
       - { when: "relation.aulard <= -1", text: "Vaubourg a lu le second discours sans lever les yeux. {NOM} n'y était pas." }
@@ -177,6 +196,7 @@ endings:
     gauge: caisse
     side: plein
     title: "Les îles lointaines"
+    indice: "Un contrat d'image signé très loin, sur une idée de ton cousin."
     epitaph: "Le contrat d'image aux îles lointaines était une idée de ton cousin. Le fisc a eu une idée aussi."
     epitaph_plus:
       - { when: "flag('international')",   text: "Le maillot cobalt est resté dans le dossier, entre deux relevés. {prenom} {nom} l'avait gagné, celui-là." }
@@ -185,6 +205,7 @@ endings:
     golden: false
     rarity: rare
     title: "Parti pour l'or"
+    indice: "Un championnat du désert qui paie sans compter, et un niveau qui reste entre eux."
     epitaph: "Le championnat du désert paie comme l'or. Le niveau reste entre eux. {prenom} {nom} a appris à dormir la journée."
     epitaph_plus:
       - { when: "relation.camille <= -1",  text: "Camille n'est pas venue. Elle appelle le dimanche, à l'heure de chez nous ; {nom} dort encore." }
@@ -193,6 +214,7 @@ endings:
     golden: true
     rarity: rare
     title: "Le micro du dimanche"
+    indice: "Un plateau de télévision, deux anciens, et des jugements sur ceux qui jouent."
     epitaph: "{prenom} {nom} juge les autres le dimanche soir, sur un plateau, entre deux anciens. Au club, le président regarde, et note les noms."
     epitaph_plus:
       - { when: "enemy('meneche')",     text: "Massenet est sur le même plateau. Il « ne commente pas » ; {nom}, si." }
@@ -201,6 +223,7 @@ endings:
   - id: grand_deballage
     rarity: rare
     title: "Le Grand Déballage"
+    indice: "Ce que tu as promis, quelqu'un l'a gardé par écrit, page après page."
     epitaph: "Le dossier faisait douze pages. Chaque page, une promesse. Chaque promesse, une date. Tu te souvenais de toutes."
     epitaph_plus:
       - { when: "flag('pacte_gege')", text: "Page une : le pacte de la craie. La date, la main, et le nom de {nom}." }
@@ -209,12 +232,14 @@ endings:
     golden: true
     rarity: rare
     title: "Le Jubilé"
+    indice: "Un stade plein pour toi seul, et un dernier tour de pelouse."
     epitaph: "Stade plein, tour d'honneur. Tu as demandé où était le vestiaire. Par habitude."
     epitaph_plus:
       - { when: "flag('finale_gigi')",  text: "Gigi Vecchio était dans les buts, pour un soir. Il a laissé passer le penalty de {nom}, et personne ne l'a cru." }
       - { when: "relation.gege >= 2",   text: "Gégé a dirigé les chants. La Nord a chanté {prenom} {nom} sans se tromper d'accent, pour la première fois." }
   - id: generique
     title: "Fin de carrière"
+    indice: "Le foot recrache tout le monde, un jour. Sans raison, sans bruit."
     epitaph: "Le foot t'a recraché{pg, select, f{e} other{}}, comme il le fait toujours. On recommence ?"
     epitaph_plus:
       - { when: "flag('fidele')",        text: "{prenom} {nom} était resté{pg, select, f{e} other{}}. C'est le foot qui est parti." }

@@ -430,6 +430,9 @@ List<String> _statutOk(Object? raw, List<String> errors, String where) {
 /// Les statuts qui parlent sans `statut_ok:` (même table que le moteur).
 const Set<String> kStatutsParlants = {'present', 'club', 'staff'};
 
+/// La longueur d'un `indice` de fin (le Cimetière) : une ligne de téléphone.
+const int kIndiceMax = 90;
+
 List<String> _strList(Object? raw) => (raw as List?)?.map((e) => e.toString()).toList() ?? const [];
 
 /// `replay: never | ritual | {after, max, after_abort}` → json ou null.
@@ -521,6 +524,21 @@ void main() {
     }
     if (plus.length > 2) errors.add('endings/$eid: ${plus.length} epitaph_plus (au plus 2)');
     em['epitaph_plus'] = plus;
+    // `indice:` (le Cimetière) : la ligne qui tient la place d'une fin pas encore trouvée — une
+    // phrase sur une seule ligne, 90 caractères au plus, qui donne envie sans dire ce qui arrive.
+    // Du texte nu : le Cimetière ne rend aucun `{placeholder}`.
+    if (em['indice'] != null) {
+      final ind = em['indice'];
+      if (ind is! String || ind.trim().isEmpty) {
+        errors.add('endings/$eid: `indice` doit être une phrase non vide');
+      } else {
+        final ligne = ind.trim();
+        if (ligne.contains('\n')) errors.add('endings/$eid: `indice` tient sur une seule ligne');
+        if (ligne.contains('{') || ligne.contains('}')) errors.add('endings/$eid: `indice` ne porte aucun {placeholder}');
+        if (ligne.runes.length > kIndiceMax) errors.add('endings/$eid: `indice` de ${ligne.runes.length} caractères (> $kIndiceMax)');
+        em['indice'] = ligne;
+      }
+    }
     if (em['rebond'] != null) {
       final rm = (em['rebond'] as Map).cast<String, dynamic>();
       final w = _parseWhen(rm['when'], errors, 'endings/$eid/rebond');
@@ -951,6 +969,29 @@ void main() {
     });
     m['alarm_overrides'] = overrides;
     postulats.add(m);
+  }
+
+  // LE LIVRE d'une fin (le Cimetière range les fins par livre) : un lot `content/endings/h<N>.yaml`
+  // (ou `h<N>_<suite>.yaml`) est celui du postulat qui porte le drapeau `histoire_h<N>` ; une fin des
+  // lots communs (endings.yaml, joueur, police, roles_bureau, ruine, setpieces_fins, sponsors) n'a
+  // pas de livre.
+  final livreDeLot = <String, String>{};
+  for (final p in postulats) {
+    for (final f in _strList(p['flags'])) {
+      final mm = RegExp(r'^histoire_h(\d+)$').firstMatch(f);
+      if (mm != null) livreDeLot[mm.group(1)!] = p['id'].toString();
+    }
+  }
+  for (final e in endings) {
+    final from = (endingIdsSeen[e['id'].toString()] ?? '').replaceAll('\\', '/');
+    final lot = RegExp(r'^endings/h(\d+)(?:[_-][^/]*)?\.yaml$').firstMatch(from);
+    if (lot == null) continue;
+    final livre = livreDeLot[lot.group(1)!];
+    if (livre == null) {
+      errors.add('$from: aucun postulat ne porte le drapeau histoire_h${lot.group(1)} de ce lot (fin « ${e['id']} »)');
+    } else {
+      e['livre'] = livre;
+    }
   }
 
   // Unes (spec variété §2.4) : journaux fictifs et manchettes, ordre du fichier.
@@ -1579,6 +1620,12 @@ void main() {
     if (ville.isNotEmpty) 'ville': ville,
   };
   _marquerFinsDormantes(bundle, director);
+  // Une fin jouable sans `indice` : le Cimetière la montre sous une ligne par défaut. Un avertissement
+  // (une fin ajoutée par un livre arrive d'abord sans sa ligne), pas une erreur.
+  final sansIndice = endings.where((e) => e['dormante'] != true && e['indice'] == null).map((e) => e['id'].toString()).toList();
+  if (sansIndice.isNotEmpty) {
+    stdout.writeln('Avertissement : ${sansIndice.length} fin(s) jouable(s) sans `indice` (Cimetière) : ${sansIndice.join(', ')}');
+  }
   final hash = fnv1a32(json.encode(bundle)).toRadixString(16);
   bundle['hash'] = hash;
 

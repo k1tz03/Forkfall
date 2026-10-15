@@ -33,7 +33,8 @@
   "use strict";
 
   var BASE = "ville/";
-  var CLE_SAUVE = "fusible.ville.v1";
+  var CLE_SAUVE = "fusible.ville.v1";        // l'ancienne case unique : rangée dans celle de son livre (voir « la sauvegarde »)
+  var CLE_CASE = "fusible.ville.v2.";        // + l'id du livre : une case par livre
   var TRANCHES = ["matin", "midi", "aprem", "soir", "nuit"];
   var TRANCHE_MOT = { matin: "Matin", midi: "Midi", aprem: "Après-midi", soir: "Soir", nuit: "Nuit" };
   var HEURE = { matin: "9 h", midi: "12 h 30", aprem: "15 h", soir: "20 h", nuit: "23 h 40" };
@@ -3129,16 +3130,70 @@
   }
 
   // ─────────────────────────────────────────────────────────────── la sauvegarde
-  function sauver() {
-    if (!S || !coquille) return;
+  // UNE CASE PAR LIVRE (`fusible.ville.v2.<id du postulat>`) : commencer un livre n'écrase jamais la
+  // carrière d'un autre, et une carrière finie libère sa case. Seul le même livre recommencé efface sa
+  // case, et l'accueil le demande d'abord (preview_template.html : Reprendre, ou Recommencer en deux
+  // gestes). Le contenu d'une case est celui de l'ancienne case unique, inchangé.
+  var sauveFinie = false;        // la carrière en cours est finie : aucune case ne se réécrit sous elle
+  var sauveAvertie = false;      // l'appareil est plein : on l'a déjà dit
+  var sauveMigree = false;
+  function idLivre(index) {
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].index === index) return ps[i].id;
+    return null;
+  }
+  function titreLivre(id) {
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i].title || id;
+    return id;
+  }
+  function lireCase(id) {
+    try { var s = JSON.parse(localStorage.getItem(CLE_CASE + id) || "null"); return s && s.v === 1 && s.moteur ? s : null; } catch (e) { return null; }
+  }
+  // L'ancienne case unique va dans celle de son livre (`graine.postulat` en dit l'index), sans écraser
+  // une partie plus récente de ce livre ; elle ne disparaît qu'une fois la copie faite. Un livre
+  // inconnu ou une case illisible : on n'y touche pas, rien ne se perd.
+  function migrerSauve() {
+    if (sauveMigree || !(window.FusibleApercu && window.FusibleApercu.postulats)) return;
+    sauveMigree = true;
     try {
-      localStorage.setItem(CLE_SAUVE, JSON.stringify({ v: 1, moteur: coquille.sauver(), ville: S, rdv: rdv, graine: coquille.graine(), quand: Date.now() }));
+      var brut = localStorage.getItem(CLE_SAUVE);
+      if (!brut) return;
+      var s = JSON.parse(brut), id = s && s.v === 1 && s.moteur ? idLivre(s.graine && s.graine.postulat) : null;
+      if (!id) return;
+      var la = lireCase(id);
+      if (!la || (la.quand || 0) < (s.quand || 0)) localStorage.setItem(CLE_CASE + id, brut);
+      localStorage.removeItem(CLE_SAUVE);
     } catch (e) {}
   }
-  function lireSauve() {
-    try { var s = JSON.parse(localStorage.getItem(CLE_SAUVE) || "null"); return s && s.v === 1 && s.moteur ? s : null; } catch (e) { return null; }
+  // les cases pleines, la plus récente d'abord : [{ id, s }]
+  function toutesSauves() {
+    migrerSauve();
+    var ps = (window.FusibleApercu && window.FusibleApercu.postulats) || [], out = [];
+    ps.forEach(function (p) { var s = lireCase(p.id); if (s) out.push({ id: p.id, s: s }); });
+    out.sort(function (a, b) { return (b.s.quand || 0) - (a.s.quand || 0); });
+    return out;
   }
-  function effacerSauve() { try { localStorage.removeItem(CLE_SAUVE); } catch (e) {} }
+  function sauver() {
+    if (!S || !coquille || sauveFinie) return;
+    migrerSauve();
+    var g = coquille.graine(), id = idLivre(g.postulat);
+    if (!id) return;
+    try {
+      localStorage.setItem(CLE_CASE + id, JSON.stringify({ v: 1, moteur: coquille.sauver(), ville: S, rdv: rdv, graine: g, quand: Date.now() }));
+    } catch (e) {
+      // le navigateur refuse d'écrire (mémoire pleine, navigation privée) : la case des autres livres ne se
+      // touche pas, et on le dit une fois
+      if (!sauveAvertie) { sauveAvertie = true; toast("Sauvegarde impossible : le navigateur refuse (mémoire pleine ou navigation privée)."); }
+    }
+  }
+  // la case d'un livre (par défaut, celui de la carrière en cours)
+  function effacerSauve(id) {
+    try {
+      if (!id && coquille) id = idLivre(coquille.graine().postulat);
+      if (id) localStorage.removeItem(CLE_CASE + id);
+    } catch (e) {}
+  }
 
   // ─────────────────────────────────────────────────────────────── l'entrée
   function brancherEntrees() {
@@ -3339,20 +3394,23 @@
   }
 
   // ─────────────────────────────────────────────────────────────── l'écran titre
+  // « Reprendre », au-dessus du nom : la carrière la plus récente, tous livres confondus (chaque
+  // cartouche de l'accueil porte aussi la sienne : `sauves()`, `reprendreLivre()`)
   function boutonReprendre() {
-    var s = lireSauve(), old = $("villeReprendre");
+    var l = toutesSauves(), old = $("villeReprendre");
     if (old) old.parentNode.removeChild(old);
-    if (!s) return;
+    if (!l.length) return;
+    var s = l[0].s, v = s.ville || {};
     var b = document.createElement("button");
     b.type = "button"; b.className = "v-reprendre"; b.id = "villeReprendre";
-    var v = s.ville || {};
-    b.innerHTML = '<b>Reprendre</b><span>' + esc((v.nom || "") + " · " + (JOUR_MOT[v.jour] || "") + ", semaine " + (v.semaine || 1)) + '</span>';
+    b.innerHTML = '<b>Reprendre</b><span>' + esc((v.nom ? v.nom + " · " : "") + (JOUR_MOT[v.jour] || "") + ", semaine " + (v.semaine || 1)) + '</span><span>' + esc(titreLivre(l[0].id)) + '</span>';
     b.addEventListener("click", function () { reprendre(s); });
     var ident = $("nameForm");
     ident.parentNode.insertBefore(b, ident);
   }
   function reprendre(s) {
     var faire = function () {
+      sauveFinie = false;
       S = s.ville; rdv = s.rdv || null;
       S.vus = S.vus || {}; S.faits = S.faits || {}; S.jourFaits = S.jourFaits || {};
       S.biens = S.biens || {}; S.sale = S.sale || 0; S.pont = S.pont || {}; S.missionsFaites = S.missionsFaites || {};
@@ -3423,6 +3481,7 @@
     // une carrière commence (avant la première vue)
     debut: function (v) {
       var faire = function () {
+        sauveFinie = false;
         S = {
           v: 1, nom: (v.entities && v.entities.protagonist) || "", role: v.role,
           // en poche au départ : une semaine de la paie du rôle (le promu n'a pas un sou, son entraîneur si)
@@ -3646,9 +3705,23 @@
       if (g) toucherQuelquun(g);
       return !!g;
     },
+    // les cases par livre : l'accueil y lit « Reprendre » sur chaque cartouche
+    sauves: function () {
+      var out = {};
+      toutesSauves().forEach(function (e) {
+        var v = e.s.ville || {};
+        out[e.id] = { nom: v.nom || "", semaine: v.semaine || 1, jour: v.jour || 0, role: v.role || "", quand: e.s.quand || 0 };
+      });
+      return out;
+    },
+    reprendreLivre: function (id) { var s = lireCase(id); if (s) reprendre(s); return !!s; },
+    effacerLivre: function (id) { effacerSauve(id); boutonReprendre(); },
+    rafraichirReprise: boutonReprendre,
     fin: function () {
       if (dedans) aDehors(true);
       actif = false; carteOn = false;
+      // une carrière finie libère sa case, et aucun geste en retard (un minuteur) ne la réécrit
+      sauveFinie = true;
       effacerSauve();
       if (cv) cv.hidden = true;
       var c = $("villeCouche"); if (c) c.hidden = true;
