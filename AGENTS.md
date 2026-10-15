@@ -182,7 +182,7 @@ commun + le livre de la carrière (le même objet, ses listes remplacées) ; `li
 charge et fusionne le livre avant que le moteur ne le lise — `startRun`, la reprise de la ville
 et `FusibleApercu.demarrer` (qui rend une promesse tenue au départ) le font ; un nouveau chemin
 qui commence ou reprend une carrière passe par eux. Les listes découpées sont `cards`, `arcs`,
-`unes` et, dans la ville, `scenes`, `cinematiques`, `conversations`, `missions`,
+`unes` et, dans la ville, `scenes`, `cinematiques`, `films`, `conversations`, `missions`,
 `lieux_variantes` (`setpieces.*` et `paroles` gardent leur longueur, un bouche-trou inerte à la
 place des items d'un autre livre) : un module qui en garde un index le refait par
 `FusibleContenu.apresFusion(fn)`, ou les lit à la demande. Plus de `#fusible-content` dans la
@@ -485,8 +485,8 @@ pas — chaque nom est l'empreinte de ses octets), `accueil/` (les vignettes et 
 l'application (`manifest.webmanifest`, `icones/`, `sw.js`) et l'aperçu d'un lien partagé
 (`apercu.jpg`, 1200 × 630 ; `pwa/genere.js` refait les images). Le service worker est versionné
 par l'assemblage : la page, le réseau d'abord (le cache après trois secondes) ; `ville/`,
-`contenu/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
-son empreinte (le commun, le moteur, les livres déjà joués) ; on rejoue hors ligne ce qu'on a vu.
+`contenu/`, `cinema/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
+son empreinte (le commun, le moteur, les livres déjà joués, les films déjà vus) ; on rejoue hors ligne ce qu'on a vu.
 La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RESERVE_IMAGES`), et la
 musique se tait quand la page est cachée (`audio.js`).
 
