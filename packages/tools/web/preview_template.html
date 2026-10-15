@@ -752,6 +752,49 @@ table.tbl tr.toi td.r{color:var(--framboise)}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .annonce.anim{animation:none}
 }
+
+/* ═══ LES ÉCHOS ═════════════════════════════════════════════════════════
+   preview_echos.js : la ligne qui suit un choix (« Gégé s'en souviendra. ») et le
+   ruban qui le rappelle plus tard (« ↩ Parce que tu as dit … »). Rares exprès, sans
+   un chiffre, et rien ne bouge dans la mise en page : tout se pose PAR-DESSUS l'écran
+   (et le doigt le traverse). Le bord de la ligne dit le sens : vert, quelqu'un se
+   rapproche ; framboise, il se ferme ; crème, c'est le monde qui retient. */
+.echo-ligne{
+  position:fixed;z-index:6;pointer-events:none;
+  background:rgba(20,13,8,.95);border-left:2px solid var(--creme3);
+  padding:3px 9px 3px 8px;font-size:11px;font-style:italic;line-height:1.2;letter-spacing:.015em;color:var(--creme);
+  opacity:0;visibility:hidden;transition:opacity 240ms linear,visibility 0s linear 240ms;
+}
+.echo-ligne.on{opacity:1;visibility:visible;transition-delay:0s}
+.echo-ligne[data-dir="chaud"]{border-left-color:var(--vert)}
+.echo-ligne[data-dir="froid"]{border-left-color:var(--framboise)}
+/* sur une carte : dans la barre du haut, à droite des trois icônes du menu (la place est vide) */
+.echo-ligne.haut{
+  top:calc(env(safe-area-inset-top,0px) + 12px);
+  right:calc(max(0px,(100vw - 430px) / 2) + 22px);
+  max-width:calc(min(100vw,430px) - 188px);
+}
+/* sur la ville : au-dessus du message du récit, même gabarit que lui */
+.echo-ligne.bas{
+  left:50%;transform:translateX(-50%);width:min(386px,calc(100vw - 44px));
+  bottom:calc(var(--v-bas,150px) + 10px);
+}
+/* le ruban : une languette qui chevauche le bord haut de la carte, queue d'aronde à droite */
+.echo-ruban{
+  position:absolute;z-index:5;left:50%;top:-10px;transform:translateX(-50%);
+  display:flex;align-items:baseline;gap:5px;width:max-content;max-width:min(316px,calc(100vw - 44px));
+  padding:4px 15px 4px 8px;overflow:hidden;white-space:nowrap;pointer-events:none;
+  background:rgba(18,11,5,.96);color:var(--creme);font-size:11px;line-height:1.35;letter-spacing:.02em;
+  clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%);
+  opacity:0;transition:opacity 260ms linear;
+}
+.echo-ruban.on{opacity:1}
+.echo-ruban i{font-style:normal;font-weight:700;color:var(--framboise);flex:0 0 auto}
+.echo-ruban .e-pre{flex:0 0 auto;color:var(--creme2)}
+.echo-ruban .e-lab{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+/* le ruban vit dans la carte : quand la ville la range, il part avec elle. La ligne, elle, se tait sous une scène jouée
+   (preview_echos.js la reporte jusqu'à la fin de la scène) */
+body.v-cine-on .echo-ligne{visibility:hidden}
 </style>
 <!-- LA VILLE (la version jouable) : assemble.js --ville y pose la feuille de
      la couche ville ; l'aperçu simple n'y met rien. -->
@@ -998,7 +1041,8 @@ __VILLE_CSS__
   function $(id) { return document.getElementById(id); }
   // ═══ LES CROCHETS ═══════════════════════════════════════════════════════
   // Les modules de l'aperçu (assemble.js, PREVIEW_MODULES, insérés au repère
-  // /*__PREVIEW_MODULES__*/ plus bas) et ceux de la ville s'abonnent aux moments
+  // des modules, plus bas : il ne doit s'écrire qu'une fois, assemble.js le vérifie)
+  // et ceux de la ville s'abonnent aux moments
   // du jeu au lieu de réécrire ce fichier :
   //   'accueil'  l'accueil vient d'être dessiné
   //   'debut'    une carrière commence (la vue)
