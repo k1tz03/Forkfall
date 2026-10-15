@@ -315,7 +315,7 @@
         '<h2 class="fz-brief-t">' + esc(majuscule(roleUn(ap.role, ap.genre))) + '<br><span>' + esc(v.year) + "</span></h2>" +
         '<div class="fz-brief-ic" aria-hidden="true">' + jaugesIcones() + "</div>" +
         '<p class="fz-brief-p">Quatre jauges. Si l\'une touche le bas ou le haut, <b>le fusible saute</b>.</p>' +
-        (premiere ? '<p class="fz-brief-p">Glisse la carte à gauche ou à droite. Les petits traits sous les jauges disent <i>ce qui bouge</i>, jamais dans quel sens. Ton score : les semaines tenues.</p>' : "") +
+        (premiere ? '<p class="fz-brief-p">Glisse la carte à gauche ou à droite. Pendant que tu hésites, un petit trait sous une jauge dit <i>qu\'elle va bouger</i>, jamais dans quel sens ; le triangle, après coup, dit où elle est allée. Ton score : les semaines tenues.</p>' : "") +
         '<button type="button" class="fz-go" data-a="commencer">Commencer</button></div>';
       document.body.appendChild(el);
       BRIEF = el;

@@ -1058,6 +1058,11 @@
       return opts[g] != null ? opts[g] : (opts.other != null ? opts.other : "");
     });
   }
+  // La typographie française : une espace fine insécable avant « : ; ! ? » et après « « » (une ligne ne
+  // commence jamais par deux-points, un guillemet ne reste jamais seul en bout de ligne)
+  function typoFr(s) {
+    return String(s).replace(/ ([:;!?»])/g, "\u202f$1").replace(/« /g, "«\u202f");
+  }
   function remplir(t, extra, sg) {
     t = choisirGenre(String(t), sg);
     var e = (vue && vue.entities) || {}, r = valeur("rang");
@@ -1077,7 +1082,7 @@
       return M[k] && /^[AEIOUYÀÂÉÈÊËÎÏÔÙÛaeiouyàâéèêëîïôùû]/.test(M[k]) ? a + w.slice(0, -1) + "'" + M[k] : m;
     });
     for (var k in extra || {}) M[k] = extra[k];
-    return articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; }));
+    return typoFr(articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; })));
   }
   function parole(qui, lieuCtx) {
     var P = D.paroles || [], ok = [];
