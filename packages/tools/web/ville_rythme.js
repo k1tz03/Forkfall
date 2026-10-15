@@ -3,11 +3,12 @@
   // ville.js (au repère `__VILLE_MODULES__`) : il voit et touche tout ce que la
   // ville connaît.
   //
-  // Mesuré en jouant le livre 4 quinze minutes, en lecteur moyen : 1,5 décision
-  // par minute, une toutes les 25 secondes ; 42 % du temps à regarder le héros
-  // marcher (12 secondes par « Y aller »), 22 % à attendre (13 secondes de fondus
-  // par « Attendre »), 16 % à lire ; trois minutes vingt de la touche d'une
-  // histoire à sa première décision. Trois remèdes, ici :
+  // Le banc QA a relevé, en jouant le livre 4 quinze minutes en lecteur moyen : 1,5
+  // décision par minute, une toutes les 25 secondes ; 42 % du temps à regarder le
+  // héros marcher (jusqu'à 18 secondes par « Y aller » vers le port ou la campagne),
+  // 22 % à attendre (cinq secondes de fondus pour franchir un dimanche soir), 16 %
+  // à lire ; trois minutes vingt de la touche d'une histoire à sa première décision
+  // (dont dix secondes de marche : le reste, c'est l'introduction). Trois remèdes, ici :
   //   · au-delà de quelques rues, un fondu court remplace la marche (`sauterVers`) ;
   //     toucher la ville pour marcher, lui, reste une marche ;
   //   · « Attendre », et « Y aller » vers un rendez-vous plus tard : un seul fondu court,

@@ -173,7 +173,8 @@ Ce que la ville porte en plus des cartes :
   la nuit, on rentre dormir sous le noir (trois nuits au plus d'un geste), d'un seul fondu
   court, l'heure qui défile dessus (deux secondes au plus : « La boucle », plus bas).
   Mesuré en jouant l'histoire 4 en n'attendant que : 3,3 gestes vides entre deux choses
-  avant, 1,3 après ; et treize secondes de fondus par « Attendre » avant la boucle. Une scène
+  avant, 1,3 après ; puis cinq secondes de fondus pour franchir un dimanche soir (la nuit, la
+  paie) avant la boucle, une demi-seconde jusqu'à la carte du lundi après. Une scène
   est une mission d'une seule étape (`scene`) que le
   moteur applique sans tirage ; une fois par carrière ; `mission(<id>)` lit une scène vue. Le
   plan du jour se tire de la graine, de la semaine et du jour.
