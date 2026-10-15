@@ -220,11 +220,39 @@ Ce que la ville porte en plus des cartes :
   jours sans que rien n'arrive. **« Attendre »** (en bas, ou « Attendre ici » dans le panneau
   d'un lieu) fait passer le temps jusqu'à ce qu'il arrive quelque chose — une scène, quelqu'un
   qui vient te chercher, le rendez-vous qui s'ouvre (un toast dit où), l'heure d'une mission ;
-  la nuit, on rentre dormir et l'attente reprend au réveil (deux nuits au plus d'un geste).
+  la nuit, on rentre dormir sous le noir (trois nuits au plus d'un geste), d'un seul fondu
+  court, l'heure qui défile dessus (deux secondes au plus : « La boucle », plus bas).
   Mesuré en jouant l'histoire 4 en n'attendant que : 3,3 gestes vides entre deux choses
-  avant, 1,3 après. Une scène est une mission d'une seule étape (`scene`) que le
+  avant, 1,3 après ; puis cinq secondes de fondus pour franchir un dimanche soir (la nuit, la
+  paie) avant la boucle, une demi-seconde jusqu'à la carte du lundi après. Une scène
+  est une mission d'une seule étape (`scene`) que le
   moteur applique sans tirage ; une fois par carrière ; `mission(<id>)` lit une scène vue. Le
   plan du jour se tire de la graine, de la semaine et du jour.
+- **La boucle** (`ville_rythme.js`, `ville_chapitres.js`) : la mesure QA en jouant le livre 4
+  quinze minutes — 1,5 décision par minute, 42 % du temps à regarder le héros marcher, 22 % à
+  attendre, trois minutes vingt de la touche d'une histoire à sa première décision — a fait
+  trois remèdes. **La marche** : au-delà de 30 cases de chemin (`MARCHE_COURTE`, une seconde trois quarts
+  de marche ; multipliée par `usage.vitesse` avec un véhicule), « Y aller », un nom
+  touché, le plan, la flèche ne marchent plus : un fondu de 0,35 s + 0,35 s, le héros à la porte
+  du but (dans sa pièce, s'il y entre : un seul fondu), puis la même arrivée qu'au bout d'une
+  marche ; toucher la ville pour marcher reste une marche, l'hélicoptère garde son fondu à
+  lui. **Le temps** (`laisserPasser`) : « Attendre », et « Y aller » vers un rendez-vous plus
+  tard, ne sont qu'un fondu court, les tranches, les échéances et les nuits chez soi passant
+  dessous, l'heure qui défile en gros sur le noir (deux secondes au plus). **L'ouverture** :
+  l'introduction jouée, la première carte se montre là où l'on est (`ouvrirSurUneCarte`), sans
+  marche ; l'aide de la ville se dit après la première réponse. **Un chapitre par semaine** :
+  au passage du dimanche soir au lundi (le crochet `jour`, pas le rendez-vous « Le journal du
+  dimanche » : il n'existe qu'aux cartes Classement, deux fois par saison), un panneau « Une de
+  la semaine » — la manchette et les brèves tirées de `S.chap`, le carnet que la ville tient de
+  la semaine (l'Almanach neuf de la frise, le match, un lien qui a changé, une dette, les
+  réponses données) —, puis « La semaine prochaine… » (rendez-vous, match, mission et son
+  délai, dettes, un quartier qui s'ouvre), puis [Continuer] ou [Reprendre plus tard] (la partie
+  est sauvée, on retourne à l'accueil, on reprend au lundi matin). Au retour d'une partie
+  sauvée : « Pendant ton absence… ». Le prochain rendez-vous est gardé dans le `localStorage`
+  (`fusible.rappel`) pour que l'accueil le dise. « Attendre » se dégrise de lui-même quand la
+  ville est au repos (il restait grisé dehors après un « Sortir »). Mesuré après coup : un
+  « Y aller » vers le port ou la campagne passe de 10 à 18 secondes à moins d'une seconde ; la
+  première carte suit l'introduction passée de 0,1 seconde, dans les dix livres.
 - **Le match à la Rive**, le samedi : la ville va au stade (les passants vers les grilles,
   puis la sortie), vingt-deux joueurs, l'arbitre et le ballon sur la pelouse, les deux tribunes
   remplies selon la jauge tribunes (peintes une fois avec la profondeur du décor), deux ou trois

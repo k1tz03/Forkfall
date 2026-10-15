@@ -280,6 +280,7 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 .pw .reprise:active{transform:translate(2px,2px);box-shadow:1px 1px 0 2px var(--a-ombre)}
 .pw .reprise svg{display:block;width:13px;height:13px;flex:0 0 auto}
 .pw .reprise b{font-weight:400;font-size:22px;line-height:1;letter-spacing:.08em;text-transform:uppercase;flex:0 0 auto}
+.pw .rappel{margin:6px 2px 0;font-size:13px;line-height:1.35;font-style:italic;color:var(--creme2, #d9c9a8)}
 .pw .reprise .qui{flex:1 1 auto;min-width:0;text-align:right;font-size:18px;line-height:1.05;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* « Reprendre » du haut : la carrière la plus récente, tous livres confondus */
@@ -2091,6 +2092,15 @@ window.FusibleContenu.pret((function () {
         r.setAttribute("aria-label", "Reprendre la carrière de ce livre" + (enCours.nom ? " : " + enCours.nom : "") + ", semaine " + enCours.semaine);
         r.addEventListener("click", function () { if (!busy) reprendreLivre(p); });
         pw.appendChild(r);
+        // le rappel de la semaine (ville_chapitres.js) : qui t'attend, où, quand
+        var rap = null;
+        try { rap = JSON.parse(localStorage.getItem("fusible.rappel") || "null"); } catch (e) { rap = null; }
+        if (rap && rap.histoire === p.id && rap.texte) {
+          var rl = document.createElement("p");
+          rl.className = "rappel";
+          rl.textContent = String(rap.texte).slice(0, 120);
+          pw.appendChild(rl);
+        }
       }
       wrap.appendChild(pw);
     });
