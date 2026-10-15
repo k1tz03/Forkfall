@@ -64,7 +64,10 @@ arcs:
       h3_pavillon:       "{annee} : un pavillon aux Lilas pour la mère de {nom}, sur l'argent d'un transfert qui ne vient pas."
     steps:
       - id: lettre
-        card: jp.h3.maison.lettre
+        # Le téléphone débranché au soir de Fardelli : la lettre le trouve encore sans fil.
+        card:
+          - { id: jp.h3.maison.lettre_fil, if: "flag('h3_fil_debranche')" }
+          - { id: jp.h3.maison.lettre }
         next: [ { step: cheque, in: [1, 2] } ]
       - id: cheque
         card:
@@ -125,6 +128,8 @@ arcs:
         # banc, ou jamais vue : Steph la repose, avec le nom de Didier.
         card:
           - { id: jp.h3.genou.momo, if: "flag('h3_boite_prise')" }
+          # La question posée à Gigi, au seau de glace, a fait le tour du vestiaire.
+          - { id: jp.h3.genou.banc_gigi, if: "flag('h3_didier_demande')" }
           - { id: jp.h3.genou.banc }
         next: [ { step: sac, if: "flag('h3_boite_prise')", in: [3, 5] } ]
       - id: sac
@@ -211,6 +216,9 @@ arcs:
         card:
           - { id: jp.h3.coupe.depanneuse_rendu, if: "flag('h3_coupe_rendu')" }
           - { id: jp.h3.coupe.depanneuse_mbako, if: "flag('h3_coupe_mbako')" }
+          # Ce que tu as dit à Gégé du coupé : la banquette, ou le mot « prêt ».
+          - { id: jp.h3.coupe.depanneuse_nord, if: "flag('h3_nord_ramenee')" }
+          - { id: jp.h3.coupe.depanneuse_pret, if: "flag('h3_coupe_pret')" }
           - { id: jp.h3.coupe.depanneuse }
         next: []
 
@@ -288,11 +296,15 @@ arcs:
       - id: photo
         card:
           - { id: jp.h3.journal.feu, if: "flag('h3_didier_prevenu') && flag('h3_halle_vue')" }
+          # Le seau de glace : Gigi se souvient de ce qu'il a répondu.
+          - { id: jp.h3.journal.photo_seau, if: "flag('h3_didier_demande')" }
           - { id: jp.h3.journal.photo }
         next: [ { step: une, in: [2, 4] } ]
       - id: une
         card:
           - { id: jp.h3.journal.tiroir, if: "!flag('h3_lea_ecrit')" }
+          # La phrase de Gigi est sur la page, signée « un ancien du club ».
+          - { id: jp.h3.journal.une_gigi, if: "flag('h3_gigi_a_parle')" }
           - { id: jp.h3.journal.une }
         next: []
 

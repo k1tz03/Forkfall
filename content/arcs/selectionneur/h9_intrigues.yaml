@@ -121,7 +121,11 @@ arcs:
           - { id: sl.h9.four.fournil }
         next: [ { step: banque, in: [2, 4] } ]
       - id: banque
-        card: sl.h9.four.banque
+        # la lettre sous la caisse (sl.h9.four.lettre) : « je peux aider », ou la baguette seulement
+        card:
+          - { id: sl.h9.four.banque_aide, if: "flag('h9_lettre_aide')" }
+          - { id: sl.h9.four.banque_baguette, if: "flag('h9_lettre_baguette')" }
+          - { id: sl.h9.four.banque }
         next: [ { step: velo, in: [2, 5] } ]
       # L'intermède de 2029 (une nuit qu'on ne se rappelle pas) ; plus tard,
       # le vélo remonte de la cave pour de vrai.
@@ -163,8 +167,11 @@ arcs:
           - { id: sl.h9.virage.banderole }
         next: [ { step: ecran, in: [2, 4] } ]
       - id: ecran
+        # la grève du toit (sl.h9.virage.buvette) : « je comprends », ou « venez nous voir jouer »
         card:
           - { id: sl.h9.virage.ecran_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.virage.ecran_comprise, if: "flag('h9_greve_comprise')" }
+          - { id: sl.h9.virage.ecran_venez, if: "flag('h9_greve_venez')" }
           - { id: sl.h9.virage.ecran }
         next: []
 
@@ -199,6 +206,11 @@ arcs:
       - id: photo
         card:
           - { id: sl.h9.gazeo.photo_loin, if: "season == 1 && flag('h9_depart')" }
+          # la ligne du contrat (sl.h9.gazeo.ligne) : elle ne te lie pas, ou tu la lis comme la Ligue
+          - { id: sl.h9.gazeo.photo_brassard_ligne_lie_pas, if: "(flag('h9_brassard_photo') || flag('h9_brassard_promis')) && flag('h9_ligne_lie_pas')" }
+          - { id: sl.h9.gazeo.photo_brassard_ligne_comme_vous, if: "(flag('h9_brassard_photo') || flag('h9_brassard_promis')) && flag('h9_ligne_comme_vous')" }
+          - { id: sl.h9.gazeo.photo_ligne_lie_pas, if: "flag('h9_ligne_lie_pas')" }
+          - { id: sl.h9.gazeo.photo_ligne_comme_vous, if: "flag('h9_ligne_comme_vous')" }
           - { id: sl.h9.gazeo.photo_brassard, if: "flag('h9_brassard_photo') || flag('h9_brassard_promis')" }
           - { id: sl.h9.gazeo.photo }
         next: []
@@ -326,6 +338,9 @@ arcs:
         this_season: true
         on_expire: skip
         card:
+          # Bréhaut et la liste signée (sl.h9.re.brehaut_listes) : « le ministère l'a dit », ou « une erreur »
+          - { id: sl.h9.deux_listes.noa_ministere, if: "flag('h9_liste_ministere') && flag('h9_bre_ministere')" }
+          - { id: sl.h9.deux_listes.noa_erreur, if: "flag('h9_liste_ministere') && flag('h9_bre_erreur')" }
           - { id: sl.h9.deux_listes.noa, if: "flag('h9_liste_ministere')" }
           - { id: sl.h9.deux_listes.medecin_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.deux_listes.medecin }
@@ -336,6 +351,9 @@ arcs:
       # liste), le certificat recollé, oublié au tiroir, ou jamais rempli.
       - id: trace
         card:
+          # Noa sur le parking (sl.h9.deux_listes.noa*) : « on me l'a dicté », ou « je l'ai signé »
+          - { id: sl.h9.deux_listes.rappel_noa_dicte, if: "flag('h9_noa_dicte')" }
+          - { id: sl.h9.deux_listes.rappel_noa_signe, if: "flag('h9_noa_signe')" }
           - { id: sl.h9.deux_listes.rappel_noa, if: "flag('h9_liste_ministere')" }
           - { id: sl.h9.deux_listes.recolle, if: "flag('h9_certificat_dechire')" }
           - { id: sl.h9.deux_listes.tiroir, if: "flag('h9_certificat_range')" }
@@ -611,9 +629,13 @@ arcs:
     steps:
       - id: main_courante
         card: sl.h9.pluie.main_courante
-        next: [ { step: appel, in: [1, 3] } ]
+        next: [ { step: appel, in: [2, 4] } ]
       - id: appel
-        card: sl.h9.pluie.appel
+        # les plongeons du petit (sl.h9.pluie.main_courante) : racontés, ou vus de près
+        card:
+          - { id: sl.h9.pluie.appel_raconte, if: "flag('h9_pluie_raconte')" }
+          - { id: sl.h9.pluie.appel_pres, if: "flag('h9_pluie_pres')" }
+          - { id: sl.h9.pluie.appel }
         next: [ { step: sac, in: [1, 3] } ]
       - id: sac
         card:

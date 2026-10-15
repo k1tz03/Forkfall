@@ -1,0 +1,309 @@
+# Histoire 8 · L'Oreillette — les fourches. Sept cartes dont les deux sorties ne se distinguaient
+# que par des jauges cachées (ou par une relation) posent maintenant un drapeau, et ce drapeau
+# revient quelques cartes plus tard (charte § 4 : planter, puis payer). Les payoffs sont des
+# variantes d'étape rangées devant la carte d'origine dans leur arc (mêmes effets, mêmes issues
+# que la carte qu'elles remplacent : seuls le texte et les réponses changent). Les cartes d'origine
+# (pro3_rampe*, re.kerdal_tribune, re.mbako_refus, re.josiane_lundi, re.ober_montre, re.gege_bache,
+# cd.buvette) gardent leur texte : elles ne font que poser le drapeau.
+#
+#   h8_rampe_machine / h8_rampe_moi        ← la rampe du terrain annexe (ds.h8.pro3_rampe*)
+#                                            → « Trois fois » (ds.h8.kerdal.trois_fois)
+#   h8_tribune_dormir / h8_tribune_mercredi ← Kerdal au parking (ds.h8.re.kerdal_tribune)
+#                                            → « Vendez Kerdal avant lundi » (ds.h8.a2_fin_de_cycle_repos)
+#   h8_refus_ici / h8_refus_porte          ← Mbako au parking (ds.h8.re.mbako_refus)
+#                                            → le surlendemain (ds.h8.kerdal.apres*)
+#   h8_mere_toi / h8_mere_docteur          ← la mère de Kerdal au téléphone (ds.h8.re.josiane_lundi)
+#                                            → la veille du dernier match (ds.h8.a4_veille_kerdal)
+#   h8_montre_perdue / h8_montre_refus     ← la montre qui ne transmet plus (ds.h8.re.ober_montre)
+#                                            → la troisième nuit (ds.h8.cp.deuxieme_poutres)
+#   h8_stand_ferme / h8_stand_laisse       ← le stand Cadence à la buvette (ds.h8.cd.buvette)
+#                                            → les nuits du virage (ds.h8.cd.nuits)
+#   h8_bache_gardee / h8_bache_pliee       ← la bâche de Vollaire (ds.h8.re.gege_bache)
+#                                            → l'offre de Cadence au zinc (ds.h8.cd.offre)
+cards:
+  # ═══════════════════ la rampe du terrain annexe (→ « Trois fois »)
+  - id: ds.h8.kerdal.trois_fois_machine
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    speaker: mbako
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Mbako regarde ses joueurs courir, pas ton écran : « À la rampe, tu as répondu pour ta machine. Elle veut Kerdal trois fois cette semaine. Kerdal ne dort plus. Je le fais jouer, {toi} ? »"
+    left:
+      label: "Le modèle a raison"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}, set: [h8_kerdal_trois], var: {h8_obei: "+1"}}
+      answer: "« À la rampe, c'était déjà elle. » Kerdal joue mercredi, samedi, mardi. Le mardi, il demande l'heure trois fois à trois personnes."
+    right:
+      label: "Il se repose"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h8_kerdal_repose], var: {h8_refus: "+1"}, react: [{card: ds.h8.re.kerdal_tribune}]}
+      answer: "Samedi, Kerdal est en tribune, en civil, la capuche sur la tête. Dans ton oreille : « Écart à la recommandation : un. »"
+
+  - id: ds.h8.kerdal.trois_fois_moi
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    speaker: mbako
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Mbako regarde ses joueurs courir, pas ton écran : « À la rampe, tu as répondu pour toi, pas pour ta machine. Elle veut Kerdal trois fois cette semaine. Il ne dort plus. Je le fais jouer, {toi} ? »"
+    left:
+      label: "Le modèle a raison"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}, set: [h8_kerdal_trois], var: {h8_obei: "+1"}}
+      answer: "« Alors tu as changé d'avis depuis la rampe. » Kerdal joue mercredi, samedi, mardi. Le mardi, il demande l'heure trois fois."
+    right:
+      label: "Il se repose"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h8_kerdal_repose], var: {h8_refus: "+1"}, react: [{card: ds.h8.re.kerdal_tribune}]}
+      answer: "Samedi, Kerdal est en tribune, en civil, la capuche sur la tête. Dans ton oreille : « Écart à la recommandation : un. »"
+
+  # ═══════════════════ Kerdal au parking (→ « Vendez Kerdal avant lundi »)
+  - id: ds.h8.a2_fin_de_cycle_repos_dormir
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures, le mercato ferme lundi. « Vendez Kerdal avant lundi. » La courbe rouge : fin de cycle. Tu lui avais dit qu'il dormirait ; le repos n'y a rien changé. La voix n'ajoute rien."
+    left:
+      label: "Je vends Kerdal"
+      effects: {caisse: "++", vestiaire: "--", set: [h8_kerdal_vendu], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}]}
+      answer: "Portclair signe à 23 h 57. Kerdal l'apprend dans le couloir, sur son téléphone : « Tu avais dit que je dormirais. » Il range ses crampons."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", direction: "--", set: [h8_kerdal_garde], var: {h8_refus: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}], react: [{card: ds.h8.re.mbako_refus}]}
+      answer: "« Noté. » Tu éteins l'écran. Au parking, tu te rappelles ce que tu lui as promis : dormir. Mbako, lui, a déjà éteint chez lui."
+
+  - id: ds.h8.a2_fin_de_cycle_repos_mercredi
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures, le mercato ferme lundi. « Vendez Kerdal avant lundi. » Sous son nom, la courbe rouge : fin de cycle. Tu lui avais dit : mercredi. Le repos n'y a rien changé. La voix n'ajoute rien."
+    left:
+      label: "Je vends Kerdal"
+      effects: {caisse: "++", vestiaire: "--", set: [h8_kerdal_vendu], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}]}
+      answer: "Portclair signe à 23 h 57. Kerdal l'apprend dans le couloir, sur son téléphone : « Mercredi, tu avais dit. » Il range ses crampons."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", direction: "--", set: [h8_kerdal_garde], var: {h8_refus: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}], react: [{card: ds.h8.re.mbako_refus}]}
+      answer: "« Noté. » Tu éteins l'écran. Au parking, tu te rappelles ce que tu lui as promis : mercredi. Mbako, lui, a déjà éteint chez lui."
+
+  # ═══════════════════ Mbako au parking (→ le surlendemain du lundi)
+  - id: ds.h8.kerdal.apres_ici
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Le surlendemain, Mbako fait courir l'équipe sans sifflet. Il s'arrête à ta hauteur : « Tu m'avais dit qu'il dormirait ici. Vendredi, je lui ai dit de dormir. Toi, tu lui as dit quoi ? »"
+    left:
+      label: "Rien"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Moi non plus, au fond. » Il repart. Les joueurs font un tour de plus que prévu, sans qu'on le leur demande."
+    right:
+      label: "Ce que disait l'écran"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}}
+      answer: "Il hoche la tête, lentement. « Alors c'est l'écran qui ira à l'enterrement. » Il siffle enfin, une seule fois, très fort."
+
+  - id: ds.h8.kerdal.apres_porte
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Le surlendemain, Mbako fait courir l'équipe sans sifflet. Il s'arrête à ta hauteur : « La machine voulait le vendre, c'est toi qui le portais. Vendredi, je lui ai dit de dormir. Et toi ? »"
+    left:
+      label: "Rien"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Moi non plus, au fond. » Il repart. Les joueurs font un tour de plus que prévu, sans qu'on le leur demande."
+    right:
+      label: "Ce que disait l'écran"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}}
+      answer: "Il hoche la tête, lentement. « Alors c'est l'écran qui ira à l'enterrement. » Il siffle enfin, une seule fois, très fort."
+
+  - id: ds.h8.kerdal.apres_vit_ici
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: kerdal
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Mardi, Kerdal arrive à l'entraînement, la marque de l'oreiller sur la joue : « Mbako dit que tu as promis que je dormirais ici. Douze heures, {toi}. Ta machine, elle le sait ? »"
+    left:
+      label: "Elle le saura"
+      effects: {vestiaire: "+", direction: "+", relation: {kerdal: 1}}
+      answer: "Le soir, la courbe est toujours rouge. Elle n'a pas de case pour douze heures de sommeil. Tu ne lui en fais pas une."
+    right:
+      label: "Ça reste entre nous"
+      effects: {vestiaire: "++", direction: "-", relation: {kerdal: 1}, set: [h8_kerdal_secret]}
+      answer: "Il rit, pour la première fois depuis août, et part rejoindre les autres en trottinant. Mbako ne siffle pas : il le regarde."
+
+  - id: ds.h8.kerdal.apres_vit_porte
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: kerdal
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Mardi, Kerdal arrive à l'entraînement, la marque de l'oreiller sur la joue : « Mbako dit que la machine voulait me vendre, et que tu m'as porté. Douze heures, {toi}. Elle le sait, elle ? »"
+    left:
+      label: "Elle le saura"
+      effects: {vestiaire: "+", direction: "+", relation: {kerdal: 1}}
+      answer: "Le soir, la courbe est toujours rouge. Elle n'a pas de case pour douze heures de sommeil. Tu ne lui en fais pas une."
+    right:
+      label: "Ça reste entre nous"
+      effects: {vestiaire: "++", direction: "-", relation: {kerdal: 1}, set: [h8_kerdal_secret]}
+      answer: "Il rit, pour la première fois depuis août, et part rejoindre les autres en trottinant. Mbako ne siffle pas : il le regarde."
+
+  # ═══════════════════ la mère de Kerdal au téléphone (→ la veille du dernier match)
+  - id: ds.h8.a4_veille_kerdal_mere
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Veille du dernier match. Une lettre de la mère de Kerdal, de sa main : « Laissez-lui sa place. » Le plus jeune pose un caillou blanc dans le casier 4. La voix : « Casier 4, libre. On le réattribue ? »"
+    left:
+      label: "Il reste ouvert"
+      effects: {vestiaire: "++", direction: "-", set: [h8_casier_ouvert], var: {h8_refus: "+1"}}
+      answer: "Tu glisses la lettre sous les cailloux. En juin, il y en a quarante et un ; elle en a posé un, un dimanche, sans prévenir personne."
+    right:
+      label: "Réattribuez-le"
+      effects: {direction: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Le nouveau range ses affaires sans toucher aux cailloux. Tu réponds à la mère, deux lignes. Elle ne répond pas."
+
+  - id: ds.h8.a4_veille_kerdal_cabinet
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Veille du dernier match. Le cabinet Ober t'envoie la décharge : la mère de Kerdal réclame ses affaires. Le plus jeune pose un caillou au casier 4. La voix : « Casier 4, libre. On le réattribue ? »"
+    left:
+      label: "Il reste ouvert"
+      effects: {vestiaire: "++", direction: "-", set: [h8_casier_ouvert], var: {h8_refus: "+1"}}
+      answer: "Tu ne signes pas la décharge. Le gamin pose son caillou sur les autres ; en juin, il y en a quarante et un, et le formulaire est vierge."
+    right:
+      label: "Réattribuez-le"
+      effects: {direction: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Tu signes la décharge. Le nouveau range ses affaires ; la mère de Kerdal emporte un carton, sans passer par le secrétariat."
+
+  # ═══════════════════ la montre qui ne transmet plus (→ la troisième nuit)
+  - id: ds.h8.cp.deuxieme_poutres_perdue
+    roles: [ds]
+    arc: corps
+    tags: [direction, decor]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Deux heures, troisième nuit de la semaine. Tu comptes les rivets du pont roulant. Ta montre est « perdue » au dossier du fonds ; au tiroir, elle ne vibre plus. Ober écrit : « Ma porte est ouverte. »"
+    left:
+      label: "J'irai au cabinet"
+      effects: {direction: "+", set: [h8_comprimes], var: {h8_nuits: "+1"}}
+      answer: "Il t'attend à neuf heures, la boîte sur le bureau, une montre neuve dans le tiroir. « Un demi. » Il ne demande pas pourquoi."
+    right:
+      label: "Je compte les rivets"
+      effects: {vestiaire: "+", var: {h8_nuits: "+1"}}
+      answer: "Cent douze rivets. À quatre heures, tu recommences par l'autre bout pour vérifier : cent treize. Tu ne dors pas pour savoir."
+
+  - id: ds.h8.cp.deuxieme_poutres_refus
+    roles: [ds]
+    arc: corps
+    tags: [direction, decor]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Deux heures, troisième nuit de la semaine. Tu comptes les rivets du pont roulant. Au dossier du fonds, ta montre est « refusée ». Un message d'Ober : « Refus noté. Ma porte est ouverte quand même. »"
+    left:
+      label: "J'irai au cabinet"
+      effects: {direction: "+", set: [h8_comprimes], var: {h8_nuits: "+1"}}
+      answer: "Il t'attend à neuf heures, la boîte sur le bureau, ton refus agrafé au dossier. « Un demi. » Il ne demande pas pourquoi tu as changé d'avis."
+    right:
+      label: "Je compte les rivets"
+      effects: {vestiaire: "+", var: {h8_nuits: "+1"}}
+      answer: "Cent douze rivets. À quatre heures, tu recommences par l'autre bout pour vérifier : cent treize. Tu ne dors pas pour savoir."
+
+  # ═══════════════════ le stand Cadence (→ les nuits du virage)
+  - id: ds.h8.cd.nuits_ferme
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, oreillette]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Six heures dix. La voix, avant le café : « Le stand est fermé, pas les bracelets : trente poignets du virage transmettent. Ils dorment mal le vendredi, cinquante-deux pour cent. Avancez les matchs. »"
+    left:
+      label: "J'avance les matchs"
+      effects: {direction: "+", tribunes: "--", var: {h8_obei: "+1"}}
+      answer: "Vendredi soir, le virage est plein et se tait aux trois quarts. Les bracelets clignotent en rythme ; Gégé chante seul, le poignet nu."
+    right:
+      label: "Le virage dormira"
+      effects: {tribunes: "+", direction: "-", var: {h8_refus: "+1"}}
+      answer: "« Préférence enregistrée. » Tu bois ton café debout, à la fenêtre. Sur le quai, un ancien promène un chien qui boite ; son poignet clignote."
+
+  - id: ds.h8.cd.nuits_laisse
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, oreillette]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Six heures dix. La voix, avant le café : « Cadence a versé la prime. Cent poignets de la buvette transmettent : le virage dort mal le vendredi, cinquante-deux pour cent. Avancez les matchs. »"
+    left:
+      label: "J'avance les matchs"
+      effects: {direction: "+", tribunes: "--", var: {h8_obei: "+1"}}
+      answer: "Vendredi soir, le virage est plein et se tait aux trois quarts. Gégé enlève son bracelet pour chanter et le serre dans son poing."
+    right:
+      label: "Le virage dormira"
+      effects: {tribunes: "+", direction: "-", var: {h8_refus: "+1"}}
+      answer: "« Préférence enregistrée. » Tu bois ton café debout, à la fenêtre. Sur le quai, un ancien promène un chien qui boite ; son poignet clignote."
+
+  # ═══════════════════ la bâche de Vollaire (→ l'offre de Cadence au zinc)
+  - id: ds.h8.cd.offre_gardee
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Gégé pose sur le zinc un bracelet noir, encore emballé : « Cadence en veut un à chaque ancien du virage. Gratuit. Tu m'as laissé la bâche, {toi} : je te le dis, je sais ce que gratuit veut dire. »"
+    left:
+      label: "Je signe pour le virage"
+      effects: {caisse: "++", tribunes: "-", relation: {gege: -1}, set: [h8_sp_cadence], outcome: signe}
+      answer: "Il remet le bracelet dans sa boîte, la boîte dans sa poche. « Je le porterai. Ils sauront quand je dors : jamais. » Il ne sourit plus."
+    right:
+      label: "Pas le virage"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, set: [h8_cadence_refuse], outcome: refuse}
+      answer: "Il laisse le bracelet sur le zinc. « Garde-le. Ils en ont déjà mis un à ton président d'honneur. Il le porte, tu sais. »"
+
+  - id: ds.h8.cd.offre_pliee
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Gégé pose sur le zinc un bracelet noir, encore emballé : « Cadence en veut un à chaque ancien du virage. Gratuit. Tu voulais brûler la bâche, {toi} : alors tu sais ce que gratuit veut dire. »"
+    left:
+      label: "Je signe pour le virage"
+      effects: {caisse: "++", tribunes: "-", relation: {gege: -1}, set: [h8_sp_cadence], outcome: signe}
+      answer: "Il remet le bracelet dans sa boîte, la boîte dans sa poche. « Je le porterai. Ils sauront quand je dors : jamais. » Il ne sourit plus."
+    right:
+      label: "Pas le virage"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, set: [h8_cadence_refuse], outcome: refuse}
+      answer: "Il laisse le bracelet sur le zinc. « Garde-le. Ils en ont déjà mis un à ton président d'honneur. Il le porte, tu sais. »"

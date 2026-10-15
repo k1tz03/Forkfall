@@ -5,11 +5,13 @@
 # les textes accordent), 2024-2027.
 #
 # Ce que ces scènes font du livre, sans rien y décider :
-#   · l'introduction (la veille du premier jour : la buvette du kop, la friche
-#     de la Tréfilerie, la laverie à trois heures) plante l'oreillette sans la
-#     montrer : le délégué du fonds écoute quelqu'un d'autre pendant qu'il te
-#     parle, une main à l'oreille ; elle plante aussi Joachim Ferlac, que le
-#     héros a connu, et la machine 4 de la laverie, où l'on se réveillera ;
+#   · l'introduction (quatre répliques, à six heures dix, au club-house) plante
+#     l'oreillette sans la montrer : le délégué du fonds écoute quelqu'un
+#     d'autre pendant qu'il te parle, une main à l'oreille ; elle plante aussi
+#     Joachim Ferlac, que le héros a connu. Le soir du premier jour reprend le
+#     reste : la buvette du kop et la friche de la Tréfilerie (après le délégué
+#     et sa berline), la machine 4 de la laverie, où l'on se réveillera (après
+#     le pont roulant) ;
 #   · la voix ne parle jamais dans une scène : elle est dans les cartes. Ici,
 #     on ne l'entend que dans ce que les autres en disent ;
 #   · avant une carte, le doute : la salle d'attente du docteur Ober, la
@@ -28,15 +30,49 @@
 # `saison` est celle de la ville : 1 = 2024-2025, 2 = 2025-2026, 3 = 2026-2027.
 cinematiques:
   # ══════════════════════════════════════════════════════ l'introduction
+  # Quatre répliques à six heures dix, au pied de l'escalier du club-house, et la première carte
+  # (l'oreillette posée dans la main) se joue sur place. Le reste de l'ancienne introduction
+  # (la buvette du kop, la friche, la laverie) est distillé sur le premier jour : la buvette et la
+  # friche le soir, après le délégué et sa berline (h8.ci.buvette, qui enchaîne h8.ci.friche), la
+  # laverie à trois heures, après le pont roulant (h8.ci.laverie). Les graines plantées sont
+  # toujours là : les soixante-douze matchs et le nom d'Almadis sur la tribune, la voiture de
+  # Joachim à la friche, la chemise de la machine 4.
   - id: h8.ci.intro
     quand: debut
     roles: [ds]
     si: "flag(histoire_h8)"
     titre: "L'Oreillette"
     sous: "Aubérive, août 2024"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: delegue, qui: inconnu, nom: "Le délégué du fonds", place: vitrine}
+      # six heures dix : la secrétaire n'est pas là, Vaubourg ne monte qu'à six heures et demie
+      - {id: sans_aulard, qui: aulard, cache: true}
+      - {id: sans_josiane, qui: josiane, cache: true}
+      - {id: sans_passant, qui: passant, cache: true}
+      - {id: sans_passante, qui: passante, cache: true}
+      - {id: sans_ancien, qui: ancien, cache: true}
+      - {id: sans_fan, qui: fan, cache: true}
+    etapes:
+      - {musique: ville_jour}
+      - {narration: "Six heures dix, le club-house. Le délégué du fonds t'attend sous la vitrine des trophées, une main à l'oreille : il te parle en regardant la porte, et il écoute quelqu'un d'autre."}
+      - {qui: delegue, dit: "Pas six heures, pas six heures et quart : six heures dix. Vous n'avez pas dormi ? Il l'avait prévu.", geste: telephone}
+      - {qui: toi, pense: "Celui d'avant n'avait pas de visage. Je l'ai vu naître sur un tableau blanc, chez Joachim, en 2016. On riait, ce jour-là."}
+      - {qui: delegue, dit: "Cinq ans chez lui, puis une porte qui claque. Le fonds aime ça : on revient pour avoir raison. Tendez la main.", geste: pointe}
+
+  # Le soir du premier jour, après le délégué et sa berline : la buvette du kop, onze heures.
+  # Gégé et Nino ne demandent pas ce que tu fais, mais pour qui.
+  - id: h8.ci.buvette
+    quand: carte
+    cartes: [ds.h8.pro5_delegue_toi, ds.h8.pro5_delegue]
+    moment: apres
+    roles: [ds]
+    si: "flag(histoire_h8)"
     lieu: buvette
     tranche: soir
-    suite: h8.ci.intro_2
+    suite: h8.ci.friche
     acteurs:
       - {qui: toi, place: porte}
       - {qui: gege, place: fond}
@@ -54,39 +90,35 @@ cinematiques:
       - {qui: nino, dit: "C'est {pg, select, f{la nouvelle} other{le nouveau}}, oncle. Le fonds l'a fait venir de la capitale pour parler à ses ordinateurs."}
       - {qui: gege, regarde: toi}
       - {qui: gege, dit: "Celui d'avant, on ne l'a jamais vu ici. Il signait la nuit, et le matin, on apprenait qui était parti."}
-      - {qui: toi, pense: "Celui d'avant n'avait pas de visage. Je l'ai vu naître sur un tableau blanc, chez Joachim, en 2016. On riait, ce jour-là."}
       - {qui: gege, dit: "Ici, on ne demande pas ce que tu fais. On demande pour qui. Tu travailles pour qui, toi ?"}
       - {qui: nino, dit: "Pour Almadis. Comme la pelouse, le car, les maillots, et le nom écrit sur la tribune."}
       - {qui: gege, geste: boit}
       - {qui: gege, dit: "Alors la bière, je te l'offre. Le fonds n'a pas encore racheté mon porte-monnaie.", ton: sourire}
       - {narration: "Le barman éteint l'écran. Dans le noir, les soixante-douze lignes blanches restent un moment sur la vitre, puis s'effacent."}
 
-  - id: h8.ci.intro_2
+  # En rentrant au duplex, par la friche de la Tréfilerie : l'endroit où l'on a retrouvé la
+  # voiture de Joachim Ferlac. (Le délégué n'y est plus : sa phrase est dans l'introduction.)
+  - id: h8.ci.friche
     quand: suite
     lieu: friche
     tranche: nuit
     meteo: brume
-    suite: h8.ci.intro_3
     acteurs:
       - {qui: toi, place: porte}
-      - {id: delegue, qui: inconnu, nom: "Le délégué du fonds", place: [3, 2], cache: true}
     etapes:
-      - {narration: "La friche de la Tréfilerie, une heure du matin. La brume monte de la Rive. Un feu de palettes que personne ne surveille ; contre la palissade, huit bougies électriques qui ne vacillent pas."}
+      - {narration: "La friche de la Tréfilerie, une heure du matin, sur le chemin du duplex. La brume monte de la Rive. Un feu de palettes que personne ne surveille ; contre la palissade, huit bougies électriques qui ne vacillent pas."}
       - {qui: toi, va: [2, 1]}
       - {qui: toi, pense: "C'est ici qu'on a retrouvé la voiture de Joachim, en décembre. Il aimait les endroits où personne ne passe. Il disait qu'on y entendait mieux."}
-      - {qui: delegue, entre: [3, 2]}
-      - {qui: delegue, dit: "Vous êtes {pg, select, f{venue} other{venu}} voir. Tout le monde vient voir, la première nuit."}
-      - {qui: delegue, geste: telephone}
-      - {qui: toi, pense: "Il parle en regardant la palissade, une main à l'oreille. Il écoute quelqu'un d'autre en même temps que moi."}
-      - {qui: delegue, dit: "Cinq ans chez lui, puis une porte qui claque. Le fonds aime les gens qui claquent les portes : ils reviennent pour avoir raison."}
-      - {qui: delegue, dit: "Six heures dix, au club-house. Pas six heures. Pas six heures et quart."}
-      - {qui: toi, dit: "Et si je ne dors pas d'ici là ?"}
-      - {qui: delegue, dit: "Il l'a prévu.", ton: noir}
-      - {qui: delegue, sort: true}
       - {narration: "Une des bougies clignote, puis s'éteint. Les sept autres continuent sans elle."}
 
-  - id: h8.ci.intro_3
-    quand: suite
+  # Après le pont roulant : tu ne dors pas, la voix tutoie, et tu marches jusqu'à la seule vitrine
+  # allumée de la rue du Stade. La machine 4 est celle de « La laverie » (saison 2).
+  - id: h8.ci.laverie
+    quand: carte
+    cartes: [ds.h8.pro6_pont_roulant]
+    moment: apres
+    roles: [ds]
+    si: "flag(histoire_h8)"
     lieu: laverie
     tranche: nuit
     acteurs:
@@ -97,14 +129,14 @@ cinematiques:
       - {id: sans_ancien, qui: ancien, cache: true}
       - {id: sans_fan, qui: fan, cache: true}
     etapes:
-      - {narration: "Trois heures, rue du Stade. Une seule vitrine allumée : la laverie. Le néon clignote au-dessus des séchoirs ; une machine tourne, la 4."}
+      - {narration: "Trois heures, rue du Stade. Tu as renoncé à dormir. Une seule vitrine allumée : la laverie. Le néon clignote au-dessus des séchoirs ; une machine tourne, la 4."}
       - {qui: gerant, dit: "On est fermés depuis minuit. Je reste pour la 4 : quelqu'un l'a lancée à onze heures, et il n'est pas revenu."}
       - {qui: toi, va: attente_1}
-      - {qui: toi, pense: "Une chemise blanche, seule dans le tambour. Une chemise de bureau, comme la mienne. Comme celle que je mettrai à six heures dix."}
+      - {qui: toi, pense: "Une chemise blanche, seule dans le tambour. Une chemise de bureau, comme la mienne. Comme celle que je remettrai demain à six heures dix."}
       - {qui: gerant, dit: "Vous pouvez attendre, si vous ne dormez pas. Ici, personne ne dort : c'est pour ça qu'on a mis des chaises."}
       - {qui: gerant, regarde: toi}
       - {qui: gerant, dit: "Vous êtes d'ici ?"}
-      - {qui: toi, dit: "Depuis ce soir."}
+      - {qui: toi, dit: "Depuis ce matin."}
       - {pause: 1200}
       - {musique: sombre}
       - {narration: "La 4 s'arrête d'un coup. Personne ne vient la vider. Contre le hublot, la chemise reste collée, les bras ouverts."}

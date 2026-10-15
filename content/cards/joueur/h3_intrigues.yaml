@@ -33,6 +33,25 @@ cards:
       effects: {caisse: "+", set: [h3_maison_lachee]}
       answer: "« Voilà. » Elle se lève pour la vaisselle, qui est faite. Elle la refait quand même, assiette par assiette, le dos tourné."
 
+  # Variante du fil : Odile a débranché le téléphone le soir de l'appel de Fardelli (h3_fil_debranche).
+  - id: jp.h3.maison.lettre_fil
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Odile pose la lettre de l'usine près du téléphone débranché depuis le soir de Fardelli : les maisons vendues aux locataires, cent quatre-vingt mille francs. « On partira. Ce n'est pas grave. »"
+    left:
+      label: "On ne partira pas"
+      effects: {relation: {odile: 1}, caisse: "-"}
+      answer: "Elle replie la lettre en trois, la glisse sous la photo de ton père et rebranche le téléphone sans un mot. « Alors il faudra de l'argent. »"
+    right:
+      label: "On partira, maman"
+      effects: {caisse: "+", set: [h3_maison_lachee]}
+      answer: "« Voilà. » Elle se lève pour la vaisselle, qui est faite. Le téléphone reste débranché ; elle la refait quand même, le dos tourné."
+
   - id: jp.h3.maison.cheque
     roles: [joueur]
     arc: agents
@@ -155,7 +174,7 @@ cards:
     text: "Ta mère n'a pas défait les cartons du pavillon. Ils sont dans le garage, empilés, étiquetés au feutre : CUISINE, PAPIERS, TON PÈRE. « Au cas où », dit-elle. Elle ne dit pas au cas où quoi."
     left:
       label: "Je les défais avec toi"
-      effects: {relation: {odile: 1}}
+      effects: {relation: {odile: 1}, set: [h3_cartons_defaits]}
       answer: "Vous ouvrez CUISINE. Elle range trois assiettes dans le placard neuf, puis les remet dans le carton. « Demain. »"
     right:
       label: "Ils sont bien là"
@@ -196,7 +215,7 @@ cards:
     text: "Gigi te trouve au local du matériel, le genou dans un seau de glace. Il s'assoit sur le panier de ballons. « Didier mettait le sien dans ce seau-là. Il disait que la glace rend le genou sourd. »"
     left:
       label: "Il est parti où, Didier ?"
-      effects: {relation: {vecchio: 1}}
+      effects: {relation: {vecchio: 1}, set: [h3_didier_demande]}
       answer: "« À l'étranger. C'est ce qu'on a écrit. » Il te tend une serviette pour le genou, et sort sans fermer la porte."
     right:
       label: "Pas un mot au coach"
@@ -237,6 +256,25 @@ cards:
       label: "Je la laisse sur la fonte"
       effects: {relation: {steph: -1}, tribunes: "-"}
       answer: "Il la remet dans son sac sans se vexer. « Elle t'attendra. » Quand tu sors, il est au rameur, immobile, les mains sur la poignée."
+
+  # Variante de la question : tu as demandé à Gigi où était Didier ; Steph le sait (h3_didier_demande).
+  - id: jp.h3.genou.banc_gigi
+    roles: [joueur]
+    arc: corps
+    tags: []
+    speaker: steph
+    lieu: muscu
+    once: true
+    tone: strategique
+    text: "Steph s'assoit au bout de ton banc, un sac entre les pieds. « Tu as demandé où était Didier. Ça se sait, un vestiaire. Il boitait à gauche aussi. » Il pose une boîte sans étiquette sur la fonte."
+    left:
+      label: "Je la prends"
+      effects: {caisse: "-", set: [h3_boite_prise]}
+      answer: "La boîte tient dans la poche du blouson. Tu la sens à chaque pas jusqu'à la cité, comme une deuxième rotule."
+    right:
+      label: "Je la laisse sur la fonte"
+      effects: {relation: {steph: -1}, tribunes: "-"}
+      answer: "Il la remet dans son sac sans se vexer. « Gigi te répondra encore l'étranger. Elle t'attendra. » Il retourne au rameur, immobile."
 
   - id: jp.h3.genou.sac
     roles: [joueur]
@@ -380,11 +418,11 @@ cards:
     text: "Gégé fait le tour du coupé sans le toucher, mains dans le dos. « Daubrac, c'est celui qui a racheté la cantine de l'usine pour un franc. » Il s'arrête devant les lettres d'or. « Tu nous ramènes ? »"
     left:
       label: "Montez, je vous ramène"
-      effects: {tribunes: "+", relation: {gege: 1}}
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h3_nord_ramenee]}
       answer: "Quatre de la Nord sur la banquette, Gégé devant. Il ne touche à rien. Au feu rouge, il essuie de sa manche la buée de son souffle."
     right:
       label: "C'est un prêt"
-      effects: {tribunes: "-", relation: {gege: -1}}
+      effects: {tribunes: "-", relation: {gege: -1}, set: [h3_coupe_pret]}
       answer: "« Un prêt. » Il le répète au virage samedi, à voix haute, et la Nord le chante sur l'air d'une berceuse."
 
   - id: jp.h3.coupe.lettres_mbako
@@ -428,6 +466,55 @@ cards:
       label: "Rentrez chez vous"
       effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, set: [h3_coupe_saisi], outcome: rentre}
       answer: "Ils rentrent, sans un mot. Il ne reste que toi, les deux huissiers, et les lettres d'or qui s'éloignent sur le plateau."
+
+  # Variantes de la dépanneuse : la Nord se souvient de la banquette (h3_nord_ramenee) ou du mot « prêt » (h3_coupe_pret).
+  - id: jp.h3.coupe.depanneuse_nord
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Après le match, deux huissiers et une dépanneuse devant ton coupé. La Nord s'arrête à la grille ; les quatre que tu as ramenés en voiture sont devant. Gégé : « On chante ton nom, ou on rentre ? »"
+    left:
+      label: "Chantez"
+      effects:
+        tribunes: "+"
+        direction: "-"
+        var: {saisie_vehicules: "+1"}
+        set: [h3_coupe_saisi]
+        outcome: chante
+        react: {card: jp.h3.re.gege_depanneuse}
+      answer: "Ils chantent ton nom, les quatre de la banquette d'abord, puis toute la Nord. L'huissier attend la fin du couplet pour signer."
+    right:
+      label: "Rentrez chez vous"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, set: [h3_coupe_saisi], outcome: rentre}
+      answer: "Ils rentrent, sans un mot. Les quatre de la banquette se retournent une fois, au coin. Il ne reste que toi, les huissiers, et les lettres d'or."
+
+  - id: jp.h3.coupe.depanneuse_pret
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Après le match, deux huissiers et une dépanneuse devant ton coupé. Gégé, les doigts dans la grille : « Un prêt, tu as dit. Ils viennent le chercher. On chante ton nom, ou on rentre ? »"
+    left:
+      label: "Chantez"
+      effects:
+        tribunes: "+"
+        direction: "-"
+        var: {saisie_vehicules: "+1"}
+        set: [h3_coupe_saisi]
+        outcome: chante
+        react: {card: jp.h3.re.gege_depanneuse}
+      answer: "Ils chantent « un prêt » sur l'air de la berceuse, puis ton nom. L'huissier attend la fin du couplet pour signer son procès-verbal."
+    right:
+      label: "Rentrez chez vous"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, set: [h3_coupe_saisi], outcome: rentre}
+      answer: "Ils rentrent. « Un prêt », dit Gégé, tout bas, au coin de la grille. Il ne reste que toi, les huissiers, et les lettres d'or."
 
   - id: jp.h3.coupe.depanneuse_mbako
     roles: [joueur]
@@ -627,7 +714,26 @@ cards:
     text: "Gigi Vecchio regarde longtemps la photo du garçon blond dans le journal étranger. « Didier était brun. Il tirait les coups francs du gauche, la main droite dans la poche. » Il rend le journal."
     left:
       label: "Dites-le à Léa"
-      effects: {relation: {vecchio: 1, lea: 1}}
+      effects: {relation: {vecchio: 1, lea: 1}, set: [h3_gigi_a_parle]}
+      answer: "Il n'y va pas. Le lendemain, Léa a une ligne de plus dans son papier, entre guillemets, signée « un ancien du club »."
+    right:
+      label: "Gardez ça pour vous"
+      effects: {relation: {vecchio: -1}}
+      answer: "Il remet ses gants, le droit d'abord. « Une chose de plus à garder. J'ai la place. » Il ne te regarde plus de la séance."
+
+  # Variante du seau : tu lui avais demandé où était Didier ; il se souvient de ce qu'il a répondu (h3_didier_demande).
+  - id: jp.h3.journal.photo_seau
+    roles: [joueur]
+    arc: presse
+    tags: [vestiaire, presse]
+    speaker: vecchio
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Gigi Vecchio regarde longtemps la photo du garçon blond. « Au seau de glace, tu m'as demandé où il était. J'ai répondu ce qu'on avait écrit. Regarde ce qu'on a écrit. » Il rend le journal."
+    left:
+      label: "Dites-le à Léa"
+      effects: {relation: {vecchio: 1, lea: 1}, set: [h3_gigi_a_parle]}
       answer: "Il n'y va pas. Le lendemain, Léa a une ligne de plus dans son papier, entre guillemets, signée « un ancien du club »."
     right:
       label: "Gardez ça pour vous"
@@ -665,6 +771,25 @@ cards:
       label: "Mettez mon nom"
       effects: {direction: "--", tribunes: "+", relation: {lea: 1}, set: [h3_signe_lea], outcome: signe}
       answer: "Elle tape ton nom sous le sien, sans une faute de frappe. « Mercredi. Ne répondez pas au téléphone mardi soir. »"
+    right:
+      label: "Attendez Josiane"
+      effects: {relation: {lea: -1}, set: [h3_josiane_prevenue], outcome: seule}
+      answer: "« Je lui porte la page ce soir. » Elle la glisse dans une chemise cartonnée. Sur la chemise, au feutre : JOSIANE."
+
+  # Variante de la phrase : Gigi a parlé à Léa ; sa phrase est sur la page, signée « un ancien du club » (h3_gigi_a_parle).
+  - id: jp.h3.journal.une_gigi
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    once: true
+    tone: strategique
+    text: "Léa a composé la page : QUI EST DIDIER VALLIN ?, le garçon blond, la phrase d'un ancien du club entre guillemets : « Didier était brun. » « Mercredi, si j'ai une deuxième signature. Vous, {toi} ? »"
+    left:
+      label: "Mettez mon nom"
+      effects: {direction: "--", tribunes: "+", relation: {lea: 1}, set: [h3_signe_lea], outcome: signe}
+      answer: "Elle tape ton nom sous le sien, sous la phrase de l'ancien, sans une faute. « Mercredi. Ne répondez pas au téléphone mardi soir. »"
     right:
       label: "Attendez Josiane"
       effects: {relation: {lea: -1}, set: [h3_josiane_prevenue], outcome: seule}

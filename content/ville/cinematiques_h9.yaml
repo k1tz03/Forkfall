@@ -24,49 +24,17 @@
 # plancher, jamais sur une place qu'un client ou un habitué peut occuper.
 cinematiques:
   # ════════════════════════════════════════ l'introduction (janvier 2029)
-  # Le matin, la boulangerie avant l'ouverture ; le soir, Saint-Aubin et le zinc. Elle mène
-  # à la veillée (la première carte) sans la jouer.
+  # Quatre répliques dans la nef, la veille de l'enterrement, et la première carte (la veillée)
+  # se joue sur place. Le reste de l'ancienne introduction (la boulangerie avant l'ouverture, le
+  # jeune homme en gris qui retient la clochette, le billet neuf) est distillé sur le premier
+  # matin : h9.ci.boulangerie, après le pain. Les graines sont toujours là : le zinc aux vis
+  # neuves, le sac de l'aéroport, la chemise pliée, l'homme du ministère qui compte et qui écrit.
   - id: h9.ci.intro
     quand: debut
     roles: [selectionneur]
     si: "flag(histoire_h9)"
     titre: "Vingt degrés dedans"
     sous: "Aubérive, janvier 2029"
-    lieu: boulangerie_residentiel
-    tranche: matin
-    suite: h9.ci.intro_2
-    acteurs:
-      - {qui: toi, place: porte}
-      - {qui: mariejo, place: boulangere}
-      - {qui: sauvan, nom: "Un jeune homme en gris", place: porte, cache: true}
-      # avant l'ouverture : ni vendeuse ni clients
-      - {qui: commercant, cache: true}
-      - {qui: passant, cache: true}
-      - {qui: passante, cache: true}
-      - {qui: ancien, cache: true}
-      - {qui: fan, cache: true}
-    etapes:
-      - {musique: ville_nuit}
-      - {narration: "Rue des Lilas, six heures moins dix. Moins quatre degrés. Chez Marçais, le fournil tourne depuis trois heures ; le rideau de fer est levé à mi-hauteur, pour toi {pg, select, f{seule} other{seul}}."}
-      - {qui: toi, va: client_1}
-      - {qui: mariejo, dit: "Votre baguette. La première de la fournée ; les autres ne sont pas encore sorties."}
-      - {narration: "Sur le comptoir, Le Quotidien du jour, plié en deux. En une, ta photo ; dessous, en plus petit : « Al-Dorado : le Dôme sera prêt en mars. »"}
-      - {narration: "Marie-Jo pose la baguette en travers du journal, sur ton visage. Sans y faire attention, ou en y faisant attention."}
-      - {qui: mariejo, dit: "Mon fils rentre ce soir. Par la route, depuis l'aéroport. Sept heures, à Saint-Aubin."}
-      - {qui: toi, pense: "Je pars là-bas dans vingt-trois mois. Lui en revient ce soir."}
-      - {qui: sauvan, entre: client_2}
-      - {narration: "Six heures pile. Un jeune homme en manteau gris retient la clochette de la main en entrant, pour qu'elle ne sonne pas. Il a l'air de ne pas avoir dormi, et de ne pas en avoir besoin."}
-      - {qui: sauvan, dit: "Un croissant, s'il vous plaît. La veillée, c'est bien ce soir à sept heures, à Saint-Aubin ?"}
-      - {qui: mariejo, dit: "Vous le connaissiez ?"}
-      - {qui: sauvan, dit: "Je représente des gens qui sont tristes, madame Marçais. Très tristes."}
-      - {qui: sauvan, regarde: toi}
-      - {qui: sauvan, dit: "Bonne journée, {toi}."}
-      - {qui: sauvan, sort: true}
-      - {qui: mariejo, dit: "Il a payé avec un billet neuf. Ici, personne n'a de billets neufs."}
-      - {fondu: "Le soir. Église Saint-Aubin."}
-
-  - id: h9.ci.intro_2
-    quand: suite
     lieu: eglise
     tranche: soir
     acteurs:
@@ -80,19 +48,47 @@ cinematiques:
       - {qui: fan, cache: true}
     etapes:
       - {musique: sombre}
-      - {narration: "Église Saint-Aubin. Devant l'autel, sur deux tréteaux, une caisse de zinc aux vis neuves, toutes tournées dans le même sens. Un seul cierge. La nef est plus froide que la rue."}
+      - {narration: "Église Saint-Aubin, sept heures du soir, moins quatre degrés dehors. Devant l'autel, sur deux tréteaux, une caisse de zinc aux vis neuves, toutes tournées dans le même sens. Un seul cierge."}
       - {qui: toi, va: banc_3}
-      - {qui: gendarme, regarde: toi}
-      - {qui: gendarme, dit: "La famille n'est pas encore arrivée, {pg, select, f{madame} other{monsieur}}. On m'a prévenu qu'il y aurait du monde de la Fédération."}
+      - {qui: gendarme, dit: "La famille n'est pas encore arrivée, {pg, select, f{madame} other{monsieur}}. Personne ne touche aux vis : j'ai ordre de rester jusqu'à l'enterrement."}
       - {qui: toi, pense: "Je suis {pg, select, f{celle} other{celui}} qui doit emmener {groupe} garçons là où il est mort."}
       - {qui: sauvan, geste: ecrit}
-      - {narration: "Sur un autre banc, le jeune homme de ce matin. Il ne prie pas. Il compte les présents, et il les écrit."}
-      - {qui: gendarme, dit: "J'ai ordre de rester jusqu'à l'enterrement. Personne ne touche aux vis."}
-      - {pause: 900}
       - {qui: mariejo, entre: [-3, -7]}
-      - {narration: "Marie-Jo Marçais entre en manteau sur son tablier. Elle tient contre elle un sac de l'aéroport, scellé lui aussi ; sous le plastique, une chemise de travail, pliée."}
-      - {qui: mariejo, geste: tete_basse}
-      - {narration: "Elle s'arrête à un pas du zinc, sans le toucher. Puis elle se retourne vers le gendarme."}
+      - {narration: "Marie-Jo Marçais entre en manteau sur son tablier, un sac de l'aéroport serré contre elle, scellé lui aussi. Sur un banc, un jeune homme en gris compte les présents, et les écrit."}
+
+  # Le premier matin, après le pain : la baguette en travers du journal, et le jeune homme du banc
+  # qui retient la clochette de la main en entrant.
+  - id: h9.ci.boulangerie
+    quand: carte
+    cartes: [sl.h9.pro3_pain, sl.h9.pro3_pain_ouvriers]
+    moment: apres
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_loin)"
+    lieu: boulangerie_residentiel
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: mariejo, place: boulangere}
+      - {qui: sauvan, nom: "Un jeune homme en gris", place: porte, cache: true}
+      # avant l'ouverture : ni vendeuse ni clients
+      - {qui: commercant, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {musique: ville_nuit}
+      - {qui: toi, va: client_1}
+      - {narration: "Sur le comptoir, Le Quotidien du jour, plié en deux. En une, ta photo ; dessous, en plus petit : « Al-Dorado : le Dôme sera prêt en mars. » Marie-Jo pose la baguette en travers, sur ton visage."}
+      - {qui: mariejo, dit: "Ce matin, j'ai ouvert à cinq heures. Le pain ne sait pas qu'on a un mort."}
+      - {qui: toi, pense: "Je pars là-bas dans vingt-trois mois. Lui en est revenu dans du zinc."}
+      - {qui: sauvan, entre: client_2}
+      - {narration: "Un jeune homme en manteau gris retient la clochette de la main en entrant, pour qu'elle ne sonne pas. Il a l'air de ne pas avoir dormi, et de ne pas en avoir besoin."}
+      - {qui: sauvan, dit: "Un croissant, s'il vous plaît. Madame Marçais, je représente des gens qui sont tristes. Très tristes."}
+      - {qui: sauvan, regarde: toi}
+      - {qui: sauvan, dit: "Bonne journée, {toi}."}
+      - {qui: sauvan, sort: true}
+      - {qui: mariejo, dit: "Il a payé avec un billet neuf. Ici, personne n'a de billets neufs."}
 
   # ═══════════════════════════════════════════════════════════════ 2029
   # Le brassard (le prologue, au vestiaire) : après, le téléphone. Le frère de Noa est sur

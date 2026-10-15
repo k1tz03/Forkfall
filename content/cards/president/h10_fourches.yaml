@@ -1,0 +1,530 @@
+# Histoire 10 · Les Deux Téléphones — les fourches. Sept cartes dont les deux sorties ne se
+# distinguaient que par des jauges cachées (ou par une relation) posent maintenant un drapeau, et
+# ce drapeau revient quelques cartes plus tard (charte § 4 : planter, puis payer). Les payoffs sont
+# des variantes d'étape rangées devant la carte d'origine dans leur arc (mêmes effets, mêmes issues
+# que la carte qu'elles remplacent : seuls le texte et les réponses changent). Les cartes d'origine
+# gardent leur texte : elles ne font que poser le drapeau.
+#
+#   h10_cafe_monte / h10_cafe_nino            ← le café de novembre (pr.h10.c_novembre)
+#                                               → la lettre de Gégé (pr.h10.c2_lettre*)
+#   h10_nino_salue / h10_nino_passe           ← Nino dans l'escalier du local (pr.h10.re.nino_escalier)
+#                                               → la nuit de Gégé (pr.h10.c3_nuit*, la carte suivante),
+#                                                 puis les trois mille visages (pr.h10.c4_masques*)
+#   h10_motion_soir / h10_motion_conseil      ← la motion du virage (pr.h10.so.motion*)
+#                                               → le guichet de la Nord (pr.h10.so.guichet*)
+#   h10_banderole_decrochee / h10_banderole_seche ← la banderole contre Owen (pr.h10.lu.banderole)
+#                                               → le lundi d'Owen (pr.h10.lu.lundi*)
+#   h10_derby_descendu / h10_derby_loge       ← Gégé à la mi-temps du derby (pr.h10.vb.derby)
+#                                               → le projet de fusion (pr.h10.vb.fusion*)
+#   h10_oncle_occupe / h10_oncle_affaires     ← Gégé et les dettes du petit (pr.h10.ni.oncle)
+#                                               → le tambour de Nino (pr.h10.ni.tambour)
+#   h10_feuille_decrochee / h10_feuille_laissee ← la feuille aux trente-trois cases (pr.h10.a_avril)
+#                                               → la dernière marche, deux ans après (pr.h10.c6_marche*)
+cards:
+  # ═══════════════════ le café de novembre (→ la lettre de Gégé)
+  - id: pr.h10.c2_lettre_promesse_cafe
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé dans son lit, la bâche de 1971 sur les pieds : « Tu m'as monté le café en novembre, et tu m'avais promis, {prenom}. Je sais pour les deux téléphones. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse une enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle sent encore le café, sous la cire."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il glisse l'enveloppe sous l'oreiller. « Alors je la donne au petit. Il saura, lui. » Sur la table de nuit, la tasse est vide."
+
+  - id: pr.h10.c2_lettre_promesse_nino
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé dans son lit, la bâche de 1971 sur les pieds : « C'est le petit qui m'a monté le café. Toi, tu m'avais promis, {prenom}. Je sais pour les deux téléphones. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse une enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle est cachetée à la cire de bougie."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il glisse l'enveloppe sous l'oreiller. « Alors je la donne au petit. Lui, il est monté. » Il ferme les yeux."
+
+  - id: pr.h10.c2_lettre_cafe
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé dans son lit, la bâche de 1971 sur les pieds, une enveloppe sur la couverture : « Tu m'as monté le café. Je sais pour les deux téléphones, {prenom}. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse l'enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle sent encore le café, sous la cire."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il reprend l'enveloppe et la glisse sous l'oreiller. « Alors je la donne au petit. Il saura, lui, quoi en faire. »"
+
+  - id: pr.h10.c2_lettre_nino
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé, la bâche de 1971 sur les pieds, une enveloppe sur la couverture : « C'est le petit qui m'a monté le café. Je sais pour les deux téléphones, {prenom}. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse l'enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle est cachetée à la cire de bougie."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il reprend l'enveloppe et la glisse sous l'oreiller. « Alors je la donne au petit. Lui, il est monté. »"
+
+  # ═══════════════════ Nino dans l'escalier du local (→ la nuit de Gégé)
+  - id: pr.h10.c3_nuit_clapet_salue
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, portable]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures du matin. Ce n'est pas le fixe qui sonne, c'est le clapet, et ce n'est pas une femme. Nino : « Tu m'as dit bonsoir, dans l'escalier. Il est deux heures. Il faut imprimer. »"
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. « Bonsoir », dit-il, comme dans l'escalier. Il compte les plis, à voix basse."
+
+  - id: pr.h10.c3_nuit_clapet_passe
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, portable]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures du matin. Ce n'est pas le fixe qui sonne, c'est le clapet, et ce n'est pas une femme. Nino : « Tu es passé sans un mot, dans l'escalier. Il est deux heures. Il faut imprimer. »"
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. Il ne te regarde pas, comme toi dans l'escalier. Il compte les plis."
+
+  - id: pr.h10.c3_nuit_salue
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, telephone]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures. La ligne du bureau, renvoyée sur la villa. Nino : « Tu m'as dit bonsoir, dans l'escalier. Il est deux heures. Il faut imprimer. » En bas, une fenêtre reste allumée."
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. « Bonsoir », dit-il, comme dans l'escalier. Il compte les plis, à voix basse."
+
+  - id: pr.h10.c3_nuit_passe
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, telephone]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures. La ligne du bureau, renvoyée sur la villa. Nino : « Tu es passé sans un mot, dans l'escalier. Il est deux heures. Il faut imprimer. » En bas, une fenêtre reste allumée."
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. Il ne te regarde pas, comme toi dans l'escalier. Il compte les plis."
+
+  # ═══════════════════ la motion du virage (→ le guichet de la Nord)
+  - id: pr.h10.so.guichet_soir
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, en écus, compte la monnaie deux fois : « On a voté ce soir-là, debout. Le petit dit que c'est une victoire. »"
+    left:
+      label: "C'en est une"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "« Alors on en a eu une. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "C'est un début"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il regarde le guichetier, pas toi. « À mon âge, les débuts, on les compte aussi. »"
+
+  - id: pr.h10.so.guichet_conseil
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, en écus, compte la monnaie deux fois : « Le conseil a décidé. C'est nous, le conseil, dit le petit. Une victoire. »"
+    left:
+      label: "C'en est une"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "« Alors on en a eu une. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "C'est un début"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il regarde le guichetier, pas toi. « À mon âge, les débuts, on les compte aussi. »"
+
+  - id: pr.h10.so.guichet_recompte_soir
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, compte la monnaie deux fois : « On a voté ce soir-là, et tu as recompté devant tout le monde. Le petit t'en veut. »"
+    left:
+      label: "Il comptait mal"
+      effects: {tribunes: "-", relation: {gege: 1}, direction: "+"}
+      answer: "« Il compte vite. Ce n'est pas pareil. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "Je lui ferai des excuses"
+      effects: {direction: "-", relation: {nino: 1}, tribunes: "+"}
+      answer: "« Ne t'excuse jamais d'avoir compté. » Il range sa monnaie pièce par pièce, comme on range des cartouches."
+
+  - id: pr.h10.so.guichet_recompte_conseil
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, compte la monnaie deux fois : « Le conseil a décidé, et tu as recompté devant tout le monde. Le petit t'en veut. »"
+    left:
+      label: "Il comptait mal"
+      effects: {tribunes: "-", relation: {gege: 1}, direction: "+"}
+      answer: "« Il compte vite. Ce n'est pas pareil. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "Je lui ferai des excuses"
+      effects: {direction: "-", relation: {nino: 1}, tribunes: "+"}
+      answer: "« Ne t'excuse jamais d'avoir compté. » Il range sa monnaie pièce par pièce, comme on range des cartouches."
+
+  # ═══════════════════ la banderole contre Owen (→ le lundi d'Owen)
+  - id: pr.h10.lu.lundi_decrochee
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe à ton bureau un lundi, jour de congé des joueurs, un verre d'eau à la main : « Nino a décroché la banderole pour moi. Si vous devez me virer, c'est aujourd'hui. Je préfère. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il boit son verre, le pose, s'en va. Le lendemain, il fait courir les joueurs une heure de plus, et salue Nino du menton, au passage."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  - id: pr.h10.lu.lundi_seche
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe un lundi, jour de congé des joueurs, un verre d'eau à la main : « La banderole a séché jusqu'au mardi ; je suis passé dessous. Si vous devez me virer, c'est aujourd'hui. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il boit son verre, le pose, s'en va. Le lendemain, il passe sous la Nord sans baisser la tête, et fait courir les joueurs une heure de plus."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  - id: pr.h10.lu.lundi_cv_decrochee
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe un lundi, jour de congé des joueurs, un verre d'eau à la main : « Nino a décroché la banderole ; le CV dépasse de votre tiroir, {toi}. Si vous devez me virer, c'est aujourd'hui. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il pousse le CV au fond du tiroir, du bout du doigt, et le referme. « Nino, lui, l'a décrochée. » Puis il boit son verre et s'en va."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  - id: pr.h10.lu.lundi_cv_seche
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe un lundi, jour de congé des joueurs, un verre d'eau à la main : « La banderole a séché jusqu'au mardi, et le CV dépasse de votre tiroir, {toi}. Si vous devez me virer, c'est aujourd'hui. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il pousse le CV au fond du tiroir, du bout du doigt, et le referme. « Elle a séché. Pas moi. » Puis il boit son verre et s'en va."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  # ═══════════════════ Gégé à la mi-temps du derby (→ le projet de fusion)
+  - id: pr.h10.vb.fusion_descendu
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby, le projet de fusion imprimé à la main : « Mon oncle t'a parlé à l'oreille, à la mi-temps. Je n'ai pas entendu. Les socios voteraient, si tu le proposes. Moi, je compterais. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. « Il t'a dit non. » Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre. « C'est ce qu'il t'a dit à l'oreille, non ? »"
+
+  - id: pr.h10.vb.fusion_loge
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby, le projet de fusion imprimé à la main : « Mon oncle t'a fait signe ; tu es resté en loge. Les socios voteraient, si tu le proposes. Moi, je compterais. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. « Mon oncle n'a rien dit. » Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre. « Mon oncle aurait dit pareil, si tu étais descendu. »"
+
+  - id: pr.h10.vb.fusion_renvoyee_descendu
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby : « Tu as renvoyé leur bouteille, et mon oncle t'a parlé à l'oreille. Ils ont rappelé, moi, pas toi. Une franchise de la Rive, deux clubs, un nom. Je compterais les mains. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. « Il t'a dit non. » Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre. « C'est ce qu'il t'a dit à l'oreille, non ? »"
+
+  - id: pr.h10.vb.fusion_renvoyee_loge
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby : « Tu as renvoyé leur bouteille, et tu es resté en loge. Ils ont rappelé, moi. Une franchise de la Rive, deux clubs, un nom. Mon oncle ne dira rien. Je compterais les mains. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. « Mon oncle n'a rien dit. » Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre. « Mon oncle aurait dit pareil, si tu étais descendu. »"
+
+  # ═══════════════════ Gégé et les dettes du petit (→ le tambour de Nino)
+  - id: pr.h10.ni.tambour_occupe
+    roles: [president]
+    arc: famille
+    tags: [ultras, tribunes]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Nino répare un tambour à la buvette, avec du ruban adhésif : « Mon oncle dit que tu t'occupes de mes dettes en me regardant faire. Après lui, {toi}, il faudra quelqu'un pour taper. Pas moi. »"
+    left:
+      label: "Tu taperas"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}}
+      answer: "Il essaie : deux coups, trois. Le son est faux. « Regarder, c'est plus dur. » Il recommence jusqu'à ce que le barman éteigne."
+    right:
+      label: "Trouve quelqu'un"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« J'ai trouvé. Un gamin de douze ans qui tape comme mon oncle à quarante. » Il ne dit pas son nom, ni celui de ses dettes."
+
+  - id: pr.h10.ni.tambour_affaires
+    roles: [president]
+    arc: famille
+    tags: [ultras, tribunes]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Nino répare un tambour à la buvette, avec du ruban adhésif : « Mon oncle dit que mes dettes sont mes affaires, pour toi. Il a raison. Après lui, {toi}, il faudra quelqu'un pour taper. Pas moi. »"
+    left:
+      label: "Tu taperas"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}}
+      answer: "Il essaie : deux coups, trois. Le son est faux. « Mes affaires, oui. » Il recommence jusqu'à ce que le barman éteigne la salle."
+    right:
+      label: "Trouve quelqu'un"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« J'ai trouvé. Un gamin de douze ans qui tape comme mon oncle à quarante. » Il ne dit pas son nom. Ça, c'est ses affaires."
+
+  # ═══════════════════ la feuille aux trente-trois cases (→ la dernière marche)
+  - id: pr.h10.c6_marche_decrochee
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sombre]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, un soir de mai, la dernière marche. Tazi sort de sous sa casquette la feuille décrochée en avril : « Je l'ai gardée. On devait compter, ce soir. Je la mure, {toi} ? »"
+    left:
+      label: "Laissez-la ouverte"
+      effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
+      answer: "Il retourne le seau et s'assoit dessus, la feuille sur les genoux. « Cette nuit-là, je dors ici. On comptera ensemble. »"
+    right:
+      label: "Murez-la"
+      effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
+      answer: "Il glisse la feuille dans sa caisse, sous le niveau. « Je viendrai tard. Il n'y aura personne pour compter. »"
+
+  - id: pr.h10.c6_marche_laissee
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sombre]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, un soir de mai, la dernière marche. Au mur, la feuille d'avril : trente-trois cases, des noms au feutre noir, le tien dans la dernière. Tazi, sa truelle : « Je la mure, {toi} ? »"
+    left:
+      label: "Laissez-la ouverte"
+      effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
+      answer: "Il retourne le seau et s'assoit dessus, face à la feuille. « Cette nuit-là, je dors ici. Ton nom, c'est à toi de le lire. »"
+    right:
+      label: "Murez-la"
+      effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
+      answer: "Il règle sa lampe frontale, sans regarder la feuille. « Je viendrai tard. La dernière case restera vide, cette nuit-là. »"
+
+  # ═══════════════════ Nino dans l'escalier du local (→ la nuit de Gégé, puis les trois mille visages)
+  - id: pr.h10.c4_masques_coupee_salue
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton, imprimés dans la nuit. Nino te salue du menton, comme dans l'escalier. Les haut-parleurs sont muets ; la Nord dit son nom."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Au premier rang, Nino te rend le salut sans lâcher son masque. Derrière la vitre, trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Nino, au premier rang, lève son masque vers toi, sans reproche."
+
+  - id: pr.h10.c4_masques_coupee_passe
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton. Nino ne tourne pas la tête, comme toi dans l'escalier. Les haut-parleurs sont muets ; la Nord dit son nom."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Nino, au premier rang, ne se retourne pas. Derrière la vitre, trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Au premier rang de la Nord, Nino te tourne le dos, son masque contre la poitrine."
+
+  - id: pr.h10.c4_masques_salue
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton, imprimés dans la nuit. Nino te salue du menton, comme dans l'escalier. La voix de Gigi dit son nom, puis se tait une minute."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Au premier rang, Nino te rend le salut sans lâcher son masque. Derrière la vitre, trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Nino, au premier rang, lève son masque vers toi, sans reproche."
+
+  - id: pr.h10.c4_masques_passe
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton, imprimés la nuit. Nino ne tourne pas la tête, comme toi dans l'escalier. La voix de Gigi dit son nom, puis se tait."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Nino, au premier rang, ne se retourne pas. Derrière la vitre, trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Au premier rang de la Nord, Nino te tourne le dos, son masque contre la poitrine."

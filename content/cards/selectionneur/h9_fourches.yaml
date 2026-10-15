@@ -1,0 +1,352 @@
+# Histoire 9 · Vingt degrés dedans — les fourches. Sept cartes dont les deux sorties ne se
+# distinguaient que par des jauges cachées (ou par une relation) posent maintenant un drapeau, et
+# ce drapeau revient quelques cartes plus tard (charte § 4 : planter, puis payer). Les payoffs sont
+# des variantes d'étape rangées devant la carte d'origine dans leur arc (mêmes effets, mêmes issues
+# que la carte qu'elles remplacent : seuls le texte et les réponses changent). Les cartes d'origine
+# gardent leur texte : elles ne font que poser le drapeau. Le Mondial se joue loin (h9_loin) : les
+# variantes `_loin` des mêmes étapes passent devant, elles ne sont pas touchées.
+#
+#   h9_lettre_aide / h9_lettre_baguette   ← la lettre de la banque sous la caisse (sl.h9.four.lettre)
+#                                           → le conseiller et la caution (sl.h9.four.banque)
+#   h9_greve_comprise / h9_greve_venez    ← Gégé et la grève du toit (sl.h9.virage.buvette)
+#                                           → l'écran de la place du marché (sl.h9.virage.ecran)
+#   h9_rapport_saurai / h9_rapport_doute  ← Marie-Jo et « à l'intérieur » (sl.h9.re.mariejo_rapport)
+#                                           → la seconde manche (sl.h9.a4_manche*)
+#   h9_ligne_lie_pas / h9_ligne_comme_vous ← la ligne du contrat Gazéo (sl.h9.gazeo.ligne)
+#                                           → la séance photo devant la flamme (sl.h9.gazeo.photo*)
+#   h9_bre_ministere / h9_bre_erreur      ← Bréhaut et la liste signée (sl.h9.re.brehaut_listes)
+#                                           → Noa sur le parking (sl.h9.deux_listes.noa)
+#   h9_noa_dicte / h9_noa_signe           ← Noa sur le parking (sl.h9.deux_listes.noa*)
+#                                           → le tiret de la quatrième ligne, un an après
+#                                             (sl.h9.deux_listes.rappel_noa*)
+#   h9_pluie_raconte / h9_pluie_pres      ← Gigi Vecchio et les plongeons du petit (sl.h9.pluie.main_courante)
+#                                           → le téléphone de l'hôpital (sl.h9.pluie.appel)
+cards:
+  # ═══════════════════ la lettre sous la caisse (→ la caution du four)
+  - id: sl.h9.four.banque_aide
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, caisse]
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Banque Aubérivoise. Deux dossiers sur le bureau : le four des Marçais, et le tien. « Madame Marçais dit que vous aviez proposé d'aider. J'étale sur cinq ans, si quelqu'un se porte caution. »"
+    left:
+      label: "Je signe la caution"
+      effects: {tribunes: "+", caisse: "-", relation: {mariejo: 1}, set: [h9_four_caution], outcome: caution, react: {card: sl.h9.re.mariejo_four}}
+      answer: "La ligne « emprunteur initial » porte encore le nom de Kévin. Tu signes en dessous : tu avais proposé, la signature n'est que la suite."
+    right:
+      label: "Je ne signe rien"
+      effects: {caisse: "+", set: [h9_four_refus], outcome: refus}
+      answer: "Il referme le dossier Marçais sur le tien. « Elle m'a dit que vous aviez proposé. Elle ne dira rien : elle sait déjà. »"
+
+  - id: sl.h9.four.banque_baguette
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, caisse]
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Banque Aubérivoise. Deux dossiers : le four des Marçais, et le tien. « Madame Marçais dit que vous avez pris votre baguette, sans plus. J'étale sur cinq ans, si quelqu'un se porte caution. »"
+    left:
+      label: "Je signe la caution"
+      effects: {tribunes: "+", caisse: "-", relation: {mariejo: 1}, set: [h9_four_caution], outcome: caution, react: {card: sl.h9.re.mariejo_four}}
+      answer: "La ligne « emprunteur initial » porte encore le nom de Kévin. Tu signes en dessous : la baguette, cette fois, tu la paies."
+    right:
+      label: "Je ne signe rien"
+      effects: {caisse: "+", set: [h9_four_refus], outcome: refus}
+      answer: "Il referme le dossier Marçais sur le tien. « Elle ne vous a rien demandé. C'est ce qu'elle dit de tout le monde, madame Marçais. »"
+
+  # ═══════════════════ Gégé et la grève du toit (→ l'écran de la place)
+  - id: sl.h9.virage.ecran_comprise
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "La buvette, le soir. Le conseil a voté un écran géant pour la place du marché, « pour le Mondial, si on y va ». Gégé repose son verre : « Tu as compris, pour le toit. On viendra, mais de dos. »"
+    left:
+      label: "De dos, alors"
+      effects: {tribunes: "-", relation: {gege: 1}, set: [h9_virage_dos], outcome: dos}
+      answer: "Il dessine un dos sur un sous-bock, une flèche vers l'écran. « Comprendre, ça se paie en nuques. » Il punaise le dessin à côté de la page."
+    right:
+      label: "Regardez-nous en face"
+      effects: {tribunes: "+", set: [h9_virage_face], outcome: face}
+      answer: "« En face, alors. Mais si le capitaine entre bras nus, on se retourne. » Il te serre la main, un peu moins fort qu'au début du mois."
+
+  - id: sl.h9.virage.ecran_venez
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "La buvette, le soir. Le conseil a voté un écran géant pour la place du marché, « pour le Mondial, si on y va ». Gégé repose son verre : « Tu nous as invités à te voir jouer. On viendra. Mais de dos. »"
+    left:
+      label: "De dos, alors"
+      effects: {tribunes: "-", relation: {gege: 1}, set: [h9_virage_dos], outcome: dos}
+      answer: "Il dessine un dos sur un sous-bock, une flèche vers l'écran. « Jouer, oui. Mais de dos. » Le dessin est punaisé, page retournée à côté."
+    right:
+      label: "Regardez-nous en face"
+      effects: {tribunes: "+", set: [h9_virage_face], outcome: face}
+      answer: "« En face, alors. Mais si le capitaine entre bras nus, on se retourne. » Il ne te serre pas la main : il la regarde un moment."
+
+  # ═══════════════════ Marie-Jo et « à l'intérieur » (→ la seconde manche)
+  - id: sl.h9.a4_manche_saurai
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain : « Vous saurez là-bas, vous avez dit. Prenez la manche : elle comprendra “à l'intérieur” mieux que moi. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies dans la poche intérieure de ta veste, contre ton contrat. Elle sent le fournil, et ce que tu as promis de savoir."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son propre poignet, deux tours, serrés avec les dents. « Alors je saurai d'ici. » Elle te rend la monnaie."
+
+  - id: sl.h9.a4_manche_saurai_attente
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain : « Le capitaine attend votre réponse. Vous, vous saurez là-bas. L'autre manche n'attend pas : prenez-la. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies contre ton contrat, dans la poche intérieure. Marie-Jo regarde ta poche, comme si tu venais enfin de répondre à Noa."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son poignet, deux tours. « Alors je saurai d'ici. Le capitaine, lui, attendra que vous parliez. »"
+
+  - id: sl.h9.a4_manche_doute
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain : « Vous ne savez pas si vous saurez, vous avez dit. Moi non plus. La manche, elle, ne doute pas. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies dans la poche intérieure de ta veste, contre ton contrat. Elle sent le fournil, et le croissant que tu n'avais pas demandé."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son propre poignet, deux tours, serrés avec les dents. « Alors elle est à moi. » Elle te rend la monnaie, et un croissant."
+
+  - id: sl.h9.a4_manche_doute_attente
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain : « Le capitaine attend votre réponse, et vous ne savez pas si vous saurez. L'autre manche n'attend pas. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies contre ton contrat, dans la poche intérieure. Marie-Jo regarde ta poche : pour une fois, tu n'as pas hésité."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son poignet, deux tours. « Alors elle est à moi. Le capitaine, lui, attendra que vous sachiez. »"
+
+  # ═══════════════════ la ligne du contrat Gazéo (→ la séance photo)
+  - id: sl.h9.gazeo.photo_ligne_lie_pas
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, vestiaire]
+    speaker: vandel
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Stade de la Rive, séance photo de Gazéo, devant une flamme bleue de trois mètres. Le photographe veut « des bras nus, pour la lumière ». Noa te regarde : « La ligne ne vous liait pas. Moi, si ? »"
+    left:
+      label: "On pose"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", set: [h9_photo_gazeo], outcome: pose}
+      answer: "Trois cents photos. Sur celle qu'ils gardent, Noa sourit, un bras dans l'autre main. « Image positive », dit-il, sans bouger les lèvres."
+    right:
+      label: "Pas de photo"
+      effects: {caisse: "-", direction: "-", vestiaire: "+", set: [h9_photo_refusee], outcome: refuse}
+      answer: "Les joueurs remettent leurs vestes. « La ligne ne nous lie pas non plus », dit Noa. La flamme reste allumée sur la pelouse vide."
+
+  - id: sl.h9.gazeo.photo_ligne_comme_vous
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, vestiaire]
+    speaker: vandel
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Stade de la Rive, séance photo de Gazéo, devant une flamme bleue. « Des bras nus, pour la lumière. » Noa : « Vous lisez la ligne comme le président de la Ligue : image positive. Positive pour qui ? »"
+    left:
+      label: "On pose"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", set: [h9_photo_gazeo], outcome: pose}
+      answer: "Trois cents photos. Sur celle qu'ils gardent, Noa sourit, bras nus, et tient son bras gauche dans sa main droite. « Positive. Voilà. »"
+    right:
+      label: "Pas de photo"
+      effects: {caisse: "-", direction: "-", vestiaire: "+", set: [h9_photo_refusee], outcome: refuse}
+      answer: "Les joueurs remettent leurs vestes. « Vous la lisiez autrement, la ligne », dit Noa. La flamme reste allumée sur la pelouse vide."
+
+  - id: sl.h9.gazeo.photo_brassard_ligne_lie_pas
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, vestiaire]
+    speaker: vandel
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Stade de la Rive, séance photo de Gazéo, devant une flamme bleue de trois mètres. « Le brassard noir, on l'enlève, pour la lumière. » Noa te regarde : « La ligne ne vous liait pas. Moi, si ? »"
+    left:
+      label: "On pose"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", set: [h9_photo_gazeo], outcome: pose}
+      answer: "Noa le défait pour la photo et le renoue en sortant, avec les dents. « Ça ne me lie pas non plus. » Sur la photo, son bras est plus pâle."
+    right:
+      label: "Pas de photo"
+      effects: {caisse: "-", direction: "-", vestiaire: "+", set: [h9_photo_refusee], outcome: refuse}
+      answer: "Noa garde le brassard. Le photographe photographie la flamme seule, sur la pelouse vide, pour ne pas rentrer bredouille."
+
+  - id: sl.h9.gazeo.photo_brassard_ligne_comme_vous
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, vestiaire]
+    speaker: vandel
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Stade de la Rive, séance photo de Gazéo, devant une flamme bleue. « Le brassard noir, on l'enlève, pour la lumière. » Noa : « Vous lisez la ligne comme la Ligue : image positive. Je l'enlève ? »"
+    left:
+      label: "On pose"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", set: [h9_photo_gazeo], outcome: pose}
+      answer: "Noa le défait pour la photo et le renoue en sortant, avec les dents. « Positif. » Sur la photo, son bras est plus pâle."
+    right:
+      label: "Pas de photo"
+      effects: {caisse: "-", direction: "-", vestiaire: "+", set: [h9_photo_refusee], outcome: refuse}
+      answer: "Noa garde le brassard. « Vous la lisiez autrement, la ligne. » Le photographe photographie la flamme seule, sur la pelouse vide."
+
+  # ═══════════════════ Bréhaut et la liste signée (→ Noa sur le parking)
+  - id: sl.h9.deux_listes.noa_ministere
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !flag('h9_depart')"
+    text: "Noa t'attend sur le parking, la liste pliée dans la poche de son survêtement : « Bréhaut m'a dit que c'était le ministère. “Fatigué.” C'est vous qui l'avez écrit, {toi}, ou eux ? »"
+    left:
+      label: "On me l'a dicté"
+      effects: {vestiaire: "+", direction: "-", relation: {vandel: 1}, set: [h9_noa_dicte]}
+      answer: "Il remonte son sac sur l'épaule. « Bréhaut disait vrai, alors. On est deux à être fatigués. » Il part vers la gare à pied. Il ne court plus."
+    right:
+      label: "Je l'ai signé"
+      effects: {direction: "+", relation: {vandel: -1}, set: [h9_noa_signe]}
+      answer: "Il remonte la fermeture de son survêtement. « Bréhaut a menti pour vous, ou pour moi ? » Il s'en va sans courir. Il marche vite."
+
+  - id: sl.h9.deux_listes.noa_erreur
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !flag('h9_depart')"
+    text: "Noa t'attend sur le parking, la liste pliée dans la poche de son survêtement : « Bréhaut dit que c'était une erreur. “Fatigué.” Une erreur, ça s'écrit tout seul, {toi}, ou on vous l'a dicté ? »"
+    left:
+      label: "On me l'a dicté"
+      effects: {vestiaire: "+", direction: "-", relation: {vandel: 1}, set: [h9_noa_dicte]}
+      answer: "Il remonte son sac sur l'épaule. « Une erreur dictée. On en fait, de celles-là. » Il part vers la gare à pied. Il ne court plus."
+    right:
+      label: "Je l'ai signé"
+      effects: {direction: "+", relation: {vandel: -1}, set: [h9_noa_signe]}
+      answer: "Il remonte la fermeture de son survêtement. « Une erreur signée, alors. » Il s'en va sans courir. Pour un fatigué, il marche vite."
+
+  # ═══════════════════ Noa sur le parking (→ le tiret de la quatrième ligne, un an après)
+  - id: sl.h9.deux_listes.rappel_noa_dicte
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "La première liste depuis le Dôme. Josiane s'arrête à la quatrième ligne, celle du tiret : « Vous avez dit à Noa qu'on vous l'avait dicté. Je retape le capitaine, ou c'est encore eux qui dictent ? »"
+    left:
+      label: "Retapez-le"
+      effects: {vestiaire: "++", direction: "-", relation: {vandel: 1}, set: [h9_noa_rappele]}
+      answer: "Elle tape VANDEL, lettre par lettre. Le soir, Noa appelle : « Dicté, vous disiez. Et maintenant ? » Il raccroche avant ta réponse. Il riait."
+    right:
+      label: "Laissez le tiret"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle laisse le tiret et passe au nom suivant. En bas de la page, elle écrit : « dicté ». Elle ne dit pas par qui."
+
+  - id: sl.h9.deux_listes.rappel_noa_signe
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "La première liste depuis le Dôme. Josiane s'arrête à la quatrième ligne, celle du tiret : « Vous avez dit à Noa que vous l'aviez signé. Qui signe peut effacer. Je le retape, le capitaine ? »"
+    left:
+      label: "Retapez-le"
+      effects: {vestiaire: "++", direction: "-", relation: {vandel: 1}, set: [h9_noa_rappele]}
+      answer: "Elle tape VANDEL, lettre par lettre. Le soir, Noa appelle : « Signé, puis effacé ? » Il raccroche avant ta réponse. Il ne riait pas."
+    right:
+      label: "Laissez le tiret"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle laisse le tiret et passe au nom suivant. En bas de la page, elle ajoute la date, puis l'heure, ce qu'elle ne fait jamais."
+
+  # ═══════════════════ Gigi Vecchio et les plongeons (→ le téléphone de l'hôpital)
+  - id: sl.h9.pluie.appel_raconte
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un soir, le téléphone. Gigi, de l'hôpital, la voix toute petite : « Raconte-moi encore les plongeons. Ils m'ont mis côté fenêtre : on voit un bout du toit de la Nord. Ton récit vaut mieux. »"
+    left:
+      label: "Je viens demain"
+      effects: {direction: "+", relation: {vecchio: 1}, outcome: demain}
+      answer: "« Demain, et dans l'ordre. » Il raccroche le premier, pour une fois. Le lendemain, la chambre est déjà refaite."
+    right:
+      label: "Je viens ce soir"
+      effects: {vestiaire: "-", relation: {vecchio: 1}, set: [h9_gigi_nuit], outcome: nuit}
+      answer: "Une nuit sur une chaise. Tu racontes les plongeons un par un ; il dit « trop tôt » à chacun et s'endort au dernier. Tu pars sans bruit."
+
+  - id: sl.h9.pluie.appel_pres
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un soir, le téléphone. Gigi, de l'hôpital, la voix toute petite : « Mes trois pas dans l'herbe, c'était mon dernier terrain. Côté fenêtre, on voit un bout du toit de la Nord. Ça ne mouille pas. »"
+    left:
+      label: "Je viens demain"
+      effects: {direction: "+", relation: {vecchio: 1}, outcome: demain}
+      answer: "« Demain, oui. N'apporte rien. » Il raccroche le premier, pour une fois. Le lendemain, la chambre sent encore l'herbe mouillée."
+    right:
+      label: "Je viens ce soir"
+      effects: {vestiaire: "-", relation: {vecchio: 1}, set: [h9_gigi_nuit], outcome: nuit}
+      answer: "Une nuit sur une chaise. Il parle de 1990, de la neige, d'un penalty, de trois pas dans l'herbe. Au matin, il dort. Tu pars sans bruit."

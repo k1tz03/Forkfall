@@ -8,92 +8,44 @@
 # Elles ne décident rien, ne montrent jamais le coup (la douche, la boîte : l'avant, l'après),
 # et n'accordent rien au héros sans {pg, select, …}.
 #
-#   l'introduction    la friche, la rue, la cuisine de la cité — une nuit de juillet 1990
+#   l'introduction    le vestiaire, seize heures moins une : quatre répliques, puis la première carte
 #   saison 1 (1990)   huit heures au parking · seize heures au terrain · la dernière sirène ·
 #                     la veille, au garage Mazurier · le Rideau Rouge · les deux femmes
 #   saison 2 (1991)   le lendemain de trois heures · la grande halle · la clé de la tour
 #   saison 3 (1992)   l'armoire de Josiane · le tapis vert · l'ambulance · le fax ·
 #                     le dernier samedi
 #
+# L'introduction jouée tient en quatre répliques : le vestiaire du Racing, la sirène de la
+# Tréfilerie qui monte, la première carte (le crochet du fond). Ce que la nuit d'avant disait — la
+# friche et l'homme à la craie, la cuisine de la cité, la voiture de Portclair sous le réverbère —
+# est distribué sur la première semaine, après les premiers choix (content/ville/intro_h3.yaml).
+# Les scènes qui suivent un choix du prologue ou du livre (le casier, le fil du téléphone, la
+# licence, le seau, la banquette, la phrase de Gigi, les cartons) ont deux versions, ou une de
+# plus : celle de la variante d'abord, celle du défaut ensuite.
+#
 # Saisons de la ville (1, 2, 3, 4) = saisons du moteur (0, 1, 2, 3).
 cinematiques:
-  # ═════════════════════════════════════════════ L'INTRODUCTION : trois lieux, une nuit de juillet
-  # Qui : le gamin de la cité, sa mère, l'agent et le président ; où : la Tréfilerie et le
-  # stade, de part et d'autre d'un parking ; pourquoi maintenant : le premier contrat, l'usine
-  # qui ferme à Noël. La graine : un homme en capote qui trace une ligne à la craie. La scène
-  # mène au crochet du vestiaire, demain à seize heures, sans le dire.
+  # ═════════════════════════════════════════════ L'INTRODUCTION : le vestiaire, seize heures moins une
+  # Qui : toi, dix-neuf ans, et Bréhaut ; où : le vestiaire du Racing, à côté de l'usine ; pourquoi
+  # maintenant : le premier entraînement de pro, et l'usine qui ferme à Noël. La scène s'arrête
+  # quand la sirène monte : la première carte (le crochet du fond, DID sous ton nom) est jouée là.
   - id: h3.ci.intro
     quand: debut
     roles: [joueur]
     si: "flag(histoire_h3)"
     titre: "La Sirène"
     sous: "Aubérive, juillet 1990"
-    lieu: friche
-    tranche: nuit
-    suite: h3.ci.intro_2
+    lieu: stade
+    tranche: aprem
     acteurs:
       - {qui: toi, place: porte}
-      - {id: ouvrier, qui: ancien, nom: "Un ouvrier du bâtiment C", place: [-2, -4]}
-      - {id: capote, qui: inconnu, nom: "Un homme en capote", place: [-1, -6]}
+      - {qui: brehaut, place: banc_3, pose: assis}
     etapes:
-      - {narration: "Vingt-deux heures. De l'autre côté du parking du stade, la Tréfilerie : les halles mortes depuis 1984, le bâtiment C qui tourne encore, et au-dessus de tout, la tour de la sirène."}
-      - {qui: toi, va: [0, -3]}
-      - {qui: ouvrier, dit: "Tu coupes par la friche, comme ton père. Lui, il passait sous la tour pour gagner trois minutes sur la pointeuse.", geste: fume}
-      - {qui: ouvrier, regarde: toi}
-      - {qui: ouvrier, dit: "Pro, il paraît. {pg, select, f{La première} other{Le premier}} de la cité depuis le gamin qu'ils ont vendu à l'étranger, l'an dernier."}
-      - {qui: toi, pense: "L'usine ferme à Noël. On le dit depuis 1984. Cette année, même les contremaîtres le disent."}
-      - {narration: "Près du feu de palettes, un homme en capote militaire s'agenouille et trace quelque chose sur le béton, à la craie, sans lever la tête."}
-      - {qui: capote, geste: genou}
-      - {qui: ouvrier, dit: "Ne le regarde pas. Il n'aime pas qu'on le regarde, et il ne demande jamais rien à personne."}
-      - {qui: capote, geste: debout}
-      - {qui: capote, sort: true}
-      - {narration: "Sur le béton, une ligne blanche, droite, longue d'un mètre, tirée au cordeau. Rien d'autre."}
-      - {qui: ouvrier, dit: "Demain, seize heures, la sirène. Moi je sortirai, toi tu entreras. On l'entend des deux côtés du grillage, tu verras."}
-      - {qui: ouvrier, sort: true}
-
-  - id: h3.ci.intro_2
-    quand: suite
-    lieu: voiture
-    tranche: nuit
-    suite: h3.ci.intro_3
-    acteurs:
-      - {qui: toi, place: porte}
-      - {qui: fardelli}
-      - {qui: aulard}
-    etapes:
-      - {narration: "Ta rue, vingt-deux heures et demie. Sous le réverbère, en face de chez ta mère, une voiture de Portclair attend, moteur allumé, vitre à moitié baissée."}
-      - {qui: toi, pense: "Je m'arrête à l'angle de la boulangerie. Personne n'attend jamais personne, ici. On ne laisse pas tourner un moteur pour rien."}
-      - {qui: aulard, dit: "Rocco. Tu as vu la réserve, dimanche ?", geste: fume}
-      - {qui: fardelli, dit: "J'ai vu {pg, select, f{une seule fille} other{un seul garçon}}. {pg, select, f{Elle} other{Il}} boite de la gauche quand personne ne regarde."}
-      - {qui: aulard, dit: "L'usine ne paiera plus les maillots, l'an prochain. Il faudra bien que quelqu'un les paie."}
-      - {qui: fardelli, dit: "À Noël, la Tréfilerie ferme. Après, il restera une seule chose à vendre dans cette ville, Jean-Marie. Et elle court vite.", ton: sourire}
-      - {qui: aulard, emote: "..."}
-      - {qui: fardelli, regarde: toi}
-      - {qui: fardelli, dit: "Bonsoir.", ton: sourire}
-      - {qui: aulard, sort: true}
-      - {qui: toi, pense: "Il a dit bonsoir comme on referme une porte derrière quelqu'un."}
-      - {narration: "La vitre remonte. Le moteur tourne encore quand tu pousses la porte de chez toi. Tu ne l'entends partir qu'une fois en haut."}
-
-  - id: h3.ci.intro_3
-    quand: suite
-    lieu: appartement
-    tranche: nuit
-    acteurs:
-      - {qui: toi, place: porte}
-      - {qui: odile, place: table_1, pose: assis}
-    etapes:
-      - {narration: "La cité de la Tréfilerie, troisième maison à gauche, les volets verts. Sur le buffet, ton père en bleu de travail, mort à la tréfileuse en 1986."}
-      - {qui: odile, geste: ecrit}
-      - {narration: "Ta mère découpe L'Écho aux ciseaux à ongles. La page des sports, la liste des pros de la saison. Ton nom, tout en bas."}
-      - {qui: odile, dit: "Demain, je pointe la sortie à seize heures moins une. Comme tous les jours depuis 1971."}
-      - {qui: toi, va: table_2}
-      - {qui: odile, dit: "Ton père disait : à seize heures, l'usine rend les gens à leur maison. Demain, à cette heure-là, toi, tu seras au vestiaire."}
-      - {qui: odile, regarde: toi}
-      - {qui: toi, pense: "Elle a mis la nappe du dimanche. On est mardi."}
-      - {narration: "Elle range son porte-monnaie dans le tiroir du buffet, sous la photo, et tourne la petite clé."}
-      - {qui: odile, dit: "Va dormir. Les vitres trembleront à seize heures, que tu aies dormi ou pas."}
-      - {qui: odile, va: cuisine}
-      - {narration: "Par la fenêtre, au-dessus des toits de la cité, la tour de la sirène. Tout en haut, la lucarne ne reflète rien, pas même la lune."}
+      - {narration: "Seize heures moins une, le vestiaire du Racing. Ton premier entraînement de pro : vingt gars qui se taisent tous au même moment, les yeux sur la pendule, comme à la messe."}
+      - {qui: brehaut, dit: "Personne ne lace un crampon avant la sirène de la Tréfilerie. Trente ans qu'on fait comme ça. L'usine ferme à Noël : on verra si on sait lacer sans elle."}
+      - {qui: toi, pense: "Ma mère sort du bâtiment C à seize heures pile. Pour elle, la sirène, c'est la fin de la journée. Pour moi, le début."}
+      - {son: sirene}
+      - {narration: "Au-dessus du parking, quelque chose commence à monter, très bas, sur une seule note. Les vitres du vestiaire se mettent à trembler dans leurs cadres."}
 
   # ═════════════════════════════════════════════ SAISON 1 (1990-1991) — L'ARGENT
   # Huit heures, le parking : la poignée de main de Fardelli, vue d'un peu avant. Le gardien
@@ -148,8 +100,38 @@ cinematiques:
       - {qui: gege, geste: dos}
       - {narration: "Gégé décroche ses doigts du grillage, un par un, et regarde la tour jusqu'à ce que le premier ballon touche la haie."}
 
+  # Le 24 décembre, quand tu avais posé le casier au milieu du couloir (h3_casier_pose) : Bréhaut a compté
+  # ceux qui se sont baissés derrière Gigi. Ils sont au premier rang ; toi, au milieu.
+  - id: h3.ci.derniere_sirene_casier
+    quand: carte
+    cartes: [jp.h3.s0_sirene, jp.h3.s0_sirene_cles, jp.h3.s0_sirene_cartons]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h3) && flag(h3_casier_pose)"
+    lieu: friche
+    tranche: aprem
+    meteo: brume
+    acteurs:
+      - {qui: toi, place: [0, -4]}
+      - {qui: lea, place: [-2, -6]}
+      - {qui: brehaut, place: [-5, -7]}
+      - {id: retraite, qui: ancien, nom: "Un retraité de la Tréfilerie", place: [1, -5]}
+    etapes:
+      - {narration: "24 décembre, quinze heures cinquante. Toute la ville est venue au grillage de la Tréfilerie, en manteau du dimanche. Personne ne parle fort."}
+      - {qui: lea, dit: "L'équipe au premier rang, devant le portail. Une photo, pas deux : le photographe n'a plus qu'une pellicule.", geste: pointe}
+      - {qui: brehaut, va: [-2, -4]}
+      - {qui: brehaut, dit: "Survêtements fermés jusqu'au col. Premier rang : ceux qui se sont baissés derrière Gigi, le jour du casier. Je les ai comptés. Pas toi."}
+      - {qui: retraite, dit: "En 58, le club de l'usine avait posé au même endroit, avec la coupe des ateliers. On était trois fois plus nombreux."}
+      - {qui: retraite, geste: tete_basse}
+      - {qui: toi, pense: "Ma mère est quelque part derrière les vitres du bâtiment C. Elle vide toujours son casier en dernier."}
+      - {qui: lea, regarde: toi}
+      - {qui: lea, dit: "Vous, au milieu. C'est votre visage que les gens découperont."}
+      - {qui: brehaut, dit: "Ta mère sort à seize heures pile. Fais comme tu veux. On te garde la place une minute, pas deux."}
+      - {narration: "Seize heures moins une. Le portail du bâtiment C s'ouvre. Là-haut, dans la tour, quelque chose cliquette, comme une horloge qu'on remonte."}
+
   # Le 24 décembre, avant la dernière sirène : la photo de L'Écho, l'équipe au premier rang,
-  # et la mère quelque part derrière les vitres. Le doute avant « Je vais vers elle ».
+  # et la mère quelque part derrière les vitres. Le doute avant « Je vais vers elle ». Quand tu as porté
+  # le casier en entier, en juillet, tu es au premier rang avec ceux qui portent l'eau.
   - id: h3.ci.derniere_sirene
     quand: carte
     cartes: [jp.h3.s0_sirene, jp.h3.s0_sirene_cles, jp.h3.s0_sirene_cartons]
@@ -168,7 +150,7 @@ cinematiques:
       - {narration: "24 décembre, quinze heures cinquante. Toute la ville est venue au grillage de la Tréfilerie, en manteau du dimanche. Personne ne parle fort."}
       - {qui: lea, dit: "L'équipe au premier rang, devant le portail. Une photo, pas deux : le photographe n'a plus qu'une pellicule.", geste: pointe}
       - {qui: brehaut, va: [-2, -4]}
-      - {qui: brehaut, dit: "Survêtements fermés jusqu'au col. Le président veut l'écusson net sur la photo ; vos têtes, il s'en passe."}
+      - {qui: brehaut, dit: "Survêtements fermés jusqu'au col. Premier rang : ceux qui portent l'eau, toi le premier depuis juillet. Les têtes, le président s'en passe ; l'écusson, non."}
       - {qui: retraite, dit: "En 58, le club de l'usine avait posé au même endroit, avec la coupe des ateliers. On était trois fois plus nombreux."}
       - {qui: retraite, geste: tete_basse}
       - {qui: toi, pense: "Ma mère est quelque part derrière les vitres du bâtiment C. Elle vide toujours son casier en dernier."}
@@ -176,6 +158,30 @@ cinematiques:
       - {qui: lea, dit: "Vous, au milieu. C'est votre visage que les gens découperont."}
       - {qui: brehaut, dit: "Ta mère sort à seize heures pile. Fais comme tu veux. On te garde la place une minute, pas deux."}
       - {narration: "Seize heures moins une. Le portail du bâtiment C s'ouvre. Là-haut, dans la tour, quelque chose cliquette, comme une horloge qu'on remonte."}
+
+  # La veille de la visite, quand tu avais demandé à Gigi où était Didier (h3_didier_demande) : Steph le sait.
+  - id: h3.ci.garage_mazurier_didier
+    quand: carte
+    carte: jp.h3.s0_boite
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h3) && flag(h3_didier_demande)"
+    lieu: muscu
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: steph, place: steph}
+      - {id: momo, qui: passant, nom: "Momo, latéral gauche", place: client_2, pose: assis}
+    etapes:
+      - {narration: "L'ancien garage Mazurier, tard. La radio crache un match de la Capitale ; la fonte sent l'huile de vidange. Une seule ampoule allumée, au-dessus d'un banc."}
+      - {qui: momo, dit: "Tiens, {pg, select, f{la petite} other{le petit}} de la cité. Tu passes la visite du grand club demain, il paraît. Toute la ville le sait, sauf ton genou."}
+      - {narration: "Steph essuie le banc de développé avec une serviette, lentement, comme on dresse une table."}
+      - {qui: momo, dit: "Moi, à ta place, je n'irais pas tout seul avec ce genou-là. On y va toujours avec quelqu'un."}
+      - {qui: momo, sort: true}
+      - {qui: steph, dit: "Assieds-toi. Didier s'asseyait là, la veille des visites. Gigi t'a dit où il était ? À l'étranger, j'imagine. Ça fait un an qu'on l'écrit."}
+      - {qui: toi, va: client_2}
+      - {qui: toi, pense: "Huit heures, demain, la clinique du grand club. Le genou gauche se tait quand il fait chaud. Ici, il fait chaud."}
+      - {narration: "Steph ouvre son sac de sport sans se presser. Dedans, quelque chose fait un bruit de hochet, une seule fois."}
 
   # La veille de la visite, chez Steph : l'avant de la boîte. Momo voit qui entre.
   - id: h3.ci.garage_mazurier
@@ -327,6 +333,31 @@ cinematiques:
       - {narration: "Sur la porte de la tour, à la craie, il trace un trait. Puis un deuxième, à côté, plus petit. Il ne dit pas ce qu'ils comptent."}
 
   # ═════════════════════════════════════════════ SAISON 3 (1992-1993) — LE CORPS
+  # Avant « Une seule », quand tu avais lu ta licence ou demandé qui était à la lettre V (h3_licence_lue) :
+  # Josiane s'en souvient, le premier jour.
+  - id: h3.ci.armoire_lue
+    quand: carte
+    cartes: [jp.h3.s2_une_seule, jp.h3.s2_une_seule_inconnu, jp.h3.s2_une_seule_prevenue]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h3) && flag(h3_licence_lue)"
+    lieu: clubhouse
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: guichet}
+      - {qui: josiane, place: secretaire, pose: assis}
+      - {qui: aulard, place: vitrine}
+    etapes:
+      - {narration: "Le club-house, seize heures. Depuis la fermeture de l'usine, plus de sirène pour couper l'après-midi : Josiane tape au rythme de la pendule."}
+      - {qui: aulard, dit: "Josiane, le classeur des pros. Un club de deuxième division veut une copie de la licence de Mbako avant vendredi."}
+      - {qui: josiane, dit: "L'armoire est fermée, président. La clé est sur moi.", geste: ecrit}
+      - {qui: aulard, dit: "Alors ouvrez-la avec ce que vous avez sur vous, et montez-moi la copie. Vendredi, Josiane. Pas samedi."}
+      - {qui: aulard, sort: true}
+      - {qui: josiane, regarde: toi}
+      - {qui: josiane, dit: "Le premier jour, vous avez lu avant de signer, ou demandé. Personne ne le fait. Je m'en suis souvenue, {toi}."}
+      - {qui: toi, pense: "Elle garde les deux mains à plat sur le classeur, comme on tient un couvercle sur une casserole qui déborde."}
+      - {narration: "Josiane se lève. Elle regarde la porte du couloir, puis le trousseau à sa ceinture, et choisit une clé que tu ne lui avais jamais vue."}
+
   # Avant « Une seule » : le président veut l'armoire ouverte, Josiane a la clé sur elle.
   - id: h3.ci.armoire
     quand: carte

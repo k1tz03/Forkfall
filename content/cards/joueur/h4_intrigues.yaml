@@ -79,7 +79,7 @@ cards:
     text: "Camille pose une deuxième enveloppe ouverte sur la table : Gigi, un bout de banderole, MONTÉE. « Un mardi, encore. Celui qui découpe a tout son temps. Qui t'en veut à ce point, {toi} ? »"
     left:
       label: "Quelqu'un de 1984"
-      effects: {relation: {camille: 1}}
+      effects: {relation: {camille: 1}, set: [h4_camille_1984]}
       answer: "« En 1984, tout le monde t'aimait. » Elle range l'enveloppe avec la première, dans sa boîte à couture, et ne pose plus la question."
     right:
       label: "Un supporter, rien de plus"
@@ -167,6 +167,24 @@ cards:
       label: "Je range les morceaux"
       effects: {direction: "+", set: [h4_photo_entiere], outcome: rangee}
       answer: "Tu retournes le cadre contre le mur, comme à midi dans le couloir, il y a deux ans. La main reste sur ton épaule, de l'autre côté."
+
+  # Variante de Camille : tu lui avais dit « quelqu'un de 1984 » ; elle a recollé les morceaux sans toi (h4_camille_1984).
+  - id: jp.h4.morceaux.entiere_camille
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Cuisine, minuit. Camille a recollé les morceaux sur la toile cirée, sans un mot. « Tu m'avais dit : quelqu'un de 1984. » Elle pose le doigt sur le trou, à ta droite. « C'est qui, {toi} ? »"
+    left:
+      label: "J'appelle Bréhaut"
+      effects: {vestiaire: "-", set: [h4_photo_entiere, h4_appel_brehaut], outcome: appelee}
+      answer: "Camille te regarde composer. Il décroche à la deuxième sonnerie. Tu ne dis rien ; lui non plus. C'est lui qui raccroche."
+    right:
+      label: "Je range les morceaux"
+      effects: {direction: "+", set: [h4_photo_entiere], outcome: rangee}
+      answer: "Tu les ranges un par un, le trou en dernier. Camille te regarde faire et ne pose plus la question : elle a vu où était le trou."
 
   # =========================================================== JULES BERTIN
   # ------------------------------------------------- 1 · le fleuriste
@@ -266,7 +284,7 @@ cards:
     text: "Massenet lit ta photocopie de l'hôpital sans la toucher, puis ouvre un tiroir : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. Celles du milieu disaient la même chose. »"
     left:
       label: "Qui vous l'a demandé ?"
-      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes, h4_massenet_appel]}
       answer: "« Ton président, au téléphone, à minuit. Mon rédacteur en chef a dit oui avant moi. Moi, j'ai barré. J'avais un crayon. »"
     right:
       label: "Republiez les dix"
@@ -282,7 +300,7 @@ cards:
     text: "Sur le bureau de Massenet, la lettre du corbeau ; à côté, un tiroir ouvert : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. J'ai gardé celles du milieu. »"
     left:
       label: "Qui vous l'a demandé ?"
-      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes, h4_massenet_appel]}
       answer: "Il te tend la feuille : « La jeune fille a été transportée vivante. » « Ton président a appelé à minuit. Moi, j'ai barré. »"
     right:
       label: "Republiez les dix"
@@ -298,7 +316,7 @@ cards:
     text: "Massenet ouvre un tiroir, à L'Écho : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. Il me reste celles du milieu : la jeune fille a été transportée vivante. »"
     left:
       label: "Qui vous l'a demandé ?"
-      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes, h4_massenet_appel]}
       answer: "« Ton président, au téléphone, à minuit. Mon rédacteur en chef a dit oui avant moi. Moi, j'ai barré. J'avais un crayon. »"
     right:
       label: "Republiez les dix"
@@ -317,6 +335,23 @@ cards:
       label: "Je la dicte"
       effects: {tribunes: "+", vestiaire: "--", parole: 1, set: [h4_nom_dicte]}
       answer: "Tu dis un prénom et un nom. Il les tape à deux doigts. « Je ne la publierai pas sans toi. Mais elle existe, maintenant. »"
+    right:
+      label: "Laissez-la blanche"
+      effects: {vestiaire: "+", outcome: blanc}
+      answer: "Il passe la règle sur la ligne blanche. « Huit barrées, une blanche. Un journal finit toujours par ressembler à quelqu'un. »"
+
+  # Variante de minuit : tu sais qui a demandé de barrer ; la onzième ligne lui sera lue avant l'imprimeur (h4_massenet_appel).
+  - id: jp.h4.deux_lignes.onze_appel
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet a remis les deux lignes de 1984 dans une épreuve, une ligne blanche dessous : « Celui de minuit lira la onzième avant l'imprimeur. C'est le nom du conducteur. Tu me la dictes, {toi} ? »"
+    left:
+      label: "Je la dicte"
+      effects: {tribunes: "+", vestiaire: "--", parole: 1, set: [h4_nom_dicte]}
+      answer: "Tu dis un prénom et un nom. Il les tape à deux doigts. « Je ne la publierai pas sans toi. Mais celui de minuit le saura demain. »"
     right:
       label: "Laissez-la blanche"
       effects: {vestiaire: "+", outcome: blanc}
@@ -367,7 +402,7 @@ cards:
     text: "Hôtel de la Rive. Au standard, une jeune femme en fauteuil, le casque sur les oreilles : « Vous débranchez la prise, la nuit. Ça ne change rien. » Puis, plus bas : « Pas vous. Le passager. »"
     left:
       label: "J'étais au volant"
-      effects: {direction: "+", caisse: "-", set: [h4_standard_vu], react: jp.h4.re.square}
+      effects: {direction: "+", caisse: "-", set: [h4_standard_vu, h4_dit_au_volant], react: jp.h4.re.square}
       answer: "Elle enfiche un autre appel : « Hôtel de la Rive, bonsoir. » Pour toi, plus un mot. Le veilleur de nuit te raccompagne à la porte."
     right:
       label: "Qui conduisait ?"
@@ -384,7 +419,7 @@ cards:
     text: "Hôtel de la Rive. Derrière le standard, une jeune femme en fauteuil, un casque sur les oreilles, enfiche un appel. Elle te voit entrer et ne dit qu'une chose : « Pas vous. Le passager. »"
     left:
       label: "J'étais au volant"
-      effects: {direction: "+", caisse: "-", set: [h4_standard_vu], react: jp.h4.re.square}
+      effects: {direction: "+", caisse: "-", set: [h4_standard_vu, h4_dit_au_volant], react: jp.h4.re.square}
       answer: "Elle enfiche un autre appel : « Hôtel de la Rive, bonsoir. » Pour toi, plus un mot. Le veilleur de nuit te raccompagne à la porte."
     right:
       label: "Qui conduisait ?"
@@ -546,7 +581,7 @@ cards:
       answer: "Il te regarde comme un tir qui passe au-dessus. « Tu ne sais pas ce que coûte une maison. La mienne, je l'ai payée avec ton silence. »"
     right:
       label: "Laisse ma maison"
-      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_maison_epargnee]}
       answer: "« Je ne touche à rien. Vaubourg garde les papiers ; moi, je garde le brassard. » Il le serre, comme sur le capot."
 
   - id: jp.h4.capot.menace
@@ -563,7 +598,7 @@ cards:
       answer: "Il te regarde comme un tir qui passe au-dessus. « Tu ne sais pas ce que coûte une maison. La mienne, je l'ai payée avec ton silence. »"
     right:
       label: "Laisse ma maison"
-      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_maison_epargnee]}
       answer: "« Je ne touche à rien. Vaubourg garde les papiers ; moi, je garde le brassard. » Il le serre, comme sur le capot."
 
   # ------------------------------------------------- 3 · Bréhaut propose
@@ -592,6 +627,24 @@ cards:
     lieu: bar
     tone: strategique
     text: "Le Corner, tard. Bréhaut pose deux verres de poire sur le zinc, la même qu'au pont en 1984 : « Au jubilé, laisse-moi le micro. Je conduisais ; c'est à moi de le dire. »"
+    left:
+      label: "Il est à toi"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_brehaut_convaincu], outcome: convaincu}
+      answer: "Il vide ton verre dans l'évier du bar, puis le sien. « Neuf ans que je te le dois. Je te le rendrai au rond central. »"
+    right:
+      label: "Je bois, et je le dirai"
+      effects: {vestiaire: "-", set: [h4_bouteille], outcome: a_moi}
+      answer: "Tu bois les deux verres. À une heure cinquante, il te dépose aux Lilas et laisse la bouteille sur le siège passager : « Pour la route. »"
+
+  # Variante de la maison : tu lui as demandé de laisser ta maison ; il t'en présente la facture (h4_maison_epargnee).
+  - id: jp.h4.capot.propose_maison
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    lieu: bar
+    tone: strategique
+    text: "Le Corner, tard. Bréhaut pose deux verres de poire sur le zinc, la même qu'au pont en 1984 : « Je t'ai laissé ta maison. Laisse-moi le micro, au jubilé. Je conduisais ; c'est à moi de le dire. »"
     left:
       label: "Il est à toi"
       effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_brehaut_convaincu], outcome: convaincu}

@@ -558,7 +558,7 @@ cards:
       answer: "Il range son mètre. « Rien, c'est beaucoup, pour quelqu'un qui dort dans le lit d'un absent. » Il te salue d'un doigt."
     right:
       label: "Demandez au président"
-      effects: {direction: "-", relation: {achard: 1}}
+      effects: {direction: "-", relation: {achard: 1}, set: [h2_achard_president]}
       answer: "« Le président m'a prié de ne rien vous demander. » Il note quelque chose. « C'est pour ça que je suis venu vous voir. »"
 
   - id: en.h2.prev.visite_cassette
@@ -632,6 +632,25 @@ cards:
       label: "Dans un wagon, à la friche"
       effects: {relation: {achard: 1}, set: [h2_achard_sait]}
       answer: "Il note « wagon » sous l'heure de la cassette. « N'y retournez pas cette semaine. On suit toujours ceux qui y vont. »"
+
+  # Variante des vacances : tu avais renvoyé Achard au président (h2_achard_president).
+  - id: en.h2.prev.vacances_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: hotel
+    text: "Hôtel de la Rive, au bar. Achard tourne un sucre dans son café : « Le président m'a reçu, comme vous disiez. Une heure, pas un mot sur Mercadier : voilà une réponse. Vous savez où il dort ? »"
+    left:
+      label: "Je ne sais rien"
+      effects: {relation: {achard: -1}}
+      answer: "« Alors je paierai. » Il pose le sucre sur la soucoupe, intact. « Et quelqu'un sera très content, qui n'est pas sa femme. »"
+    right:
+      label: "Dans un wagon, à la friche"
+      effects: {relation: {achard: 1}, set: [h2_achard_sait]}
+      answer: "Il note « wagon » et referme son carnet. « N'y retournez pas cette semaine. On suit toujours ceux qui y vont. »"
 
   # ══════════════════════════════════════════════════════ UN AN ET UN JOUR
   - id: en.h2.an.toux
@@ -882,7 +901,7 @@ cards:
       answer: "Elle le dit au téléphone avec une voix que tu ne lui connaissais pas, une voix de pierre. Le président raccroche, satisfait."
     right:
       label: "Qu'il est vivant"
-      effects: {direction: "-", relation: {josiane: 1}}
+      effects: {direction: "-", relation: {josiane: 1}, set: [h2_dit_vivant_au_president]}
       answer: "Elle le dit, mot pour mot. Un long silence au bout du fil, puis : « Vivant où ? » Elle raccroche sans répondre."
 
   # ═══════════════════════════════════════════════ variantes de relecture
