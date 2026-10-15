@@ -5,14 +5,15 @@
 # accordent), 2003-2006.
 #
 # Ce que ces scènes font du livre, sans rien y décider :
-#   · l'introduction (la veille de la page deux : la gare routière, le
-#     club-house la nuit, la première nuit rue des Lilas) plante trois graines
-#     que les cartes paient plus tard : le trousseau de Josiane auquel il manque
-#     une clé depuis juin (la ligne de la buanderie, saison 3), la petite
-#     voiture grise garée en marche arrière (le soir du 31 janvier), le fax du
-#     salon dont tu n'as donné le numéro à personne (la page blanche, saison 2).
-#     Le stagiaire y passe, poli, sans nom, avec son visage (on le reconnaîtra
-#     à la carte du stagiaire) : on le voit partout, on ne le regarde jamais ;
+#   · l'introduction (le matin de la page deux, au pied de l'escalier du club-house : quatre
+#     répliques, puis la première carte) ; ce qu'elle racontait avant (la gare routière,
+#     le club-house la nuit, la première nuit rue des Lilas) est distillé sur la première
+#     semaine, après la page deux et après le stagiaire. Trois graines que les cartes
+#     paient plus tard : le trousseau de Josiane auquel il manque une clé depuis juin
+#     (la ligne de la buanderie, saison 3), la petite voiture grise garée en marche arrière
+#     (le soir du 31 janvier), le fax du salon dont tu n'as donné le numéro à personne
+#     (la page blanche, saison 2). Le stagiaire y passe, poli : on le voit partout, on ne
+#     le regarde jamais ;
 #   · avant une carte, le doute : le café de la Mairie avant la gourmette, la
 #     pluie avant les lacets, le hall avant Valentienne, la dictée avant la
 #     doudoune, le crayon de Vialat, la tasse de trop avant le fax du petit
@@ -30,73 +31,45 @@
 # `saison` est celle de la ville : 1 = 2003-2004, 2 = 2004-2005, 3 = 2005-2006.
 cinematiques:
   # ══════════════════════════════════════════════════════ l'introduction
+  # Quatre répliques au pied de l'escalier, et la première carte (la page deux) se joue sur
+  # place. Le reste de l'ancienne introduction (le car vendu, le trousseau de Josiane, la
+  # petite grise, l'appel du père, le fax du salon) est distillé sur la première semaine :
+  # la nuit qui suit la page deux (h6.ci.appel_nuit), le soir qui suit le stagiaire
+  # (h6.ci.trousseau). Les trois graines qu'elle plantait y sont toujours : la clé qui manque
+  # à Josiane (la ligne de la buanderie, saison 3), la petite grise en marche arrière (le
+  # 31 janvier), le fax du salon dont personne n'a le numéro (la page blanche, saison 1).
   - id: h6.ci.intro
     quand: debut
     roles: [ds]
     si: "flag(histoire_h6)"
     titre: "23 h 58"
     sous: "Aubérive, août 2003"
-    lieu: gareRoutiere
-    tranche: nuit
-    suite: h6.ci.intro_2
-    acteurs:
-      - {qui: toi, place: quai}
-      - {qui: barbier, place: banc_2}
-      - {id: guichetier, qui: commercant, nom: "Le guichetier", place: guichetier}
-      - {id: sans_passant, qui: passant, cache: true}
-      - {id: sans_passante, qui: passante, cache: true}
-      - {id: sans_ancien, qui: ancien, cache: true}
-      - {id: sans_fan, qui: fan, cache: true}
-    etapes:
-      - {musique: ville_nuit}
-      - {narration: "Le dernier car de la Capitale entre en gare à 22 h 50. Un abri, un distributeur qui ronronne et, sur un banc, un vieil homme en doudoune, au mois d'août."}
-      - {qui: barbier, dit: "Bonsoir, {toi}.", ton: sourire}
-      - {qui: toi, pense: "Il y a dix ans, il m'appelait {pg, select, f{« la petite »} other{« le petit »}} et m'envoyait voir les matchs de district sous la grêle."}
-      - {qui: toi, va: banc_3}
-      - {qui: barbier, dit: "Ils ont vendu le car du club en mai. Le gardien remplaçant, le minibus du centre. Ici, on vend tout ce qui roule, et tout ce qui court."}
-      - {qui: guichetier, dit: "Je ferme. Le prochain car, c'est demain, six heures vingt."}
-      - {qui: guichetier, sort: true}
-      - {qui: barbier, dit: "Trente millions de ventes par an : c'est écrit dans ton contrat. Je ne l'ai pas lu. On me l'a lu."}
-      - {qui: barbier, dit: "Demain, le fils Vaubourg te fait signer. Prends ton temps. Chez eux, c'est toujours la page d'après qui coûte."}
-      - {qui: toi, pense: "Le Rideau Rouge est à deux rues. Quatre ans que je n'en ai pas poussé la porte. Ce soir encore, on fera le tour par le quai."}
-      - {qui: barbier, va: quai}
-      - {qui: barbier, dit: "Je prends la petite valise. La grande, tu la portes : c'est toi {pg, select, f{la patronne} other{le patron}}, maintenant.", ton: sourire}
-      - {qui: barbier, sort: true}
-
-  - id: h6.ci.intro_2
-    quand: suite
     lieu: clubhouse
-    tranche: nuit
-    suite: h6.ci.intro_3
+    tranche: matin
     acteurs:
       - {qui: toi, place: porte}
-      - {qui: barbier, place: vitrine, cache: true}
-      - {id: garcon, qui: ferlac, nom: "Un garçon en pull", place: secretaire, pose: assis}
-      - {id: sans_josiane, qui: josiane, cache: true}
+      - {qui: barbier, place: vitrine}
       - {id: sans_arnaud_vaubourg, qui: arnaud_vaubourg, cache: true}
       - {id: sans_aulard, qui: aulard, cache: true}
       - {id: sans_passant, qui: passant, cache: true}
       - {id: sans_passante, qui: passante, cache: true}
       - {id: sans_ancien, qui: ancien, cache: true}
       - {id: sans_fan, qui: fan, cache: true}
-      - {id: sans_commercant, qui: commercant, cache: true}
     etapes:
-      - {narration: "Le club-house, onze heures moins le quart. Une seule lampe au rez-de-chaussée, celle du secrétariat. Quelqu'un y tape à la machine, régulier comme une pendule."}
-      - {qui: barbier, entre: vitrine}
-      - {qui: toi, va: centre}
-      - {qui: barbier, dit: "Deux titres et une coupe. Tout ce qu'on n'a jamais réussi à vendre est derrière cette vitre."}
-      - {qui: garcon, geste: debout}
-      - {qui: garcon, va: guichet}
-      - {qui: garcon, dit: "Bonsoir, monsieur Barbier. Bonsoir, {pg, select, f{madame la directrice} other{monsieur le directeur}}. Laissez la lumière : je repasse l'éteindre.", ton: sourire}
-      - {qui: garcon, sort: true}
-      - {qui: toi, pense: "Il connaît mon titre. Je ne l'ai pas encore signé."}
-      - {qui: barbier, dit: "L'Écho a passé ta photo jeudi, en page sport. Ici, ta photo, tout le monde l'a déjà vue."}
-      - {qui: barbier, regarde: toi}
-      - {qui: barbier, dit: "Josiane m'a prêté son trousseau pour la visite. Elle compte ses clés tous les soirs. Il lui en manque une depuis juin. Elle n'a jamais rien perdu."}
-      - {narration: "Dehors, sur le parking, une seule voiture : une petite grise, garée en marche arrière, prête à partir. Personne dedans."}
+      - {musique: ville_jour}
+      - {narration: "Neuf heures, le club-house. Lucien Barbier t'attend sous la vitrine des trophées, doudoune fermée en plein août. En haut, la porte du bureau est ouverte, et quelqu'un tape à la machine."}
+      - {qui: barbier, dit: "Ils ont vendu le car du club en mai, le minibus du centre en juin. Ici, on vend tout ce qui roule et tout ce qui court. Ton contrat est sur la table, là-haut."}
+      - {qui: toi, pense: "Quatre ans que je n'ai pas poussé la porte du Rideau Rouge. Même ce matin, j'ai fait le tour par le quai."}
+      - {qui: barbier, dit: "Page deux, le fils sourira. Page trois, il retirera sa main. Lis tout, {toi}. Chez eux, c'est toujours la page d'après qui coûte."}
 
-  - id: h6.ci.intro_3
-    quand: suite
+  # La nuit qui suit la page deux : le père Vaubourg appelle sur un numéro que tu n'as donné
+  # qu'à la Ligue, et le fax de la commode, laissé branché par l'ancien locataire, reste vert.
+  - id: h6.ci.appel_nuit
+    quand: carte
+    cartes: [ds.h6.pro.page_deux, ds.h6.pro.page_deux_haut_parleur]
+    moment: apres
+    roles: [ds]
+    si: "flag(histoire_h6)"
     lieu: appartement
     tranche: nuit
     acteurs:
@@ -105,12 +78,12 @@ cinematiques:
     etapes:
       - {narration: "Rue des Lilas, deux pièces au troisième. Des cartons qu'on ouvrira plus tard, un fax sur la commode que l'ancien locataire a laissé branché, un réveil qui clignote sur 00:00."}
       - {qui: toi, va: table_1}
-      - {son: alarme}
+      - {son: sonnerie}
       - {narration: "Le téléphone. 23 h 47. Ce numéro-là, tu ne l'as donné qu'à la Ligue."}
       - {qui: toi, va: telephone}
       - {qui: toi, geste: telephone}
-      - {qui: aulard, dit: "Jean-Marie Vaubourg. Je vous appelle de la Ligue : à cette heure-ci, le standard dort, et moi je travaille."}
-      - {qui: aulard, dit: "Mon fils vous fera signer demain. Il signe toujours où je lui dis. Vous, vous vendrez où je vous dis ?"}
+      - {qui: aulard, dit: "Jean-Marie Vaubourg, de la Ligue. À cette heure-ci, le standard dort ; moi, je travaille. Mon fils vous a montré le contrat. Il signe toujours où je lui dis."}
+      - {qui: aulard, dit: "Vous, vous vendrez où je vous dis ?"}
       - {qui: toi, pense: "Il n'attend pas de réponse. Il écoute si je respire."}
       - {qui: aulard, dit: "Le Racing ne fabrique plus que des joueurs. Vendez-les bien, {toi}. Bonne nuit."}
       - {qui: toi, geste: debout}
@@ -118,6 +91,37 @@ cinematiques:
       - {narration: "Il a raccroché le premier. Tu règles le réveil sur la pendule de la cuisine. Les chiffres cessent de clignoter : 23:58."}
       - {pause: 1800}
       - {narration: "Sur la commode, le voyant du fax reste vert. Ce numéro-là, tu ne l'as donné à personne."}
+
+  # Le soir qui suit le stagiaire : Josiane recompte son trousseau, le garçon en pull dit
+  # bonsoir à chacun par son titre, la petite grise attend sur le parking.
+  - id: h6.ci.trousseau
+    quand: carte
+    cartes: [ds.h6.pro.stagiaire, ds.h6.pro.stagiaire_scouts]
+    moment: apres
+    roles: [ds]
+    si: "flag(histoire_h6)"
+    lieu: clubhouse
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+      - {qui: ferlac, place: cafe, cache: true}
+      - {id: sans_arnaud_vaubourg, qui: arnaud_vaubourg, cache: true}
+      - {id: sans_aulard, qui: aulard, cache: true}
+      - {id: sans_passant, qui: passant, cache: true}
+      - {id: sans_passante, qui: passante, cache: true}
+      - {id: sans_ancien, qui: ancien, cache: true}
+      - {id: sans_fan, qui: fan, cache: true}
+      - {id: sans_commercant, qui: commercant, cache: true}
+    etapes:
+      - {narration: "Le club-house, onze heures moins le quart. Une seule lampe au rez-de-chaussée. Madame Josiane compte ses clés sur le comptoir du secrétariat, une à une, comme chaque soir."}
+      - {qui: toi, va: guichet}
+      - {qui: josiane, dit: "Il m'en manque une depuis juin. Je n'ai jamais rien perdu de ma vie, alors je recompte."}
+      - {qui: ferlac, entre: cafe}
+      - {qui: ferlac, dit: "Bonsoir, madame Josiane. Bonsoir, {pg, select, f{madame la directrice} other{monsieur le directeur}}. Laissez la lumière : je repasse l'éteindre.", ton: sourire}
+      - {qui: ferlac, sort: true}
+      - {qui: toi, pense: "Il dit bonsoir à chacun par son titre, sans se tromper une fois. Personne ne lui a demandé comment il les sait."}
+      - {narration: "Dehors, sur le parking, une seule voiture : une petite grise, garée en marche arrière, prête à partir. Personne dedans."}
 
   # ═══════════════════════════════════════════ saison 1 (2003-2004) — le premier nom
   # Avant la gourmette (scène 5) : la photo a sonné à 23 h 58, et midi arrive.
@@ -184,6 +188,35 @@ cinematiques:
       - {qui: josiane, regarde: toi}
       - {qui: josiane, dit: "Il sait comment vous prenez votre café. Moi, je ne le sais pas encore."}
       - {narration: "Elle range une copie au classeur, plie l'autre en quatre et la glisse dans la poche de son gilet."}
+
+  # Avant les lacets, si tu as promis un gaucher à Vogler au prologue (« Vous l'aurez ») :
+  # janvier, la pluie, un entraîneur qui compte ce qu'on lui doit. Sans promesse, la scène
+  # suivante passe seule.
+  - id: h6.ci.lacets_gauche
+    quand: carte
+    cartes: [ds.h6.sc.lacets, ds.h6.sc.lacets_signe]
+    moment: avant
+    roles: [ds]
+    si: "flag(histoire_h6) && flag(h6_gauche_promis)"
+    lieu: terrain
+    tranche: matin
+    meteo: pluie
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: klopf, place: [3, 1]}
+      - {qui: vukic, place: [1, 2]}
+      - {qui: dembo, place: [3, 3], cache: true}
+    etapes:
+      - {narration: "Le terrain annexe, un matin de janvier. Il pleut depuis la veille. Vogler court quand même, la casquette à l'envers, et s'arrête net en te voyant."}
+      - {qui: toi, va: [1, 1]}
+      - {qui: klopf, dit: "En août, tu m'as dit « vous l'aurez ». Un gaucher, {toi}. Pas un droitier qui regarde son pied. On est en janvier, et on parle de me prendre Dembo."}
+      - {qui: vukic, dit: "Le chauffeur de Malbec a déjeuné hier à la brasserie du Pont. Il a demandé l'adresse du capitaine. Pas celle du club : la sienne."}
+      - {qui: klopf, regarde: toi}
+      - {qui: dembo, entre: [3, 3]}
+      - {qui: klopf, dit: "Je te laisse lui parler. Lui, je ne lui ai rien promis, et il ne m'a rien promis non plus.", geste: poing}
+      - {qui: klopf, sort: true}
+      - {qui: vukic, sort: true}
+      - {qui: toi, pense: "Vingt ans qu'on se connaît. Il n'a jamais mis si longtemps à faire un nœud."}
 
   # Avant les lacets (scène 6) : janvier, la pluie, la rumeur de Valentienne.
   # Vogler est encore là ; il part pour la Vestrie à l'été.

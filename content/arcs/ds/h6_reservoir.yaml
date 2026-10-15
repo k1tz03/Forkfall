@@ -76,7 +76,11 @@ arcs:
           - { id: ds.h6.canette.sans_recrue }
         next: [ { step: manche, in: [2, 5] } ]
       - id: manche
-        card: ds.h6.canette.manche
+        card:
+          # la recrue d'Ilyas a joué cinq minutes, ou pas une (ds.h6.canette.recrue)
+          - { id: ds.h6.canette.manche_joue, if: "flag('h6_recrue_joue')" }
+          - { id: ds.h6.canette.manche_banc, if: "flag('h6_recrue_banc')" }
+          - { id: ds.h6.canette.manche }
         next: []
 
   - id: ds.h6.mutuelle
