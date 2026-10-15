@@ -420,6 +420,31 @@ cards:
         react: {card: jp.h3.re.odile_studio}
       answer: "Il arrive en vingt minutes avec une clé : un studio au-dessus du Terminus, à son nom. « Le temps que ça se tasse. » Ta mère prend la clé."
 
+  # Variante du garage : vous aviez ouvert CUISINE ensemble, trois assiettes sorties puis remises (h3_cartons_defaits).
+  - id: jp.h3.s1_cartons_pavillon_defaits
+    roles: [joueur]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    when: "stats.clubs <= 1"
+    text: "Les huissiers ont posé les scellés sur le pavillon des Lilas : l'argent venait des comptes de Daubrac. Sur le trottoir, les cartons de ta mère. CUISINE est resté ouvert, avec ses trois assiettes."
+    left:
+      label: "Je porte les cartons"
+      effects: {relation: {odile: 1}, tribunes: "-", var: {saisie_logement: "+1"}, set: [h3_maison_perdue]}
+      answer: "Neuf cartons, un par voyage, jusqu'aux deux pièces rue des Lilas. CUISINE, elle le porte elle-même : les trois assiettes tintent à chaque marche."
+    right:
+      label: "J'appelle Fardelli"
+      effects:
+        relation: {fardelli: 1}
+        caisse: "+"
+        var: {saisie_logement: "+1"}
+        set: [h3_maison_perdue, h3_studio_fardelli]
+        react: {card: jp.h3.re.odile_studio}
+      answer: "Il arrive en vingt minutes avec une clé : un studio au-dessus du Terminus, à son nom. Ta mère prend la clé, et le carton CUISINE."
+
   - id: jp.h3.s1_cartons_cite
     roles: [joueur]
     arc: famille
