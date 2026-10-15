@@ -61,7 +61,12 @@ arcs:
         next: [ { step: guichet, in: [2, 4] } ]
       - id: guichet
         card:
+          # la motion du virage (pr.h10.so.motion*) : votée le soir même, ou renvoyée au conseil
+          - { id: pr.h10.so.guichet_recompte_soir, if: "flag('h10_socios_recompte') && flag('h10_motion_soir')" }
+          - { id: pr.h10.so.guichet_recompte_conseil, if: "flag('h10_socios_recompte') && flag('h10_motion_conseil')" }
           - { id: pr.h10.so.guichet_recompte, if: "flag('h10_socios_recompte')" }
+          - { id: pr.h10.so.guichet_soir, if: "flag('h10_motion_soir')" }
+          - { id: pr.h10.so.guichet_conseil, if: "flag('h10_motion_conseil')" }
           - { id: pr.h10.so.guichet }
         next: []
 
@@ -160,7 +165,12 @@ arcs:
         next: [ { step: lundi, in: [1, 3] } ]
       - id: lundi
         card:
+          # la banderole contre Owen (pr.h10.lu.banderole) : décrochée par Nino, ou laissée à sécher
+          - { id: pr.h10.lu.lundi_cv_decrochee, if: "flag('h10_owen_cv_garde') && flag('h10_banderole_decrochee')" }
+          - { id: pr.h10.lu.lundi_cv_seche, if: "flag('h10_owen_cv_garde') && flag('h10_banderole_seche')" }
           - { id: pr.h10.lu.lundi_cv, if: "flag('h10_owen_cv_garde')" }
+          - { id: pr.h10.lu.lundi_decrochee, if: "flag('h10_banderole_decrochee')" }
+          - { id: pr.h10.lu.lundi_seche, if: "flag('h10_banderole_seche')" }
           - { id: pr.h10.lu.lundi }
         next: []
 
@@ -486,7 +496,12 @@ arcs:
         next: [ { step: fusion, in: [2, 3] } ]
       - id: fusion
         card:
+          # Gégé à la mi-temps du derby (pr.h10.vb.derby) : descendu à son oreille, ou resté en loge
+          - { id: pr.h10.vb.fusion_renvoyee_descendu, if: "flag('h10_bouteille_renvoyee') && flag('h10_derby_descendu')" }
+          - { id: pr.h10.vb.fusion_renvoyee_loge, if: "flag('h10_bouteille_renvoyee') && flag('h10_derby_loge')" }
           - { id: pr.h10.vb.fusion_renvoyee, if: "flag('h10_bouteille_renvoyee')" }
+          - { id: pr.h10.vb.fusion_descendu, if: "flag('h10_derby_descendu')" }
+          - { id: pr.h10.vb.fusion_loge, if: "flag('h10_derby_loge')" }
           - { id: pr.h10.vb.fusion }
         next: []
 
@@ -520,5 +535,9 @@ arcs:
         card: pr.h10.ni.oncle
         next: [ { step: tambour, in: [2, 3] } ]
       - id: tambour
-        card: pr.h10.ni.tambour
+        # Gégé et les dettes du petit (pr.h10.ni.oncle) : « je m'en occupe », ou « ses affaires »
+        card:
+          - { id: pr.h10.ni.tambour_occupe, if: "flag('h10_oncle_occupe')" }
+          - { id: pr.h10.ni.tambour_affaires, if: "flag('h10_oncle_affaires')" }
+          - { id: pr.h10.ni.tambour }
         next: []

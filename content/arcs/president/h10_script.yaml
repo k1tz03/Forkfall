@@ -230,19 +230,34 @@ arcs:
         season: 2
       - id: s2_lettre
         card:
+          # le café de novembre (pr.h10.c_novembre) : monté par toi, ou par Nino
+          - { id: pr.h10.c2_lettre_promesse_cafe, if: "flag('h10_promesse_gege') && flag('h10_cafe_monte')" }
+          - { id: pr.h10.c2_lettre_promesse_nino, if: "flag('h10_promesse_gege') && flag('h10_cafe_nino')" }
           - { id: pr.h10.c2_lettre_promesse, if: "flag('h10_promesse_gege')" }
+          - { id: pr.h10.c2_lettre_cafe, if: "flag('h10_cafe_monte')" }
+          - { id: pr.h10.c2_lettre_nino, if: "flag('h10_cafe_nino')" }
           - { id: pr.h10.c2_lettre }
         at: [11, 11]
         season: 2
       - id: s2_nuit
         card:
+          # Nino dans l'escalier du local (pr.h10.re.nino_escalier) : bonsoir, ou le silence
+          - { id: pr.h10.c3_nuit_clapet_salue, if: "flag('h10_nino_retourne') && flag('h10_nino_salue')" }
+          - { id: pr.h10.c3_nuit_clapet_passe, if: "flag('h10_nino_retourne') && flag('h10_nino_passe')" }
           - { id: pr.h10.c3_nuit_clapet, if: "flag('h10_nino_retourne')" }
+          - { id: pr.h10.c3_nuit_salue, if: "flag('h10_nino_salue')" }
+          - { id: pr.h10.c3_nuit_passe, if: "flag('h10_nino_passe')" }
           - { id: pr.h10.c3_nuit }
         at: [12, 12]
         season: 2
       - id: s2_masques
         card:
+          # Nino dans l'escalier du local (pr.h10.re.nino_escalier) : le salut, ou le silence, revient à la Nord
+          - { id: pr.h10.c4_masques_coupee_salue, if: "flag('h10_voix_coupee') && flag('h10_nino_salue')" }
+          - { id: pr.h10.c4_masques_coupee_passe, if: "flag('h10_voix_coupee') && flag('h10_nino_passe')" }
           - { id: pr.h10.c4_masques_coupee, if: "flag('h10_voix_coupee')" }
+          - { id: pr.h10.c4_masques_salue, if: "flag('h10_nino_salue')" }
+          - { id: pr.h10.c4_masques_passe, if: "flag('h10_nino_passe')" }
           - { id: pr.h10.c4_masques }
         at: [14, 14]
         season: 2
@@ -261,6 +276,9 @@ arcs:
         card:
           - { id: pr.h10.c6_marche_brigade, if: "flag('h10_truelle_sale')" }
           - { id: pr.h10.c6_marche_payee, if: "flag('h10_truelle_payee')" }
+          # la feuille aux trente-trois cases (pr.h10.a_avril) : décrochée, ou laissée au mur
+          - { id: pr.h10.c6_marche_decrochee, if: "flag('h10_feuille_decrochee')" }
+          - { id: pr.h10.c6_marche_laissee, if: "flag('h10_feuille_laissee')" }
           - { id: pr.h10.c6_marche }
         at: [17, 17]
         season: 2
