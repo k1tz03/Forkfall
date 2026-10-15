@@ -16,8 +16,8 @@
 //   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
 //                       vignettes des histoires et le panorama de la ville,
 //                       découpés par docs/design/pixel_iso/accueil.js)
-//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Pixelify
-//                       Sans (la seule ressource externe de tout le fichier)
+//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Jersey 15
+//                       (la seule ressource externe de tout le fichier)
 //   __VILLE_CSS__, __VILLE_JS__ ← vides, sauf avec --ville <dossier> : la
 //                       version jouable (la ville d'Aubérive en pixel art,
 //                       ville.css + ville.js). Le dossier donné porte les
@@ -102,12 +102,18 @@ function parseArgs(argv) {
 /// présence de ses capitales, et sur un italique qui est un vrai dessin et
 /// reste lisible à 15,5 px. IBM Plex Mono était plus sage, JetBrains Mono trop
 /// technique.
+///
+/// La police pixel de l'accueil (et des cartons-titres des scènes jouées) est
+/// Jersey 15, une seule graisse. Pixelify Sans, qu'elle remplace, lisait
+/// « AUGÉRIVE · 20S0 », « FOOTGALL » et « GARRIÈRE » sur un téléphone (ses 5, B
+/// et C ressemblent à un S, un G et un G) ; Jersey 15 garde le pixel et ne confond
+/// plus ni B, C, G, S, ni 5, 8.
 function fontsCss() {
   return [
     '<link rel="preconnect" href="https://fonts.googleapis.com">',
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
     '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?' +
-      'family=Pixelify+Sans:wght@400;500;600;700&' +
+      'family=Jersey+15&' +
       'family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">',
   ].join('\n');
 }

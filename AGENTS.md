@@ -164,7 +164,11 @@ fenêtre dans la semaine (deux ou trois cartes du lundi au vendredi, le match le
 Le temps et l'argent sont tenus par la coquille (l'énergie et la faim de la préproduction
 sont parties avec le mode histoire ; un compteur caché, `eveil`, dit seulement depuis combien
 de tranches on n'a pas dormi, pour les répliques) ; la partie se sauvegarde par l'état entier
-du moteur (le Code de Carrière ne rejoue pas la ville).
+du moteur (le Code de Carrière ne rejoue pas la ville), **une case par livre**
+(`fusible.ville.v2.<id du postulat>` ; l'ancienne case unique `fusible.ville.v1` est rangée dans
+celle de son livre à la première lecture) : lancer un livre n'efface jamais celui d'un autre, et
+recommencer un livre en cours passe par un dialogue (Reprendre, Recommencer en deux touches,
+Retour) ; une carrière finie libère sa case.
 
 Ce que la ville porte en plus des cartes :
 
@@ -367,7 +371,14 @@ Ce que la ville porte en plus des cartes :
   `docs/design/pixel_iso/accueil.js` (les rendus de la ville → `packages/tools/web/accueil/*.webp`,
   commités, embarqués en `data:` par `assemble.js`) ; la couleur et l'heure de chaque histoire,
   de la table `HISTOIRES` du gabarit. **Un livre qui arrive** prend une entrée dans les deux
-  (l'assemblage prévient d'une histoire livrée sans vignette).
+  (l'assemblage prévient d'une histoire livrée sans vignette). La police de l'accueil est
+  « Jersey 15 » (la Pixelify lisait « AUGÉRIVE », « 20S0 ») ; « Commence ici » se pose sur le
+  livre 1 tant qu'aucune carrière n'a été jouée ; un livre en cours porte sa bande « Reprendre ».
+  **Le Cimetière** range les fins par livre (« La Sirène · 1/5 », puis « Toutes les histoires ») :
+  une fin trouvée montre son titre, une autre son `indice:` (une ligne, 90 caractères au plus,
+  `build_content` le vérifie et dérive `livre` du lot `endings/h<N>.yaml`). Des jalons
+  récompensent (`JALONS_FINS` : 3 fins, une pochette brillante ; 5, le port ; 8, les Tilleuls ; 12,
+  les quatre quartiers ouverts dès la première semaine), gardés dans `profile.recompenses`.
 
 ```bash
 # les images (une fois ; ~12 min, 5 Go de mémoire) : le Grand Aubérive de jour, au crépuscule, de nuit,
