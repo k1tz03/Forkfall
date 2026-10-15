@@ -97,6 +97,9 @@ arcs:
       # (schedule [1, 1]) : cinq créneaux avant les projecteurs.
       - id: fin_de_cycle
         card:
+          # Kerdal au parking (ds.h8.re.kerdal_tribune) : « tu dormiras », ou « tu rejoues mercredi »
+          - { id: ds.h8.a2_fin_de_cycle_repos_dormir, if: "flag('h8_kerdal_repose') && flag('h8_tribune_dormir')" }
+          - { id: ds.h8.a2_fin_de_cycle_repos_mercredi, if: "flag('h8_kerdal_repose') && flag('h8_tribune_mercredi')" }
           - { id: ds.h8.a2_fin_de_cycle_repos, if: "flag('h8_kerdal_repose')" }
           - { id: ds.h8.a2_fin_de_cycle }
         at: [10, 10]
@@ -109,6 +112,9 @@ arcs:
         season: 0
       - id: veille_match
         card:
+          # la mère de Kerdal au téléphone (ds.h8.re.josiane_lundi) : toi, ou le docteur
+          - { id: ds.h8.a4_veille_kerdal_mere, if: "flag('h8_mere_toi')" }
+          - { id: ds.h8.a4_veille_kerdal_cabinet, if: "flag('h8_mere_docteur')" }
           - { id: ds.h8.a4_veille_kerdal, if: "flag('h8_kerdal_mort')" }
           - { id: ds.h8.a4_veille }
         at: [17, 17]

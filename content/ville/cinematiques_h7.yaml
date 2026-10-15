@@ -22,9 +22,10 @@
 # hall de nuit prend la lumière du soir : il reste éclairé, l'heure est dans le texte.
 cinematiques:
   # ═══════════════════════════════════════════ l'introduction (mars 2011)
-  # La nuit avant les autres : le tableau des clés, plein, et une femme qui ne dort pas ;
-  # puis, à l'aube, le terrain annexe où le petit Rancé fait ses tours. Elle mène au parking
-  # de l'hôtel (la première carte : le bus de 2010) sans le montrer.
+  # Quatre répliques dans le hall, à l'aube, et la première carte (le bus, sur le parking) se
+  # joue sur place. Le reste de l'ancienne introduction est distillé sur la première semaine :
+  # la première nuit au tableau des clés (avant le tableau de minuit, h7.ci.premiere_nuit) et
+  # le terrain annexe où le petit Rancé fait ses tours (après la fenêtre de la 12, h7.ci.tours).
   - id: h7.ci.intro
     quand: debut
     roles: [selectionneur]
@@ -32,12 +33,41 @@ cinematiques:
     titre: "Chambre 12"
     sous: "Aubérive, mars 2011"
     lieu: hotel
-    tranche: soir
-    suite: h7.ci.intro_2
+    tranche: matin
     acteurs:
       - {qui: toi, place: porte}
       - {qui: sandrine, place: standard}
-      # une heure du matin : ceux du jour ne sont pas là, ni celle qui t'attend au parking
+      # six heures du matin : ceux du jour ne sont pas là, ni celle qui t'attend sur le parking
+      - {qui: escande, cache: true}
+      - {qui: josiane, cache: true}
+      - {qui: arzel, cache: true}
+      - {qui: benali, cache: true}
+      - {qui: dauzat, cache: true}
+      - {qui: tibo_rance, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {musique: ville_jour}
+      - {narration: "Six heures, l'hôtel de la Rive. Derrière le comptoir, vingt-six crochets de laiton, vingt-six doubles, et une femme qui n'a pas dormi. Par la vitre, sur le parking, un bus garé de travers."}
+      - {qui: sandrine, dit: "Vous êtes {pg, select, f{la sélectionneuse} other{le sélectionneur}}. On vous attendait jeudi, avec les autres. Moi, je n'ai que les doubles. Ce matin, ils sont tous là."}
+      - {qui: toi, pense: "Quatre noms rayés avant le mien. Après le bus de 2010, personne ne voulait de ce banc-là."}
+      - {qui: sandrine, dit: "Madame Josiane vous attend dehors, avec les clés. Elle n'est pas entrée : elle dit que le bus, ça se regarde d'abord.", geste: pointe}
+
+  # La première nuit, avant le tableau de minuit : Sandrine écrit l'heure de chaque chose,
+  # et dit à qui est la 12 sans qu'on le lui demande.
+  - id: h7.ci.premiere_nuit
+    quand: carte
+    cartes: [sl.h7.pro6_tableau, sl.h7.pro6_tableau_mutins]
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h7)"
+    lieu: hotel
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: sandrine, place: standard}
       - {qui: escande, cache: true}
       - {qui: josiane, cache: true}
       - {qui: arzel, cache: true}
@@ -50,24 +80,23 @@ cinematiques:
       - {qui: fan, cache: true}
     etapes:
       - {musique: ville_nuit}
-      - {narration: "Une heure du matin. Dans le hall de l'hôtel de la Rive, une seule lampe, au comptoir. Derrière, vingt-six crochets de laiton, vingt-six doubles, et une femme qui ne dort pas."}
+      - {narration: "Minuit moins le quart. Dans le hall, une seule lampe, au comptoir. Sandrine Lavergne écrit l'heure dans un cahier à petits carreaux, à l'encre bleue, sans lever les yeux."}
       - {qui: toi, va: bagages}
-      - {qui: sandrine, regarde: toi}
-      - {qui: sandrine, dit: "Vous êtes {pg, select, f{la sélectionneuse} other{le sélectionneur}}. On vous attendait jeudi, avec les autres."}
-      - {qui: toi, pense: "Quatre noms rayés avant le mien. Après le bus de 2010, personne ne voulait de ce banc-là."}
-      - {qui: sandrine, geste: ecrit}
-      - {narration: "Elle écrit l'heure dans un cahier à petits carreaux, à l'encre bleue : « 1 h 12, {pg, select, f{la sélectionneuse} other{le sélectionneur}}. Pas de double. »"}
-      - {qui: sandrine, dit: "Les chambres, c'est M. Escande, à sept heures. Moi, je n'ai que les doubles. Ce soir, ils sont tous là."}
+      - {qui: sandrine, dit: "Le 12, le petit Rancé l'a demandé par écrit, en janvier, à la main, sur du papier à carreaux. Il voulait la fenêtre. Je n'ai jamais su pourquoi cette fenêtre-là."}
       - {narration: "Elle ne se retourne pas vers le tableau. Elle connaît chaque clé à son bruit sur le crochet."}
-      - {qui: sandrine, dit: "Le 12, c'est le petit Rancé. Il a écrit en janvier pour l'avoir, à la main, sur du papier à carreaux. Il voulait la fenêtre."}
       - {qui: sandrine, dit: "Le salon est chauffé. Les fauteuils sont durs, mais d'ici on entend la porte.", geste: pointe}
       - {qui: toi, va: salon_1}
       - {pause: 900}
       - {qui: sandrine, dit: "Dormez. Je compte."}
-      - {fondu: "Six heures. Le terrain annexe du Racing."}
 
-  - id: h7.ci.intro_2
-    quand: suite
+  # Le lendemain à l'aube, après la fenêtre de la 12 : Tibo Rancé fait ses tours du terrain
+  # annexe, et s'arrête au même piquet, une main à plat sur la poitrine.
+  - id: h7.ci.tours
+    quand: carte
+    cartes: [sl.h7.pro5_fenetre, sl.h7.pro5_fenetre_nouveaux]
+    moment: apres
+    roles: [selectionneur]
+    si: "flag(histoire_h7)"
     lieu: terrain
     tranche: matin
     meteo: brume
@@ -75,10 +104,8 @@ cinematiques:
       - {qui: toi, place: porte}
       - {id: jardinier, qui: ancien, nom: "Le jardinier", place: [-2, 2]}
       - {qui: tibo_rance, place: [5, 1]}
-      # au bout du fil
-      - {qui: josiane, cache: true}
     etapes:
-      - {narration: "Le terrain annexe du Racing. La brume au ras de l'herbe, du givre sur les plots, deux buts sans filet. Un garçon en survêtement bleu fait le tour du terrain, seul."}
+      - {narration: "Le terrain annexe du Racing, le lendemain à l'aube. La brume au ras de l'herbe, du givre sur les plots, deux buts sans filet. Un garçon en survêtement bleu fait le tour du terrain, seul."}
       - {qui: tibo_rance, va: [6, 5]}
       - {qui: jardinier, dit: "Le petit Rancé. Il venait ici à huit ans, avec un ballon trop grand. Chaque fois qu'il revient, il refait ses tours avant que j'ouvre la grille."}
       - {qui: tibo_rance, va: [2, 6]}
@@ -89,10 +116,6 @@ cinematiques:
       - {qui: toi, pense: "Le petit Rancé. Pour moi, ce n'est encore qu'un numéro de chambre."}
       - {qui: tibo_rance, geste: debout}
       - {qui: tibo_rance, va: [5, 1], attendre: false}
-      - {qui: toi, geste: telephone}
-      - {qui: josiane, dit: "Madame Josiane, au secrétariat de la Fédération. Je vous attends sur le parking, derrière l'hôtel. Venez avant que les autres arrivent."}
-      - {qui: toi, geste: debout}
-      - {qui: tibo_rance, regarde: toi}
       - {narration: "Un tour de plus. Au coin, la même halte, la même main à plat, le même rire. Puis il repart."}
 
   # ═══════════════════════════════════════════════════════════ 2011 · la nuit

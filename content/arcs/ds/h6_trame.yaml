@@ -44,7 +44,11 @@ arcs:
     fallback: drop
     steps:
       - id: presse_papier
-        card: ds.h6.photo.presse_papier
+        card:
+          # le tri ou le tas demandé à Josiane au prologue (les fourches, h6_fourches.yaml)
+          - { id: ds.h6.photo.presse_papier_tri, if: "flag('h6_tri_josiane')" }
+          - { id: ds.h6.photo.presse_papier_tas, if: "flag('h6_tas')" }
+          - { id: ds.h6.photo.presse_papier }
         next: [ { step: gourmette, in: [1, 3] } ]
       - id: gourmette
         card:
@@ -90,7 +94,10 @@ arcs:
         card: ds.h6.barbier.doudoune
         next: [ { step: rapport, in: [3, 5] } ]
       - id: rapport
-        card: ds.h6.barbier.rapport
+        card:
+          # la page écrite à la main, lue tout de suite (ds.h6.re.barbier_main)
+          - { id: ds.h6.barbier.rapport_main, if: "flag('h6_rapport_main_lu')" }
+          - { id: ds.h6.barbier.rapport }
         next: []
 
   # ════════════════════════════════════════════════════════ Le petit Rancé
@@ -114,13 +121,22 @@ arcs:
     fallback: drop
     steps:
       - id: chaussettes
-        card: ds.h6.tibo.chaussettes
+        card:
+          # la casquette de Vogler, laissée au dernier crochet ou renvoyée à Vestrie
+          # (ds.h6.re.vukic_casquette)
+          - { id: ds.h6.tibo.chaussettes_casquette, if: "flag('h6_casquette_crochet')" }
+          - { id: ds.h6.tibo.chaussettes_retour, if: "flag('h6_casquette_renvoyee')" }
+          - { id: ds.h6.tibo.chaussettes }
         next: [ { step: grille, in: [4, 7] } ]
       - id: grille
         card: ds.h6.tibo.grille
         next: [ { step: comptoir, at_season: +1, at: [6, 7] } ]
       - id: comptoir
-        card: ds.h6.tibo.comptoir
+        card:
+          # le maillot de Tibo, pris ou repoussé (ds.h6.re.tibo_maillot)
+          - { id: ds.h6.tibo.comptoir_maillot, if: "flag('h6_maillot_chaise')" }
+          - { id: ds.h6.tibo.comptoir_promesse, if: "flag('h6_maillot_promesse')" }
+          - { id: ds.h6.tibo.comptoir }
         next: []
 
   # ════════════════════════════════════════════════════════════ Vialat
