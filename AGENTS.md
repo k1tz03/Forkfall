@@ -403,9 +403,10 @@ Ce que la ville porte en plus des cartes :
   sources, un spectrogramme et sa courbe d'énergie (cibles : moyenne −21 dB à ±1,5, crête sous
   −3 dB, 20 % de l'énergie au moins au-dessus de 250 Hz, boucle de 2 min 30, 4 min en ville) ;
   `--verifier` compile seulement, en Node. Le juke-box (`node packages/tools/web/juke_box.js --out
-  <dossier>`) les joue tous en direct, pour l'oreille du porteur. Le rendu hors ligne est
-  déterministe (l'écho n'a plus qu'un retard dans sa boucle : deux retards imbriqués se faisaient
-  servir par Chromium dans un ordre qui changeait d'un rendu à l'autre).
+  <dossier>`) les joue tous en direct, pour l'oreille du porteur. Sur une même machine, le rendu
+  hors ligne se refait au bit près (l'écho n'a plus qu'un retard dans sa boucle : deux retards
+  imbriqués se faisaient servir par Chromium dans un ordre qui changeait d'un rendu à l'autre) ;
+  d'une machine à l'autre, une crête peut bouger d'un dixième de décibel.
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,

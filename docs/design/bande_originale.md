@@ -305,8 +305,8 @@ mesures, cumulées d'un rendu à l'autre : l'écart des niveaux entre thèmes se
 par thème :
 
 ```
-accueil   « Fusible »   moy −20,9 dB (corps) · int −19,0 · crête −3,7 · >250 Hz 23,6 % · >6 kHz 1,6 % ·
-          boucle 3:02 (88 m.) · redite 3:19 · couture −1,2 dB · ×1,5 · 92 sources (C2 m.8), 46 en moyenne  ✓
+accueil   « Fusible »   moy −20,9 dB (corps) · int −19,0 · crête −3,8 · >250 Hz 23,6 % · >6 kHz 1,6 % ·
+          boucle 3:02 (88 m.) · redite 3:19 · couture −1,2 dB · ×1,7 · 92 sources (C2 m.8), 46 en moyenne  ✓
 ```
 
 | Mesure | Cible | Ce qu'on fait sinon |
