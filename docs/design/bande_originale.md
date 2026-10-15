@@ -273,9 +273,14 @@ fait flotter tout le mélange, de deux ou trois cents, et c'est assez.
 - **Le poids.** La `supersaw` seulement pour tenir (`scies: 5` dans une nappe, sept pour un lead
   seul), jamais en doubles croches ; le `vox` et la `reese` en valeurs longues ; les doubles croches
   aux instruments à un ou deux oscillateurs (`pluck2`, `sqbasse`, `acide`, `pluck`). Le banc compte
-  les sources qui sonnent ensemble : viser 80 au plus, 100 est la limite (« Fusible » : 94 à son
-  sommet, 48 en moyenne). Une enveloppe longue (`env`) garde ses voix en vie : raccourcir la
-  relâche d'une nappe allège tout.
+  les sources qui sonnent ensemble : viser 80 au plus, 100 est la limite (« Fusible » : 92 à son
+  sommet, 46 en moyenne). Le coût, mesuré en rendant dans la même séance l'ancien thème de l'accueil
+  et « Fusible » : son couplet coûte moins que l'ancien refrain, son sommet 1,3 fois plus ; chaque
+  couche d'une section chargée (la nappe, l'arpège en doubles croches, la doublure en grande scie)
+  en pèse 10 à 15 %, les effets (salle, cassette, flottements, porte) un cinquième à eux tous. Une
+  couche lourde se garde pour le sommet, pas pour toute la boucle : l'envolée de « Fusible » ne
+  prend sa grande scie qu'à son second passage. Une enveloppe longue (`env`) garde ses voix en
+  vie : raccourcir la relâche d'une nappe allège tout.
 
 ### 6.4 Le banc : les commandes et les cibles
 
@@ -290,14 +295,18 @@ NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --dep
 NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --boucle --avec /tmp/brouillon.js --out /tmp/banc
 ```
 
+Une boucle entière se rend en quelques minutes (« Fusible » : six minutes de musique, cinq minutes de
+rendu sur une machine partagée) : pour travailler une section, `--depuis` et `--duree` ; la boucle
+entière pour juger la forme, le niveau et la couture.
+
 Par thème : `<clé>.wav`, `<clé>.mp3` (192 kb/s), `<clé>.png` (le spectrogramme), `<clé>_courbe.png`
 (l'énergie mesure par mesure, les sections, la couture), et `banc.json` dans le dossier (toutes les
 mesures, cumulées d'un rendu à l'autre : l'écart des niveaux entre thèmes se lit à la fin). Une ligne
 par thème :
 
 ```
-accueil   « Fusible »   moy −20,7 dB (corps) · int −19,0 · crête −3,5 · >250 Hz 22 % · >6 kHz 1,5 % ·
-          boucle 3:02 (88 m.) · redite 3:19 · couture −0,9 dB · ×1,5 · 94 sources (C2 m.8), 48 en moyenne  ✓
+accueil   « Fusible »   moy −20,9 dB (corps) · int −19,0 · crête −3,7 · >250 Hz 23,6 % · >6 kHz 1,6 % ·
+          boucle 3:02 (88 m.) · redite 3:19 · couture −1,2 dB · ×1,5 · 92 sources (C2 m.8), 46 en moyenne  ✓
 ```
 
 | Mesure | Cible | Ce qu'on fait sinon |

@@ -245,7 +245,8 @@ button:disabled{cursor:not-allowed}
       b.appendChild(no); b.appendChild(t); b.appendChild(m); b.appendChild(h2);
       b.addEventListener('click', function () {
         if (cat[k].erreur) { avis(['« ' + i.titre + ' » ne se joue pas.', cat[k].erreur]); return; }
-        jouer(k);
+        if (enLecture && courant === k) arreter();   // la face qui joue : la toucher l'arrête
+        else jouer(k);
       });
       box.appendChild(b);
       rangees[k] = { el: b, no: no, numero: no.textContent };

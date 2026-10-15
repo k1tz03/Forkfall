@@ -79,7 +79,6 @@ function args() {
 // ── l'affichage ──
 const fr = (x, d = 1) => (x < 0 ? '−' : '') + Math.abs(x).toFixed(d).replace('.', ',');
 const mmss = (s) => Math.floor(s / 60) + ':' + String(Math.round(s % 60)).padStart(2, '0');
-const pc = (x) => Math.round(x * 100) + ' %';
 
 // ── --verifier : la partition seule, en Node ──
 function verifier(o) {
@@ -387,7 +386,7 @@ async function main() {
     if (r.sources.pointe > CIBLES.sources) revoir.push('trop de sources');
     if (r.erreurs.length) revoir.push('erreurs');
     const couture = r.couture ? ` · couture ${r.couture.mesure >= 0 ? '+' : ''}${fr(r.couture.mesure)} dB${Math.abs(r.couture.mesure) > CIBLES.couture && Math.abs(r.couture.mesure) <= CIBLES.coutureMax ? ' (à écouter)' : ''}` : '';
-    const ligne = `${nom.padEnd(11)} ${('« ' + r.titre + ' »').padEnd(22)} moy ${fr(r.moyenne)} dB${r.mesureCorps ? ' (corps)' : ''} · int ${fr(r.intensite)} · crête ${fr(r.crete)} · >250 Hz ${pc(r.aigus250)} · >6 kHz ${fr(r.aigus6k * 100)} % · ` +
+    const ligne = `${nom.padEnd(11)} ${('« ' + r.titre + ' »').padEnd(22)} moy ${fr(r.moyenne)} dB${r.mesureCorps ? ' (corps)' : ''} · int ${fr(r.intensite)} · crête ${fr(r.crete)} · >250 Hz ${fr(r.aigus250 * 100)} % · >6 kHz ${fr(r.aigus6k * 100)} % · ` +
       `boucle ${mmss(S.periode.secondes)} (${S.periode.mesures} m.) · redite ${mmss(S.redite)}${couture} · ×${fr(vitesse)} · ${r.sources.pointe} sources (${r.sources.ou}), ${Math.round(r.sources.moyenne)} en moyenne  ` +
       (revoir.length ? '✗ ' + revoir.join(', ') : '✓');
     console.log(ligne);

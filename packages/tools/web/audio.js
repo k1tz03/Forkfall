@@ -1350,7 +1350,8 @@
       var fS = ctx.createBiquadFilter();
       fS.type = 'lowpass'; fS.Q.value = ex.acc ? 2.5 : 0.6;
       fS.frequency.setValueAtTime(tonS[0] * (ex.acc ? 1.5 : 1), t);
-      fS.frequency.setTargetAtTime(tonS[1], t + 0.01, tonS[2] || 0.4);
+      // une rampe qui finit (trois constantes de temps) : passé le balayage, le filtre ne coûte plus rien
+      fS.frequency.exponentialRampToValueAtTime(Math.max(tonS[1], 20), t + 0.01 + 3 * (tonS[2] || 0.4));
       fS.connect(g);
       var cotes = [panner(ctx, fS, -large), fS, panner(ctx, fS, large)];
       for (var si = 0; si < nS; si++) {
@@ -1380,7 +1381,7 @@
       var fR = ctx.createBiquadFilter();
       fR.type = 'lowpass'; fR.Q.value = ex.acc ? 4 : 1.3;
       fR.frequency.setValueAtTime(tonR[0] * (ex.acc ? 1.6 : 1), t);
-      fR.frequency.setTargetAtTime(tonR[1], t + 0.005, tonR[2] || 0.25);
+      fR.frequency.exponentialRampToValueAtTime(Math.max(tonR[1], 20), t + 0.005 + 3 * (tonR[2] || 0.25));
       preR.connect(wsR).connect(fR).connect(g);
       [-dR, dR].forEach(function (dt) {
         var o = ctx.createOscillator();
@@ -1827,7 +1828,8 @@
         if (K.flotte) xk = flottement(xk, K.flotte);
         if (K.sature > 0) {
           var wk = ctx.createWaveShaper();
-          wk.curve = courbeDouce(K.sature); wk.oversample = '2x';
+          // sans suréchantillonnage : la saturation est douce, ses harmoniques sont minces (et le mélange entier passe ici)
+          wk.curve = courbeDouce(K.sature); wk.oversample = 'none';
           // le mélange entre divisé par DOUCE ; la courbe rend tanh(k·x)/k dans
           // l'échelle d'origine (sa pente vaut 1 aux petits niveaux)
           xk = xk.connect(gain(ctx, 1 / DOUCE));

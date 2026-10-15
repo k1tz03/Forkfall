@@ -22,9 +22,9 @@
  *   pont   16 m.  le creux : la reese, une voix « aah », l'arpège au loin, le tic,
  *                 l'accroche lente ; quatre mesures pour remonter
  *   A2     16 m.  la course, plus nerveuse (l'arpège à trois notes contre quatre temps)
- *   C       8 m.  l'envolée : la grande scie, la majeure volée (do, sol), l'accroche
- *                 à l'octave
- *   C2      8 m.  l'envolée, harmonisée
+ *   C       8 m.  l'envolée : la mélodie en valeurs longues, la majeure volée (do,
+ *                 sol), l'accroche à l'octave
+ *   C2      8 m.  l'envolée au sommet : la grande scie la double, l'harmonie dessous
  *   retour  8 m.  la retombée : la basse se referme, et la boîte relance la course
  *
  * La grammaire : audio.js (« L'ÉCRITURE », « LES VOIX ») ; le guide du
@@ -53,6 +53,7 @@
   var ARP_CROCHES = '1 . 5 . 8 . 5 . 1 . 5 . 9 . 5 .';
   var ARP_TROIS = '1 5 8 1 5 8 1 5 8 1 5 8 1 5 8 9';      // trois notes contre quatre temps
   var STAB_CONTRE = '. . X . . . X . . . X . . . X .';
+  var STAB_DEMI = '. . . . . . X . . . . . . . X .';        // l'envolée a déjà sa grande scie : deux stabs suffisent
 
   // la batterie
   var B_COURSE = 'k . h . kS . h . k . h . kS . h .';
@@ -104,12 +105,12 @@
       harmo: { inst: 'lead', vol: 0.05, echo: 0.15, rev: 0.3, flotte: { prof: 6, vit: 0.6 }, pan: -0.3 },
       envol: { inst: 'supersaw', vol: 0.08, rev: 0.35, flotte: { prof: 8, vit: 0.5 }, scies: 5, desaccord: 16, large: 0.85, filtre: 5200, env: [0.012, 0.5, 0.82, 0.2] },
       boite: { inst: 'cloche', vol: 0.09, faux: 16, echo: 0.45, rev: 0.4, pan: 0.2 },
-      arp:   { inst: 'pluck2', vol: 0.075, oct: 4, echo: 0.42, rev: 0.12, pompe: true, pan: 0.3, filtre: 3600 },
-      stab:  { inst: 'stab', vol: 0.08, oct: 4, echo: 0.22, rev: 0.25, pompe: true, pan: -0.2 },
-      nappe: { inst: 'supersaw', vol: 0.08, oct: 3, rev: 0.35, pompe: true, flotte: { prof: 10, vit: 0.42 }, filtre: 3200, scies: 5, large: 0.8, env: [0.25, 0.8, 0.85, 0.4] },
+      arp:   { inst: 'pluck2', vol: 0.085, oct: 4, echo: 0.42, rev: 0.12, pompe: true, pan: 0.3, filtre: 3600 },
+      stab:  { inst: 'stab', vol: 0.085, oct: 4, echo: 0.22, rev: 0.25, pompe: true, pan: -0.2 },
+      nappe: { inst: 'supersaw', vol: 0.09, oct: 3, rev: 0.35, pompe: true, flotte: { prof: 10, vit: 0.42 }, filtre: 3200, scies: 5, large: 0.8, env: [0.25, 0.8, 0.85, 0.4] },
       aah:   { inst: 'vox', vol: 0.085, oct: 3, voyelle: 'a', vers: 'o', rev: 0.5, flotte: { prof: 12, vit: 0.35 }, pompe: true },
       reese: { inst: 'reese', vol: 0.12, oct: 1, plancher: 'G1', desaccord: 10, pompe: true },
-      basse: { inst: 'basse', vol: 0.09, oct: 1, plancher: 'E1', pompe: true, drive: 1.6, filtre: 2400, ton: [2000, 650, 0.07] },
+      basse: { inst: 'basse', vol: 0.08, oct: 1, plancher: 'E1', pompe: true, drive: 1.6, filtre: 2400, ton: [2000, 650, 0.07] },
       batt:  { vol: 0.7, porte: 0.5, tenue: 0.22, rev: 0.15, filtre: 15000 }
     },
     sections: {
@@ -178,19 +179,21 @@
         stab: '. . . . . . X . . . . . . . . .',
         lead: silences(7).concat([ACCROCHE]).concat(silences(7)).concat([ACCROCHE])
       },
+      // l'envolée en deux marches : la mélodie seule d'abord, puis la grande scie qui
+      // la double et l'harmonie dessous (et le poids : la doublure ne sonne qu'au sommet)
       C: {
         accords: ['Am', 'F', 'C', 'G', 'Am', 'F', 'Dm', 'Am E'],
         ouvre: { nappe: [3200, 5200] },
         lead: ENVOLEE,
-        envol: ENVOLEE,
         basse: BASSE_COURSE,
-        arp: ARP_TROIS,
-        stab: STAB_CONTRE,
+        arp: ARP_CROCHES,
+        stab: STAB_DEMI,
         nappe: [NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE2],
         batt: [B_ENVOLEE_X, B_ENVOLEE, B_ENVOLEE, B_ENVOLEE, B_ENVOLEE_X, B_ENVOLEE, B_ENVOLEE, B_RELANCE_R]
       },
       C2: {
         copie: 'C', harmo: true,
+        envol: ENVOLEE,
         batt: [B_ENVOLEE_X, B_ENVOLEE, B_ENVOLEE, B_ENVOLEE, B_ENVOLEE_X, B_ENVOLEE, B_ENVOLEE, 'k . h h kSc . o . t . t . T . T .']
       },
       retour: {
