@@ -21,7 +21,10 @@
 //                       le code dort sous docs/design/archive/ et n'est plus
 //                       assemblé — ne pas le rebrancher.)
 //   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore, tout
-//                       synthétisé : aucun fichier audio, aucune URL)
+//                       synthétisé : aucun fichier audio, aucune URL), suivi des
+//                       thèmes musique/*.js par ordre alphabétique, chacun dans
+//                       son filet (musique_sources.js) — dans la page, pour le
+//                       fichier seul comme pour la version jouable
 //   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
 //                       vignettes des histoires et le panorama de la ville,
 //                       découpés par docs/design/pixel_iso/accueil.js) ; avec
@@ -352,7 +355,7 @@ function main() {
   OPTS_CONTENU.json = !!opts.contenuJson;
   const tplPath = path.join(HERE, 'preview_template.html');
   const artPath = path.join(HERE, 'art.js');
-  const audioPath = path.join(HERE, 'audio.js');
+  const musique = require(path.join(HERE, 'musique_sources.js'));
   // la version jouable se sert en HTTP : le contenu des livres, les images de l'accueil
   // et l'application (manifeste, icônes, service worker) sont des fichiers à côté de la page
   const dossier = opts.ville ? path.dirname(path.resolve(opts.out)) : null;
@@ -381,7 +384,9 @@ function main() {
   }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
-  const audio = fs.readFileSync(audioPath, 'utf8');
+  // audio.js et les thèmes (une faute de syntaxe dans un thème arrête l'assemblage ici)
+  const audio = musique.texte();
+  console.log('la musique : ' + musique.fichiers().map((f) => f.nom.replace(/\.js$/, '')).join(', ') + ' (musique/*.js)');
   const contenu = chargerContenu(opts);
   const bundle = contenu.entier;
   // une histoire livrée sans vignette prend celle du promu : on le dit
