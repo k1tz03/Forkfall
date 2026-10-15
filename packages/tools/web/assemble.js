@@ -56,11 +56,11 @@ const ROOT = path.resolve(HERE, '..', '..', '..');
 const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web');
 // Les modules de la ville, insérés dans la fermeture de ville.js (au repère
 // /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
-const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_film.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_album.js', 'ville_direct.js', 'ville_dossier.js'];
+const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_film.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_album.js', 'ville_direct.js', 'ville_dossier.js', 'ville_rythme.js', 'ville_chapitres.js'];
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js', 'preview_film.js'];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js', 'preview_eclair.js', 'preview_film.js'];
 // ville_film.js enveloppe ces quatre fonctions de ville_cinema.js (les portes des scènes
 // jouées, que les films prennent aussi) : un renommage doit casser l'assemblage, pas les films
 const PORTES_DES_FILMS = ['cineDeCarte', 'cineDeDrapeau', 'cineIntro', 'jouerCine'];

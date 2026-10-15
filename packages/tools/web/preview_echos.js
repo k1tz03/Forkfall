@@ -539,6 +539,20 @@
       if (t && t.classList.contains("on")) e.style.bottom = Math.round(window.innerHeight - t.getBoundingClientRect().top + 6) + "px";
     }
   }
+  // Le message du récit (#villeToast) peut paraître, grandir ou changer après que la ligne s'est posée
+  // (la réponse de la carte arrive en bas de la ville juste après elle) : la ligne se replace à
+  // chaque changement, au lieu de garder une hauteur mesurée trop tôt (elle mordait sur sa 3ᵉ ligne).
+  var echosObs = null;
+  function echosSuivreToast() {
+    if (echosObs || typeof MutationObserver === "undefined") return;
+    var t = document.getElementById("villeToast");
+    if (!t) return;
+    echosObs = new MutationObserver(function () {
+      var e = document.getElementById("echoLigne");
+      if (e && e.classList.contains("on")) echosPlacer();
+    });
+    echosObs.observe(t, { attributes: true, attributeFilter: ["class"], childList: true, characterData: true, subtree: true });
+  }
   function echosCacherLigne() {
     clearTimeout(echosTimer);
     var e = echosDom() ? document.getElementById("echoLigne") : null;
@@ -554,6 +568,7 @@
     clearTimeout(echosTimer);
     e.textContent = a.texte;
     e.setAttribute("data-dir", a.dir);
+    echosSuivreToast();
     echosPlacer();
     void e.offsetWidth;                      // relancer la transition d'entrée
     e.classList.add("on");

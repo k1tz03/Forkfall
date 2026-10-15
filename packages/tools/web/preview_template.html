@@ -280,6 +280,7 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 .pw .reprise:active{transform:translate(2px,2px);box-shadow:1px 1px 0 2px var(--a-ombre)}
 .pw .reprise svg{display:block;width:13px;height:13px;flex:0 0 auto}
 .pw .reprise b{font-weight:400;font-size:22px;line-height:1;letter-spacing:.08em;text-transform:uppercase;flex:0 0 auto}
+.pw .rappel{margin:6px 2px 0;font-size:13px;line-height:1.35;font-style:italic;color:var(--creme2, #d9c9a8)}
 .pw .reprise .qui{flex:1 1 auto;min-width:0;text-align:right;font-size:18px;line-height:1.05;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* « Reprendre » du haut : la carrière la plus récente, tous livres confondus */
@@ -1504,22 +1505,32 @@ window.FusibleContenu.pret((function () {
     return { prenom: cleanName(inPrenom.value, 14).trim(), nom: cleanName(inNom.value, 16).trim(), genre: nameGenre, genreChoisi: genreChoisi };
   }
   function renderGenre() {
-    btnGenre.textContent = nameGenre === "f" ? "♀" : "♂";
-    btnGenre.setAttribute("aria-label", "Genre : " + (nameGenre === "f" ? "femme" : "homme") + " ; toucher pour changer");
-    $("nameWho").textContent = nameGenre === "f" ? "elle" : "il";
+    // sans prénom et sans choix, la carrière tire son genre au hasard (startRun ne passe rien au
+    // moteur) : le bouton le dit, au lieu d'afficher un ♂ que le tirage ne respecterait pas
+    var auHasard = !genreChoisi && !inPrenom.value.trim();
+    btnGenre.textContent = auHasard ? "♂♀" : nameGenre === "f" ? "♀" : "♂";
+    btnGenre.setAttribute("aria-label", auHasard ? "Genre : au hasard ; toucher pour choisir" : "Genre : " + (nameGenre === "f" ? "femme" : "homme") + " ; toucher pour changer");
+    $("nameWho").textContent = auHasard ? "il ou elle" : nameGenre === "f" ? "elle" : "il";
   }
   function saveName() { profile.name = nameValues(); saveProfile(profile); }
   function pick(arr) { return (Array.isArray(arr) && arr.length) ? arr[Math.floor(Math.random() * arr.length)] : ""; }
   function randomName() {
+    // « Au hasard » sans genre choisi : le genre aussi est tiré, et le bouton le montre ensuite
+    if (!genreChoisi) nameGenre = Math.random() < 0.5 ? "f" : "m";
     inPrenom.value = pick(nameGenre === "f" ? NAMES.prenoms_f : NAMES.prenoms_m) || "";
     inNom.value = pick(NAMES.noms) || "";
     saveName();
+    renderGenre();
   }
   inPrenom.value = cleanName(profile.name.prenom, 14);
   inNom.value = cleanName(profile.name.nom, 16);
-  inPrenom.addEventListener("input", function () { var c = cleanName(inPrenom.value, 14); if (c !== inPrenom.value) inPrenom.value = c; saveName(); });
+  inPrenom.addEventListener("input", function () { var c = cleanName(inPrenom.value, 14); if (c !== inPrenom.value) inPrenom.value = c; saveName(); renderGenre(); });
   inNom.addEventListener("input", function () { var c = cleanName(inNom.value, 16); if (c !== inNom.value) inNom.value = c; saveName(); });
-  btnGenre.addEventListener("click", function () { nameGenre = nameGenre === "f" ? "m" : "f"; genreChoisi = true; renderGenre(); saveName(); });
+  btnGenre.addEventListener("click", function () {
+    // la première touche choisit ce qui est affiché (au hasard : homme), les suivantes alternent
+    if (!genreChoisi && !inPrenom.value.trim()) nameGenre = "m"; else nameGenre = nameGenre === "f" ? "m" : "f";
+    genreChoisi = true; renderGenre(); saveName();
+  });
   $("btnHasard").addEventListener("click", randomName);
   $("nameForm").addEventListener("submit", function (e) { e.preventDefault(); inPrenom.blur(); inNom.blur(); });
   $("nameForm").addEventListener("keydown", function (e) { e.stopPropagation(); });
@@ -2092,6 +2103,15 @@ window.FusibleContenu.pret((function () {
         r.setAttribute("aria-label", "Reprendre la carrière de ce livre" + (enCours.nom ? " : " + enCours.nom : "") + ", semaine " + enCours.semaine);
         r.addEventListener("click", function () { if (!busy) reprendreLivre(p); });
         pw.appendChild(r);
+        // le rappel de la semaine (ville_chapitres.js) : qui t'attend, où, quand
+        var rap = null;
+        try { rap = JSON.parse(localStorage.getItem("fusible.rappel") || "null"); } catch (e) { rap = null; }
+        if (rap && rap.histoire === p.id && rap.texte) {
+          var rl = document.createElement("p");
+          rl.className = "rappel";
+          rl.textContent = String(rap.texte).slice(0, 120);
+          pw.appendChild(rl);
+        }
       }
       wrap.appendChild(pw);
     });
@@ -2200,6 +2220,11 @@ window.FusibleContenu.pret((function () {
 
   // ═══ 2. JEU ═════════════════════════════════════════════════════════════
   var card = $("card"), text = $("cardText");
+  // la typographie française (le même réglage que la ville, ville.js `typoFr`) : une espace fine
+  // insécable avant « : ; ! ? » et après « « »
+  function typoCarte(s) {
+    return String(s == null ? "" : s).replace(/ ([:;!?»])/g, "\u202f$1").replace(/« /g, "«\u202f");
+  }
   var badgeL = $("badgeLeft"), badgeR = $("badgeRight");
   var portraitEl = $("portrait");
 
@@ -2287,8 +2312,9 @@ window.FusibleContenu.pret((function () {
   function renderBandeau() {
     $("bNom").textContent = (view.name || "").toUpperCase();
     var s = view.season || 1;
-    $("bPoste").textContent = (s <= 1 ? "1re année en poste" : s + " ans en poste") +
-      (view.age ? " · " + view.age + " ans" : "");
+    // (des espaces insécables : « 38 ans » ne se coupe pas, et le point médian reste avec son âge)
+    $("bPoste").textContent = (s <= 1 ? "1re année en poste" : s + "\u00a0ans en poste") +
+      (view.age ? " ·\u00a0" + view.age + "\u00a0ans" : "");
     $("bAnnee").innerHTML = nombre(String(view.year || meta.startYear || 1990), 34);
 
     var joue = (view.standingsJournee || 0) > 0;
@@ -2397,7 +2423,7 @@ window.FusibleContenu.pret((function () {
     if (ordre) text.setAttribute("data-entete", ORDRES[ordre]); else text.removeAttribute("data-entete");
     // Le texte de scène, AU-DESSUS de l'illustration, en italique. Il porte
     // déjà ses guillemets quand il en faut : on n'en rajoute pas.
-    text.textContent = c.text;
+    text.textContent = typoCarte(c.text);
     text.style.opacity = 1;
     // Au-dessus, ce que le dernier geste a produit — c'est la voix du récit.
     $("answer").textContent = view.lastAnswer || "";
@@ -2948,7 +2974,11 @@ window.FusibleContenu.pret((function () {
   function advanceEnd() {
     var eid = view.ending && view.ending.id;
     gainFin = null;
-    if (eid && !profile.endings[eid]) {
+    // Le Fusible (preview_eclair.js) ne compte pas au Cimetière des livres ; une fin commune (sans
+    // `livre`, pas endormie) atteinte en éclair y entre, elle : les fins des longues carrières (la
+    // retraite, la statue…) ne s'atteignent plus que là depuis que les livres se ferment.
+    var compte = view.mode !== "eclair" || (ENDINGS[eid] && !ENDINGS[eid].dormante && !ENDINGS[eid].livre);
+    if (eid && compte && !profile.endings[eid]) {
       profile.endings[eid] = 1; saveProfile(profile);
       if (ENDINGS[eid] && !ENDINGS[eid].dormante) gainFin = { n: discovered(), jalons: donnerRecompenses() };
     }

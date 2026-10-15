@@ -897,6 +897,48 @@ void main() {
     }
     m['pitch'] = m['pitch']?.toString() ?? '';
     m['chantier'] = m['chantier'] == true;
+    // LE MODE ÉCLAIR (« Le Fusible », packages/core/lib/src/eclair.dart). `mode: eclair`
+    // rend les quatre jauges mortelles ; `annees: [première, dernière]` fixe l'époque que
+    // le moteur tire de la graine au départ. Un postulat éclair n'est PAS un livre : le
+    // build le range en `chantier` — ni l'écran titre, ni l'album, ni l'application, ni un
+    // « successeur » ne le montrent ou ne le tirent — et il ne joue que du contenu commun
+    // (aucun prologue, aucun script, aucun arc d'un livre). Les livres ne déclarent ni
+    // `mode` ni `annees` : leur flux de tirages ne bouge pas d'un cran.
+    final mode = m['mode']?.toString() ?? 'histoire';
+    if (mode != 'histoire' && mode != 'eclair') errors.add('postulats: $id: mode « $mode » inconnu (histoire | eclair)');
+    if (m['annees'] != null) {
+      final an = m['annees'];
+      if (mode != 'eclair') {
+        errors.add('postulats: $id: `annees` n\'existe que pour un postulat éclair (le tirage de l\'époque ne doit pas bouger le flux d\'un livre)');
+      } else if (an is! List || an.length != 2 || an.any((e) => e is! int)) {
+        errors.add('postulats: $id: annees « $an » : [première, dernière], deux entiers');
+      } else if ((an[0] as int) < 1990 || (an[1] as int) > 2050 || (an[0] as int) > (an[1] as int)) {
+        errors.add('postulats: $id: annees $an hors de 1990..2050 ou décroissant');
+      }
+    }
+    if (mode == 'eclair') {
+      m['chantier'] = true;
+      if (m['prologue'] != null || m['opening_arc'] != null) {
+        errors.add('postulats: $id: un postulat éclair n\'a ni prologue ni script d\'ouverture (le contenu commun seulement)');
+      }
+      if (!((m['flags'] as List?) ?? const []).contains('eclair')) {
+        errors.add('postulats: $id: un postulat éclair pose le drapeau `eclair` (les cartes écrites pour le mode le lisent)');
+      }
+      final g = (m['gauges'] as Map?) ?? const {};
+      for (final k in const ['vestiaire', 'tribunes', 'direction', 'caisse']) {
+        final v = g[k];
+        if (v is! int || v < 10 || v > 90) errors.add('postulats: $id: jauge de départ $k « $v » : un entier de 10 à 90 (une jauge à 0 ou 100 tue)');
+      }
+      // le réservoir ne tire aucun arc de livre : ni dans son nom (`en.h1.*`, `pr.h5.*`…), ni
+      // dans une garde qui lit un drapeau d'histoire
+      ((m['programme'] as Map?) ?? const {}).forEach((bucket, bm) {
+        for (final e in ((bm as Map)['pool'] as List?) ?? const []) {
+          final arcId = (e as Map)['arc'].toString();
+          if (RegExp(r'\.h\d+\.').hasMatch(arcId)) errors.add('postulats: $id: programme["$bucket"] : « $arcId » est un arc de livre (le contenu commun seulement)');
+          if (RegExp(r'histoire_h\d').hasMatch('${e['if'] ?? ''}')) errors.add('postulats: $id: programme["$bucket"] : la garde de « $arcId » lit un drapeau d\'histoire');
+        }
+      });
+    }
     if (m['seeds'] != null && m['programme'] != null) errors.add('postulats: $id: `seeds` et `programme` sont exclusifs');
     // Fil rouge.
     final questions = <Map<String, dynamic>>[];
@@ -3332,7 +3374,16 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
 /// devient « dormante » : elle reste écrite, mais sort du Cimetière, où elle
 /// compterait sans pouvoir arriver. Le jour où un livre lui ouvre une porte
 /// (un `end:`), elle se réveille d'elle-même.
+///
+/// Le mode éclair (« Le Fusible ») : la fin que ses postulats déclarent (`fin_de_livre:` d'un
+/// postulat `mode: eclair`, « Le fusible a tenu ») ne s'atteint que dans ce mode : elle sort du
+/// Cimetière des livres elle aussi, et la porte d'un livre ne la compte pas (lint.dart).
 void _marquerFinsDormantes(Map<String, dynamic> bundle, Map<String, dynamic> director) {
+  final finsEclair = <String>{};
+  for (final p in (bundle['postulats'] as List).cast<Map<String, dynamic>>()) {
+    final f = p['fin_de_livre'];
+    if (p['mode'] == 'eclair' && f is String) finsEclair.add(f);
+  }
   if (director['jauges_fatales'] != false) return;
   const enginePosed = {'generique', 'grand_deballage', 'jubile', 'en_retraite', 'co_banqueroute'};
   final parJauge = <String>{};
@@ -3350,8 +3401,9 @@ void _marquerFinsDormantes(Map<String, dynamic> bundle, Map<String, dynamic> dir
       final e = n['end'];
       if (e is String) vises.add(e);
       // la fin d'un livre (`fin_de_livre:` d'un postulat) est une porte, elle aussi
+      // (sauf celle d'un postulat éclair : elle ne s'atteint que dans ce mode)
       final f = n['fin_de_livre'];
-      if (f is String) vises.add(f);
+      if (f is String && n['mode'] != 'eclair') vises.add(f);
       for (final v in n.values) {
         collecte(v);
       }
@@ -3366,5 +3418,6 @@ void _marquerFinsDormantes(Map<String, dynamic> bundle, Map<String, dynamic> dir
   for (final e in (bundle['endings'] as List).cast<Map<String, dynamic>>()) {
     final id = e['id'].toString();
     if (parJauge.contains(id) && !vises.contains(id) && !enginePosed.contains(id)) e['dormante'] = true;
+    if (finsEclair.contains(id) && !vises.contains(id)) e['dormante'] = true;
   }
 }

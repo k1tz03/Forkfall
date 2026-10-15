@@ -26,9 +26,9 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 3 749 cartes, 341 arcs, 118 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
+| Contenu | 3 988 cartes, 341 arcs, 123 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 212 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 250 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -115,6 +115,25 @@ les accepte tant que leur `cause:` dit `jauge` ; un `end:` qui les vise les rév
 au changement : 40 à 89 % des carrières d'un livre s'arrêtaient sur une jauge, au milieu du
 livre ; elles finissent maintenant sur les fins écrites.
 
+**Le Fusible, le mode éclair** (`docs/histoires/mode_eclair.md`) : une carrière de dix minutes à
+côté des livres — un rôle et une époque tirés de la graine, quatre jauges visibles et mortelles, pas
+de ville, un score en « semaines tenues », un défi du jour (la date → un rôle et une graine, par
+hachage, sans serveur). Cinq postulats cachés (`mode: eclair`, index 10 à 14 : `eclair_entraineur`,
+`_joueur`, `_president`, `_ds`, `_selectionneur`), forcés `chantier` par `build_content` — jamais
+listés ni tirés ; `GameState.mode` (écrit dans la sauvegarde seulement s'il vaut `eclair`) ;
+`packages/core/lib/src/eclair.dart` (`jaugesMortelles`, `semainesTenues`, `defiDuJour`,
+`carteDeLivre`) ; le contenu (`content/cards/{president,ds,selectionneur}/eclair.yaml`,
+`common/eclair_bureau.yaml`, `entraineur/eclair.yaml`, les fins `ec_tenu_*`) ; la page
+(`preview_eclair.js`, clé `fusible.eclair.v1`, jamais une sauvegarde de livre) ; le classement du jour
+facultatif (capacité `db`, un document `eclair/<id>` écrit à la fin d'un défi du jour) ; le banc
+`packages/tools/bin/eclair.dart` (`--fins`, `--fuites`, `--jours`). **Règles** : l'index des cinq
+postulats est le Code de Carrière et leur ordre fixe le défi de chaque jour ; un événement commun qui
+doit s'ouvrir en éclair nomme `eclair_<rôle>` dans ses `postulats` ; une carte du mode se lit derrière
+`flag('eclair')` ; une carte de livre ne sert jamais en éclair ; le miroir JS `defiDe` reste d'accord
+avec `defiDuJour` (valeurs épinglées dans le test) ; un contenu ajouté au mode se mesure (soixante à
+cent cartes pour un joueur ordinaire). Les fins des longues carrières (la retraite, la statue…) ne
+s'atteignent plus que là : une fin commune atteinte en éclair entre au Cimetière, pas une fin de jauge.
+
 **Le déterminisme est le socle de tout le reste** (partage d'un run, défi entre
 amis, sauvegarde, tests). Trois règles à ne jamais casser :
 
@@ -134,7 +153,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json (+ content/build/livres/)
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 212 tests (dont livres_test : l'aperçu découpé par livre)
+cd packages/core && dart test                    # 250 tests (dont livres_test : l'aperçu découpé par livre)
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -202,11 +221,39 @@ Ce que la ville porte en plus des cartes :
   jours sans que rien n'arrive. **« Attendre »** (en bas, ou « Attendre ici » dans le panneau
   d'un lieu) fait passer le temps jusqu'à ce qu'il arrive quelque chose — une scène, quelqu'un
   qui vient te chercher, le rendez-vous qui s'ouvre (un toast dit où), l'heure d'une mission ;
-  la nuit, on rentre dormir et l'attente reprend au réveil (deux nuits au plus d'un geste).
+  la nuit, on rentre dormir sous le noir (trois nuits au plus d'un geste), d'un seul fondu
+  court, l'heure qui défile dessus (deux secondes au plus : « La boucle », plus bas).
   Mesuré en jouant l'histoire 4 en n'attendant que : 3,3 gestes vides entre deux choses
-  avant, 1,3 après. Une scène est une mission d'une seule étape (`scene`) que le
+  avant, 1,3 après ; puis cinq secondes de fondus pour franchir un dimanche soir (la nuit, la
+  paie) avant la boucle, une demi-seconde jusqu'à la carte du lundi après. Une scène
+  est une mission d'une seule étape (`scene`) que le
   moteur applique sans tirage ; une fois par carrière ; `mission(<id>)` lit une scène vue. Le
   plan du jour se tire de la graine, de la semaine et du jour.
+- **La boucle** (`ville_rythme.js`, `ville_chapitres.js`) : la mesure QA en jouant le livre 4
+  quinze minutes — 1,5 décision par minute, 42 % du temps à regarder le héros marcher, 22 % à
+  attendre, trois minutes vingt de la touche d'une histoire à sa première décision — a fait
+  trois remèdes. **La marche** : au-delà de 30 cases de chemin (`MARCHE_COURTE`, une seconde trois quarts
+  de marche ; multipliée par `usage.vitesse` avec un véhicule), « Y aller », un nom
+  touché, le plan, la flèche ne marchent plus : un fondu de 0,35 s + 0,35 s, le héros à la porte
+  du but (dans sa pièce, s'il y entre : un seul fondu), puis la même arrivée qu'au bout d'une
+  marche ; toucher la ville pour marcher reste une marche, l'hélicoptère garde son fondu à
+  lui. **Le temps** (`laisserPasser`) : « Attendre », et « Y aller » vers un rendez-vous plus
+  tard, ne sont qu'un fondu court, les tranches, les échéances et les nuits chez soi passant
+  dessous, l'heure qui défile en gros sur le noir (deux secondes au plus). **L'ouverture** :
+  l'introduction jouée, la première carte se montre là où l'on est (`ouvrirSurUneCarte`), sans
+  marche ; l'aide de la ville se dit après la première réponse. **Un chapitre par semaine** :
+  au passage du dimanche soir au lundi (le crochet `jour`, pas le rendez-vous « Le journal du
+  dimanche » : il n'existe qu'aux cartes Classement, deux fois par saison), un panneau « Une de
+  la semaine » — la manchette et les brèves tirées de `S.chap`, le carnet que la ville tient de
+  la semaine (l'Almanach neuf de la frise, le match, un lien qui a changé, une dette, les
+  réponses données) —, puis « La semaine prochaine… » (rendez-vous, match, mission et son
+  délai, dettes, un quartier qui s'ouvre), puis [Continuer] ou [Reprendre plus tard] (la partie
+  est sauvée, on retourne à l'accueil, on reprend au lundi matin). Au retour d'une partie
+  sauvée : « Pendant ton absence… ». Le prochain rendez-vous est gardé dans le `localStorage`
+  (`fusible.rappel`) pour que l'accueil le dise. « Attendre » se dégrise de lui-même quand la
+  ville est au repos (il restait grisé dehors après un « Sortir »). Mesuré après coup : un
+  « Y aller » vers le port ou la campagne passe de 10 à 18 secondes à moins d'une seconde ; la
+  première carte suit l'introduction passée de 0,1 seconde, dans les dix livres.
 - **Le match à la Rive**, le samedi : la ville va au stade (les passants vers les grilles,
   puis la sortie), vingt-deux joueurs, l'arbitre et le ballon sur la pelouse, les deux tribunes
   remplies selon la jauge tribunes (peintes une fois avec la profondeur du décor), deux ou trois

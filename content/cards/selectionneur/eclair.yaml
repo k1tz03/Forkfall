@@ -1,0 +1,360 @@
+# LE FUSIBLE — le mode éclair, la sélectionneuse / le sélectionneur (docs/histoires/mode_eclair.md).
+#
+# Le rôle `selectionneur` n'avait que des livres (7 et 9) et ses alarmes : une carrière éclair y
+# mourait de famine. Ces cartes de routine s'ouvrent au seul drapeau `eclair` : aucune carrière de
+# livre ne les voit.
+#
+# Jauges du rôle (roles.yaml) : vestiaire = LE GROUPE (la jauge fragile : elle baisse d'elle-même),
+# tribunes = LE PAYS, direction = LA FÉDÉRATION, caisse = LES MOYENS. `{groupe}` dit vingt-trois
+# noms avant 2011, vingt-six ensuite. Les listes, les clubs qui refusent, les primes, le brassard.
+# Époque : 1999 à 2044 ; aucun visage daté, des fonctions (le capitaine, le délégué, le trésorier).
+cards:
+  - id: ec.sl.liste_veteran
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, moment]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "La liste des {groupe}, à rendre avant vendredi : un attaquant de trente-sept ans, le meilleur de sa génération, ou un gamin de dix-neuf ans qui marque tous les week-ends. Les deux ont appelé hier."
+    left: {label: "Je prends le vétéran", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le vétéran répond avant la fin de la sonnerie. Le gamin apprend la liste à la radio, entre deux pubs, et ne rappelle pas."}
+    right: {label: "Je prends le gamin", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le gamin pleure un peu, au téléphone. Le vétéran, lui, dit seulement qu'il comprend, et raccroche la première."}
+
+  - id: ec.sl.club_refuse
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un club refuse de libérer son gardien pour la fenêtre : « Il est blessé, ou presque, ou il le sera. » Le médecin de la Fédération a vu la radio. Il dit le contraire."
+    left: {label: "J'exige sa convocation", effects: {vestiaire: "+", direction: "-"}, answer: "Le gardien arrive avec son sac et un mot de son club, que tu ne lis pas. À la Fédération, on prépare déjà une lettre."}
+    right: {label: "Je renonce à lui", effects: {direction: "+", vestiaire: "--"}, answer: "La Fédération te remercie de ta « souplesse ». Le gardien remplaçant arrive un jour plus tard, sans mot."}
+
+  - id: ec.sl.amical_gros
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire, direction, rescue:caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "La Fédération a vendu un amical contre un grand pays pour payer la saison : bon pour la caisse, mauvais pour les genoux. Le groupe voulait préparer le vrai match, tranquillement."
+    left: {label: "Je joue le grand pays", effects: {caisse: "++", vestiaire: "-"}, answer: "Le stade est plein, les genoux le sont moins. Un titulaire sort sur une civière, qui n'avait rien demandé."}
+    right: {label: "Un petit adversaire", effects: {vestiaire: "+", caisse: "-"}, answer: "La Fédération renvoie le contrat avec une croix au stylo rouge. Le groupe gagne 4-0, sans enthousiasme."}
+
+  - id: ec.sl.primes
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Les joueurs demandent une prime de qualification triplée, par la voix de leur capitaine, qui n'a pas élevé la voix. La Fédération dit que la caisse est vide, et que ce n'est pas à toi d'en parler."
+    left: {label: "Je plaide pour la prime", effects: {vestiaire: "++", direction: "--"}, answer: "Tu portes le dossier à la Fédération, debout. On te demande de t'asseoir ; on te demande aussi, très gentiment, de ne pas recommencer."}
+    right: {label: "Je défends la caisse", effects: {direction: "+", vestiaire: "--"}, answer: "Le capitaine hoche la tête, dit « d'accord », et sort. Au dîner, la table est silencieuse, et la soupe est tiède."}
+
+  - id: ec.sl.brassard
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    when: "flag('eclair')"
+    cooldown: 50
+    once: true
+    text: "Deux joueurs veulent le brassard : le vieux défenseur qui l'a porté sept ans, et le milieu qu'on applaudit dans tous les stades. Aucun ne te l'a demandé. Les deux ont parlé à la presse."
+    left: {label: "Je garde le vieux", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le vieux serre le brassard une seconde de trop, puis le passe à son bras. Le milieu félicite tout le monde, sauf toi."}
+    right: {label: "Je le donne au milieu", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le milieu pose le brassard sur son bras avec soin, comme une montre prêtée. Le vieux regarde par la fenêtre du car."}
+
+  - id: ec.sl.mode_du_moment
+    roles: [selectionneur]
+    arc: tribunes
+    tags: [tribunes, presse, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "La presse réclame la convocation d'un attaquant de deuxième division, quinze buts, huit minutes de gloire à la télé. Il n'a pas le niveau, tout le monde le sait. Le pays le veut quand même."
+    left: {label: "Je l'appelle pour un match", effects: {tribunes: "++", vestiaire: "-"}, answer: "Il entre à la soixante-dixième, rate deux balles, en marque une. Dans le vestiaire, on lui offre un café sans lui adresser la parole."}
+    right: {label: "Je n'appelle pas les modes", effects: {vestiaire: "+", tribunes: "--"}, answer: "Le lendemain, sa photo fait la une de deux journaux, avec ton nom en légende, sans point d'exclamation."}
+
+  - id: ec.sl.hotel_stage
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "L'hôtel du stage est un palace avec piscine, offert par un mécène de la Fédération. Le groupe veut y rester. Le staff préférerait un camp simple, loin de tout, sans autre visiteur que la neige."
+    left: {label: "Je prends le palace", effects: {vestiaire: "+", caisse: "-"}, answer: "Les joueurs dorment dix heures, sourire en coin. Au petit déjeuner, un journaliste s'est glissé entre deux tables."}
+    right: {label: "Le camp, loin de tout", effects: {caisse: "+", vestiaire: "-"}, answer: "Il neige trois jours. Au dîner, le capitaine demande si la piscine du palace est ouverte, à voix haute, et personne ne rit."}
+
+  - id: ec.sl.fils_president
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le président de la Fédération te demande de prendre son fils comme adjoint : diplômé, cultivé, jamais passé sur un banc. Il dit que le garçon a « une vraie vision ». Il ne dit pas laquelle."
+    left: {label: "Il sera mon adjoint", effects: {direction: "++", vestiaire: "--"}, answer: "Le fils arrive en blazer, avec un carnet neuf. Au bout de dix minutes, il a demandé si le capitaine était au courant."}
+    right: {label: "Mon staff est complet", effects: {vestiaire: "+", direction: "--"}, answer: "Le président sourit, ce qui ne dit rien. Le soir, un courrier de la Fédération demande « l'état du budget du staff »."}
+
+  - id: ec.sl.blesse_veut_venir
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un milieu blessé à la cuisse veut rejoindre le groupe et « s'entraîner à part ». Le médecin de la Fédération dit non. L'attaquant titulaire dit que sans ce milieu, il ne joue pas."
+    left: {label: "Je le convoque", effects: {vestiaire: "++", tribunes: "-"}, answer: "Le milieu s'entraîne à part, comme promis, et pousse un peu trop fort le troisième jour. Le médecin ne dit rien, il note."}
+    right: {label: "Je suis le médecin", effects: {direction: "+", vestiaire: "--"}, answer: "Le milieu rentre chez lui, la cuisse bandée. L'attaquant titulaire regarde le plafond, au dîner, pendant dix minutes."}
+
+  - id: ec.sl.hymne
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Un joueur refuse de chanter l'hymne avant le match : une conviction, dit-il, pas un caprice. Les caméras le regardent déjà. Le président de la Fédération t'attend dans le tunnel, la main tendue."
+    left: {label: "Je le soutiens", effects: {vestiaire: "+", tribunes: "--"}, answer: "Il se tient droit, bouche fermée. Le stade siffle trente secondes, puis moins fort. Le président retire sa main."}
+    right: {label: "Il chante, ou il ne joue pas", effects: {tribunes: "+", vestiaire: "--"}, answer: "Il chante, sans voix, les yeux fixés sur le drapeau. Au retour, personne ne lui adresse un mot, sauf le gardien."}
+
+  - id: ec.sl.charter
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le charter coûte autant plein que vide. Le vol régulier arrive avec six heures de retard, mais la Fédération y tient. Dans le couloir de l'hôtel, deux joueurs dorment déjà sur leurs valises."
+    left: {label: "Je prends le charter", effects: {caisse: "--", vestiaire: "+"}, answer: "L'avion décolle à l'heure, aux trois quarts plein. Quelqu'un met de la musique, et tout le monde fait semblant de ne pas l'aimer."}
+    right: {label: "Je prends le vol régulier", effects: {caisse: "+", vestiaire: "--"}, answer: "Le groupe attend six heures dans un hall de gare aérienne. Le capitaine compte les tasses de café, une à une."}
+
+  - id: ec.sl.sponsor_tournage
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire, sponsors, rescue:caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le sponsor de l'équipe nationale veut un joueur précis pour sa campagne : le plus connu, le moins disponible. Il paie trois jours de tournage la veille du match, avec quinze techniciens."
+    left: {label: "J'autorise le tournage", effects: {caisse: "++", vestiaire: "-"}, answer: "Le joueur sourit devant la caméra pendant neuf heures. Le soir, ses jambes disent qu'on lui en a demandé trop."}
+    right: {label: "La veille d'un match, non", effects: {vestiaire: "+", caisse: "-"}, answer: "Le sponsor trouve la réponse « légitime » et rappelle le lendemain, avec une proposition moins chère, pour le lundi suivant."}
+
+  - id: ec.sl.beau_jeu
+    roles: [selectionneur]
+    arc: tribunes
+    tags: [tribunes, direction, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Les supporters réclament du beau jeu, la Fédération veut des résultats. Le capitaine propose un système plus prudent : « On gagne 1-0, personne ne siffle trop. » Le gamin du banc propose l'inverse."
+    left: {label: "Je joue le beau jeu", effects: {tribunes: "++", direction: "-"}, answer: "Le stade chante dès la quinzième minute. À la fin, le président de la Fédération dit « bravo » du bout des lèvres."}
+    right: {label: "Je joue le résultat", effects: {direction: "++", tribunes: "--"}, answer: "1-0, un but contre le cours du jeu. Le stade siffle en sortant, et le président de la Fédération te serre la main longuement."}
+
+  - id: ec.sl.retour_gardien
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le meilleur gardien de l'histoire du pays annonce qu'il revient en sélection, à quarante et un ans, « pour la dernière ». Le gardien titulaire apprend la nouvelle dans le journal, comme tout le monde."
+    left: {label: "Je l'accueille", effects: {tribunes: "++", vestiaire: "--"}, answer: "Le vieux arrive avec ses gants dans un sac de supermarché. Le titulaire s'entraîne à part, à vingt mètres, sans lever la tête."}
+    right: {label: "Je lui dis non, poliment", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le vieux répond « je comprends » sans cacher une déception de vingt ans. Le journal du lendemain titre sur ta froideur."}
+
+  - id: ec.sl.ligue_regionale
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un président de ligue régionale réclame que le prochain amical se joue chez lui, dans un stade de quatre mille places où il compte des cousins. La Fédération n'a pas dit non. Elle n'a pas dit oui."
+    left: {label: "On joue chez lui", effects: {direction: "+", caisse: "-"}, answer: "Le stade de quatre mille places est plein de cousins et de gens de passage. Le président de ligue te remercie trois fois, en partant."}
+    right: {label: "On joue à la capitale", effects: {caisse: "+", direction: "-"}, answer: "Le président de ligue n'appelle pas. Quelques semaines plus tard, un courrier de la Fédération rappelle « l'importance des régions »."}
+
+  - id: ec.sl.bus_panne
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le bus de l'équipe est tombé en panne au bord de l'autoroute, à six kilomètres du stade : trois voitures de supporters s'arrêtent d'elles-mêmes. Le chauffeur te regarde, les mains sur le volant."
+    left: {label: "On monte dans leurs voitures", effects: {tribunes: "++", vestiaire: "-"}, answer: "Les joueurs arrivent au stade assis sur des banquettes de berline, un drapeau sur les genoux. La photo fait le tour du pays."}
+    right: {label: "On attend le dépanneur", effects: {vestiaire: "+", tribunes: "-"}, answer: "Une heure sur le bas-côté. Les supporters repartent, un peu vexés. Le dépanneur arrive, content d'avoir tant de monde à servir."}
+
+  - id: ec.sl.question_poste
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, tribunes, direction, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un journaliste te demande, devant la caméra, si tu garderais ton poste en cas d'élimination. Le président de la Fédération est à deux mètres, immobile, et il t'écoute."
+    left: {label: "Je dis que oui", effects: {tribunes: "+", direction: "-"}, answer: "Ta phrase passe en boucle toute la soirée. Le président de la Fédération la répète, à voix basse, devant son adjoint."}
+    right: {label: "Ça ne dépend pas de moi", effects: {direction: "+", tribunes: "-"}, answer: "Le lendemain, le titre dit « il n'est pas sûr de lui ». Le président de la Fédération t'adresse un petit signe de tête."}
+
+  - id: ec.sl.double_nationalite
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Un jeune talent, né ici, élevé ailleurs, peut jouer pour deux pays. Son père t'attend à la sortie de l'entraînement des jeunes : « Il choisit demain. Vous pouvez lui dire ce que vous voulez. »"
+    left: {label: "Je lui parle une heure", effects: {tribunes: "+", vestiaire: "-"}, answer: "Tu lui parles dans un parking, sous un néon, sans promesse. Le lendemain, il dit oui, et le groupe sent qu'on lui a tout promis."}
+    right: {label: "Je ne le supplie pas", effects: {vestiaire: "+", tribunes: "-"}, answer: "Il choisit l'autre pays. Dans les journaux, trois colonnes sur la « fuite des talents », et ton nom dans la dernière."}
+
+  - id: ec.sl.prime_cachee
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction, sponsors, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un sponsor propose de payer une prime aux joueurs sans passer par la Fédération : en espèces, avant le match, sans reçu. Le capitaine t'en parle à voix basse, comme d'une bonne nouvelle."
+    left: {label: "J'accepte, en silence", effects: {vestiaire: "++", direction: "--"}, answer: "Les enveloppes circulent dans le tunnel, discrètement. Le jeu du groupe est limpide. La Fédération se doute de quelque chose."}
+    right: {label: "Tout passe par la Fédération", effects: {direction: "+", vestiaire: "-"}, answer: "Le capitaine remballe sa bonne nouvelle. Dans le groupe, on parle de « ceux qui ne comprennent pas le métier »."}
+
+  - id: ec.sl.deux_clans
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, rescue:vestiaire]
+    when: "flag('eclair') && (gauges.vestiaire < 50)"
+    cooldown: 26
+    text: "Deux clans dans le groupe : ceux du championnat national contre ceux qui jouent à l'étranger. Ils mangent à des tables différentes depuis lundi. Le médecin dit que ça se voit dans les jambes."
+    left: {label: "Je compose les tables", effects: {vestiaire: "++", tribunes: "-"}, answer: "Tu écris les noms sur des cartons, dans le couloir. Le soir, un joueur rit pour la première fois depuis lundi, à la table du fond."}
+    right: {label: "Ils sont adultes", effects: {tribunes: "+", vestiaire: "--"}, answer: "Le lendemain, les deux tables se sont éloignées d'un mètre. Le médecin note quelque chose sur son bloc, sans commentaire."}
+
+  - id: ec.sl.non_selection
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un défenseur appelle à minuit : il a appris sa non-sélection à la radio. Sa voix tremble, de colère ou d'autre chose. Quatre-vingts matches avec le maillot, et personne ne l'avait prévenu."
+    left: {label: "Je lui explique de vive voix", effects: {vestiaire: "+", direction: "-"}, answer: "Tu lui parles quarante minutes, assis dans ta cuisine, en pyjama. Il dit merci, et raccroche sans l'avoir pardonné."}
+    right: {label: "La liste est la liste", effects: {direction: "+", vestiaire: "--"}, answer: "Il raccroche sans dire un mot. Le lendemain, le groupe sait que tu ne rappelles pas les gens."}
+
+  - id: ec.sl.prime_president
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, tribunes, vestiaire, scandale]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le président de la Fédération s'est voté une prime de qualification, comme les joueurs. Le document fuit dans la presse du matin. Le groupe te regarde, comme si c'était toi qui l'avais signé."
+    left: {label: "Je prends mes distances", effects: {tribunes: "+", direction: "--"}, answer: "Tu dis à la presse que tu n'étais pas au courant. C'est vrai, et ça ne sert à rien. Le président ne t'appelle plus."}
+    right: {label: "Je ne dis rien", effects: {direction: "+", vestiaire: "-"}, answer: "Tu te tais. Dans le vestiaire, personne ne te parle de la prime, mais quelqu'un a collé un billet sur ton casier."}
+
+  - id: ec.sl.stage_altitude
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le stage d'altitude, trois jours sans connexion, coûte moins que l'hôtel de la capitale. Le médecin dit que c'est bon pour les poumons. Les joueurs : c'est loin de tout, ce qui est le but."
+    left: {label: "On part en altitude", effects: {caisse: "+", vestiaire: "-"}, answer: "Trois jours de brume, de pâtes, de silence. Un joueur écrit une lettre à sa mère, et on le voit sourire."}
+    right: {label: "On reste en ville", effects: {vestiaire: "+", caisse: "-"}, answer: "Le groupe dîne dehors le deuxième soir, discrètement. Le trésorier de la Fédération ne dit rien, il compte."}
+
+  - id: ec.sl.gardien_age
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le gardien titulaire a quarante ans, deux fautes de suite, une famille de supporters. Le remplaçant a vingt-trois ans et un regard de chien. Le premier ne dit rien. Le second demande à te voir."
+    left: {label: "Titulaire, le vieux", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le vieux met ses gants avec lenteur, comme on prête serment. Le jeune s'échauffe à l'autre bout du terrain, seul, face au mur."}
+    right: {label: "Titulaire, le jeune", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le jeune tremble au premier ballon, le tient au second. Le vieux reste debout contre le poteau, jusqu'à la fin de l'échauffement."}
+
+  - id: ec.sl.arbitre_hotel
+    roles: [selectionneur]
+    arc: arbitrage
+    tags: [arbitrage, direction, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "L'arbitre du match de samedi t'aborde à l'hôtel, un sourire trop large, des questions sur ta composition. Ton adjoint parle d'« une habitude du pays ». Le délégué fait semblant de n'avoir rien vu."
+    left: {label: "Je préviens le délégué", effects: {direction: "+", vestiaire: "-"}, answer: "Le délégué prend des notes, sans lever les yeux. Samedi, l'arbitre n'a pas un regard pour toi, et tout le monde le remarque."}
+    right: {label: "Je change d'hôtel", effects: {caisse: "-", vestiaire: "+"}, answer: "On déménage à minuit, valises en vrac. La Fédération paie la deuxième nuit, avec le soupir qu'il faut."}
+
+  - id: ec.sl.reception_ministre
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, presse, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le ministre des Sports t'invite à une réception à la capitale, la veille du match : des photos, des maires, un orchestre. Le groupe s'entraîne à la même heure, sans toi."
+    left: {label: "J'y vais en costume", effects: {direction: "++", vestiaire: "--"}, answer: "Tu serres cent mains, sans te rappeler un nom. Au retour, l'entraînement est fini, et le groupe t'attend en silence."}
+    right: {label: "Je reste avec le groupe", effects: {vestiaire: "+", direction: "-"}, answer: "Tu t'entraînes avec eux, en baskets, comme un adjoint. La Fédération n'est pas ravie, mais personne ne le dit."}
+
+  - id: ec.sl.dernier_match_veteran
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Le vétéran joue son dernier match en sélection : la foule le sait, le coach adverse le sait, lui seul prétend le contraire. Il demande à jouer quatre-vingt-dix minutes. Le jeune en demande dix."
+    left: {label: "Quatre-vingt-dix minutes", effects: {tribunes: "++", vestiaire: "-"}, answer: "Il joue tout, lentement, avec un geste de moins à chaque quart d'heure. Le stade se lève à la quatre-vingt-dixième."}
+    right: {label: "Je le sors à la soixantième", effects: {vestiaire: "+", tribunes: "--"}, answer: "Il sort sous les sifflets pour toi, et les applaudissements pour lui. Il te serre la main, sans trembler, avant de s'asseoir."}
+
+  - id: ec.sl.tresorier_fede
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, direction, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 45)"
+    cooldown: 26
+    text: "Le trésorier de la Fédération te rend la note du dernier stage : hôtel, avion, primes, statisticiens. Il a surligné en jaune « les poches de souplesse ». Il attend que tu dises laquelle."
+    left: {label: "Je réduis le staff", effects: {caisse: "+", vestiaire: "--"}, answer: "Deux noms disparaissent du tableau d'affichage, sans un mot. Le statisticien emporte ses écrans dans un carton."}
+    right: {label: "Je demande une rallonge", effects: {caisse: "++", direction: "-"}, answer: "Le trésorier transmet ta demande au président de la Fédération, avec son plus beau sourire. La rallonge arrive, attachée à un courrier."}
+
+  - id: ec.sl.pays_aeroport
+    roles: [selectionneur]
+    arc: tribunes
+    tags: [tribunes, direction, piege]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Le pays t'attend à l'aéroport après l'élimination : trois mille personnes, des écharpes et des banderoles, un silence qui pèse sur le hall. Tu peux sortir par le fond, ou le traverser."
+    left: {label: "Je traverse le hall", effects: {tribunes: "+++", direction: "--"}, answer: "Tu avances au milieu de la foule, personne ne siffle. À la sortie, un enfant te tend une écharpe, sans dire un mot."}
+    right: {label: "Je sors par le fond", effects: {direction: "+", tribunes: "---"}, answer: "Un employé t'ouvre une porte de service, entre deux palettes. Le lendemain, la une dit seulement : « Disparu »."}
+
+  - id: ec.sl.piege_capitaine
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, caisse, piege]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "La Fédération offre de doubler le budget du stage si tu retires le capitaine du groupe : il a critiqué le président dans un entretien. Elle précise que ce n'est pas une demande, plutôt une hypothèse."
+    left: {label: "Je retire le capitaine", effects: {caisse: "+++", vestiaire: "---"}, answer: "Le budget double le lendemain, noir sur blanc. Le capitaine apprend la nouvelle par le gardien, qui préférait ne pas la porter."}
+    right: {label: "Je garde mon capitaine", effects: {direction: "--", vestiaire: "++"}, answer: "La Fédération répond par un courrier de deux lignes. Le capitaine passe te voir à minuit, en tenue de sport, sans explication."}
+
+  - id: ec.sl.federation_audit
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair') && (gauges.direction < 60)"
+    cooldown: 26
+    text: "Le président de la Fédération veut ton plan pour les quatre ans qui viennent : dix pages, un chiffre par page. Il les lira dans son avion, ce soir, avant de décider de ton avenir."
+    left: {label: "Je rends dix pages chiffrées", effects: {direction: "++", vestiaire: "-"}, answer: "Tu écris jusqu'à trois heures du matin. Le président dit « bien » en tournant la dernière page, et ne dit pas de quoi."}
+    right: {label: "Je rends une page, la vérité", effects: {vestiaire: "+", direction: "--"}, answer: "Il lit la page debout dans le couloir. Il sourit, très poliment, et demande qui l'a aidé à l'écrire."}
+
+  - id: ec.sl.dejeuner_federal
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le déjeuner annuel de la Fédération : quatre-vingts convives, un plan de table, et toi à la droite du président, entre deux hommes qui ne se parlent pas. On attend que tu lèves ton verre."
+    left: {label: "Je porte le toast", effects: {direction: "+", vestiaire: "-"}, answer: "Tu parles de « famille » deux fois, de « rigueur » une. Les deux hommes ne se regardent pas, mais trinquent avec toi."}
+    right: {label: "Je laisse parler le chef", effects: {vestiaire: "+", direction: "-"}, answer: "Le président parle vingt minutes, sans te mentionner. À la fin, il lève son verre vers un autre convive, qui n'a rien dit."}
+
+  - id: ec.sl.stage_espoirs
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le staff veut ouvrir un stage de trois jours aux meilleurs espoirs du pays, en marge du groupe. Le groupe se sent surveillé ; le pays, lui, se sent regardé. Les parents attendent déjà dans le hall."
+    left: {label: "J'ouvre le stage", effects: {tribunes: "++", vestiaire: "-"}, answer: "Quarante gamins, quarante paires de chaussures neuves. Dans le couloir, le capitaine les regarde passer, et il en reconnaît un."}
+    right: {label: "Pas pendant la préparation", effects: {vestiaire: "+", tribunes: "-"}, answer: "Les parents repartent avec leurs enfants, déçus mais polis. Un père laisse un mot, que le staff recopie sur le tableau."}
+
+  - id: ec.sl.capitaine_micro
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, presse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le capitaine demande à parler à la presse à ta place, après l'élimination, devant tout le pays. Il dit qu'il en a le droit et que les autres sont d'accord. Tu lis la tension dans sa mâchoire."
+    left: {label: "Il parle, et je reste", effects: {vestiaire: "++", tribunes: "-"}, answer: "Il parle six minutes, très droit, sans une excuse. Le pays écoute surtout la fin, quand il remercie le staff d'un geste de la main."}
+    right: {label: "C'est à moi de parler", effects: {tribunes: "+", vestiaire: "--"}, answer: "Tu parles devant les caméras, la voix un peu rauque. Dans le couloir, le capitaine ne te regarde pas, et attend son tour de douche."}

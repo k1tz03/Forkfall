@@ -9,6 +9,7 @@ import 'annonce.dart';
 import 'condition.dart';
 import 'content.dart';
 import 'draw/director.dart';
+import 'eclair.dart';
 import 'effects.dart';
 import 'frise.dart';
 import 'match_direct.dart';
@@ -81,6 +82,12 @@ class Engine {
     }
     // Dossard du joueur : un nouvel appel, après tous les tirages existants (spec §2.5).
     if (post.role == 'joueur') entities.named['numero'] = '${rng.nextInt(30) + 1}';
+    // L'époque d'une carrière éclair (`annees:` du postulat) : UN tirage de plus, le
+    // dernier du départ, et pour les seuls postulats qui la déclarent — le flux d'une
+    // carrière de livre ne voit rien passer. L'année est donc une fonction de la
+    // graine : le défi du jour, le Code de Carrière et la sauvegarde la retrouvent.
+    final annees = post.annees;
+    final anneeDepart = annees == null ? post.year : rng.range(annees.first, annees.last);
     final p = normalizeName(prenom ?? '', max: 14);
     if (genre == 'f' || genre == 'm') {
       // Un genre choisi sans prénom saisi : le prénom tiré prend la liste de ce genre (« Chantal »
@@ -106,7 +113,7 @@ class Engine {
       season: 0,
       beat: 0,
       age: age,
-      year: post.year,
+      year: anneeDepart,
       role: post.role,
       gauges: Map.of(post.gauges),
       force: post.force,
@@ -131,6 +138,7 @@ class Engine {
       endingId: null,
       lastAnswer: null,
       over: false,
+      mode: post.mode,
     );
     // Âge et statut des personnages (spec variété §1.10) : posés depuis
     // characters.yaml, sans aucun tirage.
@@ -1002,19 +1010,25 @@ class Engine {
 
   void _checkEndings(GameState s) {
     if (s.over) return;
-    if (s.parole <= -5) {
+    // Le mode éclair ne connaît pas le grand déballage : la parole est un compteur
+    // que le joueur ne voit pas, et un fusible ne saute que par une jauge qu'on
+    // voit (mesuré sur 300 carrières : 7 % des fins d'un joueur au hasard, 18 %
+    // d'un joueur attentif, 37 % d'un joueur parfait — la première cause de mort
+    // de ceux qui jouent bien, sans qu'aucune carte l'ait annoncée).
+    if (s.parole <= -5 && s.mode != kModeEclair) {
       // Le grand déballage. En mode histoire, la parole à −5 n'arrête plus la
       // carrière toute seule : elle arme la scène du dossier (co.deballage,
       // servie à la carte suivante), et la fin ne tombe que si l'on dément —
       // ou si la parole retombe à −5 après qu'on a répondu une fois.
-      if (content.director.jaugesFatales || !director.armerDeballage(s)) {
+      if (jaugesMortelles(content, s) || !director.armerDeballage(s)) {
         s.endingId = 'grand_deballage';
         s.over = true;
       }
       return;
     }
-    // Le mode histoire : une jauge au bord n'arrête rien (DirectorConfig.jaugesFatales).
-    if (!content.director.jaugesFatales) return;
+    // Le mode histoire : une jauge au bord n'arrête rien (DirectorConfig.jaugesFatales) ;
+    // le mode éclair, lui, les rend mortelles (`jaugesMortelles`, eclair.dart).
+    if (!jaugesMortelles(content, s)) return;
     final role = content.roles[s.role]!;
     for (final g in role.gauges) {
       final v = s.gauges[g.id] ?? 50;
@@ -1905,8 +1919,10 @@ class Engine {
   }
 
   Pending _bilanCarrefour(GameState s, Rng rng) {
-    // Offer a transition if any is eligible and no gauge is under 20.
-    final anyLow = s.gauges.values.any((v) => v < 20) && s.parole < 3;
+    // Offer a transition if any is eligible and no gauge is under 20. Le mode éclair
+    // n'en offre aucune : un rôle, une carrière — et une transition recale les
+    // jauges à 50, ce qui ferait d'un Carrefour une porte de secours.
+    final anyLow = (s.gauges.values.any((v) => v < 20) && s.parole < 3) || s.mode == kModeEclair;
     final role = content.roles[s.role]!;
     final sp = _setpiece(s, 'bilan_carrefour', 'bilan', keep: (v) => v.transition != null);
     if (!anyLow) {

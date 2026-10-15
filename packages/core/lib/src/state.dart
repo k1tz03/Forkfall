@@ -3,6 +3,7 @@
 /// the reducer, so `apply` stays pure from the caller's point of view.
 library;
 
+import 'content.dart' show kModeEclair, kModeHistoire;
 import 'effects.dart';
 
 class Entities {
@@ -615,6 +616,14 @@ class GameState {
   /// la sauvegarde : une telle carrière sérialise exactement comme avant.
   List<TraceDirect> direct;
 
+  /// **Le mode de la carrière** (`kModeHistoire` ou `kModeEclair`, copié du
+  /// postulat au départ). Le mode histoire est le défaut et n'est JAMAIS
+  /// sérialisé : une carrière de livre, une sauvegarde, un golden s'écrivent
+  /// exactement comme avant que le mode existe. Seul le mode éclair laisse une
+  /// trace (`"mode": "eclair"`), et c'est elle qui rend les jauges mortelles
+  /// (`jaugesMortelles`, eclair.dart).
+  String mode;
+
   Pending? pending;
   String? endingId;
   String? lastAnswer;
@@ -694,6 +703,7 @@ class GameState {
     Map<String, CharState>? chars,
     List<String>? annonces,
     List<TraceDirect>? direct,
+    this.mode = kModeHistoire,
     required this.pending,
     required this.endingId,
     required this.lastAnswer,
@@ -792,6 +802,7 @@ class GameState {
         chars: chars.map((k, v) => MapEntry(k, v.clone())),
         annonces: List.of(annonces),
         direct: List.of(direct), // traces immuables : copie superficielle
+        mode: mode,
         pending: pending,
         endingId: endingId,
         lastAnswer: lastAnswer,
@@ -873,6 +884,7 @@ class GameState {
         'chars': {for (final k in chars.keys.toList()..sort()) k: chars[k]!.toJson()},
         'annonces': annonces,
         if (direct.isNotEmpty) 'direct': [for (final t in direct) t.toJson()],
+        if (mode != kModeHistoire) 'mode': mode,
         'pending': pending?.toJson(),
         'endingId': endingId,
         'lastAnswer': lastAnswer,
@@ -956,6 +968,7 @@ class GameState {
         chars: ((j['chars'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharState.fromJson((v as Map).cast<String, dynamic>()))),
         annonces: (j['annonces'] as List?)?.cast<String>(),
         direct: (j['direct'] as List?)?.map((e) => TraceDirect.fromJson((e as Map).cast<String, dynamic>())).toList(),
+        mode: j['mode'] == kModeEclair ? kModeEclair : kModeHistoire,
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
         endingId: j['endingId'] as String?,
         lastAnswer: j['lastAnswer'] as String?,

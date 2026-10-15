@@ -103,7 +103,14 @@
       var p = postulatDe(i), h = p && A.histoires && A.histoires[p.id];
       return (h && h.c) || "#F6E9CF";
     }
+    // le jour de Paris, comme le défi du Fusible (preview_eclair.js `jourDeParis`) : le livre du jour
+    // change à minuit chez nous, le même instant donne le même livre à tout le monde, et l'accueil
+    // ne montre jamais deux dates
     function aujourdhui() {
+      try {
+        var p = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+        if (/^\d{4}-\d{2}-\d{2}$/.test(p)) return p;
+      } catch (e) {}
       var d = new Date();
       return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
     }

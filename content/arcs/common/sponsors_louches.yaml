@@ -190,8 +190,11 @@ arcs:
     # Ses portes (un match vendu, des ampoules sans notice, un carton jaune à la
     # minute) ne s'ouvrent que chez l'intérimaire et le joueur : le moteur ne
     # lit pas `postulats` sur un événement, mais `simulate` en déduit les fins
-    # ouvertes à chaque postulat (co_radiation n'en est pas une du promu).
-    postulats: [interimaire, pepite, fin_de_contrat]
+    # ouvertes à chaque postulat (co_radiation n'en est pas une du promu). Le mode
+    # éclair du joueur y entre (`eclair_joueur`) : son programme tire `jp.sp.tripot`,
+    # qui pose `sp_tripot_service` ; une carrière éclair, elle, lit `postulats` sur
+    # les événements (Director.armEvents), et sans lui la commission n'y armerait jamais.
+    postulats: [interimaire, pepite, fin_de_contrat, eclair_joueur]
     foreground: false
     weight: 1.0
     once: true

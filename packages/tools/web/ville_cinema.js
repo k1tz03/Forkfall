@@ -78,6 +78,7 @@
     occupe = true; fermerPorte(); bulle = null; heros.chemin = null;
     var el = uiCine();
     el.style.setProperty("--cine", couleurCine());
+    el.classList.remove("fin");
     el.hidden = false;
     el.querySelector(".v-cine-boite").hidden = true;
     el.querySelector(".v-cine-titre").hidden = true;
@@ -417,7 +418,9 @@
     }
     CINE = null;
     if (el) {
+      // les bandes se retirent sur ce qui vient (la première carte, la ville) : le bouton « Passer » part d'abord
       el.classList.remove("on");
+      el.classList.add("fin");
       el.querySelector(".v-cine-boite").hidden = true;
       el.querySelector(".v-cine-titre").hidden = true;
       setTimeout(function () { if (!CINE) el.hidden = true; }, 380);
@@ -478,6 +481,16 @@
   }
 
   // ─── les conversations surprises
+  // L'intitulé d'un lieu (son nom et ce qu'on y voit, en haut, le temps d'entrer) et les mots qu'on
+  // surprend ne se lisent pas l'un sur l'autre (sur un écran de 360 px, ils tombaient au même
+  // endroit) : une conversation attend que l'intitulé s'efface, et sa bulle se tait le temps qu'il
+  // reste. Toucher quelqu'un, lui, fait taire l'intitulé (ville.js, toucherQuelquun).
+  var CARTOUCHE_VU = 0;
+  function cartoucheVisible() {
+    var el = $("villeLieu"), maintenant = performance.now();
+    if (el && el.classList.contains("on")) { CARTOUCHE_VU = maintenant; return true; }
+    return maintenant - CARTOUCHE_VU < 450;     // il s'efface en 0,35 s : la bulle attend la fin du fondu
+  }
   function convOk(cv) {
     if (S.convsVues && S.convsVues[cv.id]) return false;
     if (lieuFerme(cv.lieu)) return false;
@@ -551,6 +564,7 @@
     if (!proche && c.i >= 0) { if (ts - c.loin > 4000) finConv(); return; }
     c.loin = ts;
     if (c.i >= 0 && ts < c.jusqua) return;
+    if (cartoucheVisible()) return;
     c.i++;
     var r = c.cv.repliques[c.i];
     if (!r) { finConv(); return; }
@@ -577,6 +591,7 @@
   function guetterConv(ts) {
     if (ts - convT < 700) return;
     convT = ts;
+    if (cartoucheVisible()) return;
     var cv = convIci();
     if (!cv) return;
     var voix = convInstaller(cv), proche = false, hc = caseDe(heros.x, heros.y);
