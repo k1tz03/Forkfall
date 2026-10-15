@@ -165,7 +165,8 @@
     // 4. le match de la semaine
     var M = C.match;
     if (M) {
-      var adv = M.a || "les visiteurs", sc = M.gf + "–" + M.ga, jour = chMaj(JOUR_MOT[M.j] || "samedi");
+      // (le score ne se coupe pas entre deux lignes : un joint de mots autour du tiret)
+      var adv = M.a || "les visiteurs", sc = M.gf + "⁠–⁠" + M.ga, jour = chMaj(JOUR_MOT[M.j] || "samedi");
       var mot = M.l === "V" ? "victoire" : M.l === "D" ? "défaite" : "match nul";
       ajoute(M.l === "D" ? 58 : M.l === "V" ? 52 : 40, jour + ", " + mot + " " + sc + " contre " + adv + ".", chMaj(mot) + " " + sc + " contre " + adv, null, "match");
     }
@@ -281,10 +282,17 @@
     CHAP_DU = { recap: recap, paie: paie };
     S.chap = chCarnetNeuf();
   });
-  // le match du samedi : son résultat (celui que la ville met en scène) pour la Une ; sans score lisible, rien
-  crochetVille("match", function (M) {
-    if (!M || M.gf == null || M.ga == null) return;
-    chCarnet().match = { a: M.advVille, gf: M.gf, ga: M.ga, l: M.lettre, j: S.jour };
+  // le match du samedi, pour la Une. Son résultat n'est connu qu'à la fin (le samedi en direct le tire des
+  // décisions prises en jeu) : à la sortie du stade, la ville l'a déjà peint au mur (`S.panneau`) ; l'adversaire
+  // est celui du tableau (`M.advVille`, que le crochet « match » de celui qui le choisit a posé, quel que soit
+  // l'ordre des modules)
+  var CH_MATCH = null;
+  crochetVille("match", function (M) { CH_MATCH = M || null; });
+  crochetVille("apres_match", function () {
+    var P = S && S.panneau, M = CH_MATCH;
+    CH_MATCH = null;
+    if (!P || P.gf == null || P.ga == null) return;
+    chCarnet().match = { a: (M && (M.advVille || M.adv)) || "", gf: P.gf, ga: P.ga, l: P.gf > P.ga ? "V" : P.gf < P.ga ? "D" : "N", j: S.jour };
   });
   crochetVille("debut", function () {
     abonnerCh();
