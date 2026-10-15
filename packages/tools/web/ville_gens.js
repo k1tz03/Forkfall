@@ -276,15 +276,19 @@
   }
 
   // ─── le carnet : les gens, ce qu'on t'a confié, le climat, ce qu'on dit de toi
+  // Les onglets qu'un autre module ajoute (ville_dossier.js : le dossier 1974) : { cle, label, ouvrir }.
+  var ONGLETS_CARNET = [];
   function ongletsCarnet(actif) {
-    return '<div class="v-onglets" role="tablist"><button type="button" role="tab" data-onglet="gens"' + (actif === "gens" ? ' class="on" aria-selected="true"' : "") + '>Les gens</button>' +
-      '<button type="button" role="tab" data-onglet="biens"' + (actif === "biens" ? ' class="on" aria-selected="true"' : "") + '>Tes affaires</button></div>';
+    return '<div class="v-onglets' + (ONGLETS_CARNET.length ? " v-onglets-n" : "") + '" role="tablist"><button type="button" role="tab" data-onglet="gens"' + (actif === "gens" ? ' class="on" aria-selected="true"' : "") + '>Les gens</button>' +
+      '<button type="button" role="tab" data-onglet="biens"' + (actif === "biens" ? ' class="on" aria-selected="true"' : "") + '>Tes affaires</button>' +
+      ONGLETS_CARNET.map(function (o) { return '<button type="button" role="tab" data-onglet="' + o.cle + '"' + (actif === o.cle ? ' class="on" aria-selected="true"' : "") + '>' + esc(o.label) + '</button>'; }).join("") + '</div>';
   }
   function brancherOnglets() {
     document.querySelectorAll(".v-onglets [data-onglet]").forEach(function (b) {
       b.addEventListener("click", function () {
         if (b.classList.contains("on")) return;
-        if (b.getAttribute("data-onglet") === "gens") ouvrirCarnet(); else ouvrirInventaire();
+        var cle = b.getAttribute("data-onglet"), o = ONGLETS_CARNET.filter(function (x) { return x.cle === cle; })[0];
+        if (o) o.ouvrir(); else if (cle === "gens") ouvrirCarnet(); else ouvrirInventaire();
       });
     });
   }

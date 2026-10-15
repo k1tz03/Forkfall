@@ -179,6 +179,11 @@ String _view() {
       'ville': s.entities.named['ville'] ?? '',
       'rival': s.entities.named['rival'] ?? '',
     },
+    // TES FANTÔMES (docs/histoires/fantomes.md) : les noms des carrières d'avant
+    // (`{fantome_h4}`, `{fantome_h4_annees}`), que la ville rend dans ses textes comme les cartes.
+    'fantomes': {
+      for (final k in (s.entities.named.keys.where((k) => k.startsWith('fantome_')).toList()..sort())) k: s.entities.named[k],
+    },
     // LA JOURNÉE DE CHAMPIONNAT, et il n'y en a qu'une. Elle vient du monde
     // simulé (`world.blocks` × six), pas du calendrier des beats : le « J » du
     // bandeau comptait ici les cartes de vestiaire comme des matchs et montait
@@ -411,6 +416,19 @@ void main() {
       'fusibleBanqueroute'.toJS,
       (() {
         _state = _engine.banqueroute(_state!);
+        return _view().toJS;
+      }).toJS);
+  // TES FANTÔMES ET LE DOSSIER 1974 (preview_dossier.js ; docs/histoires/fantomes.md,
+  // dossier_1974.md) : ce que la page garde des carrières d'avant, posé au début d'une carrière
+  // — `{"drapeaux": [...], "noms": {...}}` → `Engine.heritage` (des drapeaux `fantome_*` et
+  // `dossier_*`, des noms ; aucun tirage). Rend la vue.
+  globalContext.setProperty(
+      'fusibleHeritage'.toJS,
+      ((JSString j) {
+        final m = (jsonDecode(j.toDart) as Map).cast<String, dynamic>();
+        _state = _engine.heritage(_state!,
+            drapeaux: ((m['drapeaux'] as List?) ?? const []).map((e) => e.toString()),
+            noms: ((m['noms'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())));
         return _view().toJS;
       }).toJS);
   // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de

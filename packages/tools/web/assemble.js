@@ -37,11 +37,11 @@ const ROOT = path.resolve(HERE, '..', '..', '..');
 const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web');
 // Les modules de la ville, insérés dans la fermeture de ville.js (au repère
 // /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
-const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js'];
+const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_dossier.js'];
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = [];
+const PREVIEW_MODULES = ['preview_dossier.js'];
 
 // Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
 // un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
@@ -152,7 +152,10 @@ function main() {
       }
       return src;
     });
-    tpl = tpl.split(repere).join(srcs.join('\n').split('</script').join('<\\/script'));
+    // le dernier repère seulement : le gabarit le cite aussi dans un commentaire (« les crochets »),
+    // où un module inséré casserait la page
+    const k = tpl.lastIndexOf(repere);
+    tpl = tpl.slice(0, k) + srcs.join('\n').split('</script').join('<\\/script') + tpl.slice(k + repere.length);
   }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
