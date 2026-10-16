@@ -184,6 +184,25 @@ def largeur_ms(x, largeur):
     return np.stack([m + s, m - s], axis=1).astype(np.float32)
 
 
+def par_blocs(x, f, bloc=20 * SR, marge=1024):
+    """Applique `f` (qui rend autant d'échantillons qu'elle en reçoit) par blocs de
+    `bloc` échantillons, chacun lu avec `marge` échantillons de contexte de chaque côté
+    (les filtres de suréchantillonnage n'en voient qu'une vingtaine) : le résultat est
+    celui d'un seul appel, la mémoire reste bornée (un master de douze minutes
+    suréchantillonné ×4 d'un coup pèserait plusieurs gigaoctets)."""
+    n = len(x)
+    if n <= bloc + 2 * marge:
+        return f(x)
+    morceaux = []
+    for a in range(0, n, bloc):
+        b = min(n, a + bloc)
+        a0 = max(0, a - marge)
+        b0 = min(n, b + marge)
+        y = f(x[a0:b0])
+        morceaux.append(y[a - a0:a - a0 + (b - a)])
+    return np.concatenate(morceaux)
+
+
 # ---------------------------------------------------------------------------------
 # La couleur : saturation
 
@@ -192,6 +211,8 @@ def saturer(x, drive=2.0, melange=1.0, asymetrie=0.0, surech=2):
     ajoute des harmoniques paires (la lampe, la bande) ; niveau compensé."""
     if drive <= 0 or melange <= 0:
         return x
+    if len(x) > 20 * SR + 2048:
+        return par_blocs(x, lambda y: saturer(y, drive, melange, asymetrie, surech))
     y = signal.resample_poly(x, surech, 1, axis=0) if surech > 1 else np.asarray(x, np.float64)
     d = 1.0 + drive
     sat = (np.tanh(d * (y + asymetrie)) - np.tanh(d * asymetrie)) / np.tanh(d)
@@ -236,6 +257,8 @@ def compresseur(x, seuil=-18.0, ratio=3.0, attaque=0.01, relache=0.15, genou=6.0
 def crete_par_echantillon(x, surech=4):
     """La crête vraie (ITU-R BS.1770, suréchantillonnage ×4) de chaque échantillon,
     tous canaux confondus."""
+    if len(x) > 20 * SR + 2048:
+        return par_blocs(x, lambda y: crete_par_echantillon(y, surech))
     y = signal.resample_poly(x, surech, 1, axis=0, window=('kaiser', 8.0))
     a = np.abs(y)
     if a.ndim == 2:
@@ -274,6 +297,8 @@ def limiteur(x, plafond_db=-1.2, anticipation=0.002, relache=0.06, sr=SR):
 def ecreteur_doux(x, seuil_db=-3.0, surech=4):
     """Arrondit les crêtes au-dessus de `seuil_db` (tanh au-delà du seuil), sans
     toucher au reste : une saturation qui ne s'entend que sur les coups."""
+    if len(x) > 20 * SR + 2048:
+        return par_blocs(x, lambda y: ecreteur_doux(y, seuil_db, surech))
     s = gain(seuil_db)
     y = signal.resample_poly(x, surech, 1, axis=0)
     a = np.abs(y)
