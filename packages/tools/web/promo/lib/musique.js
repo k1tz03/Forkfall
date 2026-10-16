@@ -110,7 +110,8 @@ function masterDe(cle) {
 // sont celles du second passage ; le premier est le même, L échantillons plus tôt. `n` mesures :
 // n + 1 barres (la dernière ferme la dernière mesure).
 function barresMaster(ms, depuis, fois, n) {
-  let debut = 0;
+  // (sans section : la première barre du master, celle de l'introduction, ou du corps s'il n'y en a pas)
+  let debut = ms.intro.length ? ms.intro[0].debut : ms.corps[0].debut - ms.L;
   if (depuis != null) {
     const dans = ms.intro.filter((s) => s.nom === depuis), corps = ms.corps.filter((s) => s.nom === depuis);
     const s = (dans.length ? dans : corps)[fois || 0];
@@ -184,7 +185,8 @@ function mesuresPour(theme, s, o) {
   const de = o.de || 0;
   let t;
   if (ms) {
-    const b = barresMaster(ms, o.depuis == null ? null : o.depuis, o.fois, de + Math.ceil(s / 1.2) + 4);
+    // (assez de barres pour `s` secondes, même à des mesures d'une demi-seconde)
+    const b = barresMaster(ms, o.depuis == null ? null : o.depuis, o.fois, de + Math.ceil(s / 0.5) + 4);
     t = b.map((v) => (v - b[de]) / ms.sr).slice(de);
   } else {
     const M = 240 / bpmDe(theme);

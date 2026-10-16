@@ -21,8 +21,9 @@ module.exports = bandeDeLivre({
   theme: 'livre_h2',
   extraits: {
     // le parking à 6 h 40, la place peinte, le ticket, le sapin ; puis le bureau noir, le répondeur
-    // (l'aperçu de l'App Store le prend au répondeur : sa légende parle du répondeur)
-    a: { fichier: '${SP}/agents/lot-films-r1/extraits/lundi_sept_heures.{format}.mp4', de: 0, pose: 5.6, duree: 7.2, deCourt: 4.5 },
+    // (l'aperçu de l'App Store le prend après le carton de lieu et avant la réplique du répondeur :
+    // il n'a que la colonne du milieu du 9:16, une ligne de texte large y perdrait ses bords)
+    a: { fichier: '${SP}/agents/lot-films-r1/extraits/lundi_sept_heures.{format}.mp4', de: 0, pose: 5.6, duree: 7.2, deCourt: 2.5 },
     // (une seconde de noir d'abord) la lumière de l'eau au plafond, puis les ronds sur la Rive
     b: { fichier: '${SP}/extraits/sapin_dans_la_rive.{format}.mp4', de: 1.0, pose: 3.4, duree: 6.1 },
   },
@@ -30,13 +31,12 @@ module.exports = bandeDeLivre({
   cartes: { deux: 'en.h2.rep.message1', trois: 'en.h2.berl.trois_metres' },
   lieux: { jour: 'clubhouse', nuit: 'terminus' },
   legendes: {
-    // (après le carton de lieu du film, « Aubérive, parking du stade », qui s'efface à 2,2 s)
-    promesse: { titre: 'Remercié après huit journées', sous: "personne ne l'a vu partir", de: 2.2 },
+    // (après le carton de lieu du film, « Aubérive, parking du stade », qui s'efface vers 2,4 s)
+    promesse: { titre: 'Remercié après huit journées', sous: "personne ne l'a vu partir", de: 2.5 },
     intro: { titre: 'On te donne son banc', sous: 'pour six semaines' },
     carte: { titre: "Sa voiture n'a pas bougé", sous: 'un sapin en carton au rétroviseur' },
     ville: { titre: 'Aubérive, 1990', sous: 'tout le monde le connaissait' },
-    // (en 16:9, le sous-titre du répondeur passe en bas au milieu : la légende monte)
-    objet: { titre: 'Chaque lundi, sept heures', sous: 'le répondeur a un message de lui', position: { '16x9': 'haut' } },
+    objet: { titre: 'Chaque lundi, sept heures', sous: 'le répondeur a un message de lui' },
     nuit: { titre: 'La nuit, sa voiture bouge', sous: 'de trois mètres' },
     choix: { titre: 'Parler, ou te taire ?' },
     fin: { titre: 'Une nuit, la place est vide.' },

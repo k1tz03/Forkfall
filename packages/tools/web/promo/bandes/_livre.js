@@ -57,7 +57,10 @@ module.exports = function bandeDeLivre(P) {
   const L = P.legendes || {};
   const ECRAN = { '9x16': 'ecran', '16x9': { mode: 'ecran' }, '4x5': 'ecran' };
   const VILLE = { '16x9': { mode: 'ecran' } };
-  const A_DROITE = { '16x9': 'droite' }, FILM_BAS = { '16x9': 'bas-gauche' };
+  // (sur un film en 16:9, la légende en haut : la trousse du cinéma pose son carton de lieu en bas à
+  // gauche et ses répliques en bas au milieu ; en portrait, son carton de lieu est en haut à gauche —
+  // une bande en éloigne sa légende par `de`, `a` ou `position`, extrait par extrait)
+  const A_DROITE = { '16x9': 'droite' }, FILM_BAS = { '16x9': 'haut' };
   const leg = (x, pos) => (x ? Object.assign({ position: pos }, typeof x === 'string' ? { titre: x } : x) : undefined);
   const G = P.graine, I = P.index;
   const aCarte = (prefixe, sens, sauter) => depart(I, G).concat([['avancer', 'v.card.id.indexOf(' + JSON.stringify(prefixe) + ') === 0', { reponses: sens || 'gauche', saute: sauter || 0 }],

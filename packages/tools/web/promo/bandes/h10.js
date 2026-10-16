@@ -12,6 +12,8 @@
 'use strict';
 const bandeDeLivre = require('./_livre');
 
+const BAS_PORTRAIT = { '9x16': 'bas', '4x5': 'bas' };
+
 module.exports = bandeDeLivre({
   id: 'h10',
   livre: 'escalier_ferme', index: 9, graine: 4242,
@@ -26,15 +28,18 @@ module.exports = bandeDeLivre({
   cartes: { deux: 'pr.h10.pro6_septembre', trois: 'pr.h10.a1_marche' },
   lieux: { jour: 'buvette', nuit: 'clubhouse' },
   legendes: {
-    promesse: { titre: 'Deux téléphones', sous: 'un pour la ville, un pour les autres' },
+    // (les cinq premières secondes de l'extrait portent le carton de lieu du film, « Aubérive, le
+    // club-house », en haut à gauche en portrait : les légendes du film A descendent)
+    promesse: { titre: 'Deux téléphones', sous: 'un pour la ville, un pour les autres', position: BAS_PORTRAIT },
     intro: { titre: "Les socios t'ont élue", sous: 'sur une seule promesse : monter' },
     carte: { titre: 'Monter avant 2040', sous: 'avant que la porte se ferme' },
     ville: { titre: 'Aubérive, 2037', sous: 'trois saisons avant la loi' },
-    objet: { titre: 'Une marche murée par mois', sous: '« par sécurité »' },
+    objet: { titre: 'Une marche murée par mois', sous: '« par sécurité »', position: BAS_PORTRAIT },
     nuit: { titre: 'Le clapet sonne la nuit', sous: 'pour ceux qui ont payé ta campagne' },
     choix: { titre: 'Monter, ou rester en bas ?' },
     fin: { titre: "Ce n'est pas le tien." },
     carte2Ecran: '« Ici Madame Septembre. »',
     finEcran: "Un second clapet. Pas le tien.",
   },
+  legendesCourt: { objet: { titre: 'Une marche murée par mois', sous: '« par sécurité »', position: 'bas' } },
 });

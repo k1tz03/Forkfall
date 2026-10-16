@@ -32,7 +32,8 @@ module.exports = bandeDeLivre({
     objet: { titre: 'Chaque mois, la maquette change', sous: 'le stade y rétrécit' },
     nuit: { titre: 'Le Conseil sait où tu dors', sous: 'ce que tu dois, ce que tu as signé' },
     choix: { titre: 'Tu as signé, ce jour-là ?' },
-    fin: { titre: 'Toute en bois, de 1931.' },
+    // (le film y pose son carton « 3 h 40 », en haut à gauche en portrait : la légende descend)
+    fin: { titre: 'Toute en bois, de 1931.', position: { '9x16': 'bas', '4x5': 'bas' } },
     carte2Ecran: '« Ici le Conseil. »',
     finEcran: 'La tribune Est, chêne de 1931',
   },
