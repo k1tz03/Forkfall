@@ -694,7 +694,9 @@
       { de: 11.0, a: 16.8, decor: "boulangerie", entree: "fondu", transition: 0.8, fixe: 3.6,
         camera: { pos: function (l) { var k = l / 5.8, a = -0.02 + l * 0.04, h = 1.56 - l * 0.045, R = 0.3 - l * 0.01; return [-0.64 + 0.02 * k + Math.sin(a) * R, 0.96 + h, -1.66 - 0.06 * k + Math.cos(a) * R]; },
           cible: K_cles([[0, [-0.64, 0.96, -1.66]], [5.8, [-0.62, 0.96, -1.72]]], "lin"), fov: 60, epaule: 0.06 },
-        look: { exposition: 1.05 } },
+        // en 16:9, la fenêtre monte un peu : le col et la pointe des ciseaux restent dans la
+        // bande (le bas de la chemise, lui, peut sortir)
+        cadrage: { paysage: { y: 0.3 } }, look: { exposition: 1.05 } },
       // 4 · la photo de Kévin au-dessus de la caisse, puis le sac à pain
       { de: 16.8, a: 23.0, decor: "boulangerie", entree: "coupe", fixe: 2.4,
         camera: { pos: K_cles([[0, [-2.8, 1.66, 2.62]], [3.0, [-2.74, 1.62, 2.56]], [6.2, [-2.1, 1.78, 2.85]]], "douce"), cible: K_cles([[0, [-3.48, 1.65, 2.86]], [3.0, [-3.48, 1.62, 2.82]], [6.2, [-2.88, 1.08, 2.1]]], "douce"), fov: K_cles([[0, 30], [3.0, 30], [6.2, 52]]), epaule: 0.12 },
