@@ -118,9 +118,9 @@
       c1:      { inst: 'supersaw', vol: 0.09, scies: 5, desaccord: 18, large: 0.7, rev: 0.4, pompe: true, filtre: 2000, env: [0.5, 1, 0.85, 0.3] },
       c2:      { inst: 'supersaw', vol: 0.09, scies: 5, desaccord: 18, large: 0.7, rev: 0.4, pompe: true, filtre: 2000, env: [0.5, 1, 0.85, 0.3] },
       c3:      { inst: 'supersaw', vol: 0.09, scies: 5, desaccord: 18, large: 0.7, rev: 0.4, pompe: true, filtre: 2000, env: [0.5, 1, 0.85, 0.3] },
-      sh_bas:  { inst: 'vox', vol: 0.09, oct: 3, plancher: 'Bb3', voyelle: 'ou', rev: 0.5, filtre: 150, env: [0.4, 1, 0.9, 0.3] },
-      sh_mil:  { inst: 'vox', vol: 0.09, oct: 4, plancher: 'Bb4', voyelle: 'ou', rev: 0.5, filtre: 3000, env: [0.4, 1, 0.9, 0.3] },
-      sh_haut: { inst: 'vox', vol: 0.09, oct: 5, plancher: 'Bb5', voyelle: 'ou', rev: 0.5, filtre: 3000, env: [0.4, 1, 0.9, 0.3] },
+      sh_bas:  { inst: 'vox', vol: 0.09, oct: 3, plancher: 'Bb3', voyelle: 'eu', rev: 0.5, filtre: 150, env: [0.4, 1, 0.9, 0.3] },
+      sh_mil:  { inst: 'vox', vol: 0.09, oct: 4, plancher: 'Bb4', voyelle: 'eu', rev: 0.5, filtre: 3000, env: [0.4, 1, 0.9, 0.3] },
+      sh_haut: { inst: 'vox', vol: 0.09, oct: 5, plancher: 'Bb5', voyelle: 'eu', rev: 0.5, filtre: 3000, env: [0.4, 1, 0.9, 0.3] },
       pedale:  { inst: 'reese', vol: 0.07, desaccord: 10, chaleur: 1.5, pompe: true },
       batt:    { vol: 0.42, porte: 0.3, tenue: 0.25, rev: 0.25, filtre: 15000 }
     },
