@@ -422,19 +422,25 @@ Pour un thème `<clé>`, `rendre.py` écrit dans le dossier de sortie :
   "bpm": 96, "mesure": "4/4", "mesure_s": 2.5, "frequence": 44100,
   "tonalite": "ré mineur", "moment": "…", "humeur": "…", "ville": false,
   "intro": {"debut": 0, "fin": 220500},
-  "boucle": {"debut": 4048064, "fin": 7875628},
+  "boucle": {"debut": 3866074, "fin": 7511648},
   "sections": [
     {"nom": "intro", "debut": 0, "fin": 220500, "intro": true, "reprise": false, "rang": 0, "mesures": 2},
-    {"nom": "A1", "debut": 4048064, "fin": 4489064, "intro": false, "reprise": true, "rang": 0, "mesures": 4}
+    {"nom": "A1", "debut": 3866074, "fin": 4307074, "intro": false, "reprise": true, "rang": 0, "mesures": 4},
+    {"nom": "A2", "debut": 4307074, "fin": 4748074, "intro": false, "reprise": true, "rang": 1, "mesures": 4},
+    {"nom": "B", "debut": 5189074, "fin": 6134074, "intro": false, "reprise": true, "rang": 3, "mesures": 10},
+    {"nom": "D2", "debut": 7257913, "fin": 7511648, "intro": false, "reprise": true, "rang": 6, "mesures": 2}
   ],
   "reprise": {"sauf": []},
-  "lufs": -16.0, "lufs_master": -16.02, "crete_dbtp": -1.2,
-  "duree_s": 184.3, "boucle_s": 86.8, "boucle_min_s": 0, "echantillons": 8128000,
-  "rendu": {"secondes": 95.2, "secondes_par_minute": 31.0, "pistes": [{"segment": "corps", "piste": "cors", "secondes": 1.1, "lufs": -16.7}]}
+  "lufs": -16.01, "lufs_master": -16.08, "crete_dbtp": -1.2,
+  "duree_s": 184.332, "boucle_s": 82.666, "boucle_min_s": 0, "echantillons": 8129048,
+  "gain_master_db": -1.59, "duree_rendu_s": 173.7,
+  "rendu": {"secondes": 173.7, "secondes_par_minute": 56.5,
+            "pistes": [{"segment": "corps", "piste": "cors", "secondes": 5.76, "lufs": -15.8}]}
 }
 ```
 
-  Toutes les positions sont des **indices d'échantillons dans le master**. `intro` est
+  (L'exemple omet trois sections.) Toutes les positions sont des **indices
+  d'échantillons dans le master**. `intro` est
   l'introduction ; `boucle` est le **second passage** du corps : ses premiers
   échantillons portent la queue de la fin du corps (les réverbes, les notes qui
   sonnent encore), si bien que boucler `boucle.fin → boucle.debut` est **exactement**
@@ -465,20 +471,35 @@ identique au bit à la fin du premier.
   rendue dans un FluidSynth neuf (un synthé qui a déjà joué gardait des états :
   −90 dB d'écart d'un rendu à l'autre, −30 dB après une autre piste). Deux rendus de la
   démonstration sont identiques au bit (§ 9).
-- **La vitesse** : de 30 à 40 secondes de calcul par minute de master sur la machine
-  partagée (le rendu d'une piste prend de 0,1 à 1,2 s par minute ; la chaîne du master
-  et les salles, le reste).
+- **La vitesse et la mémoire**, mesurées sur la machine partagée (quatre cœurs, charge 6
+  à 9) : la démonstration (87,7 s de musique, 184 s de master) se rend en 174 à 186 s
+  (≈ 56 s de calcul par minute de master, ≈ 2 min par minute de musique), mémoire de
+  pointe 3,4 Go ; le modèle (21,8 s de boucle, 58 s de master) en 26 à 31 s, 0,8 Go.
+  Le rendu des pistes n'en prend qu'un tiers (55 s pour la démonstration) ; le reste
+  est la chaîne du master (≈ 4 s par minute d'audio, passée sur l'extrait de la boucle
+  jusqu'à ce que la sonie tombe à 0,02 LU de la cible, puis sur les deux lignes de
+  temps), les bus et les salles. Un thème de ville de quatre minutes se rend en six à
+  huit minutes : on travaille par sections (`--sections`), on rend le tout à la fin.
 
 ## 9. La démonstration
 
-`partitions/demo_studio.py`, environ 90 secondes (une introduction de 5 s, un corps
-de 87 s) : (a) un crescendo épique hybride — ostinato des violoncelles et contrebasses
+`partitions/demo_studio.py`, 87,7 secondes (une introduction de 5 s, un corps de
+82,7 s) : (a) un crescendo épique hybride — ostinato des violoncelles et contrebasses
 en doubles croches, l'appel aux quatre cors, taiko et timbales, le « braam », le chœur,
 la sous-basse ; (b) les néons — basse en scie qui pompe, arpège en écho, caisse claire
 « gated », le même appel au lead analogique ; (c) la place — pizzicati, flûtes et
 clarinettes, glockenspiel, basse qui rebondit, batterie légère, cadence bVI – bVII – I ;
-(d) le tutti final et la tierce picarde. Les mesures du banc et les chemins des fichiers
-rendus sont dans le rapport du lot studio.
+(d) le tutti final et la tierce picarde. Le banc :
+
+```
+demo_studio « La démonstration du studio »  boucle -16.01 LUFS · master -16.08 · court terme -21.7..-13.1 · crête -1.20 dBTP
+  bandes <250 48 % · 250–2k 48 % · 2–6k 3.1 % · >6k 0.7 % · stéréo côtés/milieu -5.3 dB, corr. 0.543 (grave 0.923)
+  couture : écart -240.0 dB, saut +1.34 dB, spectre 8.05 dB, clic ×1.0 · durée 184.3 s, boucle 82.7 s · rendu 56.5 s/min
+  sonie ✓ · crête ✓ · médium ✓ · aigus ✓ · couture ✓ · grave au milieu ✓
+  sections : intro(i) -25.6, A1 -20.6, A2 -16.4, A3 -14.2, B -18.1, C -16.1, D1 -13.6, D2 -14.0
+```
+
+Deux rendus successifs de la démonstration donnent deux WAV identiques au bit.
 
 ## 10. Ce qui sonne encore artificiel, et comment l'éviter
 

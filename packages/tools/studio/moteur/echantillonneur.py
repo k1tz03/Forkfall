@@ -162,8 +162,10 @@ class _Cache:
         return v
 
 
-_FICHIERS = _Cache(1_500_000_000)
-_TRANSPOSES = _Cache(1_500_000_000)
+# deux caches d'un gigaoctet au plus chacun (un thème de quatre minutes tient alors en
+# trois à quatre gigaoctets de mémoire) ; leur taille ne change rien au son
+_FICHIERS = _Cache(1_000_000_000)
+_TRANSPOSES = _Cache(1_000_000_000)
 
 
 def _accords():

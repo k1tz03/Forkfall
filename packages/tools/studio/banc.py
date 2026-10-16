@@ -78,7 +78,8 @@ def couture(x, rep):
     premier (si elles sont identiques, sauter de `fin` à `debut` revient à jouer la
     suite naturelle : la couture est parfaite) ; (2) le saut de niveau et de spectre
     entre les 400 ms avant `fin` et les 400 ms après `debut` ; (3) le clic : le saut
-    d'échantillon au raccord comparé aux plus grands sauts voisins."""
+    d'échantillon au raccord comparé au saut naturel au même instant dans le master
+    continu (de `debut - 1` à `debut`) : 1,00 = le raccord est la transition même."""
     d, f = rep['boucle']['debut'], rep['boucle']['fin']
     L = min(SR, d)
     ecart = float(np.abs(x[f - L:f] - x[d - L:d]).max()) if L > 0 else 0.0
@@ -90,10 +91,11 @@ def couture(x, rep):
         return -0.691 + 10 * np.log10(max(float((k ** 2).sum(axis=1).mean()), 1e-15))
     saut = lufs_court(apres) - lufs_court(avant)
     spectre = float(np.sqrt(np.mean((_tiers_octave(apres) - _tiers_octave(avant)) ** 2)))
-    raccord = np.abs(x[d] - x[f - 1]).max()
-    voisins = np.abs(np.diff(x[f - 2048:f], axis=0)).max()
+    raccord = float(np.abs(x[d] - x[f - 1]).max())
+    naturel = float(np.abs(x[d] - x[d - 1]).max()) if d > 0 else raccord
+    clic = raccord / naturel if naturel > 1e-9 else (1.0 if raccord < 1e-9 else float('inf'))
     return {'ecart_db': round(float(dsp.db(ecart)), 1), 'saut_db': round(float(saut), 2),
-            'spectre_db': round(spectre, 2), 'clic': round(float(raccord / max(voisins, 1e-9)), 2)}
+            'spectre_db': round(spectre, 2), 'clic': round(clic, 2)}
 
 
 def mesures_par_mesure(x, rep):
