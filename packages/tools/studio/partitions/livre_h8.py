@@ -52,7 +52,7 @@ LA CARTE (110 à la noire ; une mesure = 2,18 s ; le corps boucle : 112 mesures,
   D1   8 m.  1:10  « Fin de cycle » : le sommet — deux canons, cors, trombones, violoncelles,
                    timbales, triolets aux violons ; le dernier temps se tait              8
   S1   8 m.  1:27  « C'était lundi » : l'arc (on arrache l'oreillette), la cymbale frottée,
-                   le verre ; la voix au loin, un violoncelle répond ; presque vide  1 → 2
+                   le verre ; la voix très loin, un violoncelle répond ; presque vide    1
   A3   8 m.  1:45  « Six heures dix », encore : le lendemain, la machine seule ; la voix
                    se tait                                                                3
   F1   8 m.  2:02  « Les projecteurs » : trémolos très haut, pizzicati en triolets, les cors
@@ -63,8 +63,8 @@ LA CARTE (110 à la noire ; une mesure = 2,18 s ; le corps boucle : 112 mesures,
   C2   8 m.  2:55  « La voix d'ailleurs », encore : le chœur, les timbales            7
   D2   8 m.  3:12  « Six heures et demie » : le second sommet ; l'horloge sonne six coups
                    (cloches tubulaires), puis la demie : la tête, à l'autre bout du triton 8 → 9
-  S2   8 m.  3:29  « Deux heures » : la voix seule, tout près, le motif ; le cor répond de
-                   très loin ; presque vide                                          1 → 2
+  S2   8 m.  3:29  « Deux heures » : la voix seule, tout près, chuchote le motif ; le cor
+                   répond de très loin ; presque vide                                1 → 2
   R    8 m.  3:47  « On recommence » : la grosse caisse, la montée vers A1              4
   Les deux fenêtres presque vides (S1, S2) tombent à 2 min 02 l'une de l'autre : sept sections
   de part et d'autre, chacune juste après un sommet (après un moment lourd, le silence).
@@ -528,7 +528,7 @@ def D2(s):
 # --- S : les silences ------------------------------------------------------------------------------
 @theme.section('S1', mesures=8)
 def S1(s):
-    nuances(s, verre='mp', voix_loin='f', celles='mf', basses='p', archet='mf')
+    nuances(s, verre='mp', voix_loin='p', celles='p', basses='p', archet='mf')
     # on arrache l'oreillette : l'arc, puis presque rien
     arc.poser(s, 0, impact=True, vel=112)
     s.note(archet, 'C4', 0.5, 8, vel=66)
@@ -536,7 +536,8 @@ def S1(s):
     s.note(verre, 'A4', 0.5, s.m(7) - 0.5, vel=58)
     s.note(verre, 'E5', 0.5, s.m(7) - 0.5, vel=54)
     s.diminuendo(verre, s.m(1), s.m(7), 'mp', 'p')
-    # la voix, au loin ; un violoncelle seul répond une mesure plus tard
+    # la voix, très loin (un fantôme dans l'oreillette arrachée) ; un violoncelle seul répond une
+    # mesure plus tard
     canon(s, TETE, 4, [(celles, 0, 78)], voix_piste=voix_loin, vel_voix=86, machine=False)
     # m. 7–8 : la pulsation revient, pizzicato
     croches(s, basses, vel=64, art='pizzicato', de=7, a=8)
@@ -545,7 +546,7 @@ def S1(s):
 
 @theme.section('S2', mesures=8)
 def S2(s):
-    nuances(s, verre='p', voix='mp', voix_f1='mf', voix_f2='mf', cor_loin='mf', basses='p', sub='mp',
+    nuances(s, verre='pp', voix='p', voix_f1='mp', voix_f2='mp', cor_loin='mp', basses='p', sub='mp',
             vibra='pp', timbales='p', archet='mf')
     # le premier temps marqué, très doux (le jeu peut reprendre ici) : une timbale, une lame
     s.note(timbales, 'A2', 0, 1, vel=70)
@@ -555,7 +556,7 @@ def S2(s):
     s.note(sub, 'A1', 0, s.m(7), vel=52)
     for h in ('A4', 'E5'):                      # la quinte à vide : rien sous « do si »
         s.note(verre, h, 0, s.m(7), vel=54)
-    # deux heures : la voix seule, tout près, le motif ; le cor répond de très loin
+    # deux heures : la voix seule, tout près, elle chuchote le motif ; le cor répond de très loin
     canon(s, MOTIF, 2, [(cor_loin, 0, 76)], vel_voix=90)
     # m. 7–8 : les triolets reviennent
     triolets_machine(s, vibra, vel=56, de=7, a=8)
