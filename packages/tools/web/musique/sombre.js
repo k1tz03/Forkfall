@@ -3,7 +3,8 @@
  * un événement noir.
  *
  * La crispation. Une cellule, la nuit : un cœur qui bat (la grosse caisse et
- * un tom, lent puis pressé), une goutte qui tombe sur deux notes — ré, mi
+ * un tom, un ré sourd sous le premier coup ; lent puis pressé), un bourdon de
+ * ré tout au fond quand l'harmonie y repose, une goutte qui tombe sur deux notes — ré, mi
  * bémol — toutes les cinq doubles croches (elle ne retombe jamais sur le même
  * temps : il faut cinq mesures pour qu'elle revienne), des cordes de synthèse
  * qui frottent (le mi bémol tenu contre le ré, une reese qui colle un
@@ -22,8 +23,8 @@
  *   creux     8 m.  le silence : le cœur ralentit et s'arrête, une mesure vide,
  *                   le sifflement, la porte au loin ; le cœur repart
  *   C        16 m.  la nuit qui tourne mal, le sommet : la porte claque au
- *                   troisième temps, la voix à l'octave, doublée ; ré mineur et
- *                   mi bémol qui se bercent sur la pédale
+ *                   troisième temps (le cœur s'y arrête), la voix à l'octave,
+ *                   doublée ; ré mineur et mi bémol qui se bercent sur la pédale
  *   aube      8 m.  la retombée : le cœur lent, les cordes se ferment ; la
  *                   relance
  *
