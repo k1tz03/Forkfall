@@ -312,14 +312,19 @@ NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/cinema/tournage.j
 # le film entier, les quatre formats, la planche, les affiches, le rapport
 NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/cinema/tournage.js \
   --film trois_mille_masques --out /tmp/films
+# la musique a changé (un thème retouché, le thème du livre arrivé) : le son seul, recollé
+# sur les vidéos déjà tournées, en quelques secondes
+NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/cinema/tournage.js \
+  --film trois_mille_masques --out /tmp/films --son-seul
 ```
 
 Le tournage rend l'image maîtresse dans Chromium (Playwright ; WebGL par SwiftShader
 sur une machine sans carte graphique : lent, mais le même rendu partout), y découpe
 chaque format habillé par le même code que le jeu, rend la musique hors ligne par le
-même moteur que le jeu (`FusibleAudio.createEngine` sur un `OfflineAudioContext` : le
-thème du film ou son secours, ses bruits à leurs temps, un fondu de sortie avec
-l'image), et fait encoder par ffmpeg. Il écrit, pour un film `<id>` :
+même moteur que le jeu (audio.js et les thèmes de `musique/`, assemblés par
+`musique_sources.js` comme dans la page ; `FusibleAudio.createEngine` sur un
+`OfflineAudioContext` : le thème du film ou son secours, ses bruits à leurs temps, un
+fondu de sortie avec l'image), et fait encoder par ffmpeg. Il écrit, pour un film `<id>` :
 `<id>.<format>.mp4`, `<id>.<format>.affiche.jpg` (l'image de `affiche`, sans
 sous-titre, avec le carton du titre), `<id>.planche.16x9.jpg` et `.9x16.jpg` (30 images
 réparties sur le film, `ffmpeg tile`), `<id>.wav` et `<id>.court.wav`, `<id>.rapport.json`
