@@ -34,7 +34,7 @@
                    gardien : « Deux pots pour Monsieur Bertin. Je l'écris. » ; le fer qui
                    claque ; il repart vers sa loge, dans l'allée. Titre : « Le carré
                    ancien / La Route de la Rive ».
-   La coupe de 30 s (l'aperçu de l'App Store) : les six plans, resserrés.
+   La coupe de 30 s (l'aperçu de l'App Store) : les six plans, resserrés (29,8 s).
    La lumière : le soleil bas et chaud d'un soir de mai, de face dans l'allée (les cyprès
    et la grille à contre-jour), de face sur la pierre (les lettres creusées dessinées
    par leur ombre) ; l'accent : le jaune des chrysanthèmes. Les visages : jamais (un
@@ -392,7 +392,7 @@
       { sorte: "replique", de: 30.4, a: 32.9, qui: "Le gardien", texte: "Deux pots pour Monsieur Bertin. Je l'écris." },
       { sorte: "titre", de: 33.2, a: 36.6, texte: "Le carré ancien", sous: "La Route de la Rive", entree: 0.2, sortie: 0.7 }
     ],
-    montages: { court: [[0.5, 5.6], [6.5, 11.2], [12.6, 17.6], [18.8, 23.6], [25.0, 29.2], [30.6, 36.9]] },
+    montages: { court: [[0.5, 5.6], [6.5, 11.2], [12.6, 17.6], [18.8, 23.6], [25.0, 29.2], [30.8, 36.8]] },   // 29,8 s
     preparer: function (K, ctx) {
       return portrait(K).then(function (src) {
         var tex = { medaillon: medaillon(K, src), gravure: gravure(K), ronds: ronds(K) };
