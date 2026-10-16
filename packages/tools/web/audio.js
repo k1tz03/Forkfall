@@ -933,6 +933,9 @@
   //              comprise) }. Absente : rien ne change
   //   `titre`, `moment`, `humeur`, `tonalite` (ce que montre le juke-box) et
   //   `ville: true` (un thème de ville : sa boucle doit durer quatre minutes).
+  //   `reprise: { sauf: ['creux'] }` : les sections où le jeu ne reprend jamais
+  //              un thème retrouvé (un creux presque muet ouvrirait mal une carte
+  //              sombre) ; il passe à la suivante.
 
   var PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function midiDe(n) {
@@ -2239,8 +2242,12 @@
     if (!s || t - s.t > REPRISE_MAX) return {};
     var C;
     try { C = compilerTheme(nom); } catch (x) { return {}; }
-    var i = s.index + 1;
-    if (i >= C.ordre.length) i = C.boucle;
+    // la section suivante, sauf celles que le thème refuse (`reprise.sauf`)
+    var sauf = (MUSIQUE[nom].reprise && MUSIQUE[nom].reprise.sauf) || [], i = s.index;
+    for (var n = 0; n <= C.ordre.length; n++) {
+      i = i + 1 >= C.ordre.length ? C.boucle : i + 1;
+      if (sauf.indexOf(C.ordre[i]) < 0) break;
+    }
     return { depuis: i };
   }
   // LA PAGE CACHÉE — le téléphone verrouillé, un autre onglet, l'application en

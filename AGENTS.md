@@ -439,7 +439,9 @@ Ce que la ville porte en plus des cartes :
   `enerve` ; la fin, le dernier tour. Un thème absent de `musique/` cède sa place au plus proche
   (`themeOu`). **La reprise** : en ville on quitte un thème et on y revient sans cesse ; un thème
   retrouvé dans les dix minutes reprend à la section qui suit celle qu'on a quittée (`audio.js`,
-  `reprise`), pas à son introduction — chaque section d'un thème doit pouvoir ouvrir le morceau.
+  `reprise`), pas à son introduction — chaque section d'un thème doit pouvoir ouvrir le morceau ;
+  un thème écarte les sections où il ne veut pas reprendre (`reprise: { sauf: ['creux'] }` : la garde
+  à vue ne rouvre pas une carte sombre sur son silence).
   Un thème s'inscrit par `FusibleAudio.theme(clé, définition)` ;
   `musique_sources.js` pose les fichiers après audio.js (l'aperçu, le banc, le juke-box), chacun
   dans son filet : une erreur n'emporte que son thème (`FusibleAudio.erreurs()`).
