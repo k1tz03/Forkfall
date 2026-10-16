@@ -264,6 +264,8 @@
         batt: [D_PAS_X, D_PAS, D_PAS, D_PAS, D_PAS, D_PAS, D_PAS, D_PAS_FIN]
       }
     },
-    ordre: ['porte', 'A', 'B', 'ruelle', 'A2', 'C', 'C2', 'descente', 'retour'], boucle: 1
+    ordre: ['porte', 'A', 'B', 'ruelle', 'A2', 'C', 'C2', 'descente', 'retour'], boucle: 1,
+    // la ruelle, ce sont les cloches seules : un thème retrouvé n'y reprend pas
+    reprise: { sauf: ['ruelle'] }
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));

@@ -244,6 +244,8 @@
         batt: [D_PAS_X, D_PAS, D_PAS, D_PAS_O, D_PAS, D_PAS, D_PAS, D_PAS_FIN]
       }
     },
-    ordre: ['sortie', 'A', 'B', 'A2', 'orage', 'eclaircie', 'B2', 'retour'], boucle: 1
+    ordre: ['sortie', 'A', 'B', 'A2', 'orage', 'eclaircie', 'B2', 'retour'], boucle: 1,
+    // l'orage s'ouvre sur le tonnerre, puis presque rien : un thème retrouvé n'y reprend pas
+    reprise: { sauf: ['orage'] }
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));

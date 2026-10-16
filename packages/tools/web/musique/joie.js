@@ -274,6 +274,8 @@
                D_DISCO_X, D_DISCO, D_DISCO, D_DISCO, D_DISCO, D_DISCO, D_DISCO, D_DISCO_FIN]
       }
     },
-    ordre: ['entree', 'A', 'B', 'bord', 'A2', 'montee', 'sommet', 'retombee', 'retour'], boucle: 1
+    ordre: ['entree', 'A', 'B', 'bord', 'A2', 'montee', 'sommet', 'retombee', 'retour'], boucle: 1,
+    // au bord de la nuit, la basse fermée et des claps au loin : un thème retrouvé n'y reprend pas
+    reprise: { sauf: ['bord'] }
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));

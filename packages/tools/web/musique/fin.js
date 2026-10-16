@@ -198,6 +198,8 @@
                'k . . . . . . . k . . . . . . .', 'k . i . . . i . k . i . . . i .', D_SLOW, D_SLOW_FIN]
       }
     },
-    ordre: ['souvenir', 'A', 'B', 'creux', 'A2', 'B2', 'dernier'], boucle: 1
+    ordre: ['souvenir', 'A', 'B', 'creux', 'A2', 'B2', 'dernier'], boucle: 1,
+    // le creux n'a plus de batterie : un thème retrouvé n'y reprend pas
+    reprise: { sauf: ['creux'] }
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));

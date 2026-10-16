@@ -218,6 +218,8 @@
         batt: [D_NUIT_X, D_NUIT, D_NUIT, D_NUIT2, D_NUIT, D_NUIT, D_NUIT_PASSE, D_NUIT_FIN]
       }
     },
-    ordre: ['allumage', 'A', 'B', 'minuit', 'A2', 'C', 'retour'], boucle: 1
+    ordre: ['allumage', 'A', 'B', 'minuit', 'A2', 'C', 'retour'], boucle: 1,
+    // minuit, c'est une horloge et la basse : un thème retrouvé n'y reprend pas
+    reprise: { sauf: ['minuit'] }
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));
