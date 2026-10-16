@@ -397,7 +397,18 @@ nuit : sans lui, les dégradés sombres se baguent). La cible des réseaux : **�
 minute en 1080 × 1920** — le plafond de 1,8 Mbit/s plus le son tient sous 14,9 Mo. Le
 grain coûte des bits : un film plus granuleux que 0,08 tombe en blocs au plafond.
 
-Le film de référence, tourné : ⟨TAILLES⟩.
+Le film de référence, tourné (41 s ; maîtresse 1920², 1 230 images, 99 min sur quatre
+cœurs partagés, soit 4,8 s l'image avec ses quatre découpes et l'encodage) :
+
+| format | taille | débit | par minute |
+|---|---|---|---|
+| `9x16` | 10,1 Mo (9,6 Mio) | 1 964 kbit/s | 14,1 Mio |
+| `16x9` | 10,0 Mo | 1 956 kbit/s | 14,0 Mio |
+| `4x5` | 8,1 Mo | 1 578 kbit/s | 11,3 Mio |
+| `appstore` (29,7 s) | 31,2 Mo | 8 396 kbit/s | — |
+
+Le son : le thème du livre (`livre_h1`), moyenne −22,6 dB, crête −4,7 dBFS. Le premier
+tournage avait le secours (`match`) : le thème est arrivé après, `--son-seul` l'a recollé.
 
 ## 11. Le film de référence : « Trois mille masques »
 
