@@ -17,20 +17,25 @@
  *   chemise   4 m.  (une fois) le dossier qu'on pose : le roulement qui enfle,
  *                   l'ostinato qui passe de quatre à trois, deux, une ; le souffle
  *   ── la boucle, 68 mesures, 2 min 43 ──
- *   A        12 m.  la première page : l'ostinato toutes les six doubles croches
- *                   (à contretemps de la mesure), la pédale de si bémol, les
- *                   cordes ; le roulement au bout des phrases
  *   C        24 m.  les douze pages : la montée (si bémol mineur → la mineur),
  *                   l'ostinato à trois, puis à deux ; le chœur sans fin, les
- *                   roulements qui s'ouvrent
+ *                   roulements qui s'ouvrent ; les pages 1 à 4 en quintes à vide
  *   D         8 m.  la dernière page, le sommet : la montée continue (si bémol,
  *                   si, do, do dièse), l'ostinato en doubles croches, le cri qui
  *                   monte, la caisse « gated »
  *   creux     8 m.  le souffle relâché : le boum, la pédale seule, le chœur tenu,
- *                   cinq tics ; le roulement repart
+ *                   le tic qui compte et qui presse ; le roulement repart
  *   B        16 m.  les promesses : l'ostinato à quatre puis à trois, la phrase
  *                   qui reste suspendue sur la sensible ; deux mesures où l'on
- *                   retient son souffle, et la relance
+ *                   retient son souffle
+ *   A        12 m.  la page d'avant : l'ostinato toutes les six doubles croches
+ *                   (à contretemps de la mesure), la pédale, les cordes, le chœur
+ *                   tenu ; le roulement au bout des phrases, et la montée revient
+ *
+ * La montée ouvre la boucle : le jeu reprend un thème retrouvé à la section qui
+ * suit celle qu'il a quittée, et une décision du samedi n'en entend que cinq à dix
+ * secondes — la deuxième décision d'un samedi tombe sur la montée, la troisième sur
+ * le sommet.
  *
  * Toutes les sections du corps partent d'un premier temps franc (la grosse
  * caisse lourde et la cymbale, la pédale dans la mesure) : le thème peut
@@ -178,9 +183,10 @@
         c3: ligne([[null, 4], [54, 2], [57, 2]]),
         pedale: ['Bb2 - - - - - - - - - - - - - - -', TENU, TENU, TENU, 'Bb2 - - - - - - - - - - - - - - -', TENU, TENU, TENU],
         pas: silences(7).concat(['. . . . . . . . Bb3 . . . Bb3 . . .']),
-        batt: ['bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, SILENCE,
-               'i . . . . . . . . . . . . . . .', 'i . . . . . . . i . . . . . . .', 'i . . . . . . . i . . . . . . .',
-               '. . . . . . . . T T T T T T T T']
+        // le tic qui compte, puis qui presse (blanches, noires, croches)
+        batt: ['bx . . . . . . . . . . . . . . .', 'i . . . . . . . i . . . . . . .', 'i . . . . . . . i . . . . . . .',
+               'i . . . i . . . i . . . i . . .', 'i . . . i . . . i . . . i . . .', 'i . . . i . . . i . . . i . . .',
+               'i . i . i . i . i . i . i . i .', '. . . . . . . . T T T T T T T T']
       },
       B: {
         accords: ['Bbm', 'Bbm', 'Gb', 'F7', 'Bbm', 'Bbm', 'Cb', 'F7', 'Ebm', 'Bbm', 'Gb', 'F7', 'Ebm', 'F7', 'F7', 'F7'],
@@ -196,6 +202,6 @@
                'K . . . . . . . . . . . . . . .', '. . . . . . . . . . . . T T T T']
       }
     },
-    ordre: ['chemise', 'A', 'C', 'D', 'creux', 'B'], boucle: 1
+    ordre: ['chemise', 'C', 'D', 'creux', 'B', 'A'], boucle: 1
   });
 })(typeof FusibleAudio === 'object' ? FusibleAudio : require('../audio.js'));
