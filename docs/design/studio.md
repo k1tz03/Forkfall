@@ -260,6 +260,7 @@ en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus
 | `flutes` | échantillons | C4–C7 | tenu (1×1), sans_vibrato (2×1), legato (1×1), staccato (3×1) | 2 prises | -0.12 / 0.50 | deux flûtes : l'air, la lumière |
 | `hautbois` | échantillons | A#3–G6 | tenu (2×1), sans_vibrato (2×1), legato (2×1), staccato (3×1) | — | +0.10 / 0.50 | hautbois : la plainte, le chant pastoral |
 | `piccolo` | échantillons | D5–C8 | tenu (1×1), staccato (1×1) | — | -0.18 / 0.55 | piccolo : la pointe, à petites doses |
+| `sifflet` | banque GM | C5–C7 | tenu | — | +0.00 / 0.40 | sifflet humain : une phrase rare, la route, le dimanche |
 | `caisse_claire` | échantillons | — | frappe (5×2), timbre_off (4×2), roulement (3×1), cercle (1×2) | — | +0.05 / 0.70 | caisse claire d'orchestre (timbre) : les marches, les roulements |
 | `carillon` | échantillons | — | monte (1×1), descend (1×1), vite (1×1) | — | +0.40 / 0.60 | carillon à tiges : la poussière d'étoiles d'une transition |
 | `claps` | échantillons | — | frappe (1×6), seul (4×1) | — | +0.00 / 0.40 | claquements de mains d'un groupe |
