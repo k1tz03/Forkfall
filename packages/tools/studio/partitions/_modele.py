@@ -51,11 +51,12 @@ def A(s):
     # les accords par chiffres romains, tenus ; `conduite` (par défaut) rapproche les voix
     s.accords(violons, GRILLE, octave=4, vel=70)
     s.accords(nappe, GRILLE, octave=3, vel=60)
-    # la basse : un ostinato de croches sur la fondamentale de chaque accord
+    # la basse : un ostinato de croches sur la fondamentale de chaque accord ; les
+    # pizzicati une octave sous elle, sauf sous le mi 1 des contrebasses (28)
     for m, ch in enumerate(GRILLE.split(), start=1):
         r = accord(ch, s.tonalite, octave=2)[0]
         s.joue(basse, ostinato([r, r, r + 12, r], pas=0.5, accents='X x o x'), a=s.m(m), fois=2)
-        s.joue(pizz, grille('x . . . x . . .', r - 12, pas=0.5), a=s.m(m))
+        s.joue(pizz, grille('x . . . x . . .', r - 12 if r - 12 >= 28 else r, pas=0.5), a=s.m(m))
     # la batterie : une ligne par pièce, seize cases par mesure ; `remplir` (par défaut)
     # la répète jusqu'à la fin de la section
     s.batterie(kick, 'K : X . . . . . . . X . . . . . . .')
@@ -76,7 +77,7 @@ def B(s):
     for m, ch in enumerate(grille_b.split(), start=1):
         r = accord(ch, s.tonalite, octave=2)[0]
         s.joue(basse, ostinato([r, r, r + 12, r], pas=0.5, accents='X x o x'), a=s.m(m), fois=2)
-        s.joue(pizz, grille('x . . x x . . .', r - 12, pas=0.5), a=s.m(m))
+        s.joue(pizz, grille('x . . x x . . .', r - 12 if r - 12 >= 28 else r, pas=0.5), a=s.m(m))
     s.batterie(kick, 'K : X . . . . . X . X . . . . . . .', jusqua=s.m(4))
     s.batterie(charley, 'H : x . x . x . x . x . x . x . x o')
     s.crescendo(violons, 0, s.longueur, 'mp', 'mf')

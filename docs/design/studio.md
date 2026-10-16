@@ -55,6 +55,9 @@ bash packages/tools/studio/installer.sh --verifier  # ne télécharge rien : dit
 
 ```bash
 cd packages/tools/studio
+# vérifier une partition en une seconde, sans rien rendre : instruments, articulations,
+# étendues, pièces de batterie, la carte des sections, la longueur de la boucle
+python3 rendre.py partitions/<clé>.py --verifier
 # rendre un thème : <clé>.wav, <clé>.json, <clé>.ecoute.mp3 ; --banc le mesure aussi
 python3 rendre.py partitions/<clé>.py --out <dossier> --banc --pistes
 # travailler un passage : seulement ces sections, en boucle
@@ -186,9 +189,18 @@ enchaîne, `m1 | m2` superpose.
 | `s.automation(piste, 'coupure', [(temps, 1.0), (temps, 0.25)])` | une courbe libre : `coupure` (le filtre d'un synthé, en multiple), `volume` (dB), `envoi` (multiple des envois) |
 
 L'expression est un gain (puissance 1,2 : `f` ≈ −2 dB, `mf` ≈ −5, `p` ≈ −11, `pp` ≈ −16)
-qui vaut 1 jusqu'au premier point, puis suit les points et tient le dernier. La
-vélocité choisit la couche ; l'expression façonne la phrase. Ne pas doubler les deux
-(une note `vel=48` dans une piste `p` est très loin).
+qui vaut 1 jusqu'au premier appel. **Chaque appel** (`nuance`, `crescendo`,
+`expression`) tient la valeur de son premier point dès ce point, va en ligne droite
+d'un point à l'autre, puis tient son dernier point jusqu'à l'appel suivant : un
+crescendo écrit en B ne déborde ni sur A ni sur C, et deux appels ne se rejoignent
+jamais en pente. Écrire donc la nuance de chaque section où elle change.
+
+L'expression choisit aussi le **timbre** des instruments échantillonnés : une note
+brève jouée `p` prend la couche douce, `f` la forte ; une note tenue sous un crescendo
+fond sa couche douce dans sa couche forte (le violon s'éclaire en montant). Le niveau,
+lui, vient du gain ci-dessus : on ne double pas la nuance. La vélocité règle l'attaque
+et la couche de départ ; ne pas l'abaisser en plus d'une nuance douce (une note
+`vel=48` dans une piste `p` est très loin).
 
 ### 3.5 La théorie
 
@@ -285,6 +297,7 @@ en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus
 | `basse_synthe` | synthèse | E1–C4 | tenu | — | +0.00 / 0.00 | basse analogique (scie + carré + sous-basse, filtre qui claque) |
 | `cuivre_synthe` | synthèse | C1–C5 | tenu | — | +0.00 / 0.40 | la couche de synthé du « braam » : trois scies saturées, le filtre s'ouvre |
 | `lead_synthe` | synthèse | C3–C7 | tenu | — | +0.00 / 0.20 | lead analogique (deux scies, glissando, vibrato tardif) |
+| `nappe_gm` | banque GM | C2–C7 | chaude, halo, atmosphere, verre, cordes | — | +0.00 / 0.50 | nappes de la banque générale (chaude, halo, atmosphère, verre frotté, cordes de synthèse) : un fond prêt, moins personnel que nappe_synthe |
 | `nappe_synthe` | synthèse | C2–C7 | tenu | — | +0.00 / 0.40 | nappe en grande scie (sept voix désaccordées), lente et large |
 | `sub_synthe` | synthèse | E1–C3 | tenu | — | +0.00 / 0.00 | sous-basse (sinus et un peu de deuxième harmonique, pour qu'un téléphone l'entende) |
 | `supersaw` | synthèse | C2–C7 | tenu | — | +0.00 / 0.25 | la grande scie : accords plaqués de stade, lead immense |

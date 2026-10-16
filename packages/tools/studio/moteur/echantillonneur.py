@@ -320,13 +320,17 @@ def allonger(x, n, debut_min):
 
 
 def jouer(banque, cle, vel, duree_s, desaccord_cents=0.0, oneshot=False, relache=None,
-          sans_attaque_s=0.0, fondu_entree_s=0.0, alea=0.5, veltrack=None, attaque_s=None):
+          sans_attaque_s=0.0, fondu_entree_s=0.0, alea=0.5, veltrack=None, attaque_s=None,
+          vel_couche=None):
     """Une note : rend (signal stéréo, décalage) où `décalage` est le nombre
     d'échantillons à placer AVANT l'instant de la note (l'attaque tombe sur le temps).
 
     `oneshot` : la note joue tout son échantillon (percussions, pizzicati, staccati) ;
-    `sans_attaque_s` : on entre dans l'échantillon après son attaque (le legato)."""
-    r = banque.choisir(cle, vel, alea)
+    `sans_attaque_s` : on entre dans l'échantillon après son attaque (le legato) ;
+    `vel_couche` : la vélocité qui choisit la couche (le timbre), si elle diffère de
+    celle qui donne le niveau (l'expression d'une piste change le timbre sans doubler
+    sa nuance). Un relâchement enregistré (le piano) s'ajoute à la fin de la note."""
+    r = banque.choisir(cle, vel if vel_couche is None else vel_couche, alea)
     corr = ACCORDS.get(os.path.basename(r.echantillon), 0.0)
     rapport = 2.0 ** ((cle - r.centre + (r.tune + corr + desaccord_cents) / 100.0) / 12.0)
     ech = transpose(r.echantillon, rapport)
@@ -364,4 +368,20 @@ def jouer(banque, cle, vel, duree_s, desaccord_cents=0.0, oneshot=False, relache
     vt = r.veltrack if veltrack is None else veltrack
     g = 10.0 ** (r.volume / 20.0) * ((vel / 127.0) ** (2.0 * vt / 100.0))
     corps *= np.float32(g)
+    if banque.relache_regions and not oneshot and sans_attaque_s == 0.0:
+        # le bruit du relâchement (l'étouffoir qui retombe), à la fin de la note
+        rr = [x for x in banque.relache_regions if x.lokey <= cle <= x.hikey
+              and x.lovel <= vel <= x.hivel]
+        if rr:
+            r2 = rr[0]
+            e2 = transpose(r2.echantillon, 2.0 ** ((cle - r2.centre + desaccord_cents / 100.0) / 12.0))
+            z = e2.donnees
+            pos = decalage + int(duree_s * SR)
+            g2 = 10.0 ** (r2.volume / 20.0) * ((vel / 127.0) ** 2.0) * 0.5
+            fin = min(len(corps), pos + len(z))
+            if fin > pos:
+                na = min(fin - pos, int(0.01 * SR))
+                morceau = np.array(z[:fin - pos], dtype=np.float32, copy=True)
+                morceau[:na] *= np.linspace(0, 1, na, dtype=np.float32)[:, None]
+                corps[pos:fin] += morceau * np.float32(g2)
     return corps, decalage

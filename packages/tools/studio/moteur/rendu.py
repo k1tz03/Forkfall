@@ -135,7 +135,8 @@ def construire(theme, noms, nom_segment, deja=None):
         for piste, note in e.evenements:
             seg.notes.setdefault(piste.nom, []).append(note.copie(t=note.t + pos))
         for piste, param, pts in e.courbes:
-            seg.courbes.setdefault((piste.nom, param), []).extend((t + pos, v) for t, v in pts)
+            # chaque appel (une nuance, un crescendo) garde ses points ensemble
+            seg.courbes.setdefault((piste.nom, param), []).append([(t + pos, v) for t, v in pts])
         seg.sections.append((nom, pos, pos + sec.longueur, sec.reprise, rang))
         pos += sec.longueur
     seg.longueur = pos
@@ -146,17 +147,23 @@ def construire(theme, noms, nom_segment, deja=None):
 # ---------------------------------------------------------------------------------
 # Une piste dans un segment
 
-def _courbe_echantillons(points, tempo, n, defaut, decalage):
-    """Une courbe (points en temps) → un tableau par échantillon du tampon : la valeur
-    par défaut jusqu'au premier point, droites entre les points, la dernière tenue."""
-    if not points:
+def _courbe_echantillons(appels, tempo, n, defaut, decalage):
+    """Les courbes d'une piste (une liste d'appels, chacun ses points en temps) → un
+    tableau par échantillon du tampon. Un appel tient la valeur de son premier point
+    dès ce point, va en ligne droite d'un point à l'autre, puis tient son dernier point
+    jusqu'à l'appel suivant : un crescendo de la section B ne déborde jamais sur A ou C.
+    Avant le premier appel : la valeur par défaut."""
+    if not appels:
         return None
-    pts = sorted(points)
-    xs = np.array([decalage + tempo.secondes(t) for t, _ in pts]) * SR
-    ys = np.array([v for _, v in pts], dtype=np.float64)
+    c = np.full(n, defaut, dtype=np.float64)
     idx = np.arange(n, dtype=np.float64)
-    c = np.interp(idx, xs, ys)
-    c[idx < xs[0]] = defaut
+    for pts in sorted((sorted(a) for a in appels if a), key=lambda a: a[0][0]):
+        xs = np.array([decalage + tempo.secondes(t) for t, _ in pts]) * SR
+        ys = np.array([v for _, v in pts], dtype=np.float64)
+        a = max(0, int(np.ceil(xs[0])))
+        if a >= n:
+            continue
+        c[a:] = np.interp(idx[a:], xs, ys)
     return c.astype(np.float32)
 
 
@@ -238,10 +245,10 @@ def rendre_piste(theme, piste, seg, n, salles_ir):
     if not jeux or reg.get('muet'):
         return None, {}
     courbes = {}
-    for (nom_p, param), pts in seg.courbes.items():
+    for (nom_p, param), appels in seg.courbes.items():
         if nom_p == piste.nom:
-            defaut = 1.0
-            c = _courbe_echantillons(pts, seg.tempo, n, defaut, PREROLL)
+            defaut = 0.0 if param == 'volume' else 1.0      # dB pour le volume, un facteur sinon
+            c = _courbe_echantillons(appels, seg.tempo, n, defaut, PREROLL)
             if c is not None:
                 courbes[param] = c
     ctx = {'reglages': reg, 'graine': theme.graine, 'piste': piste.nom, 'segment': seg.nom,

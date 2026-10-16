@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Rendre un thème : partition → master mixé et masterisé + repères + écoute MP3.
 
+    python3 packages/tools/studio/rendre.py packages/tools/studio/partitions/<clé>.py --verifier
+        vérifier la partition en une seconde, sans rien rendre
     python3 packages/tools/studio/rendre.py packages/tools/studio/partitions/<clé>.py --out <dossier>
         [--banc]            mesurer aussi (banc.py) : rapport, spectrogramme, courbe
         [--sans-mp3]        pas d'écoute MP3
@@ -33,11 +35,76 @@ def charger_partition(chemin):
     return theme
 
 
+def verifier(theme):
+    """Vérifie une partition sans la rendre (une seconde) : les instruments, les
+    articulations, les étendues, les pièces de batterie, la carte des sections, la
+    longueur de la boucle. Rend le nombre d'erreurs."""
+    from moteur import rendu
+    from moteur.instruments import INSTRUMENTS, InstrumentGM, InstrumentRythmes, PIECES_GM
+    from moteur.theorie import nom as nom_note
+    erreurs = 0
+    avis = 0
+    for p in theme.pistes.values():
+        if p.instrument not in INSTRUMENTS:
+            print(f'✗ piste {p.nom} : instrument inconnu {p.instrument!r}')
+            erreurs += 1
+    intro, deja = rendu.construire(theme, theme.intro, 'intro')
+    corps, _ = rendu.construire(theme, theme.corps, 'corps', deja)
+    for seg in (intro, corps):
+        for nom_p, notes in sorted(seg.notes.items()):
+            p = theme.pistes[nom_p]
+            inst = INSTRUMENTS.get(p.instrument)
+            if inst is None:
+                continue
+            hors = []
+            for n in notes:
+                art = n.art or p.reglages.get('art') or inst.defaut
+                if art not in inst.articulations:
+                    print(f'✗ {seg.nom} {nom_p} : articulation {art!r} inconnue de {inst.nom} '
+                          f'(connues : {", ".join(inst.articulations)})')
+                    erreurs += 1
+                    break
+                if isinstance(n.h, str):
+                    pieces = PIECES_GM if isinstance(inst, InstrumentGM) else (
+                        ('K', 'S', 'CL', 'H', 'O', 'T1', 'T2', 'T3') if isinstance(inst, InstrumentRythmes) else ())
+                    # une percussion à touche fixe (la caisse claire, les cymbales…) joue
+                    # sa pièce quel que soit le nom écrit
+                    fixe = 'cle' in (inst.articulations.get(art) or {}) if isinstance(
+                        inst.articulations.get(art), dict) else False
+                    if n.h not in pieces and not fixe:
+                        print(f'✗ {seg.nom} {nom_p} : pièce {n.h!r} inconnue de {inst.nom}')
+                        erreurs += 1
+                        break
+                elif inst.etendue and not (inst.etendue[0] <= n.h + p.reglages.get('transpose', 0) <= inst.etendue[1]):
+                    hors.append(n.h)
+            if hors:
+                avis += 1
+                print(f'! {seg.nom} {nom_p} : {len(hors)} note(s) hors de l\'étendue de {inst.nom} '
+                      f'({nom_note(inst.etendue[0])}–{nom_note(inst.etendue[1])}) : '
+                      f'{", ".join(sorted({nom_note(h) for h in hors}))}')
+    print(f'{theme.cle} « {theme.titre} » : {len(theme.pistes)} pistes')
+    for seg in (intro, corps):
+        for nom_s, a, b, rep, rang in seg.sections:
+            sec = theme.sections[nom_s]
+            nb = sum(1 for notes in seg.notes.values() for n in notes if a <= n.t < b)
+            print(f'  {seg.nom:5s} {nom_s:8s} {sec.mesures:3d} m.  {seg.tempo.secondes(a):7.2f} → '
+                  f'{seg.tempo.secondes(b):7.2f} s  {nb:5d} notes' + ('' if rep else '  (pas de reprise)'))
+    bmin = theme.boucle_min if theme.boucle_min is not None else (240 if theme.ville else 150)
+    ok = corps.duree >= bmin
+    print(f'  la boucle : {corps.duree:.1f} s ({sum(theme.sections[x].mesures for x in theme.corps)} mesures)'
+          + (f', il en faut {bmin} {"✓" if ok else "✗"}' if bmin else ''))
+    if bmin and not ok:
+        erreurs += 1
+    print(f'{erreurs} erreur(s), {avis} avis')
+    return erreurs
+
+
 def main(argv=None):
     from moteur import export, rendu
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('partition')
-    ap.add_argument('--out', required=True)
+    ap.add_argument('--out')
+    ap.add_argument('--verifier', action='store_true', help='vérifier la partition sans la rendre')
     ap.add_argument('--banc', action='store_true')
     ap.add_argument('--sans-mp3', action='store_true')
     ap.add_argument('--intro-seule', action='store_true')
@@ -45,6 +112,10 @@ def main(argv=None):
     ap.add_argument('--pistes', action='store_true', help='la sonie de chaque piste (pour équilibrer)')
     a = ap.parse_args(argv)
     theme = charger_partition(a.partition)
+    if a.verifier:
+        raise SystemExit(1 if verifier(theme) else 0)
+    if not a.out:
+        ap.error('--out est requis pour rendre')
     if a.intro_seule:
         theme.corps = list(theme.intro)
         theme.intro = []

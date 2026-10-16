@@ -57,7 +57,8 @@ def _largeur(x):
     sos = signal.butter(4, 150, 'lowpass', fs=SR, output='sos')
     xb = signal.sosfilt(sos, x, axis=0)
     cb = float(np.corrcoef(xb[:, 0], xb[:, 1])[0, 1]) if np.std(xb[:, 0]) > 0 else 1.0
-    return {'cotes_milieu_db': round(sm, 1), 'correlation': round(c, 3), 'correlation_grave': round(cb, 3)}
+    return {'cotes_milieu_db': round(float(sm), 1), 'correlation': round(c, 3),
+            'correlation_grave': round(cb, 3)}
 
 
 def _tiers_octave(x):
@@ -138,7 +139,7 @@ def dessiner(x, rep, dossier, mesures):
     ax.set_yticklabels(['50', '100', '250', '500', '1k', '2k', '4k', '8k', '16k'])
     for s in rep['sections']:
         ax.axvline(s['debut'] / SR, color='white', lw=0.6, alpha=0.6)
-        ax.text(s['debut'] / SR + 0.3, 21000, s['nom'], color='black', fontsize=8, va='bottom')
+        ax.text(s['debut'] / SR + 0.3, 14500, s['nom'], color='white', fontsize=8, va='top')
     for k in ('debut', 'fin'):
         ax.axvline(rep['boucle'][k] / SR, color='cyan', lw=1.4)
     ax.set_xlabel('secondes')

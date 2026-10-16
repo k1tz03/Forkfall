@@ -116,6 +116,34 @@ class InstrumentSfz(Instrument):
     def couches_velocite(self, art):
         return sorted({(r.lovel, r.hivel) for r in self.banque(art).regions})
 
+    def _couches(self, art):
+        """Le nombre de couches de vélocité qu'une note du milieu traverse."""
+        b = self.banque(art)
+        lo, hi = b.etendue()
+        k = (lo + hi) // 2
+        return len({(r.lovel, r.hivel) for r in b.regions if r.lokey <= k <= r.hikey})
+
+    @staticmethod
+    def _fondu_couches(banque, cle, vel, duree, cents, relache, sans_attaque, fondu, alea, expr, a0):
+        """Une note tenue sous un crescendo (ou un diminuendo) : la couche douce et la
+        couche forte, au même niveau, fondues l'une dans l'autre selon l'expression."""
+        xs = []
+        for vc in (36, 118):
+            x, d = ech.jouer(banque, cle, vel, duree, desaccord_cents=cents, relache=relache,
+                             sans_attaque_s=sans_attaque, fondu_entree_s=fondu, alea=alea, vel_couche=vc)
+            xs.append((x, d))
+        dec = max(d for _, d in xs)
+        n = max(len(x) + dec - d for x, d in xs)
+        doux = np.zeros((n, 2), dtype=np.float32)
+        fort = np.zeros((n, 2), dtype=np.float32)
+        for (x, d), cible in zip(xs, (doux, fort)):
+            cible[dec - d:dec - d + len(x)] = x
+        e = expr[max(0, a0 - dec):max(0, a0 - dec) + n]
+        if len(e) < n:
+            e = np.concatenate([e, np.full(n - len(e), e[-1] if len(e) else 1.0, np.float32)])
+        w = np.clip((e - 0.3) / 0.5, 0.0, 1.0)[:, None].astype(np.float32)
+        return doux * (1 - w) + fort * w, dec
+
     def rendre(self, jeux, n, ctx):
         reg = ctx['reglages']
         sortie = np.zeros((n, 2), dtype=np.float32)
@@ -123,6 +151,7 @@ class InstrumentSfz(Instrument):
             b.raz()
         k_uni = int(reg.get('unisson', self.unisson))
         legato_piste = reg.get('legato', False)
+        expr = ctx.get('courbes', {}).get('expression')
         jeux = sorted(jeux, key=lambda j: (j.t, j.h if not isinstance(j.h, str) else 0))
         for i, j in enumerate(jeux):
             art = self.art(j, reg)
@@ -148,13 +177,32 @@ class InstrumentSfz(Instrument):
                 if prec is not None and j.t - (prec.t + prec.d) < 0.06:
                     sans_attaque = spec.get('entree', 0.11)
                     fondu = 0.07
+            # l'expression de la piste choisit aussi le timbre : une note jouée p prend
+            # la couche douce, f la forte (le niveau, lui, reste celui de la vélocité :
+            # l'expression le règle ensuite pour toute la piste) ; sous un crescendo, une
+            # note tenue fond ses deux couches l'une dans l'autre
+            v_couche, croise = None, None
+            if expr is not None and not isinstance(j.h, str):
+                a0 = min(len(expr) - 1, max(0, int(j.t * SR)))
+                e0 = float(expr[a0])
+                v_couche = int(max(1, min(127, round(j.v * (0.45 + 0.55 * e0)))))
+                if not oneshot and self._couches(art) >= 2:
+                    b0 = min(len(expr), a0 + int((duree + 0.5) * SR))
+                    tranche = expr[a0:b0]
+                    if len(tranche) and float(tranche.max() - tranche.min()) > 0.12:
+                        croise = a0
             for u in range(k_uni):
                 c, ms, place = _UNISSON[u % len(_UNISSON)]
                 if k_uni == 1:
                     c, ms, place = 0.0, 0.0, 0.0
-                x, dec = ech.jouer(banque, cle, j.v, duree, desaccord_cents=c + accord, oneshot=oneshot,
-                                   relache=relache, sans_attaque_s=sans_attaque,
-                                   fondu_entree_s=fondu, alea=((j.rang * 7 + u * 3) % 10) / 10 + 0.05)
+                alea = ((j.rang * 7 + u * 3) % 10) / 10 + 0.05
+                if croise is not None:
+                    x, dec = self._fondu_couches(banque, cle, j.v, duree, c + accord, relache,
+                                                 sans_attaque, fondu, alea, expr, croise)
+                else:
+                    x, dec = ech.jouer(banque, cle, j.v, duree, desaccord_cents=c + accord, oneshot=oneshot,
+                                       relache=relache, sans_attaque_s=sans_attaque,
+                                       fondu_entree_s=fondu, alea=alea, vel_couche=v_couche)
                 pos = int(round((j.t - self.avance.get(art, 0.0) + ms / 1000.0) * SR)) - dec
                 g = dsp.gain(self.niveau_art(art) + spec.get('gain', 0.0)) / np.sqrt(k_uni)
                 eclat = float(reg.get('eclat', self.eclat))
@@ -594,6 +642,14 @@ def _cat():
                      'voix de synthèse : un chœur de machine', {'pan': 0.0, 'profondeur': 0.5},
                      avance={'tenu': 0.05}))
 
+    met(InstrumentGM('nappe_gm', 'synthes', ('C2', 'C7'), {'chaude': (0, 89), 'halo': (0, 94),
+                                                         'atmosphere': (0, 99), 'verre': (0, 92),
+                                                         'cordes': (0, 50)}, 'chaude',
+                     'nappes de la banque générale (chaude, halo, atmosphère, verre frotté, cordes de '
+                     'synthèse) : un fond prêt, moins personnel que nappe_synthe',
+                     {'pan': 0.0, 'profondeur': 0.5, 'largeur': 1.0},
+                     avance={'chaude': 0.12, 'halo': 0.12, 'atmosphere': 0.08, 'verre': 0.12, 'cordes': 0.1}))
+
     # --- les guitares et la basse (General MIDI) ---
     met(InstrumentGM('guitare_saturee', 'guitares', ('E2', 'E6'), {'tenu': (0, 30), 'crunch': (0, 29),
                                                                     'etouffee': (0, 28)}, 'tenu',
@@ -661,8 +717,8 @@ def _cat():
     met(InstrumentSynthe('lead_synthe', 'synthes', ('C3', 'C7'), {'tenu': None}, 'tenu',
                          'lead analogique (deux scies, glissando, vibrato tardif)',
                          {'pan': 0.0, 'profondeur': 0.2, 'salle': 0.18, 'echo': 0.18},
-                         patch={'osc': [{'forme': 'scie', 'niveau': 0.6}, {'forme': 'scie', 'niveau': 0.5,
-                                                                          'desaccord': 9}],
+                         patch={'osc': [{'forme': 'scie', 'niveau': 0.6, 'desaccord': -4.5},
+                                        {'forme': 'scie', 'niveau': 0.5, 'desaccord': 4.5}],
                                 'filtre': {'coupure': 1300.0, 'resonance': 0.9, 'env': 1.8, 'suivi': 0.5,
                                            'a': 0.01, 'd': 0.4, 's': 0.5, 'r': 0.2, 'drive': 1.4},
                                 'amp': {'a': 0.008, 'd': 0.3, 's': 0.85, 'r': 0.2},

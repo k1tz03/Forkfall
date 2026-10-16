@@ -127,6 +127,9 @@ def voix(hauteur, duree_s, vel, patch, f0=None, debut_niveau=0.0, graine=0, coup
         freq *= 2 ** (v.get('prof', 12) * rampe * np.sin(2 * np.pi * v.get('vit', 5.5) * t) / 1200)
     gauche = np.zeros(n, dtype=np.float32)
     droite = np.zeros(n, dtype=np.float32)
+    # sans voix désaccordées réparties, les deux canaux sont identiques : on ne filtre
+    # qu'une fois
+    stereo = any(o.get('forme') in ('supersaw', 'reese') for o in p['osc'])
     for o in p['osc']:
         forme = o.get('forme', 'scie')
         niveau = o.get('niveau', 1.0)
@@ -181,12 +184,12 @@ def voix(hauteur, duree_s, vel, patch, f0=None, debut_niveau=0.0, graine=0, coup
         typ = fl.get('type', 'echelle')
         if typ == 'echelle':
             gauche = noyau.echelle(gauche, fc, fl.get('resonance', 0.6), SR, fl.get('drive', 1.0))
-            droite = gauche if np.shares_memory(gauche, droite) else noyau.echelle(
-                droite, fc, fl.get('resonance', 0.6), SR, fl.get('drive', 1.0))
+            droite = noyau.echelle(droite, fc, fl.get('resonance', 0.6), SR,
+                                   fl.get('drive', 1.0)) if stereo else gauche
         else:
             q = fl.get('q', 0.8)
             gauche = noyau.variable(gauche, fc, q, SR, typ)
-            droite = noyau.variable(droite, fc, q, SR, typ)
+            droite = noyau.variable(droite, fc, q, SR, typ) if stereo else gauche
     if p['drive']:
         st = dsp.saturer(np.stack([gauche, droite], axis=1), p['drive'], surech=2)
         gauche, droite = st[:, 0], st[:, 1]

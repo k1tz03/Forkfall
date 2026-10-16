@@ -558,7 +558,9 @@ class Ecrivain:
     def expression(self, piste, points):
         """La courbe d'expression d'une piste (0..1 ou une nuance), par points
         (temps, valeur) reliés en ligne droite : la piste entière monte ou descend
-        (un crescendo d'échantillons change aussi de timbre)."""
+        (un crescendo d'échantillons change aussi de timbre). L'appel tient son premier
+        point dès ce point et son dernier point jusqu'à l'appel suivant (de cette
+        section ou d'une autre) : deux appels ne se rejoignent jamais en pente."""
         pts = [(float(t), NUANCES[v] if isinstance(v, str) else float(v)) for t, v in points]
         self.courbes.append((self._piste(piste), 'expression', pts))
 

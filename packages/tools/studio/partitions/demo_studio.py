@@ -45,7 +45,7 @@ timbales = theme.piste('timbales', volume=1.5)
 taiko = theme.piste('taiko', volume=1)
 cymbales = theme.piste('cymbales', volume=2)
 suspendue = theme.piste('cymbale_suspendue', volume=0)
-tamtam = theme.piste('tam_tam', volume=-6)
+tamtam = theme.piste('tam_tam', volume=0)
 glock = theme.piste('glockenspiel', volume=3)
 choeur = theme.piste('choeur', volume=1)
 # --- les synthés et la batterie -------------------------------------------------------
@@ -98,7 +98,8 @@ def intro(s):
     s.note(basses, 'D2', 0, 8, vel=60)
     s.note(timbales, 'D2', 4, 4, vel=70, art='roulement')
     s.crescendo(timbales, 4, 8, 'pp', 'f')
-    s.note(suspendue, 'C4', 3.0, 5, vel=90, art='monte_4s')
+    # la cymbale enfle quatre secondes (6,4 temps à 96) : elle culmine sur le premier temps de A1
+    s.note(suspendue, 'C4', 8 - 6.4, 6.4, vel=90, art='monte_4s')
     s.note(sub, 'D2', 0, 8, vel=70)
 
 
@@ -174,11 +175,14 @@ def A3(s):
     s.joue(trombones, (APPEL + REPONSE).octave(-1), vel=106, art='legato')
     # les violons courent en doubles croches sur l'accord, les seconds en trémolo
     for m, ch in enumerate(GRILLE_A.split(), start=1):
-        notes = accord(ch, 'ré mineur', octave=5)
+        # l'arpège monte jusqu'au cinquième rang : on le tient sous le do 7 des violons
+        notes = accord(ch, 'ré mineur', octave=5 if ch in ('i', 'VII') else 4)
         s.joue(violons, arpege(notes, '1 2 3 4 3 2 1 2 3 4 5 4 3 2 3 4', pas=0.25, art='staccato', vel=96),
                a=s.m(m))
     s.accords(violons2, GRILLE_A, octave=4, art='tremolo', vel=96)
     s.accords(altos, GRILLE_A, octave=3, art='tremolo', vel=96)
+    for p in (violons, violons2, altos):
+        s.nuance(p, 'f')
     s.accords(choeur, GRILLE_A, octave=4, art='aah', vel=104)
     s.nuance(choeur, 'f')
     s.note(braam, 'D2', 0, 3, vel=127)
@@ -192,7 +196,7 @@ def A3(s):
     s.note(reese, 'D2', 0, 12, vel=90)
     s.note(reese, 'C2', s.m(4), 2, vel=90)
     s.note(effets, 'D4', s.m(4, 2.5), 1.5, vel=118, art='montee')
-    s.note(suspendue, 'C4', s.m(4, 1), 4, vel=100, art='monte_2s')
+    s.note(suspendue, 'C4', s.longueur - 3.2, 3.2, vel=100, art='monte_2s')   # 2 s à 96
 
 
 # --- B : les néons (112) ---------------------------------------------------------------
@@ -281,7 +285,7 @@ def C(s):
         K : X . . . . . . . . . . . . . . .
         C : X . . . . . . . . . . . . . . .
     ''', a=s.m(8), jusqua=s.m(9))
-    s.note(suspendue, 'C4', s.m(8, 1), 4, vel=100, art='monte_2s')
+    s.note(suspendue, 'C4', s.longueur - 4.13, 4.13, vel=100, art='monte_2s')   # 2 s à 124
 
 
 # --- D : le tutti final (96, puis ralenti) -----------------------------------------------
@@ -304,6 +308,8 @@ def D1(s):
     s.joue(violons, grand.octave(1), vel=104, art='legato')
     s.joue(violons2, grand, vel=100, art='legato')
     s.accords(altos, GRILLE_A, octave=3, art='tremolo', vel=100)
+    for p in (violons, violons2, altos):
+        s.nuance(p, 'ff')
     s.accords(choeur, GRILLE_A, octave=4, art='aah', vel=112)
     s.nuance(choeur, 'ff')
     s.note(braam, 'D2', 0, 3, vel=127)
@@ -353,6 +359,10 @@ def D2(s):
     s.note(timbales, 'D2', s.m(2), 4, vel=118, art='roulement')
     s.diminuendo(timbales, s.m(2), s.m(2, 4.9), 'ff', 'p')
     s.note(sub, 'D2', s.m(2), 4, vel=90)
+    # l'accord s'éteint (le tam-tam reste) : la boucle repart sur l'ostinato piano de A1
+    # sans marche
+    for piste in (choeur, cors, trompettes, trombones, tuba, violons, altos, celles, basses):
+        s.expression(piste, [(s.m(2), 'ff'), (s.m(2, 2), 'mf'), (s.m(2, 4.9), 'ppp')])
 
 
 theme.forme(intro=['intro'], corps=['A1', 'A2', 'A3', 'B', 'C', 'D1', 'D2'])
