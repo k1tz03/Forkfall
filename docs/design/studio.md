@@ -294,7 +294,7 @@ du vrai instrument.
 | `celesta` | banque GM | C4–C8 | frappe | — | -0.30 / 0.50 | célesta : le conte, le mystère |
 | `orgue` | échantillons | C2–C7 | tenu (1×1), doux (1×1) | — | +0.00 / 0.85 | orgue à tuyaux : la messe, le vertige |
 | `piano` | échantillons | A0–C8 | tenu (3×1), pedale (3×1) | — | -0.05 / 0.35 | piano de concert (trois nuances) : la confidence, le martèlement |
-| `piano_electrique` | banque GM | E1–G7 | lames, fm, desaccorde | — | +0.00 / 0.30 | piano électrique à lames |
+| `piano_electrique` | banque GM | E1–G7 | lames, fm, desaccorde | — | +0.00 / 0.30 | piano électrique à lames (« fm » : la cloche numérique ; « desaccorde » : les lames désaccordées) : la nuit, le bar, la vitrine, le bureau la nuit |
 | `choeur` | banque GM | C3–C6 | aah, ouh | 2 prises | +0.00 / 0.70 | chœur mixte « aah » / « ouh » : l'épopée, la messe |
 | `foule` | fabriqué | G2–E4 | o, ah, rumeur | — | +0.00 / 0.20 | la foule du stade : des milliers d'hommes à l'unisson sur « o » ou « ah », de loin, la rumeur dessous ; `rumeur` seule |
 | `voix_synthe` | banque GM | C3–C6 | tenu | — | +0.00 / 0.50 | voix de synthèse : un chœur de machine |
@@ -485,6 +485,16 @@ conception n'ont pas bougé (± 0,2 dB).
 | `voix_synthe` | tenu **+1,2** (+1 / +3 / 0) |
 | `xylophone` | frappe **+2,0** (+1 / +2 / +4) |
 
+Les voix ajoutées depuis par les compositeurs sont calibrées de la même façon (zones par
+demi-ton ou par région, figures, trois registres, trois vélocités) ; le gain de chaque
+articulation, avant (sur la branche qui l'a ajoutée : la ville, les livres 3-4, 5-6) →
+maintenant : `piano_electrique` lames 0 (ville) ou −0,9 (livres 5-6) → +3,1, fm 0 ou
+−0,9 → +2,4, desaccorde 0 → +4,0 ; `boite_a_musique` +7,6 → +7,3 ; `sifflet` 0 (ville)
+ou −5,4 (livres 3-4) → −2,3 ; `contrebasse_jazz` 0 → −3,0 ; `guitare_nylon` 0 → +2,3 ;
+`batterie_balais` 0 → −2,9 ; `trompettes` harmon 0 → +6,7 (un fader réglé avant se
+corrige de l'opposé de l'écart). Le piano électrique et la guitare de nylon, tenus sur
+le papier mais qui s'éteignent, sont mesurés en suites, comme le piano.
+
 ### 4.2 La foule du stade (`foule`, `applaudissements`)
 
 Deux instruments fabriqués (`moteur/foule.py`) avec ce qui est installé, à graine fixe
@@ -538,7 +548,7 @@ la note d'avant (d'où ses réflexions espacées, sombres, et sa part de 0,3).
 voix chacune), sur la seule durée où elle chante, puis la convolution du stade ; les
 mains rejouent quarante claquements calculés une fois. L'audition des deux instruments
 (42 s de son, `python3 audition.py foule applaudissements --out <dossier>`) se rend en
-6,9 s, 0,76 Go de mémoire de pointe. L'exemple, « La tribune » (`partitions/_foule.py`,
+6,9 s, 0,76 Go de mémoire de pointe. L'exemple, « Le virage » (`partitions/_foule.py`,
 huit mesures à 96 : la foule chante la tête d'un motif à l'unisson sur « o », puis sur
 « ah », puis resserrée dans la3–ré4, sur la grosse caisse aux temps 1 et 3 et les mains
 aux temps 2 et 4 ; la dernière note tenue ; l'ovation, la foule retombée en rumeur), se
@@ -547,7 +557,7 @@ la foule et 1,3 s pour les mains), 1,1 Go de mémoire de pointe ; deux rendus so
 identiques au bit. Son banc :
 
 ```
-_foule « La tribune »  boucle -16.02 LUFS · master -16.46 · court terme -17.4..-14.7 · crête -1.20 dBTP
+_foule « Le virage »  boucle -16.02 LUFS · master -16.46 · court terme -17.4..-14.7 · crête -1.20 dBTP
   bandes <250 47 % · 250–2k 49 % · 2–6k 4.2 % · >6k 0.0 % · stéréo côtés/milieu -4.1 dB, corr. 0.437 (grave 0.893)
   couture : écart -240.0 dB, saut +1.69 dB, spectre 14.34 dB, clic ×1.0 · durée 54.0 s, boucle 20.0 s · rendu 26.4 s/min
   sonie ✓ · crête ✓ · médium ✓ · aigus ✓ · couture ✓ · grave au milieu ✓
@@ -841,4 +851,4 @@ packages/tools/studio/
   corrige de l'opposé de la table « ce qui a changé ».
 - **Octobre 2026, deuxième passe — la tribune.** Deux instruments fabriqués : la `foule`
   qui chante le motif à l'unisson, de loin, dans un stade, et les `applaudissements` en
-  mesure ou en ovation (§ 4.2) ; l'exemple « La tribune » (`partitions/_foule.py`).
+  mesure ou en ovation (§ 4.2) ; l'exemple « Le virage » (`partitions/_foule.py`).

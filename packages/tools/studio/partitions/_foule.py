@@ -1,4 +1,4 @@
-"""FUSIBLE — le studio : « La tribune » (_foule), un exemple, pas un thème du jeu : huit
+"""FUSIBLE — le studio : « Le virage » (_foule), un exemple, pas un thème du jeu : huit
 mesures pour entendre la foule du stade et ses mains.
 
   m. 1–2  la foule chante la tête d'un motif à l'unisson, dans le grave (la2–fa3), sur
@@ -14,7 +14,7 @@ Rendre et mesurer :
 """
 from moteur.ecriture import *
 
-theme = Theme('_foule', 'La tribune', bpm=96, mesure='4/4', tonalite='la mineur', graine=1907,
+theme = Theme('_foule', 'Le virage', bpm=96, mesure='4/4', tonalite='la mineur', graine=1907,
               boucle_min=0, moment='exemple (pas un thème du jeu)', humeur='un stade qui chante')
 
 foule = theme.piste('foule', volume=0)

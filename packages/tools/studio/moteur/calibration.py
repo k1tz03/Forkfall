@@ -42,8 +42,9 @@ VELOCITES = (64, 96, 120)
 BPM = 120.0
 BREVES = ('staccato', 'pizzicato', 'pince', 'frappe', 'dure', 'seul', 'etouffee', 'cercle',
           'timbre_off', 'mediator', 'doigts', 'slap', 'crunch')
-# tenus sur le papier, mais leur son s'éteint aussitôt : on les mesure en suites de notes
-DECROISSANTS = ('piano', 'arpege_synthe')
+# tenus sur le papier, mais leur son s'éteint aussitôt (une corde frappée ou pincée, une
+# lame) : on les mesure en suites de notes
+DECROISSANTS = ('piano', 'arpege_synthe', 'piano_electrique', 'guitare_nylon')
 SUITES = ('ligne_croches', 'accord_croches', 'ligne_doubles')
 # un programme GM tenu à l'attaque lente (0,2 à 0,6 s : un archet lent ; le trémolo, à
 # vélocité 64) : comme le legato, il est fait pour les lignes jusqu'à la croche à 120 (en
