@@ -20,8 +20,10 @@
  *   intro     2 m.  (une fois) la chambre : le maillet seul, la nappe qui
  *                   s'éclaire, la basse qui glisse vers le premier temps
  *   ── la boucle, 92 mesures, 4 min 23 ──
- *   A        16 m.  l'insomnie : le groove, la basse ronde, le maillet ; les
- *                   coups à la porte (m. 5 et 13), la réponse (m. 7 et 15)  [3]
+ *   A        16 m.  l'insomnie : le groove (le cerclage à voix basse, puis la
+ *                   caisse « gated » à la mesure 9), la basse ronde, le maillet ;
+ *                   les coups à la porte (m. 5 et 13), la réponse (m. 7 et 15)
+ *                                                                        [3]
  *   B         8 m.  le couloir : la nappe s'ouvre, le maillet monte à l'octave,
  *                   la basse en marche ; pas de mélodie                     [3,5]
  *   chambre  12 m.  le creux, douze mesures par trois : la nappe, la basse en
@@ -30,16 +32,17 @@
  *                   remonter                                              [1 → 2]
  *   A2       16 m.  l'insomnie, harmonisée ; la nappe dès le début         [3,5]
  *   C         8 m.  trois heures : la mélodie chante enfin (do bémol, ré bémol,
- *                   mi bémol mineur), harmonisée                            [4,5]
- *   pont      8 m.  le tableau des clés : demi-temps, la basse sur la pédale de
- *                   mi bémol, le napolitain (fa bémol), les clés, la télévision
- *                   derrière le mur                                        [2]
+ *                   mi bémol mineur), harmonisée ; le clap en fla          [4,5]
+ *   pont      8 m.  le tableau des clés : demi-temps, la basse qui piétine et
+ *                   monte d'un demi-ton (le napolitain, fa bémol), les clés, la
+ *                   télévision derrière le mur                             [2]
  *   B2        8 m.  le couloir, et la mélodie qui hésite (des entrées en retard,
  *                   des silences)                                          [4]
  *   C2        8 m.  trois heures, au sommet : la réponse double la mélodie à
  *                   l'octave grave                                         [5]
- *   retour    8 m.  le petit matin : la basse et la nappe se referment, la
- *                   réponse frappe une dernière fois et relance            [2,5]
+ *   retour    8 m.  le petit matin : le cerclage revient, la basse et la nappe
+ *                   se referment, la réponse frappe une dernière fois et
+ *                   relance                                               [2,5]
  *
  * Les creux : la chambre (mesures 25 à 36), le pont (61 à 68), le retour.
  * La mélodie joue moins de la moitié du temps ; le reste, la basse et le
@@ -118,10 +121,13 @@
   var B_GROOVE_R = 'k . h . S . h k . . k . S . h r';
   var B_GROOVE2 = 'k . h h S . h k . h k . S . h h';
   var B_FILL = 'k . h . S . h k . . k . S . t T';
-  var B_RELANCE = 'k . h . S . h k kz . . t . T S S';
-  var B_REFRAIN_X = 'kx . h . Sc . h k . . k . Sc . o .';
-  var B_REFRAIN = 'k . h . Sc . h k . . k . Sc . o .';
-  var B_RELANCE_R = 'k . h . Sc . h k kz . . t . T S S';
+  var B_RELANCE = 'k . h . S . h k kz . . t . T t S';
+  var B_REFRAIN_X = 'kx . h . S c h k . . k . S c o .';   // le clap en fla, une double croche après
+  var B_REFRAIN = 'k . h . S c h k . . k . S c o .';
+  var B_RELANCE_R = 'k . h . S c h k kz . . t . T t S';
+  var B_NUIT_X = 'kx . h . S . h k . . k . r . h .';     // le cerclage : tard, à voix basse (la relance s'y pose d'abord)
+  var B_NUIT = 'k . h . r . h k . . k . r . h .';
+  var B_NUIT_O = 'k . h . r . h k . . k . r . o .';
   var B_PONT_X = 'kx . . . . . . . S . . . . . m .';
   var B_PONT = 'k . . . . . m . S . . . . . . .';
   var B_PONT2 = 'k . . . . . . . S . . m . . m .';
@@ -131,7 +137,7 @@
     tonalite: 'mi bémol mineur',
     humeur: 'l\'insomnie à l\'hôtel : une basse ronde qui glisse, un maillet de douze contre seize, trois coups à une porte',
     ville: true,
-    bpm: 84, gain: 1, swing: 0.12,
+    bpm: 84, gain: 1.36, swing: 0.12,
     pompe: { prof: 0.35, rel: 0.3 },
     echo: { pas: 6, retour: 0.45, coupe: 1800 },
     salle: { taille: 0.85, duree: 3.6, ton: 3200 },
@@ -145,7 +151,7 @@
       sonnette: { inst: 'cloche', vol: 0.05, rev: 0.55, echo: 0.4, pan: 0.4 },
       tele:     { inst: 'choeur', vol: 0.03, oct: 3, filtre: 750, rev: 0.6, pan: -0.1 },
       basse:    { inst: 'basse', vol: 0.085, oct: 1, plancher: 'G1', pompe: true, drive: 0.9, filtre: 1600, ton: [1600, 650, 0.12], env: [0.004, 0.45, 0.65, 0.14] },
-      batt:     { vol: 0.6, porte: 0.35, tenue: 0.3, rev: 0.3, filtre: 9000 }
+      batt:     { vol: 0.6, drive: 1.2, porte: 0.35, tenue: 0.3, rev: 0.3, filtre: 9000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : la chambre ──
@@ -166,7 +172,7 @@
         nappe: silences(4).concat([NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE]),
         lead: silences(4).concat([FRAPPE, FRAPPE_FIN]).concat(silences(6)).concat([FRAPPE, FRAPPE_FIN, SILENCE, SILENCE]),
         reponse: silences(6).concat([REPONSE, REPONSE_FIN]).concat(silences(6)).concat([REPONSE, REPONSE_FIN]),
-        batt: [B_GROOVE_X, B_GROOVE, B_GROOVE, B_GROOVE_O, B_GROOVE, B_GROOVE, B_GROOVE, B_FILL,
+        batt: [B_NUIT_X, B_NUIT, B_NUIT, B_NUIT_O, B_NUIT, B_NUIT, B_NUIT, B_FILL,
                B_GROOVE_X, B_GROOVE, B_GROOVE, B_GROOVE_O, B_GROOVE, B_GROOVE, B_GROOVE_R, B_RELANCE]
       },
       // le couloir : sans mélodie
@@ -187,7 +193,7 @@
         douze: DOUZE,
         sonnette: [SILENCE, SILENCE, SILENCE, 'Bb5 . . . . . . . . . . . . . . .'].concat(silences(8)),
         reponse: silences(7).concat([COUPS_LENTS]).concat(silences(4)),
-        batt: ['bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, 'r . . . . . . . . . . . . . . .', SILENCE, SILENCE,
+        batt: ['kx . . . . . . . . . . . . . . .', SILENCE, SILENCE, 'r . . . . . . . . . . . . . . .', SILENCE, SILENCE,
                'r . . . . . . . . . . . . . . .', SILENCE, SILENCE,
                'k . . . . . . k . . k . . . . .', 'k . h . . . h k . . k . . . h .', B_RELANCE]
       },
@@ -209,9 +215,9 @@
         lead: LEAD_C,
         batt: [B_REFRAIN_X, B_REFRAIN, B_REFRAIN, B_REFRAIN, B_REFRAIN_X, B_REFRAIN, B_REFRAIN, B_RELANCE_R]
       },
-      // le tableau des clés : la pédale, le napolitain, la télévision derrière le mur
+      // le tableau des clés : la basse qui piétine, le napolitain, la télévision derrière le mur
       pont: {
-        accords: ['Ebm', 'Ebm', 'Fbmaj7/Eb', 'Fbmaj7/Eb', 'Ebm', 'Ebm', 'Fbmaj7/Eb', 'Bb7'],
+        accords: ['Ebm', 'Ebm', 'Fbmaj7', 'Fbmaj7', 'Ebm', 'Ebm', 'Fbmaj7', 'Bb7'],
         ouvre: { douze: [900, 1600] },
         basse: fois(BR_PEDALE, 7).concat([BR3]),
         douze: DOUZE,
@@ -229,7 +235,7 @@
         copie: 'C',
         reponse: LEAD_C.map(octaveBas),
         douze: DOUZE_HAUT,
-        batt: [B_REFRAIN_X, B_REFRAIN, B_REFRAIN, B_REFRAIN, B_REFRAIN_X, B_REFRAIN, B_REFRAIN, 'k . h . Sc . h k . . k . Sc . . .']
+        batt: [B_REFRAIN_X, B_REFRAIN, B_REFRAIN, B_REFRAIN, B_REFRAIN_X, B_REFRAIN, B_REFRAIN, 'k . h . S c h k . . k . S . . .']
       },
       // le petit matin
       retour: {
@@ -239,7 +245,7 @@
         douze: DOUZE,
         nappe: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE],
         reponse: silences(6).concat([REPONSE, REPONSE_FIN]),
-        batt: [B_GROOVE_X, B_GROOVE, B_GROOVE, B_GROOVE_O, 'k . . . S . . k . . k . S . . .', 'k . . . S . . k . . k . S . . .', B_FILL, B_RELANCE]
+        batt: [B_NUIT_X, B_NUIT, B_NUIT, B_NUIT_O, 'k . . . r . . k . . k . r . . .', 'k . . . r . . k . . k . r . . .', B_FILL, B_RELANCE]
       }
     },
     ordre: ['intro', 'A', 'B', 'chambre', 'A2', 'C', 'pont', 'B2', 'C2', 'retour'], boucle: 1
