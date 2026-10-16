@@ -48,8 +48,9 @@ LA CARTE (76 à la noire ; une mesure de 4/4 = 3,16 s, de 3/4 = 2,37 s ; le corp
                      motif au piano (le pianiste de l'hôtel, tôt) ; le trousseau        2 → 3
   B      8 m.  0:25  « Le tableau » : pizzicati (le tic-tac du hall), la clarinette chante le
                      motif, le cor lointain la mèche                                    3 → 4
-  V1     8 m. 3/4  0:51  « La valse » : le piano seul, valse lente ; le motif, la mèche ; la
-                     sonnette sur sib                                                    3
+  V1     8 m. 3/4  0:51  « La valse » : le piano seul, valse lente ; le motif, la mèche ; puis
+                     la main gauche tourne seule et s'éteint (une fenêtre) ; la sonnette
+                     sur sib                                                         3 → 1
   C      8 m.  1:09  « Le couloir » : l'ostinato, les cuivres graves, la tête au cor (une
                      porte au bout du couloir) ; la cymbale enfle                       5 → 6
   D      8 m.  1:35  « Deux heures dix » : le sommet — le braam, le motif aux cors avec
@@ -57,8 +58,8 @@ LA CARTE (76 à la noire ; une mesure de 4/4 = 3,16 s, de 3/4 = 2,37 s ; le corp
                      s'arrête au 3ᵉ temps de la dernière mesure (un temps de silence)   8
   K      1 m. 3/4  2:00  « La porte » : les trois coups, seuls                           1
   E      8 m.  2:02  « La douze » : le creux — l'arc (l'ampoule meurt), la cymbale frottée,
-                     une pédale presque muette, la sonnette deux fois au loin, la tête en
-                     valeurs doublées au piano ; puis le lamento revient                1 → 2
+                     une pédale presque muette, la sonnette deux fois au loin (la fenêtre) ;
+                     puis le lamento revient, la tête en valeurs doublées au piano     1 → 2
   V2     8 m. 3/4  2:28  « La valse, la nuit » : la valse orchestrée (pizzicati, basson) ; la
                      clarinette chante, puis la valse tourne seule ; la sonnette sur sib  4
   F      8 m.  2:47  « Le cahier de nuit » : l'ostinato aux altos, les violoncelles chantent
@@ -390,7 +391,7 @@ def porte0(s):
 @theme.section('A', mesures=8)
 def A(s):
     nuances(s, basses='mp', celles_tenu='pp', altos='p', piano='mf', piano_mg='f', sub='mf', violons2='pp')
-    sonner(s, 0, vel=94)
+    sonner(s, 0, vel=88)
     # la basse et les voix tenues : la grille entière, très bas dans la nuance
     basse(s, basses, vel=72)
     basse(s, sub, octave=-1, vel=56, jusqua=s.m(5))
@@ -411,7 +412,7 @@ def A(s):
 # --- B : le tableau ---------------------------------------------------------------------------
 @theme.section('B', mesures=8)
 def B(s):
-    nuances(s, basses='f', celles_tenu='p', altos='mf', clarinette='mp', cor_loin='mf', piano_mg='mf')
+    nuances(s, basses='mf', celles_tenu='p', altos='mp', clarinette='mp', cor_loin='mp', piano_mg='mf')
     # les pizzicati : la basse et sa quinte, sur 1 et 3 (le tic-tac du hall)
     for d, l, c in plages(grille_de(s)):
         b, _, q = ACCORDS[c]
@@ -424,7 +425,7 @@ def B(s):
     # la clarinette chante le motif ; le cor lointain répond par la mèche
     s.joue(clarinette, MOTIF, a=s.m(1, 4), vel=88)
     s.joue(cor_loin, MECHE, a=s.m(3, 4), vel=86)
-    s.diminuendo(cor_loin, s.m(5), s.m(5, 4), 'mf', 'p')
+    s.diminuendo(cor_loin, s.m(5), s.m(5, 4), 'mp', 'p')
     trousseau(s, s.m(6), vel=-4)
     # m. 7–8 : le piano reprend la chute de la basse ; un silence au dernier temps
     s.note(piano_mg, 'B2', s.m(7), 3.5, vel=60)
@@ -442,7 +443,10 @@ def V1(s):
     s.joue(piano, VALSE_MECHE, a=s.m(3, 3), vel=76)
     # un fil de contrebasse sous la valse (la basse dès la première mesure)
     basse(s, basses, vel=60, maxi=2)
-    sonner(s, s.m(8), note='Bb', vel=84)
+    # m. 5–8 : la mélodie finie, la main gauche tourne seule et s'éteint (une fenêtre)
+    s.diminuendo(piano_mg, s.m(4), s.m(5), 'f', 'p')
+    s.diminuendo(basses, s.m(4), s.m(5), 'p', 'pp')
+    sonner(s, s.m(8), note='Bb', vel=70)
 
 
 # --- C : le couloir ------------------------------------------------------------------------------
@@ -528,9 +532,10 @@ def E(s):
     s.crescendo(basses, s.m(5, 3), s.m(8, 4), 'p', 'mf')
     s.note(violons2, 'Bb5', s.m(2), 8, vel=50, art='tenu')
     # quelqu'un attend au comptoir vide
-    sonner(s, s.m(3), vel=78, double=True)
-    # la tête en valeurs doublées au piano (la mèche sur ♭vi)
-    s.joue(piano, TETE.augmente(2), a=s.m(3, 3), vel=80)
+    sonner(s, s.m(3), vel=64, double=True)
+    # la tête en valeurs doublées au piano, quand le lamento revient (la mèche sur ♭vi, m. 7 ;
+    # elle se tait avant V)
+    s.joue(piano, remesure(TETE, [1, 1, 3.9]), a=s.m(6, 3), vel=80)
     # m. 5–8 : les voix tenues reviennent, le piano reprend la basse du lamento (sec)
     voix(s, celles_tenu, rangs=(0, 1), vel=70, de=s.m(5, 3))
     voix(s, altos, rangs=(2,), vel=70, de=s.m(5, 3))
@@ -626,28 +631,28 @@ def G(s):
 # --- H : six heures (la relance) ------------------------------------------------------------------
 @theme.section('H', mesures=8)
 def H(s):
-    nuances(s, basses='p', celles_tenu='pp', altos='p', piano_mg='f', cor_loin='mf', sub='mp')
-    trousseau(s, 0.25, vel=0)
+    nuances(s, basses='p', celles_tenu='pp', altos='p', piano_mg='f', cor_loin='p', sub='mp')
+    trousseau(s, 0.25, vel=-12)
     s.note(archet, 'C4', s.m(1, 3), 6, vel=58)
     # m. 1–4 : la fenêtre — la pédale de mib, la cymbale frottée, le cor au loin (la menace
     # demeure) ; m. 5–8 : les murs reviennent avec le lamento
     s.note(basses, 'Eb2', 0, s.m(5), vel=74)
     basse(s, basses, vel=74, de=s.m(5))
-    s.crescendo(basses, s.m(5), s.m(8, 4), 'p', 'mp')
+    s.crescendo(basses, s.m(5), s.m(8, 4), 'p', 'mf')
     s.note(piano_mg, 'Eb2', 0, 2, vel=60)
     basse(s, sub, octave=-1, vel=54, jusqua=s.m(5))
     voix(s, celles_tenu, rangs=(0, 1), vel=66, de=s.m(5))
     voix(s, altos, rangs=(2,), vel=66, de=s.m(5))
-    s.crescendo(celles_tenu, s.m(5), s.m(8, 4), 'pp', 'p')
-    s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mp')
+    s.crescendo(celles_tenu, s.m(5), s.m(8, 4), 'pp', 'mp')
+    s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mf')
     # la mèche au cor lointain, sur la pédale
-    s.joue(cor_loin, MECHE, a=s.m(1, 4), vel=84)
-    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'mf', 'p')
+    s.joue(cor_loin, MECHE, a=s.m(1, 4), vel=76)
+    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'p', 'pp')
     # le piano reprend la basse du lamento ; la dernière mesure enfle vers la sonnette de A
     for d, l, c in plages(grille_de(s), de=s.m(5)):
         s.note(piano_mg, hauteur(ACCORDS[c][0]) + 12, d, min(l, 2), vel=56)
-    roulement(s, timb_roul, 'Bb2', s.m(8), s.m(9), 'ppp', 'p', vel=70)
-    cymbale_vers(s, s.m(9), 'monte_2s', vel=80)
+    roulement(s, timb_roul, 'Bb2', s.m(8), s.m(9), 'pp', 'mf', vel=76)
+    cymbale_vers(s, s.m(9), 'monte_2s', vel=92)
 
 
 theme.forme(intro=['intro', 'porte0'],
