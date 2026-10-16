@@ -762,7 +762,7 @@
       { sorte: "replique", de: 25.6, a: 30.4, qui: "Tibo Rancé", texte: "J'ai appris là, en bas. En novembre, je joue ?" },
       { sorte: "titre", de: 32.4, a: 36.8, texte: "Aubérive · 2011", sous: "Chambre 12", entree: 0.2, sortie: 0.7 }
     ],
-    montages: { court: [[0.4, 5.4], [6.0, 10.8], [11.6, 16.6], [17.1, 21.8], [23.4, 30.2], [31.0, 36.0]] },
+    montages: { court: [[0.4, 5.2], [6.0, 10.6], [11.6, 16.2], [17.1, 21.6], [23.6, 30.0], [31.2, 35.8]] },
     preparer: function (K, ctx) {
       return K.etapes(ctx, [
         function () { ctx.decors.dehors = dehors(K, ctx); },
