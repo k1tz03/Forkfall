@@ -176,7 +176,7 @@
     tonalite: 'ré mineur',
     humeur: 'la tribune qui t\'aime trop : un chœur qui scande sans paroles, une basse en marche, le grand tambour',
     ville: true,
-    bpm: 120, gain: 1.08,
+    bpm: 120, gain: 1.05,
     pompe: { prof: 0.5, rel: 0.22 },
     echo: { pas: 6, retour: 0.3, coupe: 2200 },
     salle: { taille: 0.85, duree: 3.0, ton: 3800 },
@@ -268,6 +268,7 @@
         lead: CHANT_B,
         harmo: true,
         envol: ENVOL_B,
+        tribune: silences(16),                // la grande scie tient l'accord : la tribune se tait (le poids)
         batt: [C_APPEL1_X, C_APPEL2, C_REPONSE1, C_REPONSE2, C_APPEL1, C_APPEL2, C_REPONSE1, C_REPONSE2,
                C_APPEL1, C_APPEL2, C_APPEL2, C_REPONSE2, C_APPEL1, C_REPONSE1, C_APPEL2, C_SEUL4]
       },
