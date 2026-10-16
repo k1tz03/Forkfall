@@ -11,8 +11,11 @@ function depart(livre, graine) {
 }
 // … et la première carte jouée : la ville est à toi (on attend que tout se taise), dehors — la
 // première carte se joue chez toi, et un saut (`aller`) depuis une pièce laisse la caméra dans la pièce
+// (selon le livre, la première réponse ouvre une scène jouée ou une deuxième carte tout de suite :
+// l'automate les passe — il répond du même côté — jusqu'à ce que la ville soit au repos)
 function enVille(livre, graine, sens) {
-  return depart(livre, graine).concat([['repondre', sens || 'gauche'], ['attendreQue', '!etat.carte && !etat.cine && !etat.fondu', 40], ['attendre', 1.2],
+  return depart(livre, graine).concat([['repondre', sens || 'gauche'],
+    ['jouerJusqua', '!etat.carte && !etat.cine && !etat.fondu', { max: 90, reponses: sens || 'gauche' }], ['attendre', 1.2],
     ['sortir'], ['attendreQue', '!etat.dedans && !etat.fondu', 20], ['attendre', 0.8]]);
 }
 // devant la porte d'un lieu, dehors (le panneau du lieu refermé, la pièce quittée)
@@ -23,12 +26,14 @@ function devant(lieu) {
 function dedans(lieu) {
   return [['aller', lieu], ['attendre', 0.9], ['fermerPorte'], ['attendre', 4.6]];
 }
-// le samedi à la Rive : le moteur avance jusqu'à la carte du match, la ville va au stade
+// le samedi à la Rive : le moteur avance jusqu'à la carte du match, la ville va au stade ; si la
+// carte n'y est pas (selon le rôle, le rendez-vous du match est ailleurs, ou plus tard), l'automate
+// suit le rendez-vous (« Y aller », « Attendre ») jusqu'à elle
 function auStade(livre, graine) {
   return depart(livre, graine).concat([
     ['avancer', 'v.card.beatKind === "match"'],
     ['eval', 'window.FusibleVille._essai("jour", "sam"); window.FusibleVille._essai("tranche", "aprem"); window.FusibleVille._essai("aller", "stade");'],
-    ['attendreCarte'], ['attendre', 1.0]]);
+    ['attendre', 1.5], ['jouerJusqua', 'etat.carte && etat.beat === "match"', { max: 120 }], ['attendre', 1.0]]);
 }
 
 // les carrières finies que la ville garde (« Tes carrières », preview_dossier.js) : trois
