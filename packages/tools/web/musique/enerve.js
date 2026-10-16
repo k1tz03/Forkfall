@@ -19,15 +19,16 @@
  *   ── la boucle, 112 mesures, 3 min 12 ──
  *   A        16 m.  la tension : la basse, la grosse caisse, le charleston, les
  *                   claps ; l'arc à la neuvième ; une coupure au bout de la phrase
- *   B        16 m.  l'arc : la basse qui saute à l'octave et dévale, le lead qui
- *                   s'ouvre jusqu'au cri, les stabs ; deux coupures
+ *   B        16 m.  l'arc : la basse qui saute à l'octave et dévale, l'arc, les
+ *                   stabs ; à la neuvième, le lead qui s'ouvre jusqu'au cri ;
+ *                   deux coupures
  *   C1        8 m.  la surtension, premier sommet : la reese sous la basse, le
  *                   cri harmonisé, l'arc à l'octave, le charleston en doubles croches
  *   coupure   8 m.  le court-circuit, le creux : la basse qui bégaie, fermée,
  *                   les crépitements, l'arc seul ; la grosse caisse revient
  *   D        16 m.  le délestage : le demi-temps, la basse en croches, une grande
- *                   scie sombre, une mélodie en valeurs longues, les stabs à
- *                   trois contre quatre
+ *                   scie sombre, les stabs à trois contre quatre ; à la
+ *                   neuvième, une mélodie en valeurs longues
  *   A2       16 m.  la remise sous tension : la quinte diminuée dans la basse,
  *                   l'arc, le lead qui monte
  *   C2       16 m.  la surtension, second sommet : tout ; l'accroche du titre,
@@ -184,7 +185,7 @@
       B: {
         accords: ['Em', 'C', 'Em', 'C', 'Em', 'C', 'Em', 'Em', 'Em', 'C', 'Em', 'C', 'F', 'Dm', 'C', 'Em'],
         ouvre: { lead: [900, 4500] },
-        lead: CRI_B,
+        lead: silences(8).concat(CRI_B.slice(8)),
         basse: [RIFF_B[0], RIFF_B[1], RIFF_B[0], RIFF_B[1], RIFF_B[0], RIFF_B[1], RIFF_B[0], coupe(RIFF_B[1]),
                 RIFF_B[0], RIFF_B[1], RIFF_B[0], RIFF_B[1], RIFF_B[0], RIFF_B[1], RIFF_B[0], coupe(RIFF_B[1], 2)],
         acide: fois(ARC, 3).concat(silences(10)),
@@ -214,7 +215,7 @@
       D: {
         accords: ['Em', 'Em', 'C', 'C', 'Dm', 'Dm', 'F', 'F', 'Em', 'Em', 'C', 'C', 'Am', 'Am', 'F', 'Em'],
         ouvre: { lead: [700, 1400] },
-        lead: LENT,
+        lead: silences(8).concat(LENT.slice(8)),
         basse: BASSE_D,
         nappe: fois([NAPPE, TENU], 7).concat([NAPPE, NAPPE]),
         stab: STAB_TROIS,
