@@ -8,8 +8,12 @@ note manque, l'enveloppe et la queue de relâche, les notes plus longues que leu
 (la note suivante entre sans son attaque, en fondu sur la précédente), les pupitres
 fabriqués à partir d'un soliste (plusieurs prises désaccordées de quelques cents et
 décalées de quelques millisecondes), l'alignement des attaques (chaque échantillon
-est posé pour que son attaque tombe sur le temps).
+est posé pour que son attaque tombe sur le temps), l'égalisation des zones (chaque
+région, c'est-à-dire chaque échantillon de chaque couche, ramenée à la sonie médiane de
+sa banque : moteur/zones.json, banc.py --calibrer).
 """
+import hashlib
+import json
 import os
 import re
 from collections import OrderedDict
@@ -42,7 +46,7 @@ def _cle_sfz(v):
 class Region:
     __slots__ = ('echantillon', 'lokey', 'hikey', 'centre', 'lovel', 'hivel', 'volume', 'tune',
                  'offset', 'seq_length', 'seq_position', 'lorand', 'hirand', 'trigger', 'attaque',
-                 'relache', 'veltrack', 'locc64', 'hicc64')
+                 'relache', 'veltrack', 'locc64', 'hicc64', 'correction', 'correction_courte')
 
     def __repr__(self):
         return (f'Region({os.path.basename(self.echantillon)}, {self.lokey}-{self.hikey}@{self.centre},'
@@ -133,6 +137,8 @@ def lire_sfz(chemin):
         r.veltrack = float(o.get('amp_veltrack', 100))
         r.locc64 = int(o.get('locc64', 0))
         r.hicc64 = int(o.get('hicc64', 127))
+        r.correction = 0.0
+        r.correction_courte = 0.0
         sortie.append(r)
     return sortie
 
@@ -181,6 +187,48 @@ def _accords():
 
 
 ACCORDS = _accords()
+
+
+def _zones():
+    """L'égalisation des zones (banc.py --calibrer) : {'echantillons': {banque: {clé de
+    région: dB, ou [dB d'une note brève, dB d'une note tenue]}}, 'hauteurs':
+    {instrument:articulation: {'de': note, 'vels': [vélocités], 'db': [[dB par demi-ton]
+    par vélocité]} ou {'de', 'vels', 'court', 'long'}, et pour un programme qui joue sur
+    une grille de vélocités, 'grille' et 'ref' (instruments.velocite_jouee)}}."""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'zones.json')
+    try:
+        with open(p, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+ZONES = _zones()
+
+# Une zone tenue a deux corrections : celle d'une note brève (une croche à 120, 0,25 s)
+# et celle d'une note tenue (deux mesures à 120, 4 s) ; entre les deux, la correction
+# glisse avec le logarithme de la durée. Les échantillons tenus n'ont pas tous la même
+# attaque (un archet qui met une seconde à sonner, un trémolo qui part d'un accent) :
+# une seule correction égalisait les notes longues ou les brèves, jamais les deux.
+COURT_S = 0.25
+LONG_S = 4.0
+
+
+def correction(r, duree_s, sans_attaque_s=0.0):
+    """La correction de zone (dB) d'une note de la région `r` qui dure `duree_s`. Une note
+    liée (entrée sans son attaque) prend celle des notes tenues."""
+    if r.correction_courte == r.correction or sans_attaque_s > 0:
+        return r.correction
+    w = min(1.0, max(0.0, np.log(max(duree_s, 1e-3) / COURT_S) / np.log(LONG_S / COURT_S)))
+    return r.correction_courte + (r.correction - r.correction_courte) * w
+
+
+def cle_region(r):
+    """La clé d'une région dans zones.json : une empreinte de son échantillon, de ses
+    couches et de ses touches (les noms des fichiers de la bibliothèque, qui portent
+    parfois une marque, ne s'écrivent pas dans le dépôt)."""
+    t = f'{os.path.basename(r.echantillon)}|{r.lovel}-{r.hivel}|{r.lokey}-{r.hikey}'
+    return hashlib.blake2b(t.encode('utf-8'), digest_size=5).hexdigest()
 
 
 class Echantillon:
@@ -242,8 +290,10 @@ def transpose(chemin, rapport):
 # Une banque : un fichier SFZ (une articulation d'un instrument)
 
 class Banque:
-    def __init__(self, chemin, regions=None):
+    def __init__(self, chemin, regions=None, nom=None):
         self.chemin = chemin
+        # le nom de la banque dans zones.json : son chemin tel que le catalogue l'écrit
+        self.nom = nom or os.path.basename(chemin)
         self.regions = regions if regions is not None else lire_sfz(chemin)
         self.regions = [r for r in self.regions if r.trigger in ('attack', 'first', 'legato')
                         and r.hicc64 >= 0 and r.locc64 <= 0]
@@ -251,6 +301,19 @@ class Banque:
             raise ValueError(f'aucune région jouable dans {chemin}')
         self.relache_regions = [r for r in lire_sfz(chemin) if r.trigger == 'release'] if regions is None else []
         self.compteurs = {}
+        self.forcer = None          # une région imposée (la calibration mesure zone par zone)
+        self.egaliser()
+
+    def egaliser(self, table=None):
+        """Pose sur chaque région sa correction de zone (dB) : celle de zones.json, ou
+        celle de `table` ({clé de région: dB} ; {} les remet à zéro)."""
+        t = ZONES.get('echantillons', {}).get(self.nom, {}) if table is None else table
+        for r in self.regions:
+            v = t.get(cle_region(r), 0.0)
+            if isinstance(v, (list, tuple)):
+                r.correction_courte, r.correction = float(v[0]), float(v[1])
+            else:
+                r.correction_courte = r.correction = float(v)
 
     def etendue(self):
         return min(r.lokey for r in self.regions), max(r.hikey for r in self.regions)
@@ -262,6 +325,8 @@ class Banque:
         """La région qui joue `cle` à `vel` : la bonne touche (sinon l'échantillon le
         plus proche), la bonne couche de vélocité (sinon la plus proche), le tour de
         rôle suivant (seq) ou le tirage `alea` (lorand/hirand)."""
+        if self.forcer is not None:
+            return self.forcer
         cands = [r for r in self.regions if r.lokey <= cle <= r.hikey]
         if not cands:
             d = min(abs(r.centre - cle) for r in self.regions)
@@ -323,7 +388,7 @@ def allonger(x, n, debut_min):
 
 def jouer(banque, cle, vel, duree_s, desaccord_cents=0.0, oneshot=False, relache=None,
           sans_attaque_s=0.0, fondu_entree_s=0.0, alea=0.5, veltrack=None, attaque_s=None,
-          vel_couche=None):
+          vel_couche=None, infos=None):
     """Une note : rend (signal stéréo, décalage) où `décalage` est le nombre
     d'échantillons à placer AVANT l'instant de la note (l'attaque tombe sur le temps).
 
@@ -331,7 +396,12 @@ def jouer(banque, cle, vel, duree_s, desaccord_cents=0.0, oneshot=False, relache
     `sans_attaque_s` : on entre dans l'échantillon après son attaque (le legato) ;
     `vel_couche` : la vélocité qui choisit la couche (le timbre), si elle diffère de
     celle qui donne le niveau (l'expression d'une piste change le timbre sans doubler
-    sa nuance). Un relâchement enregistré (le piano) s'ajoute à la fin de la note."""
+    sa nuance). Un relâchement enregistré (le piano) s'ajoute à la fin de la note.
+    Le niveau : le volume de la région, sa correction de zone (zones.json : appliquée
+    APRÈS le choix de la couche, elle ne change jamais le timbre), la vélocité.
+    `infos` (un dictionnaire) reçoit l'énergie jouée (`energie`) et celle de
+    l'échantillon joué en entier (`energie_pleine`) : une note brève coupée court
+    (le réglage `bref`) garde ainsi son énergie."""
     r = banque.choisir(cle, vel if vel_couche is None else vel_couche, alea)
     corr = ACCORDS.get(os.path.basename(r.echantillon), 0.0)
     rapport = 2.0 ** ((cle - r.centre + (r.tune + corr + desaccord_cents) / 100.0) / 12.0)
@@ -368,8 +438,12 @@ def jouer(banque, cle, vel, duree_s, desaccord_cents=0.0, oneshot=False, relache
     nf = min(n, int(0.02 * SR))
     corps[n - nf:] *= np.linspace(1, 0, nf, dtype=np.float32)[:, None]
     vt = r.veltrack if veltrack is None else veltrack
-    g = 10.0 ** (r.volume / 20.0) * ((vel / 127.0) ** (2.0 * vt / 100.0))
+    c = r.correction if oneshot else correction(r, duree_s, sans_attaque_s)
+    g = 10.0 ** ((r.volume + c) / 20.0) * ((vel / 127.0) ** (2.0 * vt / 100.0))
     corps *= np.float32(g)
+    if infos is not None:
+        infos['energie'] = float(np.sum(np.square(corps, dtype=np.float64)))
+        infos['energie_pleine'] = float(np.sum(np.square(x[debut:], dtype=np.float64))) * g * g
     if banque.relache_regions and not oneshot and sans_attaque_s == 0.0:
         # le bruit du relâchement (l'étouffoir qui retombe), à la fin de la note
         rr = [x for x in banque.relache_regions if x.lokey <= cle <= x.hikey
