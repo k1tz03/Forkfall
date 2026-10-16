@@ -421,15 +421,38 @@ Ce que la ville porte en plus des cartes :
   toi ; les affaires en second onglet). Un nouveau visage ne prend pas un mot des réservoirs de
   noms (`content/names/fr.yaml`) : `build_content` le refuse, sinon toutes les carrières figées
   changeraient.
-- **La musique** (`packages/tools/web/audio.js`, `MUSIQUE`) : six thèmes NOIRS écrits note à
-  note et synthétisés (aucun fichier son) — du synthé de polar, parce que la première
-  partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. La Mèche à
-  l'accueil (la mineur harmonique, une basse en octaves qui pompe, un motif de trois mi
-  répétés), La Filature en ville le jour (une basse en gamme de blues), Néons le soir et la
-  nuit (demi-temps, un saxophone de synthèse), La Rive au stade (mi phrygien, basse saturée,
-  la tribune qui chante, les claps du virage), Le Fusible sur une carte sombre (une boîte à
-  musique désaccordée, cinq notes contre quatre temps, un cœur qui bat), Le Dernier Tour à la
-  fin (le motif de La Mèche, lent) — en fondu enchaîné, et un jingle au départ d'une histoire.
+- **La musique** (`packages/tools/web/audio.js`, le moteur ; `packages/tools/web/musique/<clé>.js`,
+  un fichier par thème ; la bible et le guide du compositeur : `docs/design/bande_originale.md`) :
+  des thèmes NOIRS écrits note à note et synthétisés (aucun fichier son) — de la synthé noire et
+  moite qui rejoue les années quatre-vingt sur une cassette fatiguée, parce que la première
+  partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. **Les vingt
+  thèmes de la bible sont écrits** (octobre 2026, cinq compositeurs) : « Fusible » à l'accueil, le
+  modèle (une basse qui court en octaves, une accroche de quatre notes) ; un thème par livre, chacun
+  sur l'objet de son livre (le chœur des masques, le bip du répondeur, la sirène de seize heures,
+  les lampadaires d'une oreille à l'autre, la fanfare qui rétrécit, l'horloge du fax, les trois coups
+  de la chambre 12, la voix de l'oreillette en triolets, les cloches de glace du dôme, les deux
+  sonneries) ; Promenade (la ville le jour, un orage d'été au milieu), Néons (le soir), Les Quartiers
+  (la découverte), La Montée (la joie), La Rive (le stade), Garde à vue (une carte sombre), Les Douze
+  Pages (le suspense), Court-circuit (l'éclair), Le Dernier Tour (la fin). Les boucles des thèmes de
+  ville durent de 4 min 07 à 4 min 23 avant de se redire, les autres de 2 min 43 à 3 min 15 ; les
+  vingt moyennes tiennent de −21,6 à −20,8 dB. L'accroche de « Fusible » revient deux fois en
+  tout : dans Court-circuit et au dernier tour. En fondu enchaîné, et un
+  jingle au départ d'une histoire. **Où chacun joue** (bible § 4, `themeDuMoment` du gabarit) : en
+  ville le jour, le thème du livre en cours (`livre_hN`) un jour sur deux, le premier compris (son
+  introduction jouée a le même : une scène jouée demande `musique: livre`), la promenade l'autre ; les
+  quartiers (`decouverte`) le jour d'une découverte (l'événement `fusible:decouverte` : un quartier
+  qui s'ouvre, une pièce du dossier ; une page d'album finie) ; la montée (`joie`) jusqu'au lendemain
+  d'un bilan tenu ; le soir et la nuit, les néons ; le stade, la Rive ; une carte sombre, la garde à
+  vue ; le grand déballage et les décisions du samedi en direct, `suspense` ; le mode éclair,
+  `enerve` ; la fin, le dernier tour. Un thème absent de `musique/` cède sa place au plus proche
+  (`themeOu`). **La reprise** : en ville on quitte un thème et on y revient sans cesse ; un thème
+  retrouvé dans les dix minutes reprend à la section qui suit celle qu'on a quittée (`audio.js`,
+  `reprise`), pas à son introduction — chaque section d'un thème doit pouvoir ouvrir le morceau ;
+  un thème écarte les sections où il ne veut pas reprendre (`reprise: { sauf: ['creux'] }` : la garde
+  à vue ne rouvre pas une carte sombre sur son silence).
+  Un thème s'inscrit par `FusibleAudio.theme(clé, définition)` ;
+  `musique_sources.js` pose les fichiers après audio.js (l'aperçu, le banc, le juke-box), chacun
+  dans son filet : une erreur n'emporte que son thème (`FusibleAudio.erreurs()`).
   Sous un thème, les couches d'origine se taisent : la nappe, et le lit continu des lieux (la
   pluie, le néon, la rumeur — « un schlash continu » au retour du porteur, mesuré plus fort dans
   les aigus que les thèmes) ; il ne reste du lieu que de rares bruits d'objets, bas (une goutte,
@@ -437,13 +460,21 @@ Ce que la ville porte en plus des cartes :
   rue ; une carte ouverte a le sien.
   Le moteur a ses effets : la grosse caisse fait pomper les voix `pompe`, un écho ping-pong
   (`echo`), la saturation (`drive`), un filtre par voix que la section balaie (`ouvre`), la
-  caisse claire « gated » (`S`), la montée (`z`). La grille : seize cases par mesure, une note
-  attaque, `-` la tient, `.` se tait, `~` glisse, `!` accentue ; la basse et les accords en
-  degrés sur la grille d'accords ; l'en-tête de `MUSIQUE` dit tout. On vérifie sans
-  haut-parleur : `NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js
-  --out /tmp/son` rend chaque thème en WAV, avec ses niveaux et un spectrogramme (viser une
-  moyenne vers −21 dB, une crête sous −3 dB, et assez d'énergie au-dessus de 250 Hz pour un
-  haut-parleur de téléphone).
+  caisse claire « gated » (`S`, et sa porte `batt.porte`), la montée (`z`) ; la salle d'un thème
+  (`salle`, `rev`), la cassette (`cassette`, `flotte`), et les instruments `supersaw`, `reese`,
+  `stab`, `vox`, `sqbasse`, `pluck2`. La grille : seize cases par mesure, une note attaque, `-` la
+  tient, `.` se tait, `~` glisse, `!` accentue ; la basse et les accords en degrés sur la grille
+  d'accords ; « L'ÉCRITURE » et « LES VOIX », en tête de la musique dans audio.js, disent tout. On
+  vérifie sans haut-parleur : `NODE_PATH=/opt/node22/lib/node_modules node
+  packages/tools/web/banc_son.js --boucle --mp3 --out /tmp/son` rend chaque thème (l'introduction
+  et deux passages de la boucle) en WAV et en MP3, avec ses niveaux, sa période, sa couture, ses
+  sources, un spectrogramme et sa courbe d'énergie (cibles : moyenne −21 dB à ±1,5, crête sous
+  −3 dB, 20 % de l'énergie au moins au-dessus de 250 Hz, boucle de 2 min 30, 4 min en ville) ;
+  `--verifier` compile seulement, en Node. Le juke-box (`node packages/tools/web/juke_box.js --out
+  <dossier>`) les joue tous en direct, pour l'oreille du porteur. Sur une même machine, le rendu
+  hors ligne se refait au bit près (l'écho n'a plus qu'un retard dans sa boucle : deux retards
+  imbriqués se faisaient servir par Chromium dans un ordre qui changeait d'un rendu à l'autre) ;
+  d'une machine à l'autre, une crête peut bouger d'un dixième de décibel.
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,
@@ -488,7 +519,12 @@ par l'assemblage : la page, le réseau d'abord (le cache après trois secondes) 
 `contenu/`, `cinema/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
 son empreinte (le commun, le moteur, les livres déjà joués, les films déjà vus) ; on rejoue hors ligne ce qu'on a vu.
 La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RESERVE_IMAGES`), et la
-musique se tait quand la page est cachée (`audio.js`).
+musique se tait quand la page est cachée (`audio.js`). **Pour l'artefact publié** (qui ne sert pas
+le `.gz` comme fichier), on assemble avec `--contenu-json` : les bundles de `contenu/` sortent en JSON
+non compressé (l'hôte compresse au transfert, `demarrage.js` lit tel quel un bundle sans en-tête
+gzip), on ajoute `<meta name="fusible-lien" content="<l'URL de l'artefact>">` (les liens de défi), et
+l'on publie avec `capabilities: {db: {rules: [jour, jour/{self}, eclair, eclair/{self}]}, user: {},
+downloads: true}` ; les fichiers de `ville/` ne changent pas d'une version à l'autre et restent en place.
 
 ## Comment on ajoute du contenu
 

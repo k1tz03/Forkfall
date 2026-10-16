@@ -3787,8 +3787,16 @@
       if (quoi === "paie") { attente = []; ruine(); majHud(); suiteFondus(); return { francs: S.francs, dette: S.dette, attente: attente.length }; }
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
-    // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran
-    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : (typeof directMusique === "function" ? directMusique() : null) }; },
+    // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran, le
+    // rang du jour dans la carrière (0 : le premier lundi), la musique d'une scène jouée
+    // (« livre » : le thème du livre en cours, celui des introductions) ou d'une décision du
+    // samedi en direct
+    moment: function () {
+      var intro = !!CINE && (CINE.origine || (CINE.c && CINE.c.quand)) === "debut";
+      return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE,
+        jour: S ? ((S.semaine || 1) - 1) * 7 + (S.jour || 0) : null,
+        musique: CINE ? CINE.musique || (intro ? "livre" : null) : (typeof directMusique === "function" ? directMusique() : null) };
+    },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
       if (!g) Object.keys(acteurs).forEach(function (id) { if (acteurs[id].uid === uid) g = acteurs[id]; });

@@ -1433,28 +1433,64 @@ window.FusibleContenu.pret((function () {
   document.addEventListener("pointerdown", premierGeste, true);
   document.addEventListener("keydown", premierGeste, true);
 
-  // LA MUSIQUE (audio.js, les thèmes) : l'accueil a son hymne ; la ville a le
-  // marché le jour, le Terminus le soir et la nuit, le match au stade ; une
-  // carte sombre (un événement, un intermède) a la nuit qui tombe ; la fin, le
-  // dernier tour de terrain. Sans ville (l'aperçu des cartes seules), le jour,
-  // et le match sur les cartes de match.
+  // LA MUSIQUE (audio.js, musique/*.js ; où chaque thème joue : docs/design/
+  // bande_originale.md § 4). L'accueil a « Fusible ». En ville, le jour : le thème
+  // du livre en cours un jour sur deux (le premier jour d'une carrière compris : son
+  // introduction jouée a le même), la promenade l'autre ; le jour d'une découverte (un
+  // quartier qui s'ouvre, une pièce du dossier, une page d'album), les quartiers ;
+  // jusqu'au lendemain d'un bilan tenu, la montée. Le soir et la nuit, les néons ; le
+  // stade, la Rive ; une carte sombre (un événement, un intermède), la garde à vue ; le
+  // grand déballage et les décisions du samedi en direct, les douze pages ; le mode
+  // éclair, le court-circuit ; la fin, le dernier tour. Sans ville (l'aperçu des
+  // cartes seules), le thème du livre, et le match sur les cartes de match. Un thème
+  // qui n'est pas (encore) dans musique/ laisse sa place au plus proche.
+  var musiqueJoie = null, musiqueDecouverte = null;   // le jour de la ville où ça joue
+  function themeOu(nom, repli) {
+    var T = (audio && audio.THEMES) || [];
+    return T.indexOf(nom) >= 0 ? nom : repli;
+  }
+  function themeDuLivre() {
+    return currentPostulat >= 0 && currentPostulat <= 9 ? themeOu("livre_h" + (currentPostulat + 1), "ville_jour") : "ville_jour";
+  }
   function themeDuMoment() {
     if (!view) return "accueil";
     if (view.over) return "fin";
+    if (view.mode === "eclair") return themeOu("enerve", "match");
     var c = view.card || {}, tags = c.tags || [];
     var sombre = tags.indexOf("sombre") >= 0 || tags.indexOf("intermede") >= 0;
+    var tendu = c.arc === "co.deballage";
+    var tenu = c.beatKind === "bilan_une" && !!(c.une && c.une.tenu);
     var V = window.FusibleVille;
     if (V && V.moment && document.body.classList.contains("ville-on")) {
       var m = V.moment();
-      if (m.musique) return m.musique;
+      if (tenu && m.carte) musiqueJoie = m.jour;
+      if (m.musique) return m.musique === "livre" ? themeDuLivre() : themeOu(m.musique, "sombre");
       if (m.match) return "match";
+      if (m.carte && tendu) return themeOu("suspense", "sombre");
       if (m.carte && sombre) return "sombre";
-      return m.nuit ? "ville_nuit" : "ville_jour";
+      if (m.nuit) return "ville_nuit";
+      if (musiqueJoie === m.jour) return themeOu("joie", themeDuLivre());
+      if (musiqueDecouverte === m.jour) return themeOu("decouverte", "ville_jour");
+      return m.jour % 2 === 0 ? themeDuLivre() : "ville_jour";
     }
+    if (tendu) return themeOu("suspense", "sombre");
     if (sombre) return "sombre";
+    if (tenu) return themeOu("joie", themeDuLivre());
     if (/^(match|cup|gm_annonce|gm_te)$/.test(c.beatKind || "")) return "match";
-    return "ville_jour";
+    return themeDuLivre();
   }
+  // une découverte (ville_quartiers.js, preview_dossier.js ; l'album finit une page) : les
+  // quartiers jouent jusqu'au soir
+  function musiqueDecouvre() {
+    var V = window.FusibleVille, m = V && V.moment ? V.moment() : null;
+    if (!m || m.jour == null) return;
+    musiqueDecouverte = m.jour;
+    sonTheme();
+  }
+  document.addEventListener("fusible:decouverte", musiqueDecouvre);
+  document.addEventListener("fusible:album", function (ev) { if (ev && ev.detail && ev.detail.type === "page") musiqueDecouvre(); });
+  crochet("debut", function () { musiqueJoie = musiqueDecouverte = null; });
+  crochet("reprise", function () { musiqueJoie = musiqueDecouverte = null; });
   function sonTheme() {
     if (!audio || !audio.setTheme || !elTitle.hidden) return;
     audio.setTheme(themeDuMoment());

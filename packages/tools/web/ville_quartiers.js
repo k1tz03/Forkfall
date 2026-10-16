@@ -75,7 +75,12 @@
         // au début d'une carrière déjà avancée (une reprise), pas de fanfare
         if (annoncer !== false && GRAND_Q[q.cle]) {
           LEVEE[q.cle] = performance.now();
-          setTimeout(function () { if (coquille && coquille.son) coquille.son("nouvelle"); toast(GRAND_Q[q.cle].ligne); }, 600);
+          setTimeout(function () {
+            if (coquille && coquille.son) coquille.son("nouvelle");
+            toast(GRAND_Q[q.cle].ligne);
+            // une découverte : la musique de la ville passe aux quartiers jusqu'au soir
+            try { document.dispatchEvent(new CustomEvent("fusible:decouverte", { detail: { type: "quartier", id: q.cle } })); } catch (e) {}
+          }, 600);
         }
       }
     });

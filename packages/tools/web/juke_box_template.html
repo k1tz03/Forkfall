@@ -1,0 +1,455 @@
+<title>Juke-box de Fusible</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="La bande originale de Fusible, jouée en direct par le moteur du jeu : chaque thème en boucle, ses sections, son niveau.">
+__FONTS__
+<style>
+/* La platine du groupe : une colonne, le lecteur collé en haut (la face qui
+   tourne, ses sections, son niveau), la liste des faces dessous, rangées comme
+   dans la bible (l'accueil, les livres, la ville, la tension, la fin). Les
+   couleurs du jeu : le brun, la crème, un seul accent framboise. */
+:root{
+  --fond:#1B1109;      /* le brun du jeu */
+  --fond2:#241608;     /* la platine */
+  --fond3:#2E1D0C;     /* les pastilles, les cadres */
+  --texte:#F2E8CE;     /* la crème */
+  --texte2:#C4B491;    /* le texte second, 9:1 */
+  --texte3:#B0A07C;    /* le texte éteint, 7:1 */
+  --trait:#5A4428;     /* les filets */
+  --accent:#E0164B;    /* l'unique accent : ce qui joue */
+  --sur-accent:#FFF4E6;
+  --pix:"Jersey 15","Space Mono","DejaVu Sans Mono",ui-monospace,monospace;
+  --mono:"Space Mono","DejaVu Sans Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --fond:#F2E8CE;--fond2:#EADDBF;--fond3:#DFCDA6;--texte:#1B1109;--texte2:#46371F;--texte3:#5A482C;
+    --trait:#BBA67C;--accent:#C2103F;--sur-accent:#FFF4E6;color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --fond:#F2E8CE;--fond2:#EADDBF;--fond3:#DFCDA6;--texte:#1B1109;--texte2:#46371F;--texte3:#5A482C;
+  --trait:#BBA67C;--accent:#C2103F;--sur-accent:#FFF4E6;color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --fond:#1B1109;--fond2:#241608;--fond3:#2E1D0C;--texte:#F2E8CE;--texte2:#C4B491;--texte3:#B0A07C;
+  --trait:#5A4428;--accent:#E0164B;--sur-accent:#FFF4E6;color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fond);color:var(--texte);font:14px/1.5 var(--mono);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:var(--accent);color:var(--sur-accent)}
+
+.page{
+  max-width:640px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:20px 48px;
+  display:flex;flex-direction:column;gap:18px;
+}
+
+/* ── l'en-tête ── */
+.tete{display:flex;flex-direction:column;gap:2px}
+.tete h1{margin:0;font:400 44px/0.9 var(--pix);letter-spacing:.06em;text-wrap:balance}
+.tete p{margin:0;color:var(--texte2);font-size:13px;max-width:62ch}
+.tete .sous{color:var(--texte3);font-size:12px}
+
+/* ── la platine (collée en haut) ── */
+.platine{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:2;
+  background:var(--fond2);border:1px solid var(--trait);border-radius:6px;
+  padding:12px;display:flex;flex-direction:column;gap:10px;
+  box-shadow:0 10px 18px -14px rgba(0,0,0,.7);
+}
+.p-haut{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center}
+.jouer{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  background:var(--accent);color:var(--sur-accent);transition:transform .15s ease;
+}
+.jouer:hover{transform:scale(1.05)}
+.jouer:disabled{background:var(--fond3);color:var(--texte3);transform:none}
+.jouer svg{width:20px;height:20px;display:block}
+.p-titre{min-width:0}
+.p-titre b{display:block;font:400 26px/1 var(--pix);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-titre span{display:block;color:var(--texte2);font-size:12px;line-height:1.35}
+.p-temps{font-size:12px;color:var(--texte2);text-align:right;font-variant-numeric:tabular-nums;line-height:1.35}
+.p-temps strong{display:block;font-size:15px;color:var(--texte);font-weight:700}
+
+.sections{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.sections button{
+  flex:0 0 auto;border:1px solid var(--trait);border-radius:4px;padding:3px 8px;font-size:12px;
+  color:var(--texte2);background:var(--fond);white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.sections button.intro{border-style:dashed}
+.sections button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--sur-accent)}
+.sections .sep{flex:0 0 auto;align-self:center;color:var(--texte3);font-size:12px}
+.barre{height:3px;background:var(--fond3);border-radius:2px;overflow:hidden}
+.barre i{display:block;height:100%;width:0;background:var(--accent)}
+
+.oscillo{display:block;width:100%;height:56px}
+.p-bas{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;font-size:12px;color:var(--texte2)}
+.niveau{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;min-width:0}
+.vu{position:relative;width:120px;height:6px;background:var(--fond3);border-radius:3px}
+.vu i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--texte);border-radius:3px}
+.vu b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--accent)}
+.ou{font-variant-numeric:tabular-nums}
+.couture{border:1px solid var(--trait);border-radius:4px;padding:4px 10px;font-size:12px;color:var(--texte)}
+.couture:disabled{color:var(--texte3);border-style:dashed}
+
+/* ── les messages ── */
+.avis{border:1px solid var(--accent);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--texte)}
+.avis p{margin:0}
+.avis p + p{margin-top:6px;color:var(--texte2)}
+
+/* ── les faces ── */
+.faces{display:flex;flex-direction:column;gap:6px}
+.famille{margin:14px 0 2px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texte3)}
+.face{
+  display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 10px;width:100%;text-align:left;
+  padding:10px 10px 11px;border-radius:6px;border:1px solid transparent;
+}
+.face:hover{background:var(--fond2);border-color:var(--trait)}
+.face[aria-pressed="true"]{background:var(--fond2);border-color:var(--accent)}
+.face .no{grid-row:span 3;font-variant-numeric:tabular-nums;color:var(--texte3);font-size:13px;padding-top:4px}
+.face[aria-pressed="true"] .no{color:var(--accent)}
+.face .t{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;min-width:0}
+.face .t b{font:400 23px/1.05 var(--pix);letter-spacing:.03em}
+.face .t span{font-size:12px;color:var(--texte2);font-variant-numeric:tabular-nums}
+.face .m{font-size:12px;color:var(--texte2)}
+.face .h{font-size:12px;color:var(--texte3);font-style:italic}
+.face.casse{opacity:.75}
+.face.casse .h{color:var(--accent);font-style:normal}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px;margin-right:6px;vertical-align:-1px}
+.eq i{width:3px;background:var(--accent);height:40%;animation:eq 0.9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.3s}
+.eq i:nth-child(3){animation-delay:-.6s}
+@keyframes eq{0%,100%{height:30%}50%{height:100%}}
+@media (prefers-reduced-motion: reduce){.eq i{animation:none;height:70%}.jouer{transition:none}}
+
+.pied{font-size:12px;color:var(--texte3);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--trait);padding-top:14px}
+.pied p{margin:0;max-width:64ch}
+@media (max-width:380px){
+  .tete h1{font-size:38px}
+  .p-titre b{font-size:22px}
+  .vu{width:84px}
+}
+</style>
+
+<div class="page">
+  <header class="tete">
+    <h1>FUSIBLE</h1>
+    <p>La bande originale, jouée en direct par le moteur du jeu. Chaque thème tourne en boucle, comme en partie.</p>
+    <p class="sous" id="compte"></p>
+  </header>
+
+  <section class="platine" aria-label="Le lecteur">
+    <div class="p-haut">
+      <button class="jouer" id="jouer" type="button" aria-label="Jouer"></button>
+      <div class="p-titre"><b id="pTitre">Touchez une face</b><span id="pSous">le son naît au premier geste</span></div>
+      <div class="p-temps" aria-live="off"><strong id="pTemps">0:00</strong><span id="pTotal">boucle —</span></div>
+    </div>
+    <div class="sections" id="sections" aria-label="Les sections du thème"></div>
+    <div class="barre" aria-hidden="true"><i id="avance"></i></div>
+    <canvas class="oscillo" id="oscillo" aria-hidden="true"></canvas>
+    <div class="p-bas">
+      <div class="niveau"><span class="vu" title="le niveau de sortie ; le trait : la cible du banc, −21 dB"><i id="vu"></i><b id="cible"></b></span><span id="db">— dB</span></div>
+      <span class="ou" id="ou">—</span>
+      <button class="couture" id="couture" type="button" disabled>Écouter la couture</button>
+    </div>
+  </section>
+
+  <div class="avis" id="avis" hidden></div>
+  <div class="faces" id="faces"></div>
+
+  <footer class="pied">
+    <p>Tout est synthétisé à l’écoute : des oscillateurs et du bruit, aucun fichier son. En passant d’une face à l’autre, le juke-box fait le fondu enchaîné du jeu.</p>
+    <p>« Écouter la couture » part deux mesures avant la fin de la boucle : on entend la reprise. Sur iPhone, si rien ne sort, vérifiez le bouton silencieux.</p>
+    <p id="build"></p>
+  </footer>
+</div>
+
+<script>__AUDIO__</script>
+<script>
+(function () {
+  'use strict';
+  var A = window.FusibleAudio;
+  var $ = function (id) { return document.getElementById(id); };
+  var ICONE = {
+    jouer: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5v13l11-6.5z" fill="currentColor"/></svg>',
+    arreter: '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.5" y="4.5" width="11" height="11" rx="1" fill="currentColor"/></svg>'
+  };
+  // l'ordre de la bible (docs/design/bande_originale.md, § 3) ; un thème inconnu va à la fin
+  var ORDRE = ['accueil', 'livre_h1', 'livre_h2', 'livre_h3', 'livre_h4', 'livre_h5', 'livre_h6', 'livre_h7', 'livre_h8', 'livre_h9', 'livre_h10',
+    'ville_jour', 'ville_nuit', 'decouverte', 'joie', 'match', 'sombre', 'suspense', 'enerve', 'fin'];
+  var FAMILLES = [['L’accueil', /^accueil$/], ['Les dix livres', /^livre_/], ['La ville', /^(ville_|decouverte$|joie$)/],
+    ['La tension', /^(match|sombre|suspense|enerve)$/], ['La fin', /^fin$/], ['Les autres', /./]];
+  var mmss = function (s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  function avis(lignes) {
+    var el = $('avis');
+    el.textContent = '';
+    lignes.forEach(function (l) { var p = document.createElement('p'); p.textContent = l; el.appendChild(p); });
+    el.hidden = !lignes.length;
+  }
+
+  // ── le catalogue ──
+  if (!A || !A.createEngine) {
+    avis(['Le moteur du son (audio.js) ne s’est pas chargé : rien à jouer.']);
+    $('jouer').disabled = true;
+    return;
+  }
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var rang = function (k) { var i = ORDRE.indexOf(k); return i < 0 ? 1000 : i; };
+  var cles = A.THEMES.slice().sort(function (a, b) { return rang(a) - rang(b) || (a < b ? -1 : 1); });
+  var cat = {};
+  cles.forEach(function (k) {
+    var c = { cle: k, infos: A.infos(k), forme: null, erreur: null };
+    try { c.forme = A.structure(k); } catch (e) { c.erreur = String(e && e.message || e); }
+    cat[k] = c;
+  });
+  var jouables = cles.filter(function (k) { return !cat[k].erreur; });
+  $('compte').textContent = cles.length + (cles.length > 1 ? ' thèmes' : ' thème') + ' sur les vingt de la bible · ' +
+    jouables.length + ' jouable' + (jouables.length > 1 ? 's' : '');
+
+  var rangees = {};
+  (function liste() {
+    var box = $('faces'), fam = null, n = 0;
+    cles.forEach(function (k) {
+      var c = cat[k], i = c.infos;
+      var f = FAMILLES.filter(function (x) { return x[1].test(k); })[0][0];
+      if (f !== fam) {
+        fam = f;
+        var h = document.createElement('h2');
+        h.className = 'famille'; h.textContent = f;
+        box.appendChild(h);
+      }
+      n++;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'face' + (c.erreur ? ' casse' : '');
+      b.setAttribute('aria-pressed', 'false');
+      var no = document.createElement('span'); no.className = 'no'; no.textContent = String(n).padStart(2, '0');
+      var t = document.createElement('span'); t.className = 't';
+      var tb = document.createElement('b'); tb.textContent = i.titre;
+      var ts = document.createElement('span');
+      ts.textContent = i.bpm + ' bpm' + (i.tonalite ? ' · ' + i.tonalite : '') + (c.forme ? ' · boucle ' + mmss(c.forme.periode.secondes) : '');
+      t.appendChild(tb); t.appendChild(ts);
+      var m = document.createElement('span'); m.className = 'm'; m.textContent = i.moment || k;
+      var h2 = document.createElement('span'); h2.className = 'h';
+      h2.textContent = c.erreur ? 'Ne se joue pas : ' + c.erreur : (i.humeur || '');
+      b.appendChild(no); b.appendChild(t); b.appendChild(m); b.appendChild(h2);
+      b.addEventListener('click', function () {
+        if (cat[k].erreur) { avis(['« ' + i.titre + ' » ne se joue pas.', cat[k].erreur]); return; }
+        if (enLecture && courant === k) arreter();   // la face qui joue : la toucher l'arrête
+        else jouer(k);
+      });
+      box.appendChild(b);
+      rangees[k] = { el: b, no: no, numero: no.textContent };
+    });
+  })();
+  var auChargement = A.erreurs().map(function (e) { return e.ou + ' : ' + e.message; });
+  if (!AC) avis(['Ce navigateur ne sait pas synthétiser le son (Web Audio absent) : la liste se lit, mais rien ne joue.']);
+  else if (auChargement.length) avis(['Des fichiers de musique sont en erreur :'].concat(auChargement));
+
+  // ── le son : un AudioContext au premier geste, le vrai moteur dessus ──
+  var ctx = null, eng = null, an = null, horloge = null, courant = null, enLecture = false;
+  function demarrer() {
+    if (ctx) return true;
+    if (!AC) return false;
+    try {
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* ancien navigateur */ }
+      try { ctx = new AC({ latencyHint: 'playback' }); } catch (e) { ctx = new AC(); }
+      an = ctx.createAnalyser();
+      an.fftSize = 2048; an.smoothingTimeConstant = 0.72;
+      an.connect(ctx.destination);
+      eng = A.createEngine(ctx, an, { pad: false, seed: 1 });
+    } catch (e) {
+      ctx = null; eng = null;
+      avis(['Le son n’a pas pu démarrer : ' + (e && e.message || e)]);
+      return false;
+    }
+    horloge = setInterval(pomper, 200);
+    document.addEventListener('visibilitychange', pomper);
+    return true;
+  }
+  // le séquenceur : deux secondes d'avance, huit quand la page est cachée (les minuteries ralentissent)
+  var pannePompe = false;
+  function pomper() {
+    if (!eng) return;
+    try { eng.scheduleUntil(ctx.currentTime + (document.hidden ? 8 : 1.6)); }
+    catch (e) { if (!pannePompe) { pannePompe = true; avis(['Le séquenceur a calé : ' + (e && e.message || e)]); } }
+  }
+  function reprendre() {
+    if (ctx && ctx.state !== 'running') { try { var p = ctx.resume(); if (p && p.catch) p.catch(function () {}); } catch (e) { /* un geste le relancera */ } }
+  }
+
+  function jouer(k, o) {
+    if (!demarrer()) return;
+    reprendre();
+    var avant = A.erreurs().length;
+    eng.setTheme(k, o || { fade: 1.2 });
+    pomper();
+    if (eng.theme() !== k || A.erreurs().length > avant) {
+      var e = A.erreurs().slice(avant).map(function (x) { return x.message; });
+      avis(['« ' + cat[k].infos.titre + ' » ne se joue pas.'].concat(e));
+      return;
+    }
+    courant = k; enLecture = true;
+    if (!o) avis([]);
+    maj();
+    session();
+  }
+  function arreter() {
+    if (!eng) return;
+    eng.setTheme(null, { fade: 1 });
+    enLecture = false;
+    maj();
+  }
+  $('jouer').addEventListener('click', function () {
+    if (enLecture) arreter();
+    else jouer(courant || jouables[0]);
+  });
+  $('couture').addEventListener('click', function () {
+    var c = courant && cat[courant];
+    if (!c || !enLecture) return;
+    jouer(courant, { depuis: { index: c.forme.ordre.length - 1, mesure: -2 }, fade: 0.25 });
+  });
+
+  // ── l'affichage ──
+  function maj() {
+    var c = courant && cat[courant];
+    $('jouer').innerHTML = enLecture ? ICONE.arreter : ICONE.jouer;
+    $('jouer').setAttribute('aria-label', enLecture ? 'Arrêter' : 'Jouer');
+    $('jouer').disabled = !AC || !jouables.length;
+    $('couture').disabled = !enLecture;
+    Object.keys(rangees).forEach(function (k) {
+      var r = rangees[k], on = enLecture && k === courant;
+      r.el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      r.no.innerHTML = '';
+      if (on) { var eq = document.createElement('span'); eq.className = 'eq'; eq.innerHTML = '<i></i><i></i><i></i>'; r.no.appendChild(eq); }
+      else r.no.textContent = r.numero;
+    });
+    if (!c) return;
+    $('pTitre').textContent = c.infos.titre;
+    $('pSous').textContent = [c.infos.moment, c.infos.bpm + ' bpm', c.infos.tonalite].filter(Boolean).join(' · ');
+    $('pTotal').textContent = 'boucle ' + mmss(c.forme.corps.secondes);
+    var box = $('sections');
+    if (box.getAttribute('data-cle') !== courant) {
+      box.setAttribute('data-cle', courant);
+      box.textContent = '';
+      c.forme.sections.forEach(function (s, i) {
+        if (i === c.forme.boucle && i > 0) { var sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = '↻'; sep.title = 'la boucle reprend ici'; box.appendChild(sep); }
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = s.boucle ? '' : 'intro';
+        b.textContent = s.nom + ' · ' + s.mesures;
+        b.title = (s.boucle ? '' : 'introduction, jouée une fois · ') + s.mesures + ' mesures, ' + mmss(s.secondes);
+        b.setAttribute('data-index', String(i));
+        b.addEventListener('click', function () { if (courant) jouer(courant, { depuis: { index: i }, fade: enLecture ? 0.25 : 0.4 }); });
+        box.appendChild(b);
+      });
+    }
+  }
+
+  // le dessin : le spectre (bandes logarithmiques), le niveau, la position
+  var couleurs = {};
+  function lireCouleurs() {
+    var s = getComputedStyle(document.documentElement);
+    ['--texte', '--texte3', '--accent', '--fond3'].forEach(function (v) { couleurs[v] = s.getPropertyValue(v).trim() || '#F2E8CE'; });
+  }
+  lireCouleurs();
+  try { window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', lireCouleurs); } catch (e) { /* vieux navigateur */ }
+  try { new MutationObserver(lireCouleurs).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) { /* rien */ }
+  var cv = $('oscillo'), g = cv.getContext('2d'), freq = null, onde = null, pics = [];
+  var BANDES = 40;
+  function dessiner() {
+    requestAnimationFrame(dessiner);
+    var dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+    var bw = W / BANDES;
+    if (!an) {
+      g.fillStyle = couleurs['--fond3'];
+      for (var z = 0; z < BANDES; z++) g.fillRect(z * bw + 1, H - 2, Math.max(1, bw - 2), 2);
+      return;
+    }
+    if (!freq) { freq = new Uint8Array(an.frequencyBinCount); onde = new Float32Array(an.fftSize); }
+    an.getByteFrequencyData(freq);
+    var ny = ctx.sampleRate / 2, f0 = 40, f1 = 16000;
+    for (var i = 0; i < BANDES; i++) {
+      var a = f0 * Math.pow(f1 / f0, i / BANDES), b = f0 * Math.pow(f1 / f0, (i + 1) / BANDES);
+      var ka = Math.floor(a / ny * freq.length), kb = Math.max(ka + 1, Math.ceil(b / ny * freq.length)), v = 0;
+      for (var k = ka; k < kb && k < freq.length; k++) if (freq[k] > v) v = freq[k];
+      var hgt = Math.max(2, (v / 255) * (H - 4));
+      pics[i] = Math.max((pics[i] || 0) - 0.6, hgt);
+      g.fillStyle = couleurs['--texte'];
+      g.fillRect(i * bw + 1, H - hgt, Math.max(1, bw - 2), hgt);
+      g.fillStyle = couleurs['--accent'];
+      g.fillRect(i * bw + 1, H - pics[i] - 2, Math.max(1, bw - 2), 2);
+    }
+    // le niveau (RMS de la sortie), à côté de la cible du banc
+    an.getFloatTimeDomainData(onde);
+    var s = 0;
+    for (var j = 0; j < onde.length; j++) s += onde[j] * onde[j];
+    var db = 10 * Math.log10(s / onde.length + 1e-12), p = Math.max(0, Math.min(1, (db + 48) / 48));
+    $('vu').style.width = (p * 100).toFixed(1) + '%';
+    $('db').textContent = db < -70 ? '— dB' : Math.round(db) + ' dB';
+    position();
+  }
+  $('cible').style.left = ((48 - 21) / 48 * 100) + '%';
+  var dernier = '';
+  function position() {
+    if (!eng || !courant || !enLecture) return;
+    var c = cat[courant], lat = ctx.outputLatency || ctx.baseLatency || 0;
+    var pos = eng.position(ctx.currentTime - lat);
+    if (!pos || pos.theme !== courant) return;
+    var avant = 0, total = c.forme.corps.secondes;
+    c.forme.sections.forEach(function (s, i) { if (i < pos.index && (pos.boucle ? i >= c.forme.boucle : true)) avant += s.secondes; });
+    if (!pos.boucle) total = c.forme.intro.secondes;
+    var t = avant + pos.secondes;
+    $('pTemps').textContent = mmss(t);
+    $('pTotal').textContent = (pos.boucle ? 'boucle ' : 'intro ') + mmss(total);
+    $('avance').style.width = Math.min(100, t / Math.max(total, 0.01) * 100).toFixed(2) + '%';
+    var cle = pos.index + ':' + pos.mesure + ':' + pos.passage;
+    if (cle === dernier) return;
+    dernier = cle;
+    $('ou').textContent = pos.section + ' · mesure ' + pos.mesure + '/' + pos.mesures + (pos.boucle ? ' · passage ' + (pos.passage + 1) : ' · intro');
+    var bs = $('sections').querySelectorAll('button');
+    for (var i = 0; i < bs.length; i++) {
+      var on = bs[i].getAttribute('data-index') === String(pos.index);
+      if (on !== (bs[i].getAttribute('aria-current') === 'true')) {
+        bs[i].setAttribute('aria-current', on ? 'true' : 'false');
+        if (on && bs[i].scrollIntoView) { try { bs[i].scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) { /* rien */ } }
+      }
+    }
+  }
+  requestAnimationFrame(dessiner);
+
+  // le téléphone : les commandes de l'écran verrouillé, quand il les donne
+  function session() {
+    if (!('mediaSession' in navigator) || !courant) return;
+    try {
+      navigator.mediaSession.metadata = new window.MediaMetadata({ title: cat[courant].infos.titre, artist: 'Fusible', album: 'La bande originale' });
+      navigator.mediaSession.setActionHandler('play', function () { jouer(courant); });
+      navigator.mediaSession.setActionHandler('pause', arreter);
+      navigator.mediaSession.setActionHandler('nexttrack', function () { var i = jouables.indexOf(courant); jouer(jouables[(i + 1) % jouables.length]); });
+      navigator.mediaSession.setActionHandler('previoustrack', function () { var i = jouables.indexOf(courant); jouer(jouables[(i - 1 + jouables.length) % jouables.length]); });
+    } catch (e) { /* pas de commandes : tant pis */ }
+  }
+  $('build').textContent = '__BUILD__';
+  // au repos, la platine montre déjà la première face (son tempo, ses sections) : le bouton la lance
+  courant = jouables[0] || null;
+  maj();
+  // pour les essais automatiques
+  window.FusibleJukeBox = {
+    jouer: jouer, arreter: arreter, courant: function () { return enLecture ? courant : null; },
+    position: function () { return eng && ctx ? eng.position(ctx.currentTime) : null; },
+    contexte: function () { return ctx; }
+  };
+})();
+</script>

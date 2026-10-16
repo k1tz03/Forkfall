@@ -21,7 +21,10 @@
 //                       le code dort sous docs/design/archive/ et n'est plus
 //                       assemblé — ne pas le rebrancher.)
 //   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore, tout
-//                       synthétisé : aucun fichier audio, aucune URL)
+//                       synthétisé : aucun fichier audio, aucune URL), suivi des
+//                       thèmes musique/*.js par ordre alphabétique, chacun dans
+//                       son filet (musique_sources.js) — dans la page, pour le
+//                       fichier seul comme pour la version jouable
 //   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
 //                       vignettes des histoires et le panorama de la ville,
 //                       découpés par docs/design/pixel_iso/accueil.js) ; avec
@@ -151,6 +154,10 @@ function parseArgs(argv) {
     else if (a === '--out') opts.out = argv[++i];
     else if (a === '--ville') opts.ville = argv[++i];
     else if (a === '--content') opts.content = argv[++i];   // un autre bundle (les essais)
+    // le contenu à côté de la page en JSON (non compressé) plutôt qu'en .gz : pour un hôte qui ne sert pas
+    // le gzip comme fichier (l'artefact publié) ; il compresse lui-même au transfert, et demarrage.js lit
+    // tel quel un bundle qui ne commence pas par l'en-tête gzip
+    else if (a === '--contenu-json') opts.contenuJson = true;
     else if (a.startsWith('--engine=')) opts.engine = a.slice(9);
     else if (a.startsWith('--out=')) opts.out = a.slice(6);
     else if (a === '-h' || a === '--help') {
@@ -306,6 +313,7 @@ function verifierContenu(c, compresses) {
 /// et le moteur, l'accueil ne les attend pas. Chaque fichier est nommé par
 /// l'empreinte de ses octets : un nom ne désigne jamais deux contenus (le cache du
 /// navigateur et celui du service worker peuvent le garder sans demander).
+const OPTS_CONTENU = { json: false };
 function contenuHtml(c, versDossier, moteurUrl) {
   const zlib = require('zlib');
   const gz = (t) => zlib.gzipSync(Buffer.from(t, 'utf8'), { level: 9 });
@@ -317,8 +325,9 @@ function contenuHtml(c, versDossier, moteurUrl) {
   const blocs = [];
   let communUrl = null;
   if (versDossier) {
-    communUrl = 'contenu/commun.' + empreinte(compresses.commun.gz) + '.gz';
-    fs.writeFileSync(path.join(versDossier, communUrl), compresses.commun.gz);
+    communUrl = OPTS_CONTENU.json ? 'contenu/commun.' + empreinte(compresses.commun.texte) + '.json' : 'contenu/commun.' + empreinte(compresses.commun.gz) + '.gz';
+    fs.mkdirSync(path.join(versDossier, 'contenu'), { recursive: true });
+    fs.writeFileSync(path.join(versDossier, communUrl), OPTS_CONTENU.json ? compresses.commun.texte : compresses.commun.gz);
     sources.commun = { url: communUrl };
   } else {
     blocs.push('<script id="fusible-commun" type="application/octet-stream">' + compresses.commun.gz.toString('base64') + '</script>');
@@ -328,9 +337,9 @@ function contenuHtml(c, versDossier, moteurUrl) {
     const z = compresses[id].gz;
     octetsLivres += z.length;
     if (versDossier) {
-      const nom = 'contenu/' + id + '.' + empreinte(z) + '.gz';
+      const nom = OPTS_CONTENU.json ? 'contenu/' + id + '.' + empreinte(compresses[id].texte) + '.json' : 'contenu/' + id + '.' + empreinte(z) + '.gz';
       fs.mkdirSync(path.join(versDossier, 'contenu'), { recursive: true });
-      fs.writeFileSync(path.join(versDossier, nom), z);
+      fs.writeFileSync(path.join(versDossier, nom), OPTS_CONTENU.json ? compresses[id].texte : z);
       sources.livres[id] = { url: nom };
     } else {
       blocs.push('<script id="fusible-livre-' + id + '" type="application/octet-stream">' + z.toString('base64') + '</script>');
@@ -409,9 +418,10 @@ function ecrirePwa(dossier, version, depart, livres) {
 
 function main() {
   const opts = parseArgs(process.argv.slice(2));
+  OPTS_CONTENU.json = !!opts.contenuJson;
   const tplPath = path.join(HERE, 'preview_template.html');
   const artPath = path.join(HERE, 'art.js');
-  const audioPath = path.join(HERE, 'audio.js');
+  const musique = require(path.join(HERE, 'musique_sources.js'));
   // la version jouable se sert en HTTP : le contenu des livres, les images de l'accueil
   // et l'application (manifeste, icônes, service worker) sont des fichiers à côté de la page
   const dossier = opts.ville ? path.dirname(path.resolve(opts.out)) : null;
@@ -440,7 +450,9 @@ function main() {
   }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
-  const audio = fs.readFileSync(audioPath, 'utf8');
+  // audio.js et les thèmes (une faute de syntaxe dans un thème arrête l'assemblage ici)
+  const audio = musique.texte();
+  console.log('la musique : ' + musique.fichiers().map((f) => f.nom.replace(/\.js$/, '')).join(', ') + ' (musique/*.js)');
   const contenu = chargerContenu(opts);
   const bundle = contenu.entier;
   // une histoire livrée sans vignette prend celle du promu : on le dit

@@ -2448,7 +2448,14 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   const meteos = {'pluie', 'neige', 'brume'};
   const sons = {'carte_arrivee', 'reaction', 'nouvelle', 'une', 'match_but', 'match_encaisse', 'sifflet_final', 'tampon_fin',
     'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme', 'sonnerie', 'sirene', 'porte', 'klaxon', 'verre'};
-  const musiques = {'accueil', 'ville_jour', 'ville_nuit', 'match', 'sombre', 'fin', 'depart'};
+  // les thèmes de la bande originale (docs/design/bande_originale.md § 3) ; `livre` : le
+  // thème du livre en cours (celui que joue l'introduction d'un livre)
+  const musiques = {
+    'accueil', 'ville_jour', 'ville_nuit', 'decouverte', 'joie', 'match', 'sombre', 'suspense',
+    'enerve', 'fin', 'depart', 'livre',
+    'livre_h1', 'livre_h2', 'livre_h3', 'livre_h4', 'livre_h5',
+    'livre_h6', 'livre_h7', 'livre_h8', 'livre_h9', 'livre_h10',
+  };
   const quands = {'debut', 'drapeau', 'carte', 'lieu', 'semaine', 'suite'};
   final cardIdsDeLaVille = <String>{};
   for (final c in cards) {
