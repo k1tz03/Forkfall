@@ -63,7 +63,7 @@
   var P4 = '1 . . . 1 . . . 1 . . . 1 . . .';
   var P3 = ['1 . . 1 . . 1 . . 1 . . 1 . . 1', '. . 1 . . 1 . . 1 . . 1 . . 1 .', '. 1 . . 1 . . 1 . . 1 . . 1 . .'];
   var P2 = '1 . 1 . 1 . 1 . 1 . 1 . 1 . 1 .';
-  var P1 = '1! 1 1 1 1 1 1 1 1! 1 1 1 1 1 1 1';
+  var P1 = '1 1 1 1! 1 1 1 1 1 1 1 1! 1 1 1 1';                // l'accent pousse vers le temps, à côté de la grosse caisse
   // sur la pédale (si bémol tenu) : l'horloge du souffle retenu, hors de la montée
   function surBb(b) { return b.replace(/1/g, 'Bb3'); }
   var P6B = P6.map(surBb), P4B = surBb(P4), P3B = P3.map(surBb), P2B = surBb(P2), P1B = surBb(P1);
