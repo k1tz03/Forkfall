@@ -32,9 +32,10 @@
  *                     le si bémol du mort (l'ombre phrygienne) ; la voix compte
  *                     « six cent douze », puis « trois cent douze » ; quatre
  *                     mesures pour remonter                            [1 → 2]
- *   A2         16 m.  le tableur, et la mélodie en contrechant, harmonisée [3,5]
+ *   A2         16 m.  le tableur, et la mélodie en contrechant, harmonisée ;
+ *                     la voix se tait                                    [3,5]
  *   C          16 m.  fin de cycle : le sommet, la mélodie deux fois, les
- *                     triolets partout, la voix au bout de chaque phrase    [5]
+ *                     triolets partout, la voix à la toute fin             [5]
  *   laverie    16 m.  minuit, la chemise tourne pour la troisième fois :
  *                     demi-temps, un tambour qui roule en triolets, puis la
  *                     reprise                                         [2 → 3]
@@ -43,7 +44,8 @@
  *   relance     4 m.  le déclic, la voix, le roulement en triolets        [3]
  *
  * Les creux : les projecteurs (mesures 33 à 48), la laverie (81 à 96). La
- * voix parle une fois toutes les seize mesures ; la mélodie, à peine plus.
+ * voix parle cinq fois par boucle, moins d'une fois par minute ; la mélodie
+ * au triangle, un gros tiers du temps.
  *
  * La grammaire : audio.js (« L'ÉCRITURE », « LES VOIX ») ; le guide du
  * compositeur : docs/design/bande_originale.md § 6.
@@ -119,25 +121,25 @@
   // la batterie : la croche ternaire, des roulements en triolets
   var B_X = 'kx . h . . . k . S . h . . . h .';          // le demi-temps : la caisse sur le trois
   var B_ = 'k . h . . . k . S . h . k . h .';
-  var B_FILL = 'k . h . . . k . S . h . T T T .';           // les toms en triolet
-  var B_RELANCE = 'k . h . . . k . kz . . . T S S .';
-  var B_QUATRE_X = 'kx . h . kS . h . k . h . kS . h .';    // le modèle : quatre temps
-  var B_QUATRE = 'k . h . kS . h . k . h . kS h h .';
-  var B_C_X = 'kx h h . kS c h . k h h . kS c h .';
-  var B_C = 'k h h . kS c h . k h h . kS c h .';
-  var B_C_R = 'k h h . kS c h . kz . . . t T S .';
-  var B_B_X = 'kx . h . kS c h . k . h . kS c h .';
-  var B_B = 'k . h . kS c h . k . h . kS c h .';
+  var B_FILL = 'k . h . . . k . S . h . t t T .';           // les toms en triolet
+  var B_RELANCE = 'k . h . . . k . kz . . . t T S .';
+  var B_QUATRE_X = 'kx . h . S . h . k . h . S . h .';      // le modèle : la caisse sur deux et quatre
+  var B_QUATRE = 'k . h . S . h . k . h . S h h .';
+  var B_C_X = 'kx h h . S c h . k h h . S c h .';
+  var B_C = 'k h h . S c h . k h h . S c k .';
+  var B_C_R = 'k h h . S c h . kz . . . t T S .';
+  var B_B_X = 'kx . h . S c h . k . h . S c h .';
+  var B_B = 'k . h . S c h . k . h . S c k .';
   var B_LAV_X = 'kx . . . . . h . S . . . . . h .';
   var B_LAV = 'k . . . . . h . S . . . k . h .';
-  var B_LAV2 = 'k . . . . . h . S . h . k . h h';
+  var B_LAV2 = 'k . . . . . h . S . h . k h h .';
 
   A.theme('livre_h8', {
     titre: "L'Oreillette", moment: 'la ville le jour, livre 8 (et son introduction)',
     tonalite: 'la dorien',
     humeur: 'une voix de mort dans l\'oreille droite, des triolets qui calculent : « On commence par les ventes ? »',
     ville: true,
-    bpm: 110, gain: 1, swing: 0.6667,
+    bpm: 110, gain: 1.4, swing: 0.6667,
     pompe: { prof: 0.5, rel: 0.18 },
     echo: { pas: 2.6667, retour: 0.38, coupe: 3000 },
     salle: { taille: 0.7, duree: 2.6, ton: 5000 },
@@ -145,15 +147,15 @@
     voix: {
       lead:    { inst: 'tri', vol: 0.12, echo: 0.3, rev: 0.3, flotte: { prof: 4, vit: 0.5 }, filtre: 3200, pan: 0.05, env: [0.01, 0.3, 0.75, 0.2] },
       harmo:   { inst: 'tri', vol: 0.055, echo: 0.2, rev: 0.3, filtre: 2600, pan: -0.3, env: [0.01, 0.3, 0.75, 0.2] },
-      vo:      { inst: 'vox', vol: 0.5, oct: 3, voyelle: 'o', vers: 'ou', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
-      va:      { inst: 'vox', vol: 0.5, oct: 3, voyelle: 'a', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
-      ve:      { inst: 'vox', vol: 0.5, oct: 3, voyelle: 'e', vers: 'eu', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
+      vo:      { inst: 'vox', vol: 0.42, oct: 3, voyelle: 'o', vers: 'ou', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
+      va:      { inst: 'vox', vol: 0.42, oct: 3, voyelle: 'a', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
+      ve:      { inst: 'vox', vol: 0.42, oct: 3, voyelle: 'e', vers: 'eu', env: [0.015, 0.12, 0.85, 0.07], pan: 0.7, echo: 0.12 },
       calcul:  { inst: 'pulse', duty: 0.2, vol: 0.15, oct: 3, env: [0.001, 0.14, 0, 0.08], filtre: 2800, echo: 0.25, rev: 0.1, pan: -0.2, pompe: true },
       bips:    { inst: 'sub', vol: 0.035, echo: 0.5, rev: 0.35, pan: -0.45 },
       tambour: { inst: 'pluck2', vol: 0.06, oct: 3, filtre: 1500, echo: 0.2, rev: 0.15, pompe: true, pan: 0.15 },
       nappe:   { inst: 'supersaw', vol: 0.1, oct: 3, scies: 5, desaccord: 9, large: 0.6, rev: 0.4, pompe: true, filtre: 2400, flotte: { prof: 4, vit: 0.4 }, env: [0.3, 0.8, 0.85, 0.35] },
       basse:   { inst: 'sqbasse', vol: 0.07, oct: 1, plancher: 'C2', pompe: true, drive: 1.3, filtre: 2000, ton: [2400, 1000, 0.05] },
-      batt:    { vol: 0.52, porte: 0.4, tenue: 0.18, rev: 0.15, filtre: 10000 }
+      batt:    { vol: 0.52, drive: 1.2, porte: 0.4, tenue: 0.18, rev: 0.15, filtre: 10000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : le déclic, la voix ──
@@ -200,7 +202,7 @@
         vo: a(5, 16, SIX_O).map(function (b, i) { return i === 12 ? TROIS_O : b; }),
         va: a(5, 16, SIX_A).map(function (b, i) { return i === 12 ? TROIS_A : b; }),
         ve: a(5, 16, SIX_E).map(function (b, i) { return i === 12 ? TROIS_E : b; }),
-        batt: ['bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, SILENCE,
+        batt: ['kx . . . . . . . . . . . . . . .', SILENCE, SILENCE, SILENCE,
                'i . . . . . . . . . . . . . . .', SILENCE, 'i . . . . . . . . . . . . . . .', SILENCE,
                'i . . . . . . . i . . . . . . .', SILENCE, 'i . . . . . . . i . . . . . . .', SILENCE,
                'k . . . . . . . k . . . . . . .', 'k . . . k . . . k . . . k . . .', 'k . h . k . h . k . h . k . h .', B_RELANCE]
@@ -208,6 +210,7 @@
       A2: {
         copie: 'A', harmo: true,
         lead: silences(8).concat(LEAD_A2),
+        vo: SILENCE, va: SILENCE, ve: SILENCE,      // la mélodie a la parole ; la voix se tait
         accords: ['Am7', 'Am7', 'D/A', 'D/A', 'Am7', 'Am7', 'D/A', 'Em7', 'Am7', 'Am7', 'D/A', 'D/A', 'Cmaj7', 'Bm7', 'Em7', 'D'],
         nappe: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE],
         batt: [B_X].concat(fois(B_, 6)).concat([B_FILL, B_B_X]).concat(fois(B_B, 6)).concat([B_RELANCE])
@@ -222,9 +225,7 @@
         basse: [B_TRIOLET, B_BOITE, B_TRIOLET, B_BOITE],
         nappe: NAPPE,
         bips: BIPS,
-        vo: a(8, 16, DIT_O).map(function (b, i) { return i === 15 ? DIT_O : b; }),
-        va: a(8, 16, DIT_A).map(function (b, i) { return i === 15 ? DIT_A : b; }),
-        ve: a(8, 16, DIT_E).map(function (b, i) { return i === 15 ? DIT_E : b; }),
+        vo: a(16, 16, DIT_O), va: a(16, 16, DIT_A), ve: a(16, 16, DIT_E),
         batt: [B_C_X].concat(fois(B_C, 6)).concat([B_FILL, B_C_X]).concat(fois(B_C, 6)).concat([B_C_R])
       },
       // la laverie, à minuit : le tambour tourne pour la troisième fois
@@ -262,7 +263,7 @@
         calcul: CALCUL,
         basse: [B_BOITE, B_BOITE, B_TRIOLET, B_BOITE_FIN],
         vo: [SILENCE, SILENCE, DIT_O, SILENCE], va: [SILENCE, SILENCE, DIT_A, SILENCE], ve: [SILENCE, SILENCE, DIT_E, SILENCE],
-        batt: ['i . h . k . h . k . h . k . h .', 'k . h . kS . h . k . h . kS . h .', 'k . h . kS . h . k t t . T T T .', B_RELANCE]
+        batt: ['kx . h . k . h . k . h . k . h .', 'k . h . S . h . k . h . S . h .', 'k . h . S . h . k t t . t T T .', B_RELANCE]
       }
     },
     ordre: ['intro', 'A', 'B', 'projecteurs', 'A2', 'C', 'laverie', 'B2', 'retour', 'relance'], boucle: 1
