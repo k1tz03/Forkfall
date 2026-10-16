@@ -429,7 +429,7 @@ def porte(duree=0.25, profondeur=1.0, relache=0.03):
 # Le thème, ses pistes, ses sections
 
 _REGLAGES_PISTE = {
-    'volume', 'pan', 'largeur', 'profondeur', 'salle', 'plaque', 'echo', 'bus', 'eq',
+    'volume', 'pan', 'largeur', 'profondeur', 'salle', 'plaque', 'piece', 'echo', 'bus', 'eq',
     'sature', 'comp', 'pompe', 'porte', 'humain', 'unisson', 'transpose', 'art',
     'legato', 'expression', 'synthe', 'kit', 'programme', 'retard', 'muet', 'solo',
     'octaves', 'filtre', 'glisse', 'mono', 'eclat', 'bref',
