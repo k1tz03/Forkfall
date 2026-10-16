@@ -62,7 +62,7 @@ function niveau(fichier) {
 function monterMusique(spec, dossier, nom) {
   if (!spec || !spec.theme) throw new Error('la musique : pas de thème');
   const sortie = path.join(C.assurer(dossier), nom + '.wav');
-  const cle = C.empreinte({ spec, v: 4 });
+  const cle = C.empreinte({ spec, v: 5 });
   const fj = sortie.replace(/\.wav$/, '.json');
   if (fs.existsSync(sortie) && fs.existsSync(fj)) {
     const vieux = JSON.parse(fs.readFileSync(fj, 'utf8'));
@@ -107,7 +107,9 @@ function monterMusique(spec, dossier, nom) {
   const cible = spec.niveau == null ? -14 : spec.niveau, plafond = spec.crete == null ? -1 : spec.crete;
   const n0 = niveau(pret);
   let gain = cible - n0.I, n = null;
-  const limite = Math.pow(10, (plafond - 1.2) / 20);   // la crête des échantillons, sous la vraie crête visée
+  // la crête des échantillons, bien sous la vraie crête visée : l'AAC des livrables relève les crêtes
+  // entre les échantillons (mesuré : jusqu'à 1,4 dB sur « livre_h3 » à 256 kbit/s)
+  const limite = Math.pow(10, (plafond - (spec.marge == null ? 2.6 : spec.marge)) / 20);
   for (let k = 0; k < 4; k++) {
     C.ffmpeg(['-i', pret, '-af', 'volume=' + gain.toFixed(2) + 'dB,alimiter=limit=' + limite.toFixed(4) + ':attack=4:release=80:level=false,aresample=48000',
       '-c:a', 'pcm_s24le', sortie], 'niveau');

@@ -56,35 +56,51 @@ module.exports = function bandeDeLivre(P) {
   const aCarte = (prefixe, sens) => depart(I, G).concat([['avancer', 'v.card.id.indexOf(' + JSON.stringify(prefixe) + ') === 0', { reponses: sens || 'gauche' }],
     ['jouerJusqua', 'etat.carte', { max: 180 }], ['attendre', 1.2]]);
 
+  // ─── la durée des plans d'abord (des mesures entières) : chaque moment se tourne assez long pour
+  // le plus long des plans qui le prennent — jamais une dernière image figée en fin de plan
+  const total = P.mesures || Math.round(60 / M);
+  const A = P.extraits.a, B = P.extraits.b;
+  const visees = P.visees || [3.5, 4.5, 4, 4.5, 4, 3.5, 4.5, 4, 3.5, 3.5, 3.5, 6.5];
+  const n = enMesures(visees, M, total);
+  const d = (k) => n[k] + 'm';
+  const totalCourt = P.mesuresCourt || Math.floor(29 / M);
+  const nc = enMesures([4, 4, 4, 4, 4, 4, 4], M, totalCourt);
+  const s = (k) => n[k] * M, sc = (k) => nc[k] * M;
+  // l'attente qui finit un moment : `deja` secondes tournées avant elle ; le plan le plus long part de
+  // `de` dans le moment ; 0,2 s de marge
+  const reste = (min, deja, de, ...plans) => +Math.max(min, Math.max(...plans) + de + 0.2 - deja).toFixed(2);
+  const GLISSE = 1.6;   // un glissé (geste, tenue, lâcher)
+
   // ─── les moments
   const moments = [
     { id: 'intro', profils: ['social', 'appstore', 'apple'], heros: P.heros, prepare: [['attendre', 0.3]],
       tournage: [['demarrer', I, G], ['attendreQue', 'etat.cine', 30], ['attendre', 1.4], ['pose', 'titre'], ['attendre', 1.0],
-        ['scene', 1], ['attendreQue', 'etat.boiteFinie', 15], ['attendre', 0.8], ['pose', 'scene'], ['attendre', 1.6]] },
+        ['scene', 1], ['attendreQue', 'etat.boiteFinie', 15], ['attendre', 0.8], ['pose', 'scene'], ['attendre', reste(1.6, 4.0, 0.4, s(1), sc(0))]] },
     { id: 'carte1', profils: ['social', 'appstore', 'apple'], heros: P.heros, prepare: depart(I, G).concat([['attendre', 1.2]]),
-      tournage: [['attendre', 1.1], ['pose', 'carte'], ['glisser', P.sens1 || 'gauche', { duree: 0.85, ampleur: 0.46, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.8]] },
+      // le temps de lire la carte avant le geste ; après, une seconde de ce qu'il produit
+      tournage: [['attendre', reste(1.1, GLISSE + 1.0, 0.25, s(2), sc(1))], ['pose', 'carte'],
+        ['glisser', P.sens1 || 'gauche', { duree: 0.85, ampleur: 0.46, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.0]] },
     { id: 'jour', profils: ['social', 'apple'], heros: P.heros,
       prepare: enVille(I, G).concat([['tranche', 'aprem']], devant(P.lieux.jour), [['zoom', 3], ['attendre', 1.8]]),
-      tournage: [['attendre', 0.5], ['touche', 'ArrowDown', 1, 1.2], ['pose', 'jour'], ['attendre', 2.0]] },
+      tournage: [['attendre', 0.5], ['touche', 'ArrowDown', 1, 1.2], ['pose', 'jour'], ['attendre', reste(2.0, 1.7, 0.3, s(3))]] },
     { id: 'carte2', profils: ['social', 'apple'], heros: P.heros, prepare: aCarte(P.cartes.deux, P.cartes.sens),
-      tournage: [['attendre', 1.6], ['pose', 'carte'], ['attendre', 2.4]] },
+      tournage: [['attendre', 1.6], ['pose', 'carte'], ['attendre', reste(2.4, 1.6, 0.4, s(4))]] },
     { id: 'nuit', profils: ['social', 'appstore', 'apple'], heros: P.heros,
       prepare: enVille(I, G).concat([['tranche', 'nuit']], devant(P.lieux.nuit), [['zoom', 3], ['attendre', 1.8]]),
-      tournage: [['attendre', 0.6], ['touche', 'ArrowRight', 1, 1.4], ['pose', 'nuit'], ['attendre', 2.0]] },
+      tournage: [['attendre', 0.6], ['touche', 'ArrowRight', 1, 1.4], ['pose', 'nuit'], ['attendre', reste(2.0, 2.0, 0.3, s(6), sc(3))]] },
     { id: 'carte3', profils: ['social', 'appstore', 'apple'], heros: P.heros, prepare: aCarte(P.cartes.trois, P.cartes.sens),
-      tournage: [['attendre', 1.2], ['pose', 'carte'], ['glisser', P.cartes.sensTrois || 'gauche', { duree: 0.8, ampleur: 0.44, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.8]] },
+      tournage: [['attendre', reste(1.2, GLISSE + 1.0, 0.3, s(7), sc(4))], ['pose', 'carte'],
+        ['glisser', P.cartes.sensTrois || 'gauche', { duree: 0.8, ampleur: 0.44, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.0]] },
     { id: 'stade', profils: ['social', 'apple'], heros: P.heros, prepare: auStade(I, G),
-      tournage: [['attendre', 0.6], ['glisser', 'gauche', { duree: 0.6, ampleur: 0.45 }], ['attendre', 3.2], ['pose', 'stade'], ['attendre', 2.0]] },
+      // le plan part 2,4 s avant la pose
+      tournage: [['attendre', 0.6], ['glisser', 'gauche', { duree: 0.6, ampleur: 0.45 }], ['attendre', 3.2], ['pose', 'stade'], ['attendre', reste(2.0, 2.4, 0, s(9))]] },
     { id: 'accueil', profils: ['appstore', 'apple', 'google'], heros: P.heros, profil: { runs: 1 }, prepare: [['attendre', 1.6]],
-      tournage: [['attendre', 0.8], ['defiler', '#postulats .postulat[data-index="' + I + '"]', { duree: 1.0, marge: 96 }], ['attendre', 1.2], ['pose', 'cartouche'], ['attendre', 2.6]] },
+      // le dernier plan de l'aperçu part 1,6 s avant la pose
+      tournage: [['attendre', 0.8], ['defiler', '#postulats .postulat[data-index="' + I + '"]', { duree: 1.0, marge: 96 }], ['attendre', 1.2], ['pose', 'cartouche'],
+        ['attendre', reste(2.6, 1.6, 0, sc(6))]] },
   ];
 
-  // ─── le montage d'une minute : des durées visées, posées sur les mesures
-  const total = P.mesures || Math.round(60 / M);
-  const A = P.extraits.a, B = P.extraits.b;
-  const visees = P.visees || [3.5, 4, 4.5, 4.5, 4, 3.5, 4.5, 4.5, 3.5, 4, 3.5, 6.5];
-  const n = enMesures(visees, M, total);
-  const d = (k) => n[k] + 'm';
+  // ─── le montage d'une minute
   // la suite d'un extrait reprend où son premier plan l'a laissé — ou plus tôt, pour finir avec
   // l'extrait (6 à 8 s) plutôt que de figer sa dernière image
   const suite = (X, k1, k2) => (X.de || 0) + Math.max(0, Math.min(n[k1] * M, (X.duree || 7) - n[k2] * M));
@@ -104,15 +120,14 @@ module.exports = function bandeDeLivre(P) {
     { duree: 'reste', source: { carton: 'fin', image: P.panorama || '${WEB}/accueil/panorama_nuit.webp', livre: { titre: P.titre, ligne: P.ligne },
       disponibilite: P.disponibilite || 'Bientôt sur mobile', logoA: 0.5, dispoA: 2.2 }, entree: 'flash', transition: 0.3, couleurFlash: P.accent },
   ];
-  // ─── l'aperçu de l'App Store : ~28 s, rien que le jeu et ses films
-  const totalCourt = P.mesuresCourt || Math.floor(29 / M);
-  const nc = enMesures([4, 4, 4, 4, 4, 4, 4], M, totalCourt);
+  // ─── l'aperçu de l'App Store : ~28 s, rien que le jeu et ses films ; sur une carte, la légende en
+  // bas (le texte de la carte est en haut de l'écran)
   const court = [
     { duree: nc[0] + 'm', source: { moment: 'intro', de: 0.4 }, legende: leg(L.intro) },
-    { duree: nc[1] + 'm', source: { moment: 'carte1', de: 0.25 }, legende: leg(L.carte) },
+    { duree: nc[1] + 'm', source: { moment: 'carte1', de: 0.25 }, legende: leg(L.carte, 'bas') },
     { duree: nc[2] + 'm', source: { film: 'a', de: A.de || 0 }, legende: leg(L.objet) },
     { duree: nc[3] + 'm', source: { moment: 'nuit', de: 0.3 }, legende: leg(L.nuit) },
-    { duree: nc[4] + 'm', source: { moment: 'carte3', de: 0.3 }, legende: leg(L.choix) },
+    { duree: nc[4] + 'm', source: { moment: 'carte3', de: 0.3 }, legende: leg(L.choix, 'bas') },
     { duree: nc[5] + 'm', source: { film: 'b', de: B.de || 0 } },
     { duree: 'reste', source: { moment: 'accueil', de: { pose: 'cartouche', avant: 1.6 } }, entree: 'fondu', transition: 0.5 },
   ];
@@ -128,7 +143,7 @@ module.exports = function bandeDeLivre(P) {
     formats: { '9x16': 'long', '16x9': 'long', '4x5': 'long', appstore: 'court' },
     ecrans: { liste: (P.ecrans || [
       { legende: L.carteEcran || L.carte, source: { moment: 'carte1', pose: 'glisse' } },
-      { legende: L.introEcran || L.intro, source: { moment: 'intro', pose: 'titre' } },
+      { legende: L.introEcran || L.intro, source: { moment: 'intro', pose: 'scene' } },
       { legende: L.villeEcran || L.ville, source: { moment: 'jour', pose: 'jour' } },
       { legende: L.objetEcran || L.objet, source: { film: 'a', t: (A.de || 0) + (A.pose || 2) } },
       { legende: L.carte2Ecran, source: { moment: 'carte2', pose: 'carte' } },
