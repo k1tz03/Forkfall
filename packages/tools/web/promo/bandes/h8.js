@@ -21,7 +21,9 @@ module.exports = bandeDeLivre({
   extraits: {
     // la bâche de la Nord, longée lettre après lettre : VOLLAIRE, L'ENFANT DU QUAI (la capture : « VOLLA »)
     a: { fichier: '${SP}/extraits/six_heures_dix.{format}.mp4', de: 0, pose: 0.3, duree: 6.5 },
-    b: { fichier: '${SP}/extraits/trois_heures.{format}.mp4', de: 0, pose: 3.0, duree: 6.85 },
+    // la baie dans le noir, les quatre pylônes d'un coup (1 s) ; puis le stade vide, allumé, quelqu'un
+    // au bout de la touche (dès 4,4 s : la capture, à 5 s)
+    b: { fichier: '${SP}/extraits/trois_heures.{format}.mp4', de: 0, pose: 5.0, duree: 6.83 },
   },
   // « Vendez Vollaire » sous la bâche de la Nord (montrée), puis « Vendez Kerdal avant lundi » (glissée)
   cartes: { deux: 'ds.h8.a1_vollaire', trois: 'ds.h8.a2_fin_de_cycle' },
@@ -39,7 +41,9 @@ module.exports = bandeDeLivre({
     carte2Ecran: '« Vendez Vollaire. »',
     villeEcran: 'Aubérive, 2024',
     objetEcran: 'Une bâche de vingt mètres sur la Nord',
-    finEcran: "Ce qu'il prédit arrive",
+    // (la capture de la nuit montre la friche, son feu : pas le stade)
+    nuitEcran: 'Tu dors deux heures par nuit',
+    finEcran: "À trois heures, le stade vide s'allume",
   },
   // (l'aperçu de l'App Store n'a pas la ville du jour : la voix y passe sur la bâche)
   legendesCourt: { objet: { titre: 'Il parle avec la voix', sous: "de l'homme qui l'a construit" } },
