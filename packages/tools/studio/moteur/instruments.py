@@ -867,6 +867,12 @@ def _cat():
     met(InstrumentGM('voix_synthe', 'choeur', ('C3', 'C6'), {'tenu': (0, 54)}, 'tenu',
                      'voix de synthèse : un chœur de machine', {'pan': 0.0, 'profondeur': 0.5},
                      avance={'tenu': 0.05}))
+    # le sifflet (un homme qui siffle, enregistré : un son presque pur, un vibrato de voix) : une
+    # phrase rare, jamais un ostinato (au-dessus de do6 il devient perçant)
+    met(InstrumentGM('sifflet', 'bois', ('C5', 'C7'), {'tenu': (0, 78)}, 'tenu',
+                     'sifflet humain : quelqu\'un qui siffle en marchant, une phrase rare (la route, le '
+                     'dimanche)', {'pan': 0.0, 'profondeur': 0.4},
+                     avance={'tenu': 0.03}))
 
     met(InstrumentGM('nappe_gm', 'synthes', ('C2', 'C7'), {'chaude': (0, 89), 'halo': (0, 94),
                                                          'atmosphere': (0, 99), 'verre': (0, 92),
@@ -916,8 +922,6 @@ def _cat():
                      {'pan': 0.05, 'profondeur': 0.2}))
     met(InstrumentGM('guitare_nylon', 'guitares', ('E2', 'B5'), {'tenu': (0, 24)}, 'tenu',
                      'guitare à cordes de nylon : les arpèges pincés du jour', {'pan': -0.3, 'profondeur': 0.3}))
-    met(InstrumentGM('sifflet', 'bois', ('C5', 'C7'), {'tenu': (0, 78)}, 'tenu',
-                     'sifflet : quelqu\'un qui siffle en marchant', {'pan': 0.1, 'profondeur': 0.4}))
 
     # --- les synthétiseurs ---
     met(InstrumentSynthe('basse_synthe', 'synthes', ('E1', 'C4'), {'tenu': None}, 'tenu',
