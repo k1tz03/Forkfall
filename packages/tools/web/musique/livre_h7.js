@@ -4,11 +4,12 @@
  *
  * L'insomnie à l'hôtel de la Rive, en 2011. Un groove lent et moite (les doubles
  * croches un peu traînées, la caisse « gated » dans une grande salle), une
- * basse ronde qui chante et glisse d'une note à l'autre comme une basse sans
- * frettes — c'est elle qu'on fredonne —, des nappes qui flottent, et un motif de
- * douze doubles croches au maillet, qui tourne contre la mesure de seize sans
- * jamais retomber sur le temps avant trois mesures : le couloir du deuxième, où
- * toutes les portes portent le numéro 12.
+ * basse ronde qui chante et glisse d'une note de l'accord à sa voisine (la
+ * tierce vers la quinte, la septième vers la quinte), comme une basse sans
+ * frettes, jamais par sauts d'octave — c'est elle qu'on fredonne —, des nappes
+ * qui flottent, et un motif de douze doubles croches au maillet, qui tourne
+ * contre la mesure de seize sans jamais retomber sur le temps avant trois
+ * mesures : le couloir du deuxième, où toutes les portes portent le numéro 12.
  *
  * L'accroche hésite : trois coups frappés à une porte (si bémol, trois fois),
  * un soupir qui glisse (ré bémol, do bémol), et le si bémol qui reste. Deux
@@ -79,7 +80,7 @@
   // LA BASSE RONDE : elle monte, glisse, redescend (les degrés suivent l'accord)
   var BR1 = 'R - - - - - - R . . 3 - ~5 - 7 -';
   var BR2 = 'R - - - - - - 8 . . 7 - ~5 - 3 -';
-  var BR3 = 'R - - - - - - R . . 3 - 5 - ~8 -';     // elle appelle la mesure suivante
+  var BR3 = 'R - - - - - - R . . 3 - 5 - 7 -';      // elle monte à pied vers la mesure suivante
   var BR_MARCHE = 'R - - R . . 5 - . . 7 - ~8 - 5 -';
   var BR_PEDALE = 'R - - - - - - R . . R - - - . .';
 
@@ -160,7 +161,7 @@
         ouvre: { nappe: [700, 2200] },
         douze: tourne(['1', '.', '5', '.', '8', '5', '.', '9', '.', '5', '8', '.'], 2),
         nappe: [NAPPE, NAPPE],
-        basse: [SILENCE, '. . . . . . . . . . . . R - ~8 -'],
+        basse: [SILENCE, '. . . . . . . . . . . . 5 - ~3 -'],
         batt: ['r . . . . . . . . . . . r . . .', 'r . . . . . . . kz . . . t . T S']
       },
       // ── la boucle ──
