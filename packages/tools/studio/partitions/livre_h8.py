@@ -53,18 +53,21 @@ LA CARTE (110 à la noire ; une mesure = 2,18 s ; le corps boucle : 112 mesures,
                    timbales, triolets aux violons ; le dernier temps se tait              8
   S1   8 m.  1:27  « C'était lundi » : l'arc (on arrache l'oreillette), la cymbale frottée,
                    le verre ; la voix au loin, un violoncelle répond ; presque vide  1 → 2
-  F1   8 m.  1:45  « Les projecteurs » : trémolos très haut, pizzicati en triolets, les cors
+  A3   8 m.  1:45  « Six heures dix », encore : le lendemain, la machine seule ; la voix
+                   se tait                                                                3
+  F1   8 m.  2:02  « Les projecteurs » : trémolos très haut, pizzicati en triolets, les cors
                    tiennent la grille et enflent ; pas de voix (le stade s'allume seul)   4
-  G1   8 m.  2:02  « La laverie » : marimba et célesta qui tournent ; la tête trois fois,
+  G1   8 m.  2:20  « La laverie » : marimba et célesta qui tournent ; la tête trois fois,
                    décalée d'un temps ; la clarinette et le basson répondent              5
-  B2   8 m.  2:20  « Trois fois », encore, plus de cordes et les cors ; la fin glisse    6
-  C2   8 m.  2:37  « La voix d'ailleurs », encore : le chœur, les timbales            7
-  D2   8 m.  2:55  « Six heures et demie » : le second sommet ; l'horloge sonne six coups
+  B2   8 m.  2:37  « Trois fois », encore, plus de cordes et les cors ; la fin glisse    6
+  C2   8 m.  2:55  « La voix d'ailleurs », encore : le chœur, les timbales            7
+  D2   8 m.  3:12  « Six heures et demie » : le second sommet ; l'horloge sonne six coups
                    (cloches tubulaires), puis la demie : la tête, à l'autre bout du triton 8 → 9
-  S2   8 m.  3:12  « Deux heures » : la voix seule, tout près, le motif ; le cor répond de
+  S2   8 m.  3:29  « Deux heures » : la voix seule, tout près, le motif ; le cor répond de
                    très loin ; presque vide                                          1 → 2
-  A3   8 m.  3:29  « Six heures dix », encore : la machine seule, la voix se tait          3
   R    8 m.  3:47  « On recommence » : la grosse caisse, la montée vers A1              4
+  Les deux fenêtres presque vides (S1, S2) tombent à 2 min 02 l'une de l'autre : sept sections
+  de part et d'autre, chacune juste après un sommet (après un moment lourd, le silence).
 """
 import random
 
@@ -618,7 +621,7 @@ def A3(s):
     nuances(s, basses='mp', vibra='mp', celesta='mf', sub='f', violons2='p', altos='p', grains='mf')
     croches(s, basses, vel=74)
     basse_tenue(s, sub, vel=62)
-    # la machine seule : la voix se tait (elle reviendra au tournant de la boucle)
+    # le lendemain : la machine seule, la voix se tait (elle reviendra à la laverie)
     triolets_machine(s, celesta, vel=60)
     triolets_machine(s, vibra, vel=58, de=5)
     tenues(s, altos, vel=58)
@@ -627,4 +630,4 @@ def A3(s):
 
 
 theme.forme(intro=['intro'],
-            corps=['A1', 'A2', 'B1', 'C1', 'D1', 'S1', 'F1', 'G1', 'B2', 'C2', 'D2', 'S2', 'A3', 'R'])
+            corps=['A1', 'A2', 'B1', 'C1', 'D1', 'S1', 'A3', 'F1', 'G1', 'B2', 'C2', 'D2', 'S2', 'R'])
