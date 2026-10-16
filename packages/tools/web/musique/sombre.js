@@ -87,6 +87,8 @@
   var COLLE = [tenue('Eb4'), tenue('D4'), tenue('C#4'), tenue('C4'), tenue('B3'), tenue('Bb3'), SILENCE, SILENCE];
   var COLLE_HAUT = [tenue('Eb5'), tenue('D5'), tenue('C#5'), tenue('C5'), tenue('B4'), tenue('Bb4'), SILENCE, SILENCE];
   var MIB = [tenue('Eb4'), TENU, TENU, TENU];
+  // le bourdon : la pédale de ré, tout au fond (seulement là où l'harmonie repose sur ré)
+  var RE = [tenue('D2'), TENU, TENU, TENU];
 
   // LE CŒUR : la grosse caisse (le premier coup), le tom (le second) ; lent, puis pressé
   var P_LENT = 'D3 . . . . . . . D3 . . . . . . .';
@@ -105,7 +107,7 @@
   A.theme('sombre', {
     titre: 'Garde à vue', moment: 'une carte sombre, un événement noir', tonalite: 'ré mineur',
     humeur: 'un cœur qui bat, une goutte sur deux notes, des cordes qui frottent, le silence qui pèse',
-    bpm: 92, gain: 1.56,
+    bpm: 92, gain: 1.5,
     pompe: { prof: 0.3, rel: 0.35 },
     echo: { pas: 3, retour: 0.5, coupe: 1500 },
     salle: { taille: 0.8, duree: 3.4, ton: 2600 },
@@ -113,13 +115,14 @@
     voix: {
       lead:   { inst: 'vox', vol: 0.11, voyelle: 'ou', vers: 'o', rev: 0.5, echo: 0.2, flotte: { prof: 12, vit: 0.28 }, pan: 0.05 },
       harmo:  { inst: 'vox', vol: 0.06, voyelle: 'o', vers: 'ou', rev: 0.5, flotte: { prof: 12, vit: 0.28 }, pan: -0.25 },
-      goutte: { inst: 'pluck2', vol: 0.13, echo: 0.45, rev: 0.35, pan: 0.25, ton: [2600, 600, 0.04], filtre: 3000 },
+      goutte: { inst: 'pluck2', vol: 0.13, echo: 0.45, rev: 0.35, pan: 0.25, ton: [2000, 600, 0.05], env: [0.006, 0.2, 0, 0.15], filtre: 3000 },
       cordes: { inst: 'supersaw', vol: 0.15, oct: 3, scies: 5, desaccord: 20, large: 0.8, rev: 0.5, pompe: true,
                 flotte: { prof: 10, vit: 0.25 }, filtre: 1800, env: [0.9, 1.5, 0.8, 0.7] },
       frotte: { inst: 'reese', vol: 0.075, desaccord: 14, chaleur: 1.4, rev: 0.4, flotte: { prof: 8, vit: 0.3 }, env: [0.6, 1, 0.9, 0.6], pan: -0.15 },
-      pouls:  { inst: 'sqbasse', vol: 0.075, ton: [700, 220, 0.04], env: [0.002, 0.16, 0, 0.08] },
+      pouls:  { inst: 'sqbasse', vol: 0.065, ton: [700, 220, 0.04], env: [0.002, 0.16, 0, 0.08] },
+      bourdon:{ inst: 'sub', vol: 0.06, pompe: true, env: [1.2, 1, 0.9, 1] },
       aigu:   { inst: 'sub', vol: 0.025, rev: 0.6, echo: 0.3, flotte: { prof: 6, vit: 0.2 }, env: [1.2, 1, 0.9, 1.2] },
-      batt:   { vol: 0.42, porte: 0.25, tenue: 0.3, rev: 0.3, filtre: 6000 }
+      batt:   { vol: 0.38, porte: 0.25, tenue: 0.3, rev: 0.3, filtre: 6000 }
     },
     sections: {
       // ── l'introduction, jouée une fois ──
@@ -137,6 +140,7 @@
         cordes: [NAPPE, TENU, TENU, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU],
         frotte: MIB,
         goutte: GOUTTE,
+        bourdon: RE.concat(RE, RE, [tenue('D2'), TENU, SILENCE, SILENCE]),
         lead: silences(12).concat([tenue('D4'), TENU, tenue('C#4'), '- - - - - - - - . . . . . . . .']),
         pouls: [P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_UN, P_LENT, P_LENT, P_LENT, P_LENT],
         batt: [C_LENT_X, C_LENT, C_LENT, C_LENT, C_LENT, C_LENT, C_LENT, C_LENT,
@@ -157,6 +161,7 @@
         ouvre: { cordes: [1200, 700] },
         cordes: [NAPPE, TENU, SILENCE, SILENCE, NAPPE, TENU, NAPPE, TENU],
         frotte: [tenue('Eb4'), TENU, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE],
+        bourdon: [tenue('D2'), '- - - - - - - - - - - - . . . .', SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE],
         goutte: [GOUTTE[0], GOUTTE[1], GOUTTE[2], SILENCE, SILENCE, GOUTTE[3], GOUTTE[4], GOUTTE[0]],
         aigu: [SILENCE, SILENCE, SILENCE, SILENCE, tenue('A5'), '- - - - - - - - - - - - . . . .', SILENCE, SILENCE],
         pouls: [P_LENT, P_UN, P_UN, SILENCE, SILENCE, SILENCE, P_LENT, P_VITE],
@@ -170,6 +175,7 @@
         cordes: NAPPE,
         lead: DESCENTE_HAUTE.concat(BERCE),
         frotte: COLLE_HAUT.concat(MIB, MIB),
+        bourdon: silences(8).concat(RE, [tenue('D2'), SILENCE, SILENCE, SILENCE]),
         goutte: GOUTTE,
         pouls: P_PORTE,
         batt: [C_PORTE_X, C_PORTE, C_PORTE, C_PORTE, C_PORTE, C_PORTE, C_PORTE, C_RATE,
@@ -181,6 +187,7 @@
         cordes: [NAPPE, TENU],
         frotte: MIB,
         goutte: GOUTTE,
+        bourdon: RE.concat([tenue('D2'), TENU, SILENCE, SILENCE]),
         pouls: [P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, P_LENT, 'D3 . . . . . . . D3 . . . D3 . . .'],
         batt: [C_LENT_X, C_LENT, C_LENT, C_LENT, C_LENT, C_LENT, C_LENT, 'k . t . . . . . kz . t . k t . .']
       }

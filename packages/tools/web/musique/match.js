@@ -15,8 +15,8 @@
  *   entree    4 m.  (une fois) les grilles : les tambours du virage, la foule
  *                   qui monte, la basse qui s'ouvre, un roulement
  *   ── la boucle, 104 mesures, 3 min 15 ──
- *   A        16 m.  l'échauffement : la basse à contretemps, le charleston ; la
- *                   foule et les claps entrent à la neuvième mesure
+ *   A        16 m.  l'échauffement : la basse à contretemps, le charleston, la
+ *                   foule qui s'éclaire ; les claps entrent à la neuvième mesure
  *   B         8 m.  la tribune : le chant, les claps du virage au bout des phrases
  *   B2        8 m.  le chant harmonisé, les stabs
  *   montee    8 m.  la montée : noires, croches, doubles croches, la caisse
