@@ -64,37 +64,37 @@ TON = 'mi phrygien'
 # --- l'arc ----------------------------------------------------------------------------------
 arc = Arc(theme)
 # --- la batterie hybride ----------------------------------------------------------------------
-kick = theme.piste('kick', 'boite_a_rythmes', bus='batterie', volume=0)
-kit = theme.piste('kit', 'batterie_puissante', volume=0)
+kick = theme.piste('kick', 'boite_a_rythmes', bus='batterie', volume=2)
+kit = theme.piste('kit', 'batterie_puissante', volume=1.5)
 caisse_g = theme.piste('caisse_g', 'batterie_puissante', porte=porte(duree=0.22), volume=0)
 # --- les cordes ------------------------------------------------------------------------------
-celles = theme.piste('celles', 'violoncelles', art='staccato', bref=0.12, pan=0.3, volume=0)
-basses = theme.piste('basses', 'contrebasses', art='staccato', bref=0.12, volume=0)
+celles = theme.piste('celles', 'violoncelles', art='staccato', bref=0.12, pan=0.3, volume=2)
+basses = theme.piste('basses', 'contrebasses', art='staccato', bref=0.12, volume=3)
 altos = theme.piste('altos', art='staccato', bref=0.12, pan=0.15, volume=0)
-violons = theme.piste('violons', art='staccato', bref=0.12, pan=-0.45, volume=0)
+violons = theme.piste('violons', art='staccato', bref=0.12, pan=-0.45, volume=2)
 # --- les cuivres -----------------------------------------------------------------------------
 # les cuivres graves « cuivrent » plus que d'ordinaire (l'éclat : la saturation des notes fortes)
-cors = theme.piste('cors', art='tenu', volume=0)
-trombones = theme.piste('trombones', art='tenu', eclat=3.0, volume=0)
-tuba = theme.piste('tuba', art='tenu', eclat=2.5, volume=0)
-trompettes = theme.piste('trompettes', art='tenu', volume=0)
-coups = theme.piste('coups', 'trombones', art='staccato', bref=0.12, eclat=3.0, volume=0)   # les quintes frappées
-braam = theme.piste('braam', volume=-4)
-cuivre_s = theme.piste('cuivre_s', 'cuivre_synthe', volume=-12)
+cors = theme.piste('cors', art='tenu', volume=1.5)
+trombones = theme.piste('trombones', art='tenu', eclat=3.0, volume=2)
+tuba = theme.piste('tuba', art='tenu', eclat=2.5, volume=-1)
+trompettes = theme.piste('trompettes', art='tenu', volume=4.5)
+coups = theme.piste('coups', 'trombones', art='staccato', bref=0.12, eclat=3.0, volume=-1)   # les quintes frappées
+braam = theme.piste('braam', volume=-1)
+cuivre_s = theme.piste('cuivre_s', 'cuivre_synthe', volume=-5.5)
 # --- le piano (le creux) ---------------------------------------------------------------------
-piano = theme.piste('piano', art='pedale', salle=0.3, volume=0)
+piano = theme.piste('piano', art='pedale', salle=0.3, volume=11)
 # --- les percussions --------------------------------------------------------------------------
-taiko = theme.piste('taiko', volume=0, eq={'passe_haut': 40})
-timbales = theme.piste('timbales', volume=0)
-timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=0)
-cymbales = theme.piste('cymbales', volume=0)
+taiko = theme.piste('taiko', volume=2, eq={'passe_haut': 40})
+timbales = theme.piste('timbales', volume=4)
+timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=2)
+cymbales = theme.piste('cymbales', volume=2)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=0)
 effets = theme.piste('effets', volume=0)
 # --- le grain de synthèse ---------------------------------------------------------------------
 basse_s = theme.piste('basse_s', 'basse_synthe', mono=True, sature=0.8, pompe=pompe(0.45, 0.1, source='kick'),
                       eq={'passe_haut': 36}, volume=-6)
 nappe = theme.piste('nappe', 'nappe_synthe', pompe=pompe(0.6, 0.12, source='kick'), eq={'passe_haut': 200},
-                    synthe={'filtre': {'coupure': 700.0}}, volume=-12)
+                    synthe={'filtre': {'coupure': 700.0}}, volume=4)
 
 
 def nuances(s, **niveaux):
@@ -308,7 +308,7 @@ GRILLE_A = 'i i II i i i II VII'
 @theme.section('A1', mesures=8)
 def A1(s):
     t = temps_de(GRILLE_A)
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='mf', trombones='f',
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='mf', trombones='ff',
             nappe='p')
     quatre(s, 0, s.longueur)
     seizes(s, celles, t, 2, 'abcd', vel=86)
@@ -323,8 +323,8 @@ def A1(s):
 @theme.section('A2', mesures=8)
 def A2(s):
     t = temps_de('i VI.VI.vii.i i II i VI.VI.vii.i i II')
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', cors='f', trombones='f',
-            trompettes='mf', nappe='p')
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', cors='ff', trombones='f',
+            trompettes='f', nappe='p')
     quatre(s, 0, s.longueur)
     seizes(s, celles, t, 2, 'badc', vel=88)
     basse(s, t, 'badc', vel=86)
@@ -360,7 +360,7 @@ def B1(s):
     # les cuivres relancent après chaque cassure (la tête diminuée)
     for m in (3, 7):
         s.joue(trombones, TETE_DIM.octave(-1), a=s.m(m) - 0.5, vel=108)
-    s.nuance(trombones, 'f')
+    s.nuance(trombones, 'ff')
 
 
 TEMPS_C1 = 'VI.VI.vii.i VI.VI.vii.i II i VI.VI.vii.i VI.VI.vii.i II i'
@@ -419,7 +419,7 @@ def C2(s):
     t = temps_de('i II i II VI VII VI.VI.VII.VII i')
     trous = [(s.m(8, 3), s.m(9))]
     nuances(s, celles='ff', basses='ff', altos='f', violons='f', basse_s='mf', kick='f', kit='f', caisse_g='f',
-            cors='ff', trombones='ff', trompettes='f', tuba='f', taiko='f', timbales='f', cuivre_s='mf', nappe='mp')
+            cors='ff', trombones='f', trompettes='f', tuba='f', taiko='f', timbales='f', cuivre_s='mf', nappe='mp')
     sommet_base(s, t, figs='dcba', trous=trous, braam_h='E2')
     # le motif aux cors, son renversement aux trombones une demi-mesure plus tard (m. 1 et m. 3) :
     # renversé autour de ré, il reste dans le mode (do fa | MI ── la si | sol do) et sa note
@@ -446,7 +446,7 @@ def C2(s):
 @theme.section('T1', mesures=8)
 def T1(s):
     t = temps_de('i i II i i i i II')
-    nuances(s, basse_s='mp', kit='mp', kick='p', nappe='mf', piano='mf')
+    nuances(s, basse_s='mp', kit='mp', kick='p', nappe='mf', piano='f')
     # la pulsation ne s'arrête pas : la grosse caisse douce, le charleston ; la cymbale marque
     # l'arrivée
     s.note(kit, 'C', 0, 1, vel=96)
@@ -474,7 +474,7 @@ def T1(s):
 @theme.section('A3', mesures=8)
 def A3(s):
     t = temps_de('i i II i i i VI VII')
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', cors='f', nappe='p')
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', cors='ff', nappe='p')
     cassee(s, 0, s.longueur)
     s.note(kit, 'C', 0, 1, vel=110)
     seizes(s, celles, t, 2, 'cbda', vel=88)
@@ -507,8 +507,8 @@ def A4(s):
 def B2(s):
     t = temps_de('VI VII VI VII VI VII VI.VI.VII.VII i')
     trous = [(s.m(2, 3), s.m(3)), (s.m(6, 3), s.m(7))]
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='f', trombones='f',
-            cors='f', nappe='mp')
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='mf', trombones='ff',
+            cors='ff', nappe='mp')
     quatre(s, 0, s.longueur, trous=trous)
     seizes(s, celles, t, 2, 'acbd', vel=88, trous=trous)
     basse(s, t, 'acbd', vel=86, trous=trous)
@@ -576,7 +576,7 @@ def R(s):
     la nappe), la tête aux trombones, doux, dans le grave ; m. 5 la caisse claire et les
     violoncelles reviennent ; m. 7–8 les toms, la montée : A1 repart."""
     t = temps_de('i i II i i i VI VII')
-    nuances(s, basse_s='mf', basses='mp', kick='mf', kit='mp', caisse_g='mp', trombones='mf', nappe='mf')
+    nuances(s, basse_s='mf', basses='mp', kick='mf', kit='mp', caisse_g='mp', trombones='f', nappe='mf')
     s.note(kit, 'C', 0, 1, vel=100)
     for b in range(32):
         s.note(kick, 'K', b, 0.25, vel=100 if b < 16 else 108)
