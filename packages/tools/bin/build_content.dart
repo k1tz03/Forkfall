@@ -1929,7 +1929,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['lieux', 'paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens', 'match_direct']) {
+      for (final cle in ['lieux', 'paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'films', 'conversations', 'tableaux', 'gens', 'match_direct']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -2637,6 +2637,93 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     }
   }
 
+  // --- LES FILMS (docs/design/cinematiques.md) : une cinématique en 3D, plein écran, qu'un
+  // livre déclenche (content/ville/films_*.yaml). Le film lui-même est un module de la coquille
+  // (packages/tools/web/cinema/films/<module>.js) ; ici, seulement quand il se joue. Un film se
+  // joue une fois par carrière, au départ, avant ou après une carte, après un drapeau ; son
+  // livre (`livre:`, un postulat) pose la porte `flag(histoire_hN)` devant son `si`, ce qui le
+  // range dans le bundle de ce livre (src/livres.dart). Le `si` d'un film est une petite
+  // grammaire (cinema/lecteur.js `siVrai`) : flag(x), !flag(x), saison|annee|relation.<id>
+  // comparés à un nombre, reliés par && — les deux doivent rester d'accord.
+  final films = <Map<String, dynamic>>[];
+  {
+    final vusF = <String>{};
+    final drapeauDuLivre = <String, String>{};
+    final pdoc = _loadYaml('postulats.yaml');
+    final plist = pdoc is Map ? (pdoc['postulats'] as List? ?? const []) : (pdoc is List ? pdoc : const []);
+    for (final p in plist) {
+      if (p is! Map) continue;
+      for (final f in _strList(p['flags'])) {
+        if (RegExp(r'^histoire_h\d+$').hasMatch(f)) drapeauDuLivre[p['id'].toString()] = f;
+      }
+    }
+    final filmsRel = 'packages/tools/web/cinema/films';
+    var dFilms = Directory('${Directory(contentDir).parent.path}/$filmsRel');
+    if (!dFilms.existsSync()) dFilms = Directory.fromUri(Platform.script.resolve('../../../$filmsRel/'));
+    final reTerme = RegExp(r'^(!?flag\(\s*[A-Za-z0-9_.]+\s*\)|(saison|annee|relation\.[a-z0-9_]+)\s*(==|!=|>=|<=|>|<)\s*-?\d+)$');
+    final quandsFilm = {'debut', 'carte', 'drapeau'};
+    for (final e in (m['films'] as List? ?? const [])) {
+      if (e is! Map) continue;
+      final id = e['id']?.toString() ?? '';
+      final where = 'ville/films/$id';
+      if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(id) || !vusF.add(id)) errors.add('$where: id vide, en double, ou hors de [a-z0-9_.]');
+      final module = e['module']?.toString() ?? '';
+      if (!RegExp(r'^[a-z0-9_]+$').hasMatch(module)) {
+        errors.add('$where: `module` : le nom d\'un fichier de $filmsRel (sans .js)');
+      } else {
+        final f = File('${dFilms.path}/$module.js');
+        if (!f.existsSync()) {
+          errors.add('$where: le film « $module » n\'existe pas ($filmsRel/$module.js)');
+        } else if (!RegExp('\\bid:\\s*["\']$module["\']').hasMatch(f.readAsStringSync())) {
+          errors.add('$where: $filmsRel/$module.js doit se déclarer avec id: "$module"');
+        }
+      }
+      final quand = e['quand']?.toString() ?? '';
+      if (!quandsFilm.contains(quand)) errors.add('$where: `quand` : ${quandsFilm.join(' | ')}');
+      final roles = _strList(e['roles']);
+      for (final r in roles) {
+        if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+      }
+      final siBrut = e['si']?.toString().trim() ?? '';
+      for (final t0 in siBrut.isEmpty ? const <String>[] : siBrut.split('&&')) {
+        final t = t0.trim().replaceAll("'", '').replaceAll('"', '');
+        if (!reTerme.hasMatch(t)) errors.add('$where: si « $t » : un film lit flag(x), !flag(x), saison, annee ou relation.<id> comparés à un nombre');
+      }
+      si(siBrut.isEmpty ? null : siBrut, where);
+      final livre = e['livre']?.toString();
+      var siOut = siBrut;
+      if (livre != null) {
+        final d = drapeauDuLivre[livre];
+        if (d == null) {
+          errors.add('$where: livre « $livre » : un postulat qui pose un drapeau histoire_hN');
+        } else {
+          siOut = siBrut.isEmpty ? "flag('$d')" : "flag('$d') && $siBrut";
+        }
+      }
+      final out = <String, dynamic>{'id': id, 'module': module, 'quand': quand, if (livre != null) 'livre': livre,
+        if (roles.isNotEmpty) 'roles': roles, if (siOut.isNotEmpty) 'si': siOut};
+      if (quand == 'carte') {
+        final cs = [..._strList(e['cartes']), if (e['carte'] != null) e['carte'].toString()];
+        final pre = e['prefixe']?.toString();
+        if (cs.isEmpty && pre == null) errors.add('$where: `quand: carte` demande `carte`, `cartes` ou `prefixe`');
+        for (final c in cs) {
+          if (!cardIdsDeLaVille.contains(c)) errors.add('$where: carte « $c » inconnue');
+        }
+        if (pre != null && !cardIdsDeLaVille.any((c) => c.startsWith(pre))) errors.add('$where: aucune carte ne commence par « $pre »');
+        final moment = e['moment']?.toString() ?? 'avant';
+        if (moment != 'avant' && moment != 'apres') errors.add('$where: `moment` : avant | apres');
+        out.addAll({if (cs.isNotEmpty) 'cartes': cs, if (pre != null) 'prefixe': pre, 'moment': moment});
+      }
+      if (quand == 'drapeau') {
+        final d = e['drapeau']?.toString() ?? '';
+        if (d.isEmpty) errors.add('$where: `quand: drapeau` demande `drapeau`');
+        out['drapeau'] = d;
+      }
+      if (e['titre'] != null) out['titre'] = txt(e, 'titre', where, 40);
+      films.add(out);
+    }
+  }
+
   // --- LES CONVERSATIONS SURPRISES : deux ou trois personnages qui parlent entre eux, dans une
   // pièce ou devant un lieu ; on les entend en passant près d'eux, sans s'arrêter (une fois).
   final conversations = <Map<String, dynamic>>[];
@@ -3132,6 +3219,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (missions.isNotEmpty) 'missions': missions,
     if (scenes.isNotEmpty) 'scenes': scenes,
     if (cinematiques.isNotEmpty) 'cinematiques': cinematiques,
+    if (films.isNotEmpty) 'films': films,
     if (conversations.isNotEmpty) 'conversations': conversations,
     if (tableaux.isNotEmpty) 'tableaux': tableaux,
     if (objets.isNotEmpty) 'objets': objets,
