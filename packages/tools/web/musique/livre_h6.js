@@ -12,24 +12,27 @@
  *
  * L'accroche se dit comme on dit l'heure : « vingt-trois cinquante-huit » — la,
  * si bémol, ré, ré, sol, les degrés 2, 3, 5, 5 et 8 de sol mineur, posés sur
- * l'accord de ré qui attend sa résolution. Le bip du fax (un sinus pur, le ré
- * au-dessus de tout) l'annonce ; le lead carré, fin comme un papier thermique,
- * la dit au bout des phrases ; le creux la ralentit au bip ; le sommet la
- * chante deux fois, harmonisée. Sol mineur ; 132.
+ * l'accord de ré suspendu (le sol y est chez lui), que la mesure d'après
+ * résout. Le bip du fax (un sinus pur, le ré au-dessus de tout) l'annonce ; le
+ * lead carré, fin comme un papier thermique, la dit au bout des phrases ; le
+ * creux la ralentit au bip ; le sommet la chante deux fois, harmonisée, puis
+ * doublée par la grande scie. Sol mineur ; 132.
  *
  *   intro     4 m.  (une fois) 23 h 58 : deux bips, la tête d'impression qui
  *                   part, la basse qui s'ouvre, le roulement
  *   ── la boucle, 136 mesures, 4 min 07 ──
- *   A        16 m.  la course : le galop, l'horloge, la nappe fermée ; la basse
- *                   descend sol fa mi bémol, do si bémol ; l'accroche aux
- *                   mesures 7 et 15, sur l'accord de ré                  [3]
- *   B        16 m.  les offres : l'arpège nerveux, les stabs à la noire pointée,
- *                   une mélodie qui descend par marches (sol, fa, mi bémol, ré)
- *                   puis l'accroche                                      [4]
- *   C         8 m.  la dernière minute : deux accords par mesure, l'accroche et
- *                   sa réponse, la nappe ouverte                         [5]
+ *   A        16 m.  la course : le galop, l'horloge, la caisse sèche, un stab
+ *                   par mesure ; la basse descend sol fa mi bémol, do si bémol ;
+ *                   l'arpège entre à la mesure 9 ; l'accroche aux mesures 7 et
+ *                   15, sur ré suspendu                                  [3]
+ *   B        16 m.  les offres : on oublie l'heure — l'horloge se tait, l'arpège
+ *                   nerveux, les stabs à la noire pointée, la caisse « gated »
+ *                   et le clap en fla ; une mélodie qui descend par marches (sol,
+ *                   fa, mi bémol, ré), puis l'accroche                   [4]
+ *   C         8 m.  la dernière minute : l'horloge revient, deux accords par
+ *                   mesure, l'accroche et sa réponse, la nappe ouverte   [5]
  *   papier   16 m.  le creux : le papier descend l'escalier et coule dans la
- *                   Rive — un boum, puis l'horloge seule qui sort du coton, une
+ *                   Rive — un tom, puis l'horloge seule qui sort du coton, une
  *                   voix « ouh », la basse en rondes ; l'accroche lente au bip ;
  *                   quatre mesures pour remonter                      [1 → 3]
  *   A2       16 m.  la course, plus serrée : la basse saute à l'octave,
@@ -38,8 +41,9 @@
  *                   la croche, le napolitain (la bémol) ; deux mesures pour
  *                   repartir                                          [2,5]
  *   B2       16 m.  les offres, harmonisées, la grande scie dessous      [4,5]
- *   C2       16 m.  minuit moins une : la dernière minute deux fois, la grande
- *                   scie double l'accroche au second passage            [5]
+ *   C2        8 m.  minuit moins une : la dernière minute, harmonisée   [5]
+ *   C3        8 m.  le sommet : la grande scie double l'accroche ; l'arpège et
+ *                   les stabs lui laissent la place                     [5]
  *   minuit   12 m.  la retombée : la basse se referme, le bip, l'horloge seule
  *                                                                     [2]
  *   relance   4 m.  le galop rouvre, les toms, la montée                 [3]
@@ -147,7 +151,7 @@
     tonalite: 'sol mineur',
     humeur: 'le fax de la dernière minute : une tête d\'impression en doubles croches, une basse qui galope, « vingt-trois cinquante-huit »',
     ville: true,
-    bpm: 132, gain: 1,
+    bpm: 132, gain: 1.2,
     pompe: { prof: 0.55, rel: 0.16 },
     echo: { pas: 3, retour: 0.32, coupe: 2800 },
     salle: { taille: 0.55, duree: 2.0, ton: 4500 },
@@ -164,7 +168,7 @@
       ouh:   { inst: 'vox', vol: 0.075, oct: 3, voyelle: 'ou', vers: 'o', rev: 0.5, flotte: { prof: 12, vit: 0.3 }, pompe: true },
       reese: { inst: 'reese', vol: 0.11, oct: 1, plancher: 'G1', desaccord: 11, chaleur: 1.8, pompe: true },
       basse: { inst: 'sqbasse', vol: 0.075, oct: 1, plancher: 'A1', pompe: true, drive: 1.6, filtre: 2400, ton: [2600, 1000, 0.06] },
-      batt:  { vol: 0.52, porte: 0.5, tenue: 0.2, rev: 0.14, filtre: 12000 }
+      batt:  { vol: 0.52, drive: 1.2, porte: 0.5, tenue: 0.2, rev: 0.14, filtre: 12000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : 23 h 58 ──
@@ -178,7 +182,7 @@
       },
       // ── la boucle ──
       A: {
-        accords: ['Gm', 'Gm/F', 'Eb', 'Eb', 'Cm', 'Cm/Bb', 'D', 'D', 'Gm', 'Gm/F', 'Eb', 'Eb', 'Cm', 'Ab', 'D', 'D'],
+        accords: ['Gm', 'Gm/F', 'Eb', 'Eb', 'Cm', 'Cm/Bb', 'Dsus4', 'D', 'Gm', 'Gm/F', 'Eb', 'Eb', 'Cm', 'Ab', 'Dsus4', 'D'],
         ouvre: { basse: [1000, 2400], nappe: [1500, 2600] },
         basse: fois(GALOP, 7).concat([GALOP_FIN]).concat(fois(GALOP, 7)).concat([GALOP_FIN]),
         tete: TETE,
@@ -189,11 +193,10 @@
         batt: [B_COURSE_X].concat(fois(B_COURSE, 6)).concat([B_COURSE_T, B_COURSE_X]).concat(fois(B_COURSE, 6)).concat([B_RELANCE])
       },
       B: {
-        accords: ['Eb', 'Bb/D', 'Cm', 'Gm', 'Eb', 'Bb/D', 'Ab', 'D', 'Eb', 'Bb/D', 'Cm', 'Gm', 'Ab', 'Eb/G', 'D', 'D'],
+        accords: ['Eb', 'Bb/D', 'Cm', 'Gm', 'Eb', 'Bb/D', 'Ab', 'D', 'Eb', 'Bb/D', 'Cm', 'Gm', 'Ab', 'Eb/G', 'Dsus4', 'D'],
         basse: fois(GALOP_8, 7).concat([GALOP_FIN]).concat(fois(GALOP_8, 7)).concat([GALOP_FIN]),
         arp: ARP5,
         stab: STAB_POINTE,
-        tete: TETE_LIGNE,
         lead: LEAD_B,
         batt: [B_OFFRE_X].concat(fois(B_OFFRE, 6)).concat([B_SERRE_T, B_OFFRE_X]).concat(fois(B_OFFRE, 6)).concat([B_OFFRE_R])
       },
@@ -258,6 +261,7 @@
         copie: 'C',
         ouvre: { nappe: [3000, 3600] },
         envol: LEAD_C,
+        arp: SILENCE, stab: SILENCE,      // la grande scie prend leur place : l'horloge et le galop tiennent la course
         batt: [B_MINUTE_X].concat(fois(B_MINUTE, 6)).concat(['k h h h kS c h h k . h . kS . . .'])
       },
       // la retombée : la basse se referme, le fax rappelle, l'horloge reste seule
@@ -278,7 +282,7 @@
         basse: [GALOP, GALOP, GALOP_8, GALOP_FIN],
         tete: TETE,
         lead: [SILENCE, SILENCE, SILENCE, HEURE_FIN],
-        batt: ['k . h . kS . h . k . h . kS . h .', 'k . h . kS . h . k . h . kS . h h', 'k . h . kS . h . k . T . t . T .', B_RELANCE]
+        batt: ['kx . h . kS . h . k . h . kS . h .', 'k . h . kS . h . k . h . kS . h h', 'k . h . kS . h . k . T . t . T .', B_RELANCE]
       }
     },
     ordre: ['intro', 'A', 'B', 'C', 'papier', 'A2', 'sous_sol', 'B2', 'C2', 'C3', 'minuit', 'relance'], boucle: 1
