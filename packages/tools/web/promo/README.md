@@ -112,7 +112,9 @@ légende sur la suite du film A, quand le film y pose son titre ; de même `fin:
 film B, et `filmB`, une légende sur son premier plan), les légendes des captures (`carteEcran`,
 `introEcran`, `villeEcran`, `objetEcran`, `carte2Ecran`, `nuitEcran`, `choixEcran`, `stadeEcran`,
 `finEcran` : une capture dit ce que son image montre), `extraits.x.deCourt` (où l'aperçu
-de l'App Store prend l'extrait), `extraits.x.suite` (où reprend sa seconde moitié), `lieux.toucheJour`,
+de l'App Store prend l'extrait), `extraits.x.xAppstore` (sa colonne de 886 px prise à gauche, -1,
+ou à droite, 1, plutôt qu'au milieu : le carton de lieu d'un film, en haut à gauche en portrait,
+y reste entier), `extraits.x.suite` (où reprend sa seconde moitié), `lieux.toucheJour`,
 `lieux.toucheNuit`, `lieux.trancheJour`, `repliques` (l'introduction avancée de n répliques),
 `moments: { jour: { … } }` (retoucher un moment), `legendesCourt` (d'autres légendes pour l'aperçu),
 `visees` (les durées visées des douze plans), `duree`, `dureeCourt`, `marge`.
