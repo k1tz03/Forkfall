@@ -50,13 +50,13 @@ arc = Arc(theme)
 # --- les cordes ----------------------------------------------------------------------------
 basses = theme.piste('basses', 'contrebasses', art='sans_vibrato', volume=6)
 celles = theme.piste('celles', 'violoncelles', art='legato', pan=0.3, volume=9)
-celles_pizz = theme.piste('celles_pizz', 'violoncelles', art='pizzicato', pan=0.35, volume=10)
+celles_pizz = theme.piste('celles_pizz', 'violoncelles', art='pizzicato', pan=0.35, volume=9)
 celles_trem = theme.piste('celles_trem', 'violoncelles', art='tremolo', pan=0.3, volume=0)
 altos = theme.piste('altos', art='tremolo', volume=0)
 violons2 = theme.piste('violons2', 'violons', art='tremolo', pan=-0.25, volume=5)
 violons = theme.piste('violons', art='tenu', pan=-0.45, profondeur=0.6, volume=6)
 # --- les cuivres -----------------------------------------------------------------------------
-cors = theme.piste('cors', art='sourdine', volume=5)
+cors = theme.piste('cors', art='sourdine', volume=6)
 cor_bouche = theme.piste('cor_bouche', 'cors', art='sourdine', unisson=1, pan=-0.35, profondeur=0.8,
                          salle=0.5, volume=6)
 trombones = theme.piste('trombones', art='tenu', volume=2)
@@ -66,7 +66,7 @@ braam = theme.piste('braam', volume=1)
 voix = theme.piste('voix', 'choeur', art='ouh', unisson=1, pan=0.15, profondeur=0.9, salle=0.6,
                    volume=5.5)
 # --- le piano --------------------------------------------------------------------------------
-piano = theme.piste('piano', art='pedale', salle=0.4, volume=6)
+piano = theme.piste('piano', art='pedale', salle=0.4, volume=5)
 goutte = theme.piste('goutte', 'piano', art='tenu', pan=-0.5, profondeur=0.7, salle=0.7, volume=14)
 # --- les percussions --------------------------------------------------------------------------
 # le cœur : la grosse caisse de concert étouffée (son corps), une timbale sourde sur ré (le
@@ -176,19 +176,19 @@ def intro(s):
 
 @theme.section('S1', mesures=8)
 def S1(s):
-    nuances(s, basses='p', sub='mf', coeur='f', coeur_ton='f', celles='mp', voix='mp', archet='mf',
+    nuances(s, basses='p', sub='mf', coeur='mf', coeur_ton='mf', celles='p', voix='mp', archet='mp',
             goutte='p')
     # le premier temps : le cœur, la pédale, le métal frotté (la cymbale à l'archet, le tam-tam
     # gratté dessous)
     s.note(archet, 'C4', 0, 8, vel=84)
-    s.note(tamtam, 'C4', 0, 6, vel=58)
+    s.note(tamtam, 'C4', 0, 6, vel=50)
     s.nuance(tamtam, 'p')
     s.note(basses, 'D2', 0, 32, vel=66)
     s.note(sub, 'D2', 0, 32, vel=62)
     battements(s, 0, s.longueur, 'L d . . . . . . L d . . . . . .', vel=86)
     # le balancier, dès la mesure 2
     balancier(s, 2, 8)
-    s.crescendo(celles, s.m(2), s.m(8, 4), 'p', 'mp')
+    s.crescendo(celles, s.m(2), s.m(8, 4), 'pp', 'p')
     # la mèche, chantée par une voix seule, bouche ouverte (elle ne se résout pas : le si♭
     # s'éteint) ; « ah » plutôt que « ouh » : ses formants passent dans un téléphone
     s.joue(voix, MECHE, a=s.m(5) - 1, vel=80, art='aah')
