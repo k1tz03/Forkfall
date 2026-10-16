@@ -63,7 +63,8 @@ LA CARTE (76 à la noire ; une mesure de 4/4 = 3,16 s, de 3/4 = 2,37 s ; le corp
   V2     8 m. 3/4  2:28  « La valse, la nuit » : la valse orchestrée (pizzicati, basson) ; la
                      clarinette chante, puis la valse tourne seule ; la sonnette sur sib  4
   F      8 m.  2:47  « Le cahier de nuit » : l'ostinato aux altos, les violoncelles chantent
-                     le motif, le chœur au fond sur le lamento (les bougies)           5 → 6
+                     le motif (la clarinette à l'octave), le chœur au fond sur le
+                     lamento (les bougies)                                            5 → 6
   G      8 m.  3:12  « Passez-moi la 12 » : le second sommet — les cordes à trois octaves
                      chantent le motif, les cors la mèche, le lamento en contre-chant   7 → 8
   H      8 m.  3:37  « Six heures » : le trousseau, puis presque rien — la pédale, la
@@ -575,17 +576,19 @@ def V2(s):
 # --- F : le cahier de nuit ---------------------------------------------------------------------------
 @theme.section('F', mesures=8)
 def F(s):
-    nuances(s, celles='mf', basses='mf', altos='mf', violons2='mp', celles_chant='ff',
+    nuances(s, celles='mf', basses='mf', altos='mp', violons2='mp', celles_chant='ff', clarinette='mf',
             choeur='mp', timbales='mf', sub='f')
     s.note(timbales, 'Eb2', 0, 1, vel=88)
     moteur(s, altos, 2, 'cbab', vel=76)
-    s.crescendo(altos, s.m(5), s.m(8, 4), 'mf', 'f')
+    s.crescendo(altos, s.m(5), s.m(8, 4), 'mp', 'mf')
     basse(s, basses, vel=80, art='tenu')
     basse(s, celles, octave=1, vel=72, art='tenu', de=s.m(5))
     basse(s, sub, octave=-1, vel=58)
     voix(s, violons2, rangs=(0, 1, 2), octave=2, vel=62)
-    # les violoncelles chantent le motif (octave 3)
+    # les violoncelles chantent le motif (octave 3), la clarinette le double à l'octave (sans elle,
+    # le motif vit sous 400 Hz : un téléphone ne l'entend plus)
     s.joue(celles_chant, MOTIF.octave(-1), a=s.m(1, 4), vel=104)
+    s.joue(clarinette, MOTIF, a=s.m(1, 4), vel=84)
     # le chœur (les bougies devant l'hôtel) sur le lamento
     for d, l, c in plages(grille_de(s), de=s.m(5)):
         for h in accord_temps(c):
@@ -598,8 +601,8 @@ def F(s):
 # --- G : passez-moi la 12 (le second sommet) --------------------------------------------------------
 @theme.section('G', mesures=8)
 def G(s):
-    nuances(s, violons='f', violons2='f', altos='f', celles='f', celles_chant='f', basses='mf', cors='f',
-            trombones='mf', tuba='mf', choeur='mf', timbales='f', sub='fff')
+    nuances(s, violons='ff', violons2='f', altos='f', celles='f', celles_chant='f', basses='mf', cors='f',
+            trombones='mp', tuba='mf', choeur='mp', timbales='f', sub='fff')
     fin = s.m(8, 3.5)
     s.note(timbales, 'Eb2', 0, 1, vel=108)
     s.note(cymbales, 'C4', 0, 2, vel=92)
@@ -623,7 +626,7 @@ def G(s):
         for h in accord_temps(c):
             s.note(choeur, h + 12, d, l, vel=84, art='aah')
         s.note(timbales, hauteur(ACCORDS[c][0]) + 12, d, 1, vel=100)
-    s.crescendo(choeur, s.m(5), s.m(8), 'mf', 'f')
+    s.crescendo(choeur, s.m(5), s.m(8), 'mp', 'mf')
     cymbale_vers(s, s.m(8, 3.5), 'monte_4s', vel=84)
     s.note(cymbales, 'C4', s.m(8, 3.5), 1, vel=96, art='etouffee')
 
