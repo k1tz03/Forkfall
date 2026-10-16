@@ -578,8 +578,8 @@
     // le standard qui sonne dans le vide : deux fois deux sonneries
     sons: [[11.8, "sonnerie"], [14.6, "sonnerie"]],
     textes: [
-      { sorte: "lieu", de: 0.9, a: 5.2, texte: "Aubérive, hôtel de la Rive", sous: "Novembre 2011 · la troisième nuit, 2 h 31" },
-      { sorte: "lieu", de: 23.4, a: 27.9, texte: "Hôtel de la Rive", sous: "3 h 50" },
+      { sorte: "lieu", de: 0.9, a: 5.2, texte: "Aubérive, hôtel de la Rive", sous: "Novembre 2011 · la troisième nuit, 2\u00a0h\u00a031" },
+      { sorte: "lieu", de: 23.4, a: 27.9, texte: "Hôtel de la Rive", sous: "3\u00a0h\u00a050" },
       { sorte: "titre", de: 30.4, a: 34.9, texte: "Aubérive · 2011", sous: "Chambre 12", entree: 0.2, sortie: 0.7 }
     ],
     montages: { court: [[0.4, 5.2], [5.9, 10.8], [11.6, 16.6], [17.1, 21.8], [23.0, 27.8], [29.2, 34.8]] },
