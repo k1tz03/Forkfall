@@ -54,7 +54,7 @@ SEC = 108 / 60.0      # les temps d'une seconde
 harpe = theme.piste('harpe', volume=-1.3, pan=-0.25, largeur=1.0)
 celesta = theme.piste('celesta', volume=1, echo=0.15)
 cloches = theme.piste('cloches', volume=1)
-glock = theme.piste('glock', 'glockenspiel', volume=-13.7)
+glock = theme.piste('glock', 'glockenspiel', volume=-9)
 vln_pz = theme.piste('vln_pz', 'violons', art='pizzicato', volume=-7)
 alt_pz = theme.piste('alt_pz', 'altos', art='pizzicato', volume=-5)
 vc_pz = theme.piste('vc_pz', 'violoncelles', art='pizzicato', pan=0.12, volume=-2)
@@ -63,7 +63,7 @@ violons2 = theme.piste('violons2', 'violons', pan=-0.2, volume=-6)
 altos = theme.piste('altos', volume=-4)
 celles = theme.piste('celles', 'violoncelles', pan=0.12, volume=-2)
 cb = theme.piste('cb', 'contrebasses', pan=0.05, volume=-4)
-flute = theme.piste('flute', 'flutes', unisson=1, volume=-1)
+flute = theme.piste('flute', 'flutes', unisson=1, volume=-2.5)
 hautbois = theme.piste('hautbois', volume=-3.2)
 clar = theme.piste('clar', 'clarinettes', unisson=1, volume=-3.6)
 bassons = theme.piste('bassons', volume=0)
@@ -71,13 +71,13 @@ cor = theme.piste('cor', 'cors', volume=-3)
 cors = theme.piste('cors_pad', 'cors', volume=-11)
 trompettes = theme.piste('trompettes', volume=-5)
 trombones = theme.piste('trombones', volume=-4)
-tuba = theme.piste('tuba', volume=-10)
+tuba = theme.piste('tuba', pan=0.1, volume=-10)
 timbales = theme.piste('timbales', volume=-3)
 timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=-1)
 cymbales = theme.piste('cymbales', volume=-7)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=-9)
-carillon = theme.piste('carillon', volume=-10)
-triangle = theme.piste('triangle', 'batterie', volume=-16, pan=0.3, salle=0.3)
+carillon = theme.piste('carillon', volume=-6)
+triangle = theme.piste('triangle', 'batterie', volume=-10, pan=0.3, salle=0.3)
 arc = Arc(theme, volume=-5, impact_volume=-7)
 
 theme.salle('echo', temps=0.75, retour=0.3)
@@ -139,10 +139,15 @@ def montant(ch, n=8, de=3, plafond='C7'):
 
 
 def harpe_arpege(s, grille, de=1, vel=72, decal=0, piste=None, figs=FIGS):
+    """L'arpège qui monte ; ses deux notes graves plus douces (une harpiste allège la basse
+    dans un arpège léger : la calibration rend le grave de la harpe aussi fort que l'aigu)."""
     p = piste or harpe
     for i, ch in enumerate(grille):
         fig = figs[(i + decal) % len(figs)]
-        s.joue(p, arpege(HARPE[ch], fig, pas=0.5, vel=vel, duree=1.5), a=s.m(de + i))
+        graves = sorted(hauteur(x) for x in HARPE[ch])[:2]
+        m = arpege(HARPE[ch], fig, pas=0.5, vel=vel, duree=1.5)
+        m = m.vel(lambda n, k: vel - 16 if n.h == graves[0] else (vel - 8 if n.h == graves[1] else vel))
+        s.joue(p, m, a=s.m(de + i))
 
 
 def pizz_graves(s, grille, de=1, vel=76, piste=None):
@@ -194,10 +199,11 @@ QUESTION = mel('r:.5 A4:.5 C5:.5 E5:1.5 D5:1 | B4:2 A4:.5 G4:.5 A4:1 | r:.5 C5:.
 # --- l'introduction ----------------------------------------------------------------------------
 @theme.section('intro', mesures=4)
 def intro(s):
-    arc.poser(s, 0, impact=False, vel=108)
-    glissando(s, harpe, 0.1, 'F3', 'F5', duree=0.9, vel=66)
-    s.note(cloches, 'F4', 0, 4, vel=70)
-    s.note(triangle, 'TR', 0, 2, vel=60)
+    arc.poser(s, 0, impact=False, vel=110)
+    # l'étincelle d'abord ; la harpe, la cloche et le triangle juste après
+    glissando(s, harpe, 0.35, 'F3', 'F5', duree=0.9, vel=66)
+    s.note(cloches, 'F4', 0.35, 4, vel=70)
+    s.note(triangle, 'TR', 0.35, 2, vel=60)
     s.joue(celesta, TETE_CEL, a=s.m(1, 4), vel=82)
     s.nuance(celesta, 'mf')
     tenue(s, ['fa', 'sol/fa', 'fa', 'sol/fa'], vel=54)
