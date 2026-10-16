@@ -62,6 +62,8 @@
  *                                              à la section qui suit celle quittée)
  *   FusibleAudio.position()                    la section et la mesure qui jouent
  *   FusibleAudio.jingle(nom)                   une phrase jouée une fois
+ *   FusibleAudio.setQualite('pleine'|'legere') la qualité du moteur (voir LA QUALITÉ)
+ *   FusibleAudio.qualite()                     celle qui joue ; .verdict() : d'où elle vient
  *
  * La musique, côté partition (les fichiers musique/*.js, le banc, le juke-box) :
  *   FusibleAudio.theme(clé, définition)        enregistre un thème (rend vrai
@@ -84,6 +86,16 @@
  * Un moteur a aussi `e.setTheme(nom, { at, fade, depuis })` (`depuis` : partir
  * d'une section, de son rang dans l'ordre ou de { index, mesure }) et
  * `e.position(t)` (la section, la mesure, le passage du thème qui joue).
+ *
+ * LA QUALITÉ. `createEngine(ctx, dest, { qualite: 'pleine'|'legere' })` et
+ * `e.setQualite(q)`. `pleine` (partout par défaut : le banc, le juke-box, les rendus
+ * hors ligne) est le son tel que les thèmes l'ont écrit. `legere` est le même son
+ * pour un téléphone qui n'y arrive pas en direct (des craquements aux sommets de
+ * la musique) : moins de nœuds, des filtres qui n'ont plus un calcul par échantillon,
+ * une avance plus courte du séquenceur — voir MONTAGES. Les notes qui sonnent déjà ne
+ * bougent pas ; les nouvelles prennent la nouvelle qualité ; le niveau ne saute pas. La page
+ * choisit seule au premier geste (LE DIRECT, plus bas) ; `FusibleAudio.setQualite`
+ * force un choix, `FusibleAudio.qualite()` dit celui qui joue.
  * ------------------------------------------------------------------------- */
 (function (global) {
   'use strict';
@@ -115,11 +127,18 @@
   function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
 
   // ------------------------------------------------------------- matières --
+  // Les tampons calculés à la main (le bruit, les réponses de salle) ne dépendent que de la fréquence
+  // d'échantillonnage, et un AudioBuffer n'est lié à aucun contexte : ils sont gardés par fréquence et
+  // servent à tous les contextes qui la partagent — le direct, la mesure de l'appareil (qualité
+  // légère), les rendus du banc —, au lieu d'être refaits (des centaines de milliers d'échantillons,
+  // quelques dizaines de millisecondes sur un téléphone) pour chacun.
+  var PAR_FREQUENCE = {};
+  function porteur(ctx) { var k = String(ctx.sampleRate); return PAR_FREQUENCE[k] || (PAR_FREQUENCE[k] = {}); }
   // Un seul tampon de bruit blanc par contexte : tout le décor en sort (vent,
   // foule, pluie, papier, pas, obturateurs), filtré et enveloppé autrement.
   var NOISE = new WeakMap();
   function noiseBuffer(ctx) {
-    var b = NOISE.get(ctx);
+    var b = NOISE.get(porteur(ctx));
     if (b) return b;
     var n = Math.floor(ctx.sampleRate * 4);
     b = ctx.createBuffer(2, n, ctx.sampleRate);
@@ -128,7 +147,7 @@
       var r = mulberry(0x51ED + c * 7919);
       for (var i = 0; i < n; i++) d[i] = r() * 2 - 1;
     }
-    NOISE.set(ctx, b);
+    NOISE.set(porteur(ctx), b);
     return b;
   }
 
@@ -138,8 +157,8 @@
   // besoin, et gardé en cache tant que le lieu ne change pas.
   var IR = new WeakMap();
   function impulse(ctx, key, dur, decay, early) {
-    var cache = IR.get(ctx);
-    if (!cache) { cache = {}; IR.set(ctx, cache); }
+    var cache = IR.get(porteur(ctx));
+    if (!cache) { cache = {}; IR.set(porteur(ctx), cache); }
     if (cache[key]) return cache[key];
     var n = Math.max(1, Math.floor(ctx.sampleRate * dur));
     var buf = ctx.createBuffer(2, n, ctx.sampleRate);
@@ -175,8 +194,8 @@
     duree = clamp(duree == null ? 2.4 : +duree, 0.3, 6);
     ton = clamp(ton == null ? 4500 : +ton, 600, 16000);
     var key = 'salle:' + taille.toFixed(2) + ':' + duree.toFixed(2) + ':' + Math.round(ton);
-    var cache = IR.get(ctx);
-    if (!cache) { cache = {}; IR.set(ctx, cache); }
+    var cache = IR.get(porteur(ctx));
+    if (!cache) { cache = {}; IR.set(porteur(ctx), cache); }
     if (cache[key]) return cache[key];
     var sr = ctx.sampleRate, pre = 0.004 + 0.045 * taille;
     var n = Math.max(1, Math.floor(sr * Math.min(duree * 1.1 + pre, 6.5)));
@@ -208,8 +227,8 @@
   function porteIR(ctx, tenue) {
     tenue = clamp(tenue == null ? 0.24 : +tenue, 0.08, 0.6);
     var key = 'porte:' + tenue.toFixed(3);
-    var cache = IR.get(ctx);
-    if (!cache) { cache = {}; IR.set(ctx, cache); }
+    var cache = IR.get(porteur(ctx));
+    if (!cache) { cache = {}; IR.set(porteur(ctx), cache); }
     if (cache[key]) return cache[key];
     var sr = ctx.sampleRate, n = Math.floor(sr * (tenue + 0.03));
     var buf = ctx.createBuffer(2, n, sr), a = 1 - Math.exp(-2 * Math.PI * 7000 / sr);
@@ -1184,15 +1203,18 @@
     for (var i = 1; i < n; i++) re[i] = (2 / (i * Math.PI)) * Math.sin(i * Math.PI * duty);
     return (c[k] = ctx.createPeriodicWave(re, im));
   }
-  // une enveloppe : attaque, chute vers le palier, relâche ; rend l'heure du silence
-  function env(param, t, a, d, sus, r, dur, peak) {
+  // une enveloppe : attaque, chute vers le palier, relâche ; rend l'heure du silence. `queue` : combien
+  // de relâches l'oscillateur vit encore après la fin de la note (2 : il est alors à −52 dB de son palier ;
+  // 1,6 en qualité légère : −42 dB, sous le souffle de la cassette, et un nœud en moins pendant un tiers
+  // de relâche)
+  function env(param, t, a, d, sus, r, dur, peak, queue) {
     var p = Math.max(peak, 0.0002);
     param.setValueAtTime(0.0001, t);
     param.linearRampToValueAtTime(p, t + a);
     if (sus < 1) param.setTargetAtTime(Math.max(p * sus, 0.0001), t + a, Math.max(d, 0.005) / 3);
     var off = t + Math.max(dur, a + 0.01);
     param.setTargetAtTime(0.0001, off, Math.max(r, 0.005) / 3);
-    return off + r * 2 + 0.03;
+    return off + r * (queue || 2) + 0.03;
   }
   // `filtre` : [ouverture à l'attaque, palier], `fenv` le temps qu'il met à se
   // refermer ; `detune` : un écart (deux oscillateurs) ou la liste des écarts ;
@@ -1269,9 +1291,55 @@
     p.connect(out);
     return p;
   }
-  // une note : `ex.acc` l'accentue, `ex.de` (Hz) la fait glisser depuis là
+
+  // ── LA QUALITÉ — le même son, moins cher. Un téléphone modeste peut craquer aux sommets
+  //    de la musique (92 sources à la fois dans « Fusible », section C2) ; mesuré dans
+  //    Chromium, le temps d'un thème en direct ne vient pas de ce qu'on croit :
+  //      · chaque nœud du graphe est visité à chaque paquet de 128 échantillons, qu'il sonne
+  //        ou non : une note écrite 1,5 s d'avance pèse déjà (≈ 0,15 ms de CPU par seconde et
+  //        par nœud en attente, le tiers du coût d'un oscillateur qui joue) ;
+  //      · un filtre dont la fréquence bouge (l'enveloppe d'une note, un balayage de section)
+  //        recalcule ses coefficients À CHAQUE ÉCHANTILLON : 3,5 ms/s, quatre fois un filtre
+  //        fixe ; en `k-rate` (un calcul par paquet, 2,9 ms) : 1,4 ms/s, et le même son ;
+  //      · un oscillateur modulé (vibrato) coûte le double d'un oscillateur libre, pareil ;
+  //      · un retard modulé (le flottement de bande) 2,5 ms/s, une convolution 8 à 16 ms/s ;
+  //      · un oscillateur de plus, lui, ne coûte que 0,45 ms/s.
+  //    `pleine` est le son tel qu'il est écrit (les mêmes appels à Web Audio que sans qualité :
+  //    journal_son.js le prouve). `legere` garde les notes, le mélange et le niveau, et change
+  //    le montage :
+  //      scies       la grande scie joue 3 scies au lieu de 5 ou 7 (l'écart des deux extrêmes
+  //                  et la largeur restent ; la loi de niveau divise par √n : même énergie)
+  //      flotteVoix  le flottement de bande de CHAQUE voix s'en va (celui du mélange, `cassette.
+  //                  flotte`, reste) ; sur un thème qui joue déjà, il s'éteint en 0,4 s
+  //      krate       les fréquences de filtre et de vibrato se calculent par paquet
+  //      voxDeux     la voix « aah » : une scie et le triangle au lieu de deux scies et le triangle
+  //                  (même énergie, même profil de fréquences : la seconde scie ne faisait que battre)
+  //      vibMin      son vibrato n'est écrit que pour les notes d'au moins 0,5 s : il monte de 0,25 à
+  //                  0,8 s, sur une syllabe de foule il ne s'entend pas (et coûte trois modulations)
+  //      queue       un oscillateur vit encore 1,6 relâche après la fin de sa note, non 2 (il est alors
+  //                  à −42 dB de son palier, sous le souffle de la cassette : on ne l'entend pas partir)
+  //      avance      combien de secondes de notes existent d'avance dans le graphe (et
+  //      cadence     tous les combien de secondes le séquenceur les écrit) ; la fenêtre
+  //                  s'élargit seule, jusqu'à celle de `pleine`, si le fil principal prend du retard.
+  //                  (Une avance plus courte change un peu le son des balayages de filtre de
+  //                  section, qui s'arrêtent à l'écriture de la section suivante : voir `debut`.)
+  //    Les notes qui sonnent déjà ne bougent pas : un changement en cours de route ne
+  //    se voit ni ne s'entend. FusibleAudio.setQualite / .qualite ; le banc : --legere.
+  var MONTAGES = {
+    pleine: { scies: 0, flotteVoix: true, krate: false, voxDeux: false, vibMin: 0, queue: 2, avance: 1.5, cadence: 0.25 },
+    legere: { scies: 3, flotteVoix: false, krate: true, voxDeux: true, vibMin: 0.5, queue: 1.6, avance: 1.0, cadence: 0.15 }
+  };
+  // la fréquence d'un paramètre se calcule par paquet de 128 échantillons (`k-rate`) en qualité légère ;
+  // un navigateur qui refuse (le réglage est facultatif) garde le calcul par échantillon : même son, plus lourd
+  function kr(param, Q) {
+    if (!Q.krate || !param) return;
+    try { param.automationRate = 'k-rate'; } catch (e) { /* refusé : tant pis */ }
+  }
+  // une note : `ex.acc` l'accentue, `ex.de` (Hz) la fait glisser depuis là, `ex.q` est la
+  // qualité du moteur qui la joue (MONTAGES ; sans elle, `pleine` : le son écrit)
   function jouerNote(ctx, out, nom, t, dur, f, vol, voix, ex) {
     ex = ex || {};
+    var Q = ex.q || MONTAGES.pleine;
     var g = gain(ctx, 0.0001);
     g.connect(out);
     var fin, oscs = [];
@@ -1291,7 +1359,7 @@
       [[1, 1, 1.5], [2.76, 0.32, 0.6], [5.4, 0.13, 0.25]].forEach(function (p) {
         var o = ctx.createOscillator(), og = gain(ctx, 0.0001);
         o.type = 'sine'; o.frequency.value = f * p[0]; o.detune.value = ecart;
-        if (lg) lg.connect(o.detune);
+        if (lg) { lg.connect(o.detune); kr(o.detune, Q); }
         og.gain.setValueAtTime(0.0001, t);
         og.gain.linearRampToValueAtTime(vol * p[1], t + 0.003);
         og.gain.exponentialRampToValueAtTime(0.0001, t + p[2] + tenue);
@@ -1309,7 +1377,7 @@
       mg.gain.exponentialRampToValueAtTime(f * 0.35, t + 0.5);
       mo.connect(mg).connect(c.frequency);
       c.connect(g);
-      fin = env(g.gain, t, 0.004, 0.9, 0.32, 0.3, dur, vol);
+      fin = env(g.gain, t, 0.004, 0.9, 0.32, 0.3, dur, vol, Q.queue);
       c.start(t); mo.start(t); c.stop(fin); mo.stop(fin);
       return;
     }
@@ -1333,8 +1401,8 @@
       vlg.gain.setValueAtTime(0, t);
       vlg.gain.linearRampToValueAtTime(f * 0.008, t + 0.35);
       vlfo.connect(vlg);
-      oscs.forEach(function (o) { vlg.connect(o.frequency); });
-      fin = env(g.gain, t, 0.09, 0.3, 0.9, 0.28, dur, vol * 2.4);
+      oscs.forEach(function (o) { vlg.connect(o.frequency); kr(o.frequency, Q); });
+      fin = env(g.gain, t, 0.09, 0.3, 0.9, 0.28, dur, vol * 2.4, Q.queue);
       oscs.forEach(function (o) { o.start(t); o.stop(fin); });
       vlfo.start(t); vlfo.stop(fin);
       return;
@@ -1346,15 +1414,19 @@
       // pour la plus écartée), posées de gauche à droite (`large`, 0 à 1),
       // chacune partie un rien après l'autre (les phases s'écartent : pas de
       // claquement à l'attaque). Pour les accords tenus et les leads larges : à
-      // éviter en doubles croches (sept oscillateurs par note).
+      // éviter en doubles croches (sept oscillateurs par note). En qualité légère
+      // (`Q.scies`), trois scies : la plus basse, la centrale et la plus haute, avec le même
+      // écart extrême, la même largeur, et la même énergie (le niveau divise par √n).
       var nS = voix.scies === 5 ? 5 : 7;
-      var forme = nS === 5 ? [-1, -0.46, 0, 0.47, 0.98] : [-1, -0.63, -0.29, 0, 0.31, 0.61, 0.97];
+      if (Q.scies && Q.scies < nS) nS = Q.scies;
+      var forme = nS === 3 ? [-1, 0, 0.98] : nS === 5 ? [-1, -0.46, 0, 0.47, 0.98] : [-1, -0.63, -0.29, 0, 0.31, 0.61, 0.97];
       var cale = [0, 0.0013, 0.0029, 0, 0.0021, 0.0035, 0.0009];
       var desac = voix.desaccord == null ? 18 : voix.desaccord;
       var large = voix.large == null ? 0.7 : clamp(voix.large, 0, 1);
       var tonS = voix.ton || [6500, 3800, 0.4];
       var fS = ctx.createBiquadFilter();
       fS.type = 'lowpass'; fS.Q.value = ex.acc ? 2.5 : 0.6;
+      kr(fS.frequency, Q);
       fS.frequency.setValueAtTime(tonS[0] * (ex.acc ? 1.5 : 1), t);
       // une rampe qui finit (trois constantes de temps) : passé le balayage, le filtre ne coûte plus rien
       fS.frequency.exponentialRampToValueAtTime(Math.max(tonS[1], 20), t + 0.01 + 3 * (tonS[2] || 0.4));
@@ -1371,7 +1443,7 @@
         else o.frequency.value = f;
       });
       fin = env(g.gain, t, ve[0] != null ? ve[0] : 0.012, ve[1] != null ? ve[1] : 0.5, ve[2] != null ? ve[2] : 0.82,
-        ve[3] != null ? ve[3] : 0.35, dur, vol * 0.71 / Math.sqrt(nS));
+        ve[3] != null ? ve[3] : 0.35, dur, vol * 0.71 / Math.sqrt(nS), Q.queue);
       oscs.forEach(function (o, i) { o.start(t + cale[i % cale.length]); o.stop(fin); });
       return;
     }
@@ -1386,6 +1458,7 @@
       wsR.curve = courbeDrive(voix.chaleur == null ? 1.6 : voix.chaleur); wsR.oversample = '2x';
       var fR = ctx.createBiquadFilter();
       fR.type = 'lowpass'; fR.Q.value = ex.acc ? 4 : 1.3;
+      kr(fR.frequency, Q);
       fR.frequency.setValueAtTime(tonR[0] * (ex.acc ? 1.6 : 1), t);
       fR.frequency.exponentialRampToValueAtTime(Math.max(tonR[1], 20), t + 0.005 + 3 * (tonR[2] || 0.25));
       preR.connect(wsR).connect(fR).connect(g);
@@ -1402,7 +1475,7 @@
         else o.frequency.value = f;
       });
       fin = env(g.gain, t, ve[0] != null ? ve[0] : 0.006, ve[1] != null ? ve[1] : 0.3, ve[2] != null ? ve[2] : 0.85,
-        ve[3] != null ? ve[3] : 0.12, dur, vol * 0.82);
+        ve[3] != null ? ve[3] : 0.12, dur, vol * 0.82, Q.queue);
       oscs.forEach(function (o) { o.start(t); o.stop(fin); });
       return;
     }
@@ -1412,7 +1485,14 @@
       // où elle glisse pendant la note), un peu de corps sous les formants,
       // une attaque lente, un vibrato qui vient tard.
       var v0 = VOYELLES[voix.voyelle] || VOYELLES.a, v1 = VOYELLES[voix.vers] || null;
+      // En qualité légère : (1) `Q.voxDeux`, une scie et le triangle — la seconde scie (à 7 cents de la
+      // première) s'en va, la première prend sa part (√(1² + 0,8²) = 1,28 : la même énergie) ; au banc, le
+      // niveau et le profil par tiers d'octave ne bougent pas (±0,05 dB, 0,1 dB de moyenne), seul le
+      // battement de la seconde scie manque ; (2) le vibrato ne vient qu'au bout d'un quart de seconde
+      // (il monte de 0,25 à 0,8 s) : sur une note courte — les syllabes de la foule — il ne s'entend pas, et
+      // ses modulations de fréquence coûtent. Il n'est écrit que pour les notes d'au moins `Q.vibMin` secondes.
       var fv1 = ctx.createBiquadFilter(), fv2 = ctx.createBiquadFilter(), corps = ctx.createBiquadFilter(), lpv = ctx.createBiquadFilter();
+      kr(fv1.frequency, Q); kr(fv2.frequency, Q);
       fv1.type = 'bandpass'; fv1.Q.value = 2.6; fv1.frequency.setValueAtTime(v0[0], t);
       fv2.type = 'bandpass'; fv2.Q.value = 3.4; fv2.frequency.setValueAtTime(v0[1], t);
       if (v1) {
@@ -1426,22 +1506,24 @@
       mixv.connect(corps).connect(gain(ctx, 0.35)).connect(lpv);
       fv1.connect(lpv); fv2.connect(gain(ctx, 0.7)).connect(lpv);
       lpv.connect(g);
-      [['sawtooth', 0, 1], ['sawtooth', 7, 0.8], ['triangle', -5, 1.2]].forEach(function (p) {
+      (Q.voxDeux ? [['sawtooth', 0, 1.28], ['triangle', -5, 1.2]] : [['sawtooth', 0, 1], ['sawtooth', 7, 0.8], ['triangle', -5, 1.2]]).forEach(function (p) {
         var o = ctx.createOscillator();
         o.type = p[0]; o.detune.value = p[1];
         o.connect(gain(ctx, p[2])).connect(mixv);
         oscs.push(o);
       });
       oscs.forEach(function (o) { o.frequency.value = f; });
-      var vbv = ctx.createOscillator(), vbg = gain(ctx, 0);
-      vbv.frequency.value = 4.7;
-      vbg.gain.setValueAtTime(0, t + 0.25);
-      vbg.gain.linearRampToValueAtTime(f * 0.0045, t + 0.8);
-      vbv.connect(vbg);
-      oscs.forEach(function (o) { vbg.connect(o.frequency); });
-      oscs.push(vbv);
+      if (dur >= (Q.vibMin || 0)) {
+        var vbv = ctx.createOscillator(), vbg = gain(ctx, 0);
+        vbv.frequency.value = 4.7;
+        vbg.gain.setValueAtTime(0, t + 0.25);
+        vbg.gain.linearRampToValueAtTime(f * 0.0045, t + 0.8);
+        vbv.connect(vbg);
+        oscs.forEach(function (o) { vbg.connect(o.frequency); kr(o.frequency, Q); });
+        oscs.push(vbv);
+      }
       fin = env(g.gain, t, ve[0] != null ? ve[0] : 0.28, ve[1] != null ? ve[1] : 0.6, ve[2] != null ? ve[2] : 0.9,
-        ve[3] != null ? ve[3] : 0.6, dur, vol * 0.36);
+        ve[3] != null ? ve[3] : 0.6, dur, vol * 0.36, Q.queue);
       oscs.forEach(function (o) { o.start(t); o.stop(fin); });
       return;
     }
@@ -1451,6 +1533,7 @@
     if (fdef) {
       var flt = ctx.createBiquadFilter();
       flt.type = 'lowpass'; flt.Q.value = (def.q || 1.2) + (ex.acc ? 4 : 0);
+      kr(flt.frequency, Q);
       flt.frequency.setValueAtTime(fdef[0] * (ex.acc ? 1.8 : 1), t);
       flt.frequency.setTargetAtTime(fdef[1], t + def.a, (voix.ton && voix.ton[2]) || def.fenv || 0.12);
       flt.connect(g);
@@ -1482,11 +1565,11 @@
       vg.gain.setValueAtTime(0, t + 0.12);
       vg.gain.linearRampToValueAtTime(f * 0.006 * def.vib, t + 0.32);
       v.connect(vg);
-      oscs.forEach(function (o) { vg.connect(o.frequency); });
+      oscs.forEach(function (o) { vg.connect(o.frequency); kr(o.frequency, Q); });
       oscs.push(v);
     }
     fin = env(g.gain, t, ve[0] != null ? ve[0] : def.a, ve[1] != null ? ve[1] : def.d, ve[2] != null ? ve[2] : def.s,
-      ve[3] != null ? ve[3] : def.r, dur, vol * (def.niveau || 1));
+      ve[3] != null ? ve[3] : def.r, dur, vol * (def.niveau || 1), Q.queue);
     oscs.forEach(function (o) { o.start(t); o.stop(fin); });
   }
   // un souffle tenu puis coupé net : la caisse claire « gated » des années
@@ -1583,6 +1666,9 @@
   // Il tourne sur n'importe quel BaseAudioContext : le direct (AudioContext)
   // et le banc d'essai (OfflineAudioContext) passent par le même code.
 
+  // l'heure du mur, en millisecondes (le séquenceur du direct et la mesure de l'appareil)
+  function horloge() { return global.performance && global.performance.now ? global.performance.now() : Date.now(); }
+
   function createEngine(ctx, dest, opt) {
     opt = opt || {};
     var seed = opt.seed == null ? (Date.now() & 0x7fffffff) : opt.seed;
@@ -1591,6 +1677,9 @@
     // de minuterie de ménage — rien qui dépende du temps réel.
     var offline = opt.offline === true ||
       (ctx.constructor && /Offline/.test(ctx.constructor.name || ''));
+    // la qualité (MONTAGES) : `pleine` sauf demande ; elle peut changer en route (setQualite)
+    var qualite = MONTAGES[opt.qualite] ? opt.qualite : 'pleine';
+    var Q = MONTAGES[qualite];
 
     var master = gain(ctx, opt.master == null ? 0.85 : opt.master);
     // Un limiteur doux en sortie : rien ne doit jamais saturer, même si trois
@@ -1611,10 +1700,12 @@
     ambBus.connect(master); padBus.connect(master); sfxBus.connect(master); musBus.connect(master);
     // une petite salle pour la musique : ce qui la sort de la boîte
     var musWet = gain(ctx, 0.14);
-    var musRev = ctx.createConvolver();
-    musRev.normalize = true;
-    musRev.buffer = impulse(ctx, 'musique', 1.5, 3.4, [[0.017, 0.35], [0.031, 0.25]]);
-    musWet.connect(musRev).connect(musBus);
+    if (!opt.sansPiece) {   // la mesure de l'appareil s'en passe : « Fusible » a sa salle, et ce convolueur inutilisé pèserait dans sa seconde de rendu
+      var musRev = ctx.createConvolver();
+      musRev.normalize = true;
+      musRev.buffer = impulse(ctx, 'musique', 1.5, 3.4, [[0.017, 0.35], [0.031, 0.25]]);
+      musWet.connect(musRev).connect(musBus);
+    }
 
     var mode = 'tout';
     var tension = 0;
@@ -1809,8 +1900,10 @@
       var vivants = [];
       // le flottement d'une bande : la voix passe par un retard qui s'allonge et
       // raccourcit lentement — la hauteur ondule de ±`prof` cents, à `vit` Hz, en
-      // deux lenteurs qui ne se rejoignent jamais (le flottement ne se répète pas)
-      function flottement(entree, f) {
+      // deux lenteurs qui ne se rejoignent jamais (le flottement ne se répète pas).
+      // Celui d'une voix (`voix` vrai) peut s'éteindre en route (alleger) ; celui du mélange, jamais.
+      var souples = [];
+      function flottement(entree, f, voix) {
         var prof = clamp(typeof f === 'number' ? f : (f.prof == null ? 8 : f.prof), 0, 40);
         var vit = clamp(typeof f === 'number' ? 0.55 : (f.vit == null ? 0.55 : f.vit), 0.2, 12);
         var frac = Math.pow(2, prof / 1200) - 1;
@@ -1820,8 +1913,10 @@
         [[vit, a1], [vit * 0.383, a2]].forEach(function (c) {
           var o = ctx.createOscillator();
           o.frequency.value = c[0];
-          o.connect(gain(ctx, c[1])).connect(d.delayTime);
+          var og = gain(ctx, c[1]);
+          o.connect(og).connect(d.delayTime);
           o.start(at); vivants.push(o);
+          if (voix) souples.push({ o: o, g: og });
         });
         entree.connect(d);
         return d;
@@ -1878,7 +1973,7 @@
       Object.keys(th.voix).forEach(function (vn) {
         if (vn === 'batt') return;
         var v = th.voix[vn], entree = gain(ctx, 1), x = entree, flt = null;
-        if (v.flotte) x = flottement(x, v.flotte);
+        if (v.flotte && Q.flotteVoix) x = flottement(x, v.flotte, true);
         if (v.drive) {
           var ws = ctx.createWaveShaper();
           ws.curve = courbeDrive(v.drive); ws.oversample = '2x';
@@ -1886,6 +1981,7 @@
         }
         if (v.filtre) {
           flt = ctx.createBiquadFilter();
+          kr(flt.frequency, Q);
           flt.type = 'lowpass'; flt.frequency.value = v.filtre; flt.Q.value = v.q || 0.7;
           x.connect(flt); x = flt;
         }
@@ -1915,6 +2011,7 @@
         }
         if (bt.filtre) {
           fb = ctx.createBiquadFilter();
+          kr(fb.frequency, Q);
           fb.type = 'lowpass'; fb.frequency.value = bt.filtre; fb.Q.value = bt.q || 0.7;
           xb.connect(fb); xb = fb;
           bus.batt = { entree: null, filtre: fb };
@@ -1942,7 +2039,16 @@
         g.setTargetAtTime(1 - th.pompe.prof, tt, 0.004);
         g.setTargetAtTime(1, tt + 0.03, (th.pompe.rel || 0.15) / 3);
       }
-      // le début d'une section : les filtres qu'elle balaie, les autres rendus
+      // le début d'une section : les filtres qu'elle balaie, les autres rendus.
+      // CONNU, laissé tel quel pour que la qualité pleine ne bouge pas : la rampe d'une section finit à
+      // `tt + sec.pas * C.pas`, la suivante commence à `tStep`, une somme de pas, et les deux diffèrent d'un
+      // arrondi (10⁻¹⁴ s). Quand la suivante tombe un rien AVANT la fin de la rampe, Web Audio range son
+      // `setValueAtTime` avant la rampe : dès qu'il est écrit (l'avance du séquenceur avant la section, 1,5 s
+      // en direct) le balayage s'arrête, et le filtre retombe à sa valeur de départ jusqu'au bout de la
+      // section. Le son d'un balayage dépend donc du moment où le séquenceur écrit (le banc fige ses
+      // fenêtres de 2 s pour cela). Le correctif tient en une ligne (finir la rampe un millième de seconde
+      // plus tôt) ; il rend leur balayage entier aux sections concernées, donc il change le son : à décider
+      // à l'oreille.
       function debut(sec, tt) {
         Object.keys(bus).forEach(function (vn) {
           var b = bus[vn];
@@ -1990,7 +2096,7 @@
           var inst = voix.epoque ? timbreEpoque(voix.inst, year) : voix.inst;
           var dur = e.len * C.pas * (e.len > 1 ? 0.96 : 0.8);
           var vol = (voix.drive ? 1 : voix.vol) / Math.sqrt(e.h.length);
-          var ex = { acc: e.acc, de: e.de != null ? hzDe(e.de) : 0 };
+          var ex = { acc: e.acc, de: e.de != null ? hzDe(e.de) : 0, q: Q };
           for (var j = 0; j < e.h.length; j++) jouerNote(ctx, bus[e.v].entree, inst, tt, dur, hzDe(e.h[j]), vol, voix, ex);
         }
       }
@@ -2029,6 +2135,19 @@
             secondes: clamp(t - e.t, 0, e.mesures * C.pas * 16)
           };
         },
+        // la qualité légère arrive pendant que le thème joue : le flottement des voix s'éteint en
+        // 0,4 s (la hauteur revient à plat sans saut ; le retard, lui, reste, quelques millisecondes)
+        // et les filtres de voix passent en k-rate. Les notes qui sonnent ne sont pas touchées.
+        alleger: function (tt) {
+          souples.forEach(function (s) {
+            s.g.gain.cancelScheduledValues(tt);
+            s.g.gain.setValueAtTime(s.g.gain.value, tt);
+            s.g.gain.linearRampToValueAtTime(0, tt + 0.4);
+            try { s.o.stop(tt + 0.5); } catch (e) { /* déjà arrêté */ }
+          });
+          souples = [];
+          Object.keys(bus).forEach(function (vn) { if (bus[vn].filtre) kr(bus[vn].filtre.frequency, Q); });
+        },
         stop: function (t, f) {
           this.dead = t + f + 0.4;
           out.gain.cancelScheduledValues(t);
@@ -2040,6 +2159,22 @@
     }
 
     function now() { return ctx.currentTime; }
+
+    // Le pas du séquenceur en direct. En qualité légère, l'avance est plus courte (moins de nœuds en
+    // attente dans le graphe) : si le fil principal prend du retard (un pas qui arrive plus de 0,1 s après
+    // l'heure), la fenêtre s'élargit d'autant — au plus jusqu'à celle de `pleine` — puis se resserre
+    // de 50 ms par pas. Un arrêt du fil principal ne fait donc pas plus de trous qu'avant.
+    var fenetre = Q.avance, dernierPas = null;
+    function pasDirect() {
+      var m = horloge(), max = MONTAGES.pleine.avance;
+      if (Q.avance < max) {
+        var retard = dernierPas == null ? 0 : (m - dernierPas) / 1000 - Q.cadence;
+        if (retard > 0.1) fenetre = Math.min(max, Math.max(fenetre, Q.avance + 2 * retard));
+        else fenetre = Math.max(Q.avance, fenetre - 0.05);
+      } else fenetre = Q.avance;
+      dernierPas = m;
+      try { engine.scheduleUntil(now() + fenetre); } catch (e) {}
+    }
 
     var engine = {
       ctx: ctx,
@@ -2193,14 +2328,29 @@
         var t = (o.at == null ? now() + 0.008 : o.at);
         for (var i = 0; i < list.length; i++) engine.play(list[i], { at: t + i * step, gain: i ? 0.75 : 1 });
       },
-      // ---- le direct : une fenêtre glissante d'une seconde et demie ----
+      // ---- la qualité (MONTAGES) : celle qui joue, et le changement en route ----
+      qualite: function () { return qualite; },
+      setQualite: function (q) {
+        if (!MONTAGES[q]) q = 'pleine';
+        if (q === qualite) return qualite;
+        qualite = q; Q = MONTAGES[q];
+        if (q === 'legere') {
+          var tq = now();
+          for (var i = 0; i < themes.length; i++) if (!themes[i].dead && themes[i].alleger) themes[i].alleger(tq);
+        }
+        // une autre avance, une autre cadence : le séquenceur repart, sans rien réécrire de ce qui l'est déjà
+        if (engine._timer) { engine.stopClock(); engine.startClock(); }
+        return qualite;
+      },
+      avance: function () { return Q.avance; },       // les secondes de notes écrites d'avance (le banc s'y règle)
+      cadence: function () { return Q.cadence; },     // tous les combien de secondes le séquenceur les écrit
+      // ---- le direct : une fenêtre glissante (1,5 s d'avance, écrite tous les quarts de seconde, en pleine) ----
       startClock: function () {
         if (engine._timer) return;
         scheduled = Math.max(scheduled, now());
-        engine._timer = setInterval(function () {
-          try { engine.scheduleUntil(now() + 1.5); } catch (e) {}
-        }, 250);
-        engine.scheduleUntil(now() + 1.5);
+        fenetre = Q.avance; dernierPas = null;
+        engine._timer = setInterval(pasDirect, Math.round(Q.cadence * 1000));
+        engine.scheduleUntil(now() + fenetre);
       },
       stopClock: function () {
         if (engine._timer) { clearInterval(engine._timer); engine._timer = null; }
@@ -2227,7 +2377,7 @@
   // chante tout seul à l'ouverture est un jeu qu'on referme).
   var live = null, liveCtx = null;
   var mode = 'tout';
-  var pending = { ambiance: null, tension: 0, year: 1990, theme: null };
+  var pending = { ambiance: null, tension: 0, year: 1990, theme: null, qualite: null };
   // LA REPRISE — en ville, on quitte un thème et on y revient sans cesse (une carte
   // sombre, la nuit, le match, une scène jouée) : repartir chaque fois de son
   // introduction ferait entendre vingt fois les mêmes mesures. Le thème qu'on quitte
@@ -2259,9 +2409,11 @@
     if (!liveCtx || cachee || liveCtx.state === 'closed') return;
     if (liveCtx.state !== 'running') { try { var p = liveCtx.resume(); if (p && p.catch) p.catch(function () {}); } catch (x) { /* un geste le relancera */ } }
   }
+  var miseEnVeille = 0;   // combien de fois la page a été cachée (une mesure d'appareil qui l'a été ne vaut rien)
   function cacher() {
     if (cachee) return;
     cachee = true;
+    miseEnVeille++;
     if (live) live.stopClock();
     if (liveCtx && liveCtx.state === 'running') { try { var p = liveCtx.suspend(); if (p && p.catch) p.catch(function () {}); } catch (x) { /* rien */ } }
   }
@@ -2284,13 +2436,102 @@
     global.addEventListener('pageshow', function () { if (!global.document.hidden) montrer(); });
   }
 
+  // LE CHOIX DE LA QUALITÉ (MONTAGES) — une fois, au premier geste. La page garde un verdict par version du
+  // moteur (localStorage `fusible.son.v1` : { q, vitesse, v }) ; sans lui, elle MESURE l'appareil, un peu après
+  // que la musique a démarré, sans la retarder : elle rend DUREE_MESURE seconde du passage le plus lourd de la
+  // bande (« Fusible », section C2 : 92 sources à la fois), en qualité pleine, dans un OfflineAudioContext à la
+  // fréquence du direct, et la vitesse est la durée du son sur le temps que le rendu a pris. Au-dessous de
+  // SEUIL_SON, qualité légère.
+  // Le seuil vient d'une calibration sur Chromium (aucun téléphone n'a été mesuré) : le fil audio en direct
+  // coûte 1,9 fois le rendu hors ligne de la même musique (29 % d'un cœur quand la mesure donne ×6,7), et il
+  // craque vers 90 % d'un cœur. À ×3,5, la pleine passerait un peu plus de la moitié d'un cœur au sommet de la
+  // bande — la marge que demande un téléphone (fréquence qui varie, cœurs lents, autres applications) — et la
+  // légère, 28 % moins chère, 40 %. À ×2,5, la pleine serait à 76 %, trop près du craquement. Changer de
+  // qualité coûte peu à l'oreille (le niveau à 0,4 dB, un tiers d'octave à 2,3 dB au pire), craquer coûte
+  // beaucoup : le seuil penche du côté de la légère. À refaire sur un vrai téléphone : `FusibleAudio.verdict()`
+  // dit la vitesse qu'il a mesurée. Toute faute (pas de contexte hors ligne, un rendu qui échoue, la page cachée
+  // en route) laisse la qualité pleine et ne garde rien. VERSION_SON monte quand le coût du moteur ou de la
+  // musique change (ou quand la section C2 de « Fusible » est réécrite) : la mesure est refaite.
+  var VERSION_SON = 1, CLE_SON = 'fusible.son.v1', SEUIL_SON = 3.5, DUREE_MESURE = 1;
+  var verdict = null;          // { q, vitesse, v, origine: 'memoire' | 'mesure' | 'page' }
+  var mesureEnCours = false;
+  function lireVerdict() {
+    try {
+      var o = JSON.parse(global.localStorage.getItem(CLE_SON));
+      if (o && o.v === VERSION_SON && MONTAGES[o.q]) return { q: o.q, vitesse: +o.vitesse || 0, v: o.v, origine: 'memoire' };
+    } catch (x) { /* pas de stockage, ou illisible : on mesurera */ }
+    return null;
+  }
+  function garderVerdict(o) {
+    try { global.localStorage.setItem(CLE_SON, JSON.stringify({ q: o.q, vitesse: o.vitesse, v: o.v })); } catch (x) { /* tant pis : on mesurera la prochaine fois */ }
+  }
+  // un rendu hors ligne de « Fusible » C2 : rappelle `fini(vitesse)`, ou `fini(null)` au moindre échec
+  function mesurer(sr, fini) {
+    var rendu = false;
+    function fin(v) { if (rendu) return; rendu = true; fini(v); }
+    try {
+      var OAC = global.OfflineAudioContext || global.webkitOfflineAudioContext;
+      if (!OAC || !MUSIQUE.accueil || !(sr > 0)) return fin(null);
+      var oc = new OAC(2, Math.ceil(sr * DUREE_MESURE), sr);
+      var e = createEngine(oc, oc.destination, { qualite: 'pleine', pad: false, at: 0, seed: 1, offline: true, sansPiece: true });
+      e.setTheme('accueil', { at: 0, fade: 0, depuis: 'C2' });
+      e.scheduleUntil(DUREE_MESURE + 0.15);
+      var t0 = horloge();
+      var fait = function () { var dt = (horloge() - t0) / 1000; fin(dt > 0 ? DUREE_MESURE / dt : null); };
+      var p = oc.startRendering();
+      if (p && p.then) p.then(fait, function () { fin(null); });
+      else oc.oncomplete = fait;       // le vieux webkitOfflineAudioContext ne rend pas de promesse
+      global.setTimeout(function () { fin(null); }, 10000);   // un rendu qui ne finit pas (page gelée, contexte tué) ne vaut rien
+    } catch (x) { fin(null); }
+  }
+  // un résultat net se croit ; entre les deux (de 0,6 à 1,5 fois le seuil), un second rendu : le premier
+  // paie la montée en fréquence du processeur, et la meilleure vitesse des deux est celle de l'appareil
+  function mesurerAppareil(sr, fini) {
+    var essais = 0, meilleure = null;
+    (function encore() {
+      mesurer(sr, function (v) {
+        if (v == null) return fini(meilleure);
+        essais++;
+        meilleure = meilleure == null ? v : Math.max(meilleure, v);
+        if (essais < 2 && meilleure > SEUIL_SON * 0.6 && meilleure < SEUIL_SON * 1.5) return global.setTimeout(encore, 60);
+        fini(meilleure);
+      });
+    })();
+  }
+  function mesurerPlusTard() {
+    if (mesureEnCours || verdict || pending.qualite || !global.setTimeout) return;
+    mesureEnCours = true;
+    var lancer = function () {
+      if (!live || !liveCtx || verdict || pending.qualite) { mesureEnCours = false; return; }
+      if (cachee) { global.setTimeout(lancer, 2000); return; }
+      var veille = miseEnVeille;
+      mesurerAppareil(liveCtx.sampleRate, function (v) {
+        mesureEnCours = false;
+        if (!live || verdict || pending.qualite) return;
+        if (veille !== miseEnVeille || cachee) { mesurerPlusTard(); return; }   // cachée en route : la mesure ne vaut rien
+        if (v == null) return;
+        verdict = { q: v < SEUIL_SON ? 'legere' : 'pleine', vitesse: Math.round(v * 100) / 100, v: VERSION_SON, origine: 'mesure' };
+        garderVerdict(verdict);
+        live.setQualite(verdict.q);
+      });
+    };
+    // 1,2 s après le geste (la musique est lancée, son fondu fini), puis quand le navigateur est au repos
+    global.setTimeout(function () {
+      if (global.requestIdleCallback) global.requestIdleCallback(lancer, { timeout: 3000 });
+      else lancer();
+    }, 1200);
+  }
+
   function ensure() {
     if (live) return live;
     if (mode === 'muet') return null;
     var AC = global.AudioContext || global.webkitAudioContext;
     if (!AC) return null;
     try { liveCtx = new AC(); } catch (e) { return null; }
-    live = createEngine(liveCtx, liveCtx.destination, { mode: mode });
+    // la qualité : celle que la page a forcée, sinon le verdict gardé pour cette version du moteur, sinon pleine
+    // (et la mesure de l'appareil, plus bas)
+    if (!pending.qualite && !verdict) verdict = lireVerdict();
+    live = createEngine(liveCtx, liveCtx.destination, { mode: mode, qualite: pending.qualite || (verdict && verdict.q) || 'pleine' });
     live.setYear(pending.year);
     // le thème avant le lieu : le lit d'un lieu né sous un thème naît éteint
     if (pending.theme) live.setTheme(pending.theme, { fade: 0.6 });
@@ -2298,6 +2539,7 @@
     live.setTension(pending.tension);
     // né pendant que la page est cachée (rare : il faut un geste) : il attend qu'elle revienne
     if (cachee) { try { liveCtx.suspend(); } catch (x) { /* rien */ } } else live.startClock();
+    if (!pending.qualite && !verdict) mesurerPlusTard();
     return live;
   }
 
@@ -2377,6 +2619,28 @@
     _erreur: function (ou, e) { signaler(ou, e); },
     SILENCE: SILENCE,
     jingle: function (nom) { if (live) live.jingle(nom); },
+    // la qualité du moteur (MONTAGES) : `qualite()` dit celle qui joue (ou jouera au premier geste) ;
+    // `setQualite` la force — la page décide, la mesure de l'appareil ne l'écrase pas, rien n'est gardé
+    // — ; `verdict()` dit d'où elle vient : { q, vitesse (la mesure, ×temps réel, ou null), v, origine :
+    // 'mesure' | 'memoire' | 'page' } ou null tant que rien n'est décidé
+    qualite: function () {
+      if (live) return live.qualite();
+      if (pending.qualite) return pending.qualite;
+      if (!verdict) verdict = lireVerdict();
+      return verdict ? verdict.q : 'pleine';
+    },
+    setQualite: function (q) {
+      if (!MONTAGES[q]) return API.qualite();
+      pending.qualite = q;
+      verdict = { q: q, vitesse: verdict && verdict.vitesse != null ? verdict.vitesse : null, v: VERSION_SON, origine: 'page' };
+      if (live) live.setQualite(q);
+      return q;
+    },
+    verdict: function () { return verdict ? { q: verdict.q, vitesse: verdict.vitesse, v: verdict.v, origine: verdict.origine } : null; },
+    _qualites: MONTAGES,
+    // la mesure de l'appareil, à la demande (la QA, le banc) : rappelle cb(vitesse en ×temps réel, ou null)
+    _mesurer: function (sr, cb) { mesurer(sr || (liveCtx && liveCtx.sampleRate) || 44100, cb); },
+    _seuil: function () { return SEUIL_SON; },
     // le banc d'essai : la partition compilée d'un thème (les erreurs d'écriture sortent ici)
     _compiler: function (nom) { var C = compilerTheme(nom); return { ordre: C.ordre, pas: Object.keys(C.sections).map(function (k) { return k + ':' + C.sections[k].pas; }) }; },
     _partition: function (nom) { return compilerTheme(nom); },

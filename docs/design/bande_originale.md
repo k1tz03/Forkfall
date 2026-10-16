@@ -286,6 +286,14 @@ fait flotter tout le mélange, de deux ou trois cents, et c'est assez.
   couche lourde se garde pour le sommet, pas pour toute la boucle : l'envolée de « Fusible » ne
   prend sa grande scie qu'à son second passage. Une enveloppe longue (`env`) garde ses voix en
   vie : raccourcir la relâche d'une nappe allège tout.
+- **La qualité légère.** Un téléphone modeste joue la bande en qualité `legere` (`audio.js`, `MONTAGES`,
+  choisie au premier geste en mesurant l'appareil) : la grande scie à trois scies, plus de flottement de
+  voix (celui de `cassette.flotte` reste), la voix « aah » à une scie et un triangle, des filtres calculés
+  par paquet. Votre thème doit sonner juste dans les deux : le rendre avec `banc_son.js --legere` (fichiers
+  `<clé>_legere.*`) et le comparer à la pleine, le niveau à 0,5 dB près, aucun tiers d'octave à plus de
+  2,5 dB. Ce qui s'en va, le battement de sept scies et le roulis d'une voix, ne doit pas porter seul une
+  couleur. (« Fusible » C2 sert aussi de mesure au téléphone : la réécrire, c'est monter `VERSION_SON`
+  dans audio.js.)
 
 ### 6.4 Le banc : les commandes et les cibles
 
@@ -298,6 +306,8 @@ NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --bou
 NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --depuis B --duree 20 --out /tmp/banc livre_h4
 # un brouillon hors de musique/, et tous les thèmes pour comparer les niveaux
 NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --boucle --avec /tmp/brouillon.js --out /tmp/banc
+# le même passage en qualité légère (le montage du direct d'un téléphone modeste) : <clé>_legere.wav, .png…
+NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --legere --depuis B --duree 20 --out /tmp/banc livre_h4
 ```
 
 Une boucle entière se rend en quelques minutes (« Fusible » : six minutes de musique, cinq minutes de
