@@ -255,6 +255,7 @@ du vrai instrument.
 |---|---|---|---|---|---|---|
 | `altos` | échantillons | C3–E6 | tenu (2×1), legato (2×1), staccato (2×2), pizzicato (2×1), tremolo (2×1) | — | +0.18 / 0.35 | pupitre d'altos : le milieu sombre des cordes |
 | `basses_film` | couches | E1–G3 | tenu, staccato, pizzicato, tremolo | — | +0.50 / 0.40 | les contrebasses de film : le soliste en pupitre et le pupitre de la banque générale sous lui |
+| `contrebasse_jazz` | banque GM | E1–G3 | pince | — | +0.05 / 0.20 | contrebasse pincée du bal : la marche souple, le demi-temps de la nuit |
 | `contrebasses` | échantillons | E1–G3 | tenu (2×1), sans_vibrato (2×1), legato (2×1), staccato (1×1), pizzicato (1×1), tremolo (2×1) | 3 prises | +0.55 / 0.40 | pupitre de contrebasses (un soliste en trois prises) : le sol de l'orchestre |
 | `harpe` | échantillons | C1–G7 | pince (1×1) | — | -0.55 / 0.45 | harpe de concert : arpèges, glissandos écrits |
 | `pupitre_basses` | banque GM | E1–G3 | tenu, staccato, pizzicato, tremolo | — | +0.55 / 0.45 | pupitre de contrebasses (banque générale) |
@@ -263,13 +264,14 @@ du vrai instrument.
 | `braam` | couches | C1–C4 | tenu | — | +0.10 / 0.50 | le « braam » : trombones, tuba et cors fortissimo, une octave de synthé saturé dessous ; écrire la fondamentale grave (C2..G2), il double à l'octave |
 | `cors` | échantillons | A1–F5 | tenu (3×1), legato (3×1), staccato (3×1), sourdine (2×1) | 4 prises | -0.30 / 0.65 | quatre cors à l'unisson : le thème héroïque, rond et lointain |
 | `trombones` | échantillons | E2–F5 | tenu (3×1), vibrato (1×1), legato (3×1), staccato (4×1) | 3 prises | +0.40 / 0.60 | trois trombones : le cuivre grave qui gronde |
-| `trompettes` | échantillons | F#3–D6 | tenu (2×1), vibrato (2×1), legato (2×1), staccato (3×1), sourdine (2×1) | 2 prises | +0.25 / 0.60 | deux trompettes : l'éclat, les fanfares |
+| `trompettes` | échantillons | F#3–D6 | tenu (2×1), vibrato (2×1), legato (2×1), staccato (3×1), sourdine (2×1), harmon (2×1) | 2 prises | +0.25 / 0.60 | deux trompettes : l'éclat, les fanfares |
 | `tuba` | échantillons | D1–F4 | tenu (3×1), legato (3×1), staccato (2×4) | — | +0.50 / 0.60 | tuba : le fond des cuivres |
 | `bassons` | échantillons | A#1–E5 | tenu (2×1), vibrato (2×1), legato (2×1), staccato (2×1) | 2 prises | +0.15 / 0.50 | bassons : le grave boisé, le staccato qui sautille |
 | `clarinettes` | échantillons | D3–C7 | tenu (3×1), legato (3×1), staccato (3×1) | 2 prises | -0.08 / 0.50 | clarinettes : le bois rond, souple |
 | `flutes` | échantillons | C4–C7 | tenu (1×1), sans_vibrato (2×1), legato (1×1), staccato (3×1) | 2 prises | -0.12 / 0.50 | deux flûtes : l'air, la lumière |
 | `hautbois` | échantillons | A#3–G6 | tenu (2×1), sans_vibrato (2×1), legato (2×1), staccato (3×1) | — | +0.10 / 0.50 | hautbois : la plainte, le chant pastoral |
 | `piccolo` | échantillons | D5–C8 | tenu (1×1), staccato (1×1) | — | -0.18 / 0.55 | piccolo : la pointe, à petites doses |
+| `sifflet` | banque GM | C5–C7 | tenu | — | +0.10 / 0.40 | sifflet : quelqu'un qui siffle en marchant |
 | `applaudissements` | fabriqué | — | mesure, ovation | — | +0.00 / 0.20 | une tribune qui frappe dans ses mains : en mesure (chaque note, un coup) ou l'ovation qui enfle pendant la note |
 | `caisse_claire` | échantillons | — | frappe (5×2), timbre_off (4×2), roulement (3×1), cercle (1×2) | — | +0.05 / 0.70 | caisse claire d'orchestre (timbre) : les marches, les roulements |
 | `carillon` | échantillons | — | monte (1×1), descend (1×1), vite (1×1) | — | +0.40 / 0.60 | carillon à tiges : la poussière d'étoiles d'une transition |
@@ -291,13 +293,16 @@ du vrai instrument.
 | `celesta` | banque GM | C4–C8 | frappe | — | -0.30 / 0.50 | célesta : le conte, le mystère |
 | `orgue` | échantillons | C2–C7 | tenu (1×1), doux (1×1) | — | +0.00 / 0.85 | orgue à tuyaux : la messe, le vertige |
 | `piano` | échantillons | A0–C8 | tenu (3×1), pedale (3×1) | — | -0.05 / 0.35 | piano de concert (trois nuances) : la confidence, le martèlement |
+| `piano_electrique` | banque GM | E1–G6 | lames, fm, desaccorde | — | +0.00 / 0.30 | piano électrique à lames : la nuit, le bar, les néons |
 | `choeur` | banque GM | C3–C6 | aah, ouh | 2 prises | +0.00 / 0.70 | chœur mixte « aah » / « ouh » : l'épopée, la messe |
 | `foule` | fabriqué | G2–E4 | o, ah, rumeur | — | +0.00 / 0.20 | la foule du stade : des milliers d'hommes à l'unisson sur « o » ou « ah », de loin, la rumeur dessous ; `rumeur` seule |
 | `voix_synthe` | banque GM | C3–C6 | tenu | — | +0.00 / 0.50 | voix de synthèse : un chœur de machine |
 | `basse_electrique` | banque GM | E1–G4 | doigts, mediator, slap | — | +0.00 / 0.10 | basse électrique : le groove |
 | `guitare_claire` | banque GM | E2–E6 | tenu, etouffee | — | +0.35 / 0.30 | guitare électrique claire : les arpèges de nuit |
+| `guitare_nylon` | banque GM | E2–B5 | tenu | — | -0.30 / 0.30 | guitare à cordes de nylon : les arpèges pincés du jour |
 | `guitare_saturee` | banque GM | E2–E6 | tenu, crunch, etouffee | — | -0.40 / 0.20 | guitare saturée : les quintes à vide, le mur |
 | `batterie` | banque GM | — | kit | — | +0.00 / 0.20 | batterie standard : la pop, le rock léger |
+| `batterie_balais` | banque GM | — | kit | — | +0.00 / 0.25 | batterie aux balais : la promenade |
 | `batterie_electro` | banque GM | — | kit | — | +0.00 / 0.20 | batterie électronique des années 80 |
 | `batterie_jazz` | banque GM | — | kit | — | +0.00 / 0.20 | batterie jazz : les balais du soir |
 | `batterie_puissante` | banque GM | — | kit | — | +0.00 / 0.20 | batterie puissante : le stade |
