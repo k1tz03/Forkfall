@@ -362,7 +362,11 @@ def intro(s):
 # --- A : six heures dix ---------------------------------------------------------------------------
 @theme.section('A1', mesures=8)
 def A1(s):
-    nuances(s, voix_f1='fff', voix_f2='fff', basses='p', vibra='mp', sub='f', voix='mf', cors='mf', altos='p', celesta='mp')
+    nuances(s, voix_f1='fff', voix_f2='fff', basses='p', vibra='mp', sub='f', voix='mf', cors='mf', altos='p', celesta='mp',
+            timbales='mp')
+    # le premier temps : la montée de R (ou de l'introduction) retombe ici
+    s.note(timbales, 'A2', 0, 1, vel=74)
+    s.note(suspendue, 'C4', 0, 2, vel=66, art='frappe')
     croches(s, basses, vel=76)
     basse_tenue(s, sub, vel=64)
     triolets_machine(s, vibra, vel=64)
@@ -611,8 +615,8 @@ def R(s):
     tenues(s, altos, octave=1, vel=64)
     s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mf')
     canon(s, TETE, 5, [(cors, 0, 86)])
-    s.note(effets, 'A3', s.m(7), 8, vel=86, art='montee')
-    cymbale_vers(s, s.m(9), 'monte_4s', vel=84)
+    s.note(effets, 'A3', s.m(7), 8, vel=76, art='montee')
+    cymbale_vers(s, s.m(9), 'monte_4s', vel=78)
 
 
 # --- A3 : six heures dix, encore ---------------------------------------------------------------------
