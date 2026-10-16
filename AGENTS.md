@@ -479,6 +479,9 @@ Ce que la ville porte en plus des cartes :
   qu'un bit d'un WAV 16 bits presque partout : un nœud à trois entrées les somme dans l'ordre d'un
   ensemble de pointeurs. Pour prouver qu'un changement d'`audio.js` laisse la qualité pleine intacte,
   `node packages/tools/web/journal_son.js` compare, appel par appel, ce que le moteur demande à Web Audio.)
+  Un balayage de section (`ouvre`) finit sa rampe un millième de seconde avant la section suivante :
+  sinon un arrondi rangeait le début de la suivante avant la fin de la rampe, et le filtre retombait à
+  sa valeur de départ dès que le séquenceur l'écrivait (un quart des balayages, selon l'avance).
   **La qualité légère** (`audio.js`, `MONTAGES`) : le même son monté moins cher pour le direct d'un
   téléphone modeste (trois scies à la grande scie, plus de flottement de voix, des filtres en `k-rate`,
   une seconde d'avance au séquenceur) ; `pleine`, le son écrit, reste le défaut du banc, du juke-box et

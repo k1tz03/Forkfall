@@ -2040,21 +2040,18 @@
         g.setTargetAtTime(1, tt + 0.03, (th.pompe.rel || 0.15) / 3);
       }
       // le début d'une section : les filtres qu'elle balaie, les autres rendus.
-      // CONNU, laissé tel quel pour que la qualité pleine ne bouge pas : la rampe d'une section finit à
-      // `tt + sec.pas * C.pas`, la suivante commence à `tStep`, une somme de pas, et les deux diffèrent d'un
-      // arrondi (10⁻¹⁴ s). Quand la suivante tombe un rien AVANT la fin de la rampe, Web Audio range son
-      // `setValueAtTime` avant la rampe : dès qu'il est écrit (l'avance du séquenceur avant la section, 1,5 s
-      // en direct) le balayage s'arrête, et le filtre retombe à sa valeur de départ jusqu'au bout de la
-      // section. Le son d'un balayage dépend donc du moment où le séquenceur écrit (le banc fige ses
-      // fenêtres de 2 s pour cela). Le correctif tient en une ligne (finir la rampe un millième de seconde
-      // plus tôt) ; il rend leur balayage entier aux sections concernées, donc il change le son : à décider
-      // à l'oreille.
+      // La rampe finit un millième de seconde avant la section suivante : la fin exacte
+      // (`tt + sec.pas * C.pas`) et le début de la suivante (`tStep`, une somme de pas) diffèrent d'un
+      // arrondi (10⁻¹⁴ s), et quand la suivante tombait un rien AVANT la fin de la rampe, Web Audio rangeait
+      // son `setValueAtTime` avant la rampe : dès que le séquenceur l'écrivait (1,5 s d'avance en direct, 3 s
+      // au banc), le filtre retombait à sa valeur de départ jusqu'au bout de la section — un quart des
+      // balayages des vingt thèmes, et un son qui dépendait de l'avance du séquenceur.
       function debut(sec, tt) {
         Object.keys(bus).forEach(function (vn) {
           var b = bus[vn];
           if (!b.filtre) return;
           var o = sec.ouvre && sec.ouvre[vn], f = b.filtre.frequency;
-          if (o) { f.setValueAtTime(o[0], tt); f.exponentialRampToValueAtTime(o[1], tt + sec.pas * C.pas); }
+          if (o) { f.setValueAtTime(o[0], tt); f.exponentialRampToValueAtTime(o[1], tt + sec.pas * C.pas - 0.001); }
           else f.setValueAtTime(th.voix[vn].filtre, tt);
         });
       }
