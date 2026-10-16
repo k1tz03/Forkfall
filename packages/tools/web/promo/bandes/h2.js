@@ -24,8 +24,9 @@ module.exports = bandeDeLivre({
     // (l'aperçu de l'App Store le prend après le carton de lieu et avant la réplique du répondeur :
     // il n'a que la colonne du milieu du 9:16, une ligne de texte large y perdrait ses bords)
     a: { fichier: '${SP}/agents/lot-films-r1/extraits/lundi_sept_heures.{format}.mp4', de: 0, pose: 5.6, duree: 7.2, deCourt: 2.5 },
-    // (une seconde de noir d'abord) la lumière de l'eau au plafond, puis les ronds sur la Rive
-    b: { fichier: '${SP}/extraits/sapin_dans_la_rive.{format}.mp4', de: 1.0, pose: 3.4, duree: 6.1 },
+    // (une seconde de noir d'abord) la lumière de l'eau au plafond, puis les ronds sur la Rive (dès
+    // 3,2 s) ; la capture les prend nets, le lampadaire dans l'eau et le bord du quai (3,3 s)
+    b: { fichier: '${SP}/extraits/sapin_dans_la_rive.{format}.mp4', de: 1.0, pose: 2.3, duree: 6.1 },
   },
   // la voix du répondeur (montrée), puis la berline qui a bougé de trois mètres (glissée)
   cartes: { deux: 'en.h2.rep.message1', trois: 'en.h2.berl.trois_metres' },
