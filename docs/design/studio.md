@@ -309,8 +309,10 @@ Ce que l'échantillonneur fait pour qu'un instrument sonne vrai :
   dixième de sa crête) tombe sur la note écrite ; les cordes et les cuivres tenus sont
   avancés de 15 à 30 ms de plus, le chœur de 90 ms (leurs attaques sont lentes) ;
 - **les tours de rôle** (deux prises par note pour les spiccatos, jusqu'à six pour les
-  claps) et **les couches** de vélocité ; une note sans échantillon est transposée
-  depuis le plus proche (rééchantillonnage polyphasé, sans repliement) ;
+  claps) et **les couches** de vélocité ; une note brève répétée varie en plus d'une
+  prise à l'autre (± 3 cents, jusqu'à −0,9 dB, en cycle de cinq : fixe, donc identique
+  d'un rendu à l'autre) ; une note sans échantillon est transposée depuis le plus
+  proche (rééchantillonnage polyphasé, sans repliement) ;
 - **les notes longues** : au-delà de son échantillon, une note boucle sa partie tenue
   en fondus enchaînés de 0,3 s ;
 - **le legato** (`art='legato'`, ou `legato=True` sur la piste) : la note suivante entre

@@ -24,6 +24,11 @@ from .fluide import Synthe
 from .sources import chemin
 from .theorie import hauteur
 
+# les petites variations d'une note brève répétée (les bibliothèques n'ont que deux prises
+# par note : sans elles, un ostinato de doubles croches « mitraille ») : (cents, dB), en
+# cycle sur le rang de la note — fixes, donc rendues à l'identique à chaque rendu
+_VARIATIONS = [(0.0, 0.0), (3.0, -0.6), (-2.5, -0.3), (1.5, -0.9), (-1.5, -0.2)]
+
 # les prises d'un pupitre fabriqué : désaccord (cents), retard (ms), place (±)
 _UNISSON = [(0.0, 0.0, 0.0), (7.0, 13.0, -0.14), (-6.0, 22.0, 0.14), (4.0, 7.0, -0.07),
             (-9.0, 29.0, 0.08), (10.0, 17.0, -0.2), (-3.0, 35.0, 0.2), (5.0, 4.0, 0.0)]
@@ -196,6 +201,11 @@ class InstrumentSfz(Instrument):
                 if k_uni == 1:
                     c, ms, place = 0.0, 0.0, 0.0
                 alea = ((j.rang * 7 + u * 3) % 10) / 10 + 0.05
+                if oneshot and not isinstance(j.h, str):
+                    vc, vg = _VARIATIONS[j.rang % len(_VARIATIONS)]
+                    c += vc
+                else:
+                    vg = 0.0
                 if croise is not None:
                     x, dec = self._fondu_couches(banque, cle, j.v, duree, c + accord, relache,
                                                  sans_attaque, fondu, alea, expr, croise)
@@ -204,7 +214,7 @@ class InstrumentSfz(Instrument):
                                        relache=relache, sans_attaque_s=sans_attaque,
                                        fondu_entree_s=fondu, alea=alea, vel_couche=v_couche)
                 pos = int(round((j.t - self.avance.get(art, 0.0) + ms / 1000.0) * SR)) - dec
-                g = dsp.gain(self.niveau_art(art) + spec.get('gain', 0.0)) / np.sqrt(k_uni)
+                g = dsp.gain(self.niveau_art(art) + spec.get('gain', 0.0) + vg) / np.sqrt(k_uni)
                 eclat = float(reg.get('eclat', self.eclat))
                 if eclat and j.v > 72:
                     # la note forte « cuivre » : la saturation monte avec la vélocité, le
