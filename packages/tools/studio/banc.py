@@ -2,7 +2,13 @@
 """Le banc : mesurer un thème rendu (son <clé>.wav et son <clé>.json).
 
     python3 packages/tools/studio/banc.py <dossier>/<clé>.wav [--out <dossier>]
-    python3 packages/tools/studio/banc.py --calibrer      # les niveaux des instruments
+    python3 packages/tools/studio/banc.py --calibrer [instrument…] [--travaux 2] [--out <dossier>]
+        les niveaux des instruments : moteur/zones.json, moteur/niveaux.json (des noms :
+        seulement ces instruments, les autres gardent leurs lignes)
+    python3 packages/tools/studio/banc.py --niveaux [instrument…] [--out <dossier>]
+        la preuve : la sonie en contexte de chaque articulation (registres, vélocités)
+    python3 packages/tools/studio/banc.py --comparer <avant>/niveaux.json <après>/niveaux.json
+        ce qui a changé d'un état du studio à l'autre (pour corriger des faders)
 
 Il mesure : la sonie (intégrée sur la boucle, par section, court terme maximale), la
 crête vraie, l'équilibre spectral (< 250 Hz, 250 Hz–2 kHz, 2–6 kHz, > 6 kHz), la
@@ -254,51 +260,63 @@ def ligne(r):
     return '\n'.join([l1, l2, l3, l4, l5])
 
 
-BREVES = ('staccato', 'pizzicato', 'pince', 'frappe', 'dure', 'seul', 'etouffee', 'cercle',
-          'timbre_off', 'mediator', 'doigts', 'slap', 'crunch')
+def calibrer(travaux=1, dossier=None, instruments=None):
+    """Recalibre les niveaux (moteur/calibration.py) : l'égalisation des zones
+    (moteur/zones.json), puis le niveau de chaque articulation mesuré en contexte sur des
+    figures de musique (moteur/niveaux.json) ; imprime la table des écarts. Avec des noms
+    d'instruments : seulement ceux-là (les autres gardent leurs lignes)."""
+    from moteur import calibration
+    zones, niveaux, mesures, detail = calibration.calibrer(travaux, journal=lambda m: print(m, flush=True),
+                                                           instruments=instruments or None)
+    print(calibration.resume_zones(detail))
+    print(calibration.table_markdown(mesures))
+    if dossier:
+        os.makedirs(dossier, exist_ok=True)
+        with open(os.path.join(dossier, 'calibration.json'), 'w', encoding='utf-8') as f:
+            json.dump({'mesures': calibration.en_json(mesures),
+                       'zones': {b: [list(d) for d in det] for b, det in detail.items()}},
+                      f, ensure_ascii=False, indent=1)
+    print(os.path.join(ICI, 'moteur', 'zones.json'))
+    print(os.path.join(ICI, 'moteur', 'niveaux.json'))
 
 
-def calibrer(sortie=None):
-    """Mesure chaque articulation de chaque instrument et écrit le gain qui met sa sonie
-    maximale (fenêtres de 400 ms) à −20 LUFS : moteur/niveaux.json. Une articulation
-    tenue joue une note de deux secondes au milieu de l'étendue ; une brève, huit
-    croches à 120 ; une percussion sans hauteur, une frappe ; une batterie, un motif.
-    À vélocité égale, changer d'articulation ne change donc pas le niveau."""
-    from moteur.instruments import INSTRUMENTS, Jeu, InstrumentCouches
-    niveaux = {}
-    for nom in sorted(INSTRUMENTS):
-        inst = INSTRUMENTS[nom]
-        if isinstance(inst, InstrumentCouches):
-            continue
-        inst.niveau = 0.0
-        inst.niveaux_art = {}
-        h = int((inst.etendue[0] + inst.etendue[1]) / 2) - 5 if inst.etendue else 60
-        for art in inst.articulations:
-            if inst.famille == 'batterie':
-                jeux = [Jeu(0.2 + 0.25 * i, 0.2, p, 100, art, None, i) for i, p in
-                        enumerate(['K', 'H', 'S', 'H', 'K', 'H', 'S', 'H'])]
-            elif art in BREVES or art in ('montee', 'impact'):
-                if art in ('montee', 'impact', 'frappe') and inst.etendue is None:
-                    jeux = [Jeu(0.2, 2.0, h, 100, art, None, 0)]
-                else:
-                    jeux = [Jeu(0.2 + 0.25 * i, 0.2, h, 100, art, None, i) for i in range(8)]
-            else:
-                jeux = [Jeu(0.2, 2.0, h, 100, art, None, 0)]
-            try:
-                y = inst.rendre(jeux, int(5 * SR), {'reglages': {}, 'courbes': {}})
-            except Exception as e:      # un instrument cassé ne doit pas cacher les autres
-                print(f'{nom} {art}: {e}')
-                continue
-            y = dsp.panoramique(y, 0.0, 0.7)
-            v = float(dsp.sonie_court_terme(y, fenetre=0.4, pas=0.05).max())
-            g = round(-20.0 - v, 1)
-            niveaux[f'{nom}:{art}'] = g
-            print(f'{nom:20s} {art:12s} {v:+6.1f} LUFS → {g:+.1f} dB')
-    chemin = sortie or os.path.join(ICI, 'moteur', 'niveaux.json')
-    with open(chemin, 'w', encoding='utf-8') as f:
-        json.dump(niveaux, f, ensure_ascii=False, indent=1, sort_keys=True)
-        f.write(chr(10))
-    print(chemin)
+def niveaux(instruments=None, travaux=1, dossier=None):
+    """La preuve : la sonie en contexte de chaque articulation de chaque instrument à
+    hauteur (trois registres, les figures, trois vélocités), avec les tables en place ;
+    la table Markdown des écarts, et `niveaux.json` dans `dossier` (pour comparer deux
+    états du studio : --comparer)."""
+    from moteur import calibration
+    mesures = calibration.mesurer_tout(travaux, instruments or None)
+    print(calibration.table_markdown(mesures))
+    if dossier:
+        os.makedirs(dossier, exist_ok=True)
+        chemin = os.path.join(dossier, 'niveaux.json')
+        with open(chemin, 'w', encoding='utf-8') as f:
+            json.dump(calibration.en_json(mesures), f, ensure_ascii=False, indent=1)
+        print(chemin)
+
+
+def comparer(avant, apres):
+    """Ce qui a changé d'un état du studio à l'autre (deux sorties de --niveaux) : pour
+    chaque instrument et articulation, la différence de sonie en contexte (moyenne des
+    figures, des registres et des vélocités), et son étendue d'un registre à l'autre.
+    Un fader réglé sur l'ancien état se corrige de l'opposé de la moyenne."""
+    from moteur import calibration
+    with open(avant, encoding='utf-8') as f:
+        a = calibration.depuis_json(json.load(f))
+    with open(apres, encoding='utf-8') as f:
+        b = calibration.depuis_json(json.load(f))
+    print('| Instrument | Articulation | Avant → après (dB) | Grave / médium / aigu (dB) |')
+    print('|---|---|---|---|')
+    for (n, art) in sorted(set(a) & set(b)):
+        ra, rb = a[(n, art)], b[(n, art)]
+        cles = sorted(set(ra) & set(rb))
+        d = [rb[k] - ra[k] for k in cles]
+        par_reg = []
+        for rg in calibration.REGISTRES:
+            x = [rb[k] - ra[k] for k in cles if k[0] == rg]
+            par_reg.append(f'{np.mean(x):+.1f}' if x else '—')
+        print(f'| `{n}` | {art} | {np.mean(d):+.1f} | {" / ".join(par_reg)} |')
 
 
 def main(argv=None):
@@ -306,9 +324,18 @@ def main(argv=None):
     ap.add_argument('wav', nargs='*')
     ap.add_argument('--out')
     ap.add_argument('--calibrer', action='store_true')
+    ap.add_argument('--niveaux', action='store_true', help='la preuve : la sonie en contexte de chaque articulation')
+    ap.add_argument('--comparer', nargs=2, metavar=('AVANT', 'APRES'), help='deux sorties de --niveaux')
+    ap.add_argument('--travaux', type=int, default=1, help='processus de mesure en parallèle')
     a = ap.parse_args(argv)
     if a.calibrer:
-        calibrer()
+        calibrer(a.travaux, a.out, a.wav)
+        return
+    if a.niveaux:
+        niveaux(a.wav, a.travaux, a.out)
+        return
+    if a.comparer:
+        comparer(*a.comparer)
         return
     for w in a.wav:
         dossier = a.out or os.path.dirname(os.path.abspath(w))
