@@ -211,8 +211,8 @@ au lieu d'être rendus au banc ; sans master, rien ne change. Ce qu'il faut savo
   section peut avoir son tempo) ; dans une rampe d'accelerando ou de ritardando (`bpm=(96, 72)` dans
   la partition, `packages/tools/studio/partitions/<clé>.py`, celle que le JSON nomme), la barre k sur
   m tombe à ln(1 + (q − 1)·k/m) / ln q de la section, q = t1/t0 (au studio, le tempo varie
-  linéairement en temps). Le montage cale ses plans sur ces barres (`barres` du résultat) : un
-  `'2m'` dure deux vraies mesures.
+  linéairement d'un temps de la mesure au suivant, non avec les secondes). Le montage cale ses
+  plans sur ces barres (`barres` du résultat) : un `'2m'` dure deux vraies mesures.
 - **`depuis`** : `null` part du début du master (l'introduction) ; une section du corps, de son
   premier passage ; une section de l'introduction, d'elle-même (`fois: 1` : la deuxième fois qu'une
   section revient). Les mesures continuent d'une section à l'autre ; au-delà du second passage, le

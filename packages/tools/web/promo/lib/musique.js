@@ -67,9 +67,10 @@ function rampesPartition(cle) {
 }
 
 // où tombent les barres d'une section, de 0 (son début) à 1 (sa fin). Le studio fait varier le
-// tempo linéairement en temps (rendu.py, CarteTempo) : de t0 à t1 bpm sur la section, la barre k
-// sur m tombe à ln(1 + (q − 1)·k/m) / ln(q), q = t1/t0 (k/m sans rampe). `cle` : la partition (la
-// clé écrite dans le JSON du master, celle qui l'a rendu)
+// tempo linéairement d'un temps de la mesure au suivant, non avec les secondes (rendu.py,
+// CarteTempo) : de t0 à t1 bpm sur la section, la barre k sur m tombe à ln(1 + (q − 1)·k/m) / ln(q),
+// q = t1/t0 (k/m sans rampe). `cle` : la partition (la clé écrite dans le JSON du master, celle qui
+// l'a rendu)
 function fractions(s, cle) {
   let q = null;
   if (Array.isArray(s.bpm) && s.bpm.length === 2 && s.bpm[0] > 0) q = s.bpm[1] / s.bpm[0];

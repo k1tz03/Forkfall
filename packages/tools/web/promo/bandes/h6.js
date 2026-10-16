@@ -21,7 +21,9 @@ module.exports = bandeDeLivre({
   extraits: {
     // l'horloge du bureau qui passe à 23 h 58, puis le fax qui sort sa page (dès 2,3 s)
     a: { fichier: '${SP}/extraits/papier_thermique.{format}.mp4', de: 0, pose: 5.6, duree: 7.4, deCourt: 2.4 },
-    b: { fichier: '${SP}/extraits/la_buanderie.{format}.mp4', de: 0, pose: 3.0, duree: 7.2 },
+    // les maillots de 1987 qui sèchent (le 10 en plein cadre à 2 s), puis le panier de linge, et le
+    // téléphone dedans (dès 6 s) : la légende de la fin reste en haut, au-dessus du panier
+    b: { fichier: '${SP}/extraits/la_buanderie.{format}.mp4', de: 0, pose: 2.0, duree: 7.2 },
   },
   // la page du fax de 23 h 58 (montrée), puis la photo qui sort le lendemain (glissée)
   cartes: { deux: 'ds.h6.pro.fax', trois: 'ds.h6.sc.photo' },
@@ -34,8 +36,8 @@ module.exports = bandeDeLivre({
     objet: { titre: 'Un nom, un prix, un club', sous: 'chaque nuit à 23 h 58' },
     nuit: { titre: "Si tu n'obéis pas", sous: 'il imprime une photo de toi' },
     choix: { titre: 'Qui écrit ?' },
-    fin: { titre: 'Le papier blanchit en six mois.' },
+    fin: { titre: 'Dans le linge, un téléphone sonne.' },
     carte2Ecran: '23 h 58 · une page · aucun numéro',
-    finEcran: 'Le papier blanchit en six mois',
+    finEcran: 'Tu rêves de la buanderie de 1987',
   },
 });
