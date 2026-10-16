@@ -168,7 +168,7 @@ button:disabled{cursor:not-allowed}
   <div class="faces" id="faces"></div>
 
   <footer class="pied">
-    <p>Tout est synthétisé à l’écoute : des oscillateurs et du bruit, aucun fichier son. En passant d’une face à l’autre, le juke-box fait le fondu enchaîné du jeu.</p>
+    <p id="piedSon">Tout est synthétisé à l’écoute : des oscillateurs et du bruit, aucun fichier son. En passant d’une face à l’autre, le juke-box fait le fondu enchaîné du jeu.</p>
     <p>« Écouter la couture » part deux mesures avant la fin de la boucle : on entend la reprise. Sur iPhone, si rien ne sort, vérifiez le bouton silencieux.</p>
     <p id="build"></p>
   </footer>
@@ -237,7 +237,8 @@ button:disabled{cursor:not-allowed}
       var t = document.createElement('span'); t.className = 't';
       var tb = document.createElement('b'); tb.textContent = i.titre;
       var ts = document.createElement('span');
-      ts.textContent = i.bpm + ' bpm' + (i.tonalite ? ' · ' + i.tonalite : '') + (c.forme ? ' · boucle ' + mmss(c.forme.periode.secondes) : '');
+      ts.textContent = i.bpm + ' bpm' + (i.tonalite ? ' · ' + i.tonalite : '') + (c.forme ? ' · boucle ' + mmss(c.forme.periode.secondes) : '') +
+        (i.rendu ? (i.provisoire ? ' · maquette enregistrée' : ' · enregistré') : '');
       t.appendChild(tb); t.appendChild(ts);
       var m = document.createElement('span'); m.className = 'm'; m.textContent = i.moment || k;
       var h2 = document.createElement('span'); h2.className = 'h';
@@ -252,6 +253,12 @@ button:disabled{cursor:not-allowed}
       rangees[k] = { el: b, no: no, numero: no.textContent };
     });
   })();
+  // la musique enregistrée (le manifeste passé par juke_box.js) : ce que la page joue en fichiers
+  var enregistres = cles.filter(function (k) { return cat[k].infos.rendu; });
+  if (enregistres.length) {
+    $('piedSon').textContent = enregistres.length + (enregistres.length > 1 ? ' thèmes jouent leur enregistrement' : ' thème joue son enregistrement') +
+      ' (des MP3 à côté de la page, décodés bloc par bloc, bouclés à l’échantillon près) ; les autres sont synthétisés à l’écoute. En passant d’une face à l’autre, le juke-box fait le fondu enchaîné du jeu.';
+  }
   var auChargement = A.erreurs().map(function (e) { return e.ou + ' : ' + e.message; });
   if (!AC) avis(['Ce navigateur ne sait pas synthétiser le son (Web Audio absent) : la liste se lit, mais rien ne joue.']);
   else if (auChargement.length) avis(['Des fichiers de musique sont en erreur :'].concat(auChargement));
@@ -291,6 +298,8 @@ button:disabled{cursor:not-allowed}
   function jouer(k, o) {
     if (!demarrer()) return;
     reprendre();
+    // la forme de ce qui jouera (un enregistrement en panne laisse la place à la synthèse, qui a la sienne)
+    try { var f = A.structure(k); if (f && cat[k].forme && f.rendu !== cat[k].forme.rendu) { cat[k].forme = f; $('sections').removeAttribute('data-cle'); } } catch (e) { /* rien */ }
     var avant = A.erreurs().length;
     eng.setTheme(k, o || { fade: 1.2 });
     pomper();

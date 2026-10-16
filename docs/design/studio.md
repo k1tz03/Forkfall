@@ -464,6 +464,12 @@ passage ; la chaîne du master, qui anticipe de quelques millisecondes, traite u
 (raccord en 30 ms après la boucle). Le banc vérifie : la fin du second passage est
 identique au bit à la fin du premier.
 
+Côté jeu, un dossier de masters livrés (`<clé>.wav` et `<clé>.json` par thème) s'empaquette d'une
+commande : `node packages/tools/web/musique_audio.js --masters <dossier>` (des MP3 par blocs et le manifeste
+du lecteur, `packages/tools/web/musique/audio/`), puis `--verifier --masters <dossier>` mesure les coutures
+dans Chromium (AGENTS.md, « La musique enregistrée »). Une section qu'un film cite (`musiqueDepuis` dans
+`cinema/films/`) garde son nom : sinon la musique du film part du début (l'empaquetage le signale).
+
 ## 8. Le déterminisme et la vitesse
 
 - **Même partition, même son** : aucun hasard sans graine (l'humanisation tire de la

@@ -1500,6 +1500,8 @@ window.FusibleContenu.pret((function () {
   function sonTheme() {
     if (!audio || !audio.setTheme || !elTitle.hidden) return;
     audio.setTheme(themeDuMoment());
+    // la musique enregistrée (audio.js) : le premier bloc des thèmes qui joueront sans doute bientôt
+    if (audio.precharger && view) audio.precharger([themeDuLivre(), "ville_jour", "ville_nuit"]);
   }
   function sonScene() {
     if (!audio || !view) return;
@@ -2180,6 +2182,7 @@ window.FusibleContenu.pret((function () {
     profile.histoires[p.id] = (profile.histoires[p.id] | 0) + 1;
     saveProfile(profile);
     if (audio && audio.jingle) audio.jingle("depart");
+    if (audio && audio.precharger) audio.precharger(["livre_h" + (p.index + 1), "ville_jour", "ville_nuit"]);
     var go = function () { if (b) b.classList.remove("go"); busy = false; startRun(p.index); };
     if (reduce) go(); else setTimeout(go, 300);
   }

@@ -197,6 +197,7 @@ navigateur : la page reste à l'écoute pendant qu'un film se prépare).
     livre: "promu",                 // le postulat (sa couleur, son livre)
     titre: "Mon film", duree: 32,
     musique: "livre_h1", secours: "ville_nuit",
+    musiqueDepuis: "creux",         // facultatif : la section du thème où le film commence
     affiche: 21.5,                  // le temps de l'affiche
     habillage: { vignette: 0.55, grain: 0.075, ratioPaysage: 2.35, ratioPortrait: 0 },
     sortie: { noir: 1.4 },
@@ -278,7 +279,10 @@ films:
 - plein écran, par-dessus le jeu (la ville cesse de se dessiner pendant le film) ;
 - **« Passer ›»** en haut à droite (44 × 36 px au moins), et Échap ;
 - les sous-titres dessinés dans l'image, et redits pour un lecteur d'écran (`aria-live`) ;
-- la musique du film (`setTheme`), puis celle du moment ;
+- la musique du film (`setTheme(thème, { debut: true, depuis: musiqueDepuis })` : le thème part de son
+  début, ou de la section que nomme `musiqueDepuis`, même entendu dix minutes plus tôt — sans `debut`, la
+  reprise d'audio.js le relancerait au milieu, et les images ne tomberaient plus sur ses temps ; une section
+  que la version qui joue ne connaît pas, le début), puis celle du moment, comme d'habitude ;
 - **la pause quand la page se cache** (le temps du film s'arrête) ;
 - **le mouvement réduit** (`prefers-reduced-motion`) : une image fixe par plan (`fixe`),
   en fondu lent, les textes par-dessus ;

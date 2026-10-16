@@ -463,7 +463,12 @@ Ce que la ville porte en plus des cartes :
   retrouvé dans les dix minutes reprend à la section qui suit celle qu'on a quittée (`audio.js`,
   `reprise`), pas à son introduction — chaque section d'un thème doit pouvoir ouvrir le morceau ;
   un thème écarte les sections où il ne veut pas reprendre (`reprise: { sauf: ['creux'] }` : la garde
-  à vue ne rouvre pas une carte sombre sur son silence).
+  à vue ne rouvre pas une carte sombre sur son silence). `FusibleAudio.setTheme(nom, { debut: true })`
+  part du début, sans la reprise, même si le thème jouait déjà : un film (`cinema/lecteur.js`) coupe ses
+  images sur les temps de son thème ; le film fini, le thème du moment revient comme d'habitude. Avec
+  `depuis: '<section>'` (le `musiqueDepuis` d'un film, que le tournage suit aussi), il part de cette
+  section, si la version qui joue la connaît (les marqueurs d'un master du studio, l'ordre d'une partition),
+  sinon du début : un master qui remplace un thème garde les noms de section que des films citent.
   Un thème s'inscrit par `FusibleAudio.theme(clé, définition)` ;
   `musique_sources.js` pose les fichiers après audio.js (l'aperçu, le banc, le juke-box), chacun
   dans son filet : une erreur n'emporte que son thème (`FusibleAudio.erreurs()`).
@@ -502,7 +507,36 @@ Ce que la ville porte en plus des cartes :
   des rendus, et `banc_son.js --legere` rend l'autre. Au premier geste, sans verdict gardé
   (`localStorage` `fusible.son.v1` : `{ q, vitesse, v }`, refait quand `VERSION_SON` monte), la page rend
   une seconde de « Fusible » C2 hors ligne et passe en légère au-dessous de ×3,5 ; `FusibleAudio.qualite()`
-  le dit, `FusibleAudio.setQualite()` (ou `?son=legere` dans l'adresse) le force.
+  le dit, `FusibleAudio.setQualite()` (ou `?son=legere` dans l'adresse) le force (avec la musique
+  enregistrée, la mesure attend qu'un thème de synthèse joue vraiment).
+  **La musique enregistrée** (`packages/tools/web/musique_audio.js` ; le lecteur : `audio.js`, « LA MUSIQUE
+  ENREGISTRÉE ») : la bande que le studio rend hors ligne (`packages/tools/studio`, un master par thème,
+  `<clé>.wav` 24 bits et `<clé>.json`, la boucle à −16 LUFS ; le contrat : `docs/design/studio.md` § 7) se
+  joue en fichiers. `node packages/tools/web/musique_audio.js --masters <dossier>` (le dossier que livrent
+  les compositeurs) l'empaquette dans `packages/tools/web/musique/audio/` (commité) : par thème, au plus
+  six MP3 (LAME, ABR 160 kbit/s, 44,1 kHz, ≈ 1,2 Mo la minute) — l'introduction et la tête du premier
+  passage (en deux blocs quand il reste un fichier : la première note n'attend que les 6 premières secondes),
+  puis le second passage en blocs égaux de 54 s au plus, qui débordent d'un dixième de seconde —
+  et `manifeste.json` (les positions à l'échantillon, les sections et leurs mesures — un thème peut changer
+  de tempo —, `reprise_sauf` et les sections `reprise: false`, l'étalon du décodeur). Il dit aussi si une
+  section qu'un film cite (`musiqueDepuis`) manque au master ; `--sortie <dossier>` empaquette ailleurs (un
+  essai). Tant qu'aucun master n'y est empaqueté, le dossier n'existe pas et la synthèse joue chaque thème
+  (les maquettes — la synthèse rendue au même contrat par `--maquettes`, 120 fichiers, 97 Mo — ont servi à
+  éprouver la chaîne, hors du dépôt) ; un master du studio y entre thème par thème.
+  `assemble.js --ville` pose les MP3 dans `musique/` (nommés par leur empreinte) et passe le manifeste à
+  `FusibleAudio.enregistrements` ; le moteur joue alors chaque thème à l'échantillon près (des
+  AudioBufferSourceNode bout à bout, un fondu de 23 ms juste avant chaque jointure ; l'introduction une fois,
+  puis la boucle), avec le fondu enchaîné de 1,2 s, la reprise (`reprise_sauf` du manifeste), la page cachée
+  et les trois modes. La mémoire : le bloc qui joue et le suivant (décodé 12 s avant la jointure), 40 Mo
+  décodés au plus à 48 kHz ; le réseau : le bloc suivant dès que le précédent commence,
+  `FusibleAudio.precharger` (la page : le livre, le jour, la nuit ; un film : le bloc de sa section), le
+  premier bloc du thème de l'accueil dès qu'il s'affiche, et le service worker garde les MP3 d'une
+  version à l'autre (`fusible-musique`). Sans fichier (le fichier seul, hors ligne, un 404, un décodage
+  raté), la synthèse joue le thème comme avant ; un bloc en retard, la musique se retire à la jointure et
+  reprend quand il arrive. `--maquettes <dossier>` rend les maquettes (les thèmes de synthèse, au même
+  contrat), `--verifier --masters <dossier>` mesure les coutures dans Chromium (44,1 et 48 kHz, des
+  décodeurs qui ne lisent pas l'étiquette LAME) et la mémoire ; `FusibleAudio.lecteur()` dit l'état du
+  lecteur. Le juke-box joue les fichiers quand ils sont là (`juke_box.js --synthese` : sans).
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,
@@ -546,6 +580,8 @@ l'application (`manifest.webmanifest`, `icones/`, `sw.js`) et l'aperçu d'un lie
 par l'assemblage : la page, le réseau d'abord (le cache après trois secondes) ; `ville/`,
 `contenu/`, `cinema/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
 son empreinte (le commun, le moteur, les livres déjà joués, les films déjà vus) ; on rejoue hors ligne ce qu'on a vu.
+`musique/` (les MP3 de la musique enregistrée) a son cache à lui, qui survit aux versions et perd seulement
+ce que le manifeste ne nomme plus.
 La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RESERVE_IMAGES`), et la
 musique se tait quand la page est cachée (`audio.js`). **Pour l'artefact publié** (qui ne sert pas
 le `.gz` comme fichier), on assemble avec `--contenu-json` : les bundles de `contenu/` sortent en JSON
@@ -553,6 +589,9 @@ non compressé (l'hôte compresse au transfert, `demarrage.js` lit tel quel un b
 gzip), on ajoute `<meta name="fusible-lien" content="<l'URL de l'artefact>">` (les liens de défi), et
 l'on publie avec `capabilities: {db: {rules: [jour, jour/{self}, eclair, eclair/{self}]}, user: {},
 downloads: true}` ; les fichiers de `ville/` ne changent pas d'une version à l'autre et restent en place.
+Ceux de `musique/` non plus, tant qu'un thème ne change pas (leur nom est leur empreinte) : des MP3
+(`audio/mpeg`, 1,1 Mo au plus chacun, la limite est de 15 Mo), six au plus par thème, ≈ 100 Mo pour les vingt,
+donc publiés en plusieurs fois (64 Mo et 255 fichiers au plus par publication), au même `url`.
 
 ## Comment on ajoute du contenu
 

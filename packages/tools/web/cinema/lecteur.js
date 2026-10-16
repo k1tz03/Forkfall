@@ -171,6 +171,9 @@
     return null;
   }
   FC.themeDe = themeDe;
+  // la section du thème où le film commence (`musiqueDepuis`, celle que le tournage a prise), pour le thème
+  // du film seulement (pas son secours) ; audio.js part du début s'il ne connaît pas ce nom
+  function depuisDe(def, theme) { return theme && theme === def.musique && def.musiqueDepuis != null ? def.musiqueDepuis : undefined; }
 
   //  o = { heros: { nom, genre }, couleur, qualite, reduit, audio (FusibleAudio), titre, sous (le secours) }
   FC.jouer = function (id, o) {
@@ -264,6 +267,9 @@
       FC.charger(id).then(function (def) {
         if (fini) return;
         attente.style.width = "55%";
+        // la musique enregistrée (audio.js) : le premier bloc du thème se télécharge pendant que le film se prépare
+        var themeTot = themeDe(def, audio);
+        if (themeTot && audio && audio.precharger) { try { audio.precharger([{ cle: themeTot, depuis: depuisDe(def, themeTot) }]); } catch (e) { /* rien */ } }
         var K = FC.kit;
         var q = o.qualite || K.qualiteAppareil();
         // la taille de la mémoire d'image : l'écran, la densité plafonnée, l'échelle de la qualité
@@ -280,8 +286,11 @@
           clearTimeout(garde);
           attente.style.width = "100%";
           setTimeout(function () { attente.style.opacity = "0"; }, 300);
+          // le thème part de son DÉBUT (`debut`, sans la reprise de audio.js), ou de la section que le film
+          // nomme (`musiqueDepuis`) : les images se coupent sur ses temps ; à la fin du film, le thème du
+          // moment revient comme d'habitude
           var theme = themeDe(def, audio);
-          if (theme && audio && audio.setTheme) { try { audio.setTheme(theme); } catch (e) { /* rien */ } }
+          if (theme && audio && audio.setTheme) { try { audio.setTheme(theme, { debut: true, depuis: depuisDe(def, theme) }); } catch (e) { /* rien */ } }
           if (reduit) return fixes(def, K, dim, theme);
           return direct(def, K, Q, dimensions, function (d) { dim = d; }, function (k) { echelle = k; });
         });

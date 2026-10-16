@@ -20,11 +20,13 @@
 //                       Il a remplacé la piste « album de vignettes », dont
 //                       le code dort sous docs/design/archive/ et n'est plus
 //                       assemblé — ne pas le rebrancher.)
-//   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore, tout
-//                       synthétisé : aucun fichier audio, aucune URL), suivi des
-//                       thèmes musique/*.js par ordre alphabétique, chacun dans
-//                       son filet (musique_sources.js) — dans la page, pour le
-//                       fichier seul comme pour la version jouable
+//   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore : les
+//                       lieux, les gestes, la synthèse), suivi des thèmes
+//                       musique/*.js par ordre alphabétique, chacun dans son
+//                       filet (musique_sources.js) — dans la page, pour le
+//                       fichier seul comme pour la version jouable ; avec
+//                       --ville, le manifeste de la musique enregistrée
+//                       (musique/audio/, ses MP3 à côté de la page, musique/)
 //   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
 //                       vignettes des histoires et le panorama de la ville,
 //                       découpés par docs/design/pixel_iso/accueil.js) ; avec
@@ -356,6 +358,45 @@ function contenuHtml(c, versDossier, moteurUrl) {
   return { html: blocs.join('\n'), communUrl, livresUrls: Object.values(sources.livres).map((s) => s.url).filter(Boolean) };
 }
 
+/// LA MUSIQUE ENREGISTRÉE (packages/tools/web/musique/audio/, écrite par musique_audio.js) : chaque thème
+/// rendu par le studio, en MP3 par blocs, et le manifeste que le lecteur d'audio.js lit. Avec --ville, les
+/// MP3 sont posés à côté de la page (musique/<clé>.<bloc>.<empreinte>.mp3 : un nom ne désigne jamais deux
+/// fichiers, le service worker les garde d'une version à l'autre) et le manifeste, adresses comprises, est
+/// passé à `FusibleAudio.enregistrements` dans la page. Le fichier seul n'en prend rien : la synthèse y
+/// joue chaque thème (le dire, avec ce qu'il pèserait sinon).
+function musiqueEnregistree(versDossier) {
+  const src = path.join(HERE, 'musique', 'audio'), manPath = path.join(src, 'manifeste.json');
+  if (versDossier) fs.rmSync(path.join(versDossier, 'musique'), { recursive: true, force: true });
+  if (!fs.existsSync(manPath)) return { script: '', urls: [] };
+  const man = JSON.parse(fs.readFileSync(manPath, 'utf8'));
+  const empreinte = (b) => require('crypto').createHash('sha1').update(b).digest('hex').slice(0, 10);
+  const urls = [];
+  let octets = 0, plusGros = 0;
+  if (versDossier) fs.mkdirSync(path.join(versDossier, 'musique'), { recursive: true });
+  for (const t of Object.values(man.themes || {})) {
+    for (const b of t.blocs) {
+      const f = path.join(src, b.fichier);
+      if (!fs.existsSync(f)) throw new Error('musique/audio/' + b.fichier + ' absent (le manifeste le cite : relance musique_audio.js)');
+      const data = fs.readFileSync(f);
+      octets += data.length; plusGros = Math.max(plusGros, data.length);
+      if (versDossier) {
+        const nom = 'musique/' + b.fichier.replace(/\.mp3$/, '') + '.' + empreinte(data) + '.mp3';
+        fs.writeFileSync(path.join(versDossier, nom), data);
+        b.fichier = nom;
+        urls.push(nom);
+      }
+    }
+  }
+  const n = Object.keys(man.themes || {}).length;
+  if (!versDossier) {
+    console.log('la musique enregistrée : ' + n + ' thèmes (' + (octets / 1e6).toFixed(1) + ' Mo de MP3) ne sont pas dans le fichier seul — ils y pèseraient ' +
+      (octets * 4 / 3 / 1e6).toFixed(0) + ' Mo en base64 : la synthèse y joue chaque thème');
+    return { script: '', urls: [] };
+  }
+  console.log('la musique enregistrée : ' + n + ' thèmes, ' + urls.length + ' fichiers, ' + (octets / 1e6).toFixed(1) + ' Mo (le plus gros ' + (plusGros / 1e6).toFixed(2) + ' Mo) → musique/');
+  return { script: '\n;FusibleAudio.enregistrements(' + JSON.stringify(man) + ');', urls };
+}
+
 /// L'APPLICATION ET LE PARTAGE (--ville) : le manifeste, les icônes, le service
 /// worker, l'aperçu d'un lien (Open Graph, Twitter). Les images viennent de
 /// packages/tools/web/pwa/ (pwa/genere.js les tire de l'accueil).
@@ -392,7 +433,7 @@ function teteHtml(communUrl) {
     '<meta name="twitter:image" content="apercu.jpg">',
   ].join('\n');
 }
-function ecrirePwa(dossier, version, depart, livres) {
+function ecrirePwa(dossier, version, depart, livres, musique) {
   const pwa = path.join(HERE, 'pwa');
   fs.mkdirSync(path.join(dossier, 'icones'), { recursive: true });
   for (const f of ['icone-48.png', 'icone-192.png', 'icone-512.png', 'icone-masquable-512.png', 'apple-touch-icon.png']) {
@@ -412,7 +453,8 @@ function ecrirePwa(dossier, version, depart, livres) {
   };
   fs.writeFileSync(path.join(dossier, 'manifest.webmanifest'), JSON.stringify(manifeste, null, 2) + '\n');
   const sw = fs.readFileSync(path.join(HERE, 'sw.js'), 'utf8').split('__VERSION__').join(version)
-    .split('__DEPART__').join(JSON.stringify(depart)).split('__LIVRES__').join(JSON.stringify(livres));
+    .split('__DEPART__').join(JSON.stringify(depart)).split('__LIVRES__').join(JSON.stringify(livres))
+    .split('__MUSIQUE__').join(JSON.stringify(musique || []));
   fs.writeFileSync(path.join(dossier, 'sw.js'), sw);
 }
 
@@ -450,8 +492,10 @@ function main() {
   }
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
-  // audio.js et les thèmes (une faute de syntaxe dans un thème arrête l'assemblage ici)
-  const audio = musique.texte();
+  // audio.js et les thèmes (une faute de syntaxe dans un thème arrête l'assemblage ici) ; avec --ville, le
+  // manifeste de la musique enregistrée à leur suite (ses MP3 à côté de la page)
+  const enregistree = musiqueEnregistree(dossier);
+  const audio = musique.texte() + enregistree.script;
   console.log('la musique : ' + musique.fichiers().map((f) => f.nom.replace(/\.js$/, '')).join(', ') + ' (musique/*.js)');
   const contenu = chargerContenu(opts);
   const bundle = contenu.entier;
@@ -560,7 +604,7 @@ function main() {
       .concat(['lieux.json', 'grille.json', 'sprites.json', 'interieurs.json'].filter((f) => fs.existsSync(path.join(dest, f))).map((f) => 'ville/' + f))
       .concat(fs.readdirSync(dest).filter((f) => /^brume_.*\.webp$/.test(f)).sort().map((f) => 'ville/' + f));
     const version = require('crypto').createHash('sha1').update(tpl).update(JSON.stringify(depart)).update(fs.readFileSync(path.join(HERE, 'sw.js'))).digest('hex').slice(0, 12);
-    ecrirePwa(dossier, version, depart, blocContenu.livresUrls.concat(blocCinema.urls));
+    ecrirePwa(dossier, version, depart, blocContenu.livresUrls.concat(blocCinema.urls), enregistree.urls);
     console.log('l\'application : manifeste, icônes, aperçu, sw.js (version ' + version + ', ' + depart.length + ' fichiers au départ)');
   }
 }

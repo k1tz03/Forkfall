@@ -11,6 +11,11 @@
      qui est nommé par son empreinte, contenu/ et cinema/, passe de l'un à
      l'autre sans être retéléchargé). Une tuile, un livre, un film déjà vus se
      rejouent hors ligne.
+   · La musique enregistrée (musique/<clé>.<bloc>.<empreinte>.mp3) : le cache
+     d'abord, dans un cache à elle, `fusible-musique`, qui survit aux versions :
+     un bloc entendu une fois ne se retélécharge plus (un thème de ville pèse
+     5 Mo), et se rejoue hors ligne. À chaque version, ce que le manifeste ne
+     nomme plus en sort (la place reste celle d'une bande originale).
    · Ce qui n'est pas d'ici (les polices de Google) passe sans s'arrêter.
    ═══════════════════════════════════════════════════════════════════════════ */
 'use strict';
@@ -19,6 +24,9 @@ var CACHE = 'fusible-' + VERSION;
 var DEPART = __DEPART__;   // ce qu'il faut pour rouvrir l'accueil hors ligne
 var LIVRES = __LIVRES__;   // les livres et les films de cette version : on ne les demande pas d'avance
 var STATIQUE = /\/(ville|contenu|cinema|accueil|icones)\/[^/]+$/;
+var MUSIQUE = __MUSIQUE__;   // les MP3 de la musique enregistrée de cette version
+var CACHE_MUSIQUE = 'fusible-musique';
+var EST_MUSIQUE = /\/musique\/[^/]+\.mp3$/;
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
@@ -36,9 +44,20 @@ self.addEventListener('install', function (e) {
 
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) {
-    return Promise.all(ks.filter(function (k) { return k.indexOf('fusible-') === 0 && k !== CACHE; }).map(function (k) { return caches.delete(k); }));
-  }).then(function () { return self.clients.claim(); }));
+    return Promise.all(ks.filter(function (k) { return k.indexOf('fusible-') === 0 && k !== CACHE && k !== CACHE_MUSIQUE; }).map(function (k) { return caches.delete(k); }));
+  }).then(elaguerMusique).then(function () { return self.clients.claim(); }));
 });
+
+// la musique d'une version précédente que celle-ci ne nomme plus s'en va (le reste reste)
+function elaguerMusique() {
+  var garde = {};
+  MUSIQUE.forEach(function (u) { garde[new URL(u, self.registration.scope).href] = true; });
+  return caches.open(CACHE_MUSIQUE).then(function (c) {
+    return c.keys().then(function (reqs) {
+      return Promise.all(reqs.filter(function (r) { return !garde[r.url]; }).map(function (r) { return c.delete(r); }));
+    });
+  }).catch(function () { /* pas de cache : rien à élaguer */ });
+}
 
 function garder(req, rep) {
   if (rep && rep.ok && rep.type === 'basic') {
@@ -60,6 +79,19 @@ function cacheDabord(req) {
         .then(function (c) { return c.put(req, rep); })
         .then(function () { return caches.match(req); })
         .then(function (r2) { return r2 || fetch(req); }, function () { return fetch(req); });
+    });
+  });
+}
+
+// La musique : son cache à elle, le même chemin (mis au cache, puis lu de là : un seul flux)
+function musiqueDabord(req) {
+  return caches.open(CACHE_MUSIQUE).then(function (c) {
+    return c.match(req).then(function (r) {
+      if (r) return r;
+      return fetch(req).then(function (rep) {
+        if (!rep || !rep.ok || rep.type !== 'basic') return rep;
+        return c.put(req, rep).then(function () { return c.match(req); }).then(function (r2) { return r2 || fetch(req); }, function () { return fetch(req); });
+      });
     });
   });
 }
@@ -99,6 +131,10 @@ self.addEventListener('fetch', function (e) {
   if (url.origin !== self.location.origin) return;
   if (req.mode === 'navigate' || /\/(index\.html)?$/.test(url.pathname)) {
     e.respondWith(reseauDabord(req));
+    return;
+  }
+  if (EST_MUSIQUE.test(url.pathname)) {
+    e.respondWith(musiqueDabord(req));
     return;
   }
   if (STATIQUE.test(url.pathname) || /\/(manifest\.webmanifest|apercu\.jpg)$/.test(url.pathname)) {

@@ -34,11 +34,13 @@
  * Plus les GESTES : un son court et sec par événement de `card.sfx`, jamais
  * deux fois exactement le même (hauteur, timbre et durée tirés à chaque coup).
  *
- * CONTRAINTE DURE : l'aperçu est un fichier HTML autonome dont la politique de
- * sécurité interdit tout média externe. Aucun fichier audio, aucune URL, aucun
- * data: — TOUT est synthétisé par la Web Audio API : oscillateurs, bruit
- * filtré, enveloppes, réverbération par convolution dont la réponse
- * impulsionnelle est fabriquée à la main, séquenceur à fenêtre glissante.
+ * CONTRAINTE DURE : l'aperçu en un fichier HTML autonome n'a aucun média
+ * externe. Aucun fichier audio, aucune URL, aucun data: — tout y est synthétisé
+ * par la Web Audio API : oscillateurs, bruit filtré, enveloppes, réverbération
+ * par convolution dont la réponse impulsionnelle est fabriquée à la main,
+ * séquenceur à fenêtre glissante. La version jouable (la ville, servie en HTTP)
+ * a en plus LA MUSIQUE ENREGISTRÉE (plus bas) : la bande du studio en MP3 à côté
+ * de la page ; sans eux, la synthèse joue chaque thème comme avant.
  *
  * Le module ne touche à rien tant que le joueur n'a pas fait un geste : les
  * navigateurs refusent de démarrer un AudioContext sans interaction, et un jeu
@@ -60,10 +62,20 @@
  *   FusibleAudio.THEMES / .setTheme(nom|null)  la musique (fondu enchaîné ; un thème
  *                                              retrouvé dans les dix minutes reprend
  *                                              à la section qui suit celle quittée)
+ *   FusibleAudio.setTheme(nom, { debut: true }) depuis son début, sans la reprise, même
+ *                                              s'il jouait déjà (un film coupe ses
+ *                                              images sur les temps de son thème) ;
+ *                                              `depuis: 'creux'` : depuis cette section
+ *                                              (un nom que la version qui joue ne
+ *                                              connaît pas : depuis le début)
  *   FusibleAudio.position()                    la section et la mesure qui jouent
  *   FusibleAudio.jingle(nom)                   une phrase jouée une fois
  *   FusibleAudio.setQualite('pleine'|'legere') la qualité du moteur (voir LA QUALITÉ)
  *   FusibleAudio.qualite()                     celle qui joue ; .verdict() : d'où elle vient
+ *   FusibleAudio.enregistrements(manifeste)    la musique enregistrée (LA MUSIQUE ENREGISTRÉE)
+ *   FusibleAudio.precharger([clé])             le premier bloc de ces thèmes, téléchargé d'avance
+ *                                              ({ cle, depuis } : le bloc de cette section)
+ *   FusibleAudio.lecteur()                     l'état du lecteur : mémoire, téléchargements, journal
  *
  * La musique, côté partition (les fichiers musique/*.js, le banc, le juke-box) :
  *   FusibleAudio.theme(clé, définition)        enregistre un thème (rend vrai
@@ -1662,6 +1674,417 @@
     }
   }
 
+  // ================================================ LA MUSIQUE ENREGISTRÉE =
+  // La bande originale rendue hors ligne par le studio (packages/tools/studio), avec de vrais
+  // instruments, empaquetée par packages/tools/web/musique_audio.js : chaque thème en MP3, en au
+  // plus six blocs, et un manifeste (musique/audio/manifeste.json) que la page assemblée passe à
+  // `FusibleAudio.enregistrements(manifeste)`. Quand un thème a son enregistrement, le moteur le
+  // joue à la place de la synthèse : l'introduction une fois, puis le corps de la boucle sans fin,
+  // à l'échantillon près (des AudioBufferSourceNode posés bout à bout). Sans fichier (le fichier
+  // seul, hors ligne au premier lancement, un 404, un décodage impossible), la synthèse joue le
+  // thème exactement comme avant.
+  //
+  // LE PLAN D'UN THÈME (positions en échantillons du master, à 44,1 kHz). Les premiers blocs (un,
+  // ou deux quand le premier est court : la première note n'attend que lui) portent l'introduction
+  // et la tête du PREMIER passage du corps, jusqu'à `entree` ; on y passe au SECOND passage (les
+  // blocs suivants, à partir de `boucle_bloc` : [B0, B1)) à la même place musicale, entree + L (L
+  // la longueur du corps) ; au bout du dernier, on revient au premier de la boucle en B0. Chaque bloc
+  // déborde de son morceau ; une JOINTURE est un fondu de `fondu` échantillons posé juste AVANT le point de
+  // jointure, entre deux signaux qui sont la même musique au même instant : deux décodages du
+  // même master, ou la fin du premier passage (la marge du bloc 1, qui coule dans le second sans
+  // couture) et celle du second. Les deux nœuds sont écrits à l'avance (dès que le bloc suivant est
+  // décodé, AVANCE_DECODAGE s avant la jointure) : un fil principal qui cale ne fait pas de trou.
+  //
+  // L'ALIGNEMENT. Un nœud lit son tampon à partir d'un décalage ENTIER (o) depuis une trame
+  // ENTIÈRE (T) : jamais d'interpolation. Le suivant hérite (T, o) du précédent, et la différence
+  // de leurs débuts de fichier, posés sur un pas de 1 764 échantillons, tombe entière à toutes les
+  // fréquences courantes : deux blocs consécutifs sont alignés à l'échantillon. Au saut de la
+  // boucle (L quelconque), l'arrondi coûte au plus une demi-trame (à 48 kHz). Le décodeur MP3 peut
+  // laisser un retard (1 105 échantillons quand il ignore l'étiquette LAME) : le même pour tous les
+  // fichiers, il n'écarte jamais deux blocs ; on le mesure sur l'ÉTALON (un clic à un échantillon
+  // connu) pour que les positions affichées soient justes, et les marges des blocs le couvrent.
+  //
+  // LA MÉMOIRE. Le chargeur d'un contexte ne garde décodés que les blocs qu'un thème tient : le
+  // bloc qui joue, le suivant (pendant les AVANCE_DECODAGE s qui précèdent la jointure), et ceux du
+  // thème qui s'en va le temps de son fondu. Un bloc est rendu dès que son nœud s'est tu. Les MP3
+  // téléchargés restent en mémoire (COMPRESSES_MAX octets au plus, les plus anciens partent) : la
+  // boucle qui revient, une reprise, ne retéléchargent rien.
+  //
+  // LE RÉSEAU. Le bloc suivant se télécharge dès que le précédent commence (une minute d'avance) ;
+  // `FusibleAudio.precharger(clés)` va chercher le premier bloc des thèmes probables (la page : le
+  // livre, le jour, la nuit ; un film : le bloc de sa section) quand la page a fini de se charger —
+  // sauf celui du thème qui jouera au premier geste, demandé tout de suite. Un bloc que la musique
+  // attend part en priorité haute, ce qui s'avance en priorité basse. Un thème demandé dont le premier
+  // bloc n'est pas encore là ne coupe rien : l'ancien thème continue jusqu'à ce qu'il arrive,
+  // ATTENTE_MAX s au plus (ATTENTE_SILENCE s quand rien ne jouait), puis la synthèse prend sa place ;
+  // décodé à temps, il part à l'heure où la synthèse serait partie. Un bloc en retard au milieu d'un thème :
+  // la musique se retire en FONDU_TENUE s à la jointure et reprend là, en 0,3 s, quand il arrive ; un
+  // bloc qui ne viendra pas (404, décodage impossible) : la synthèse reprend le thème à la même section.
+  var RENDUS = {};             // clé → le thème enregistré (préparé depuis le manifeste)
+  var RENDU = null;            // { frequence, fondu, marge, etalon } : ce que le manifeste dit pour tous
+  var PANNES = {};             // clé → { t (horloge, ms), definitive } : son enregistrement ne se joue plus
+  // le niveau : un master à −16 LUFS (le contrat du studio) multiplié par ce gain arrive au bus de la musique là
+  // où les thèmes de synthèse arrivaient (leur boucle à −17,25 LUFS « nue » en moyenne sur les vingt, mesurée
+  // sur les maquettes de musique_audio.js --maquettes ; de −18,2 à −16,8) : la musique ne change pas de place
+  // face aux gestes et aux lieux. `gain_db` (manifeste) rattrape un master dont la boucle n'est pas tout à fait
+  // à −16.
+  var NIVEAU_RENDU = Math.pow(10, -1.25 / 20);
+  var AVANCE_DECODAGE = 12;    // s avant une jointure : le bloc suivant se décode, ses nœuds s'écrivent
+  var DEPART_PRES = 4;         // s : un thème qui part si près d'une jointure attend aussi le bloc d'après
+  var DECISION_TENUE = 0.7;    // s avant une jointure : un bloc toujours absent, la musique se retire
+  var FONDU_TENUE = 0.5;       // s : ce retrait (et 0,3 s pour revenir)
+  var ATTENTE_MAX = 12;        // s : un thème dont le premier bloc ne vient pas laisse sa place à la synthèse…
+  var ATTENTE_SILENCE = 4;     // s : …plus tôt quand rien ne joue en attendant (la musique ne cale jamais)
+  var COMPRESSES_MAX = 12e6;   // octets de MP3 gardés en mémoire
+  var PANNE_RESEAU = 60000;    // ms : après une erreur de réseau, on retente l'enregistrement d'un thème
+  var NOEUD_AVANT = 128;       // trames : un nœud démarre un paquet avant son fondu (son départ arrondi ne s'entend pas)
+
+  // les événements du lecteur, pour la QA (FusibleAudio.lecteur().journal), les 60 derniers
+  var JOURNAL_RENDU = [];
+  function noterRendu(quoi, o) {
+    var e = { t: Math.round(horloge()), quoi: quoi };
+    if (o) for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) e[k] = o[k];
+    JOURNAL_RENDU.push(e);
+    if (JOURNAL_RENDU.length > 60) JOURNAL_RENDU.shift();
+  }
+  function rienFaire() {}
+
+  function enregistrements(m, o) {
+    try {
+      if (!m || typeof m !== 'object' || !m.themes) throw new Error('manifeste sans thèmes');
+      o = o || {};
+      var base = o.base == null ? '' : String(o.base);
+      RENDU = { frequence: +m.frequence || 44100, fondu: +m.fondu || 1024, marge: +m.marge || 4410, etalon: m.etalon || null };
+      var n = 0;
+      Object.keys(m.themes).forEach(function (cle) {
+        try { RENDUS[cle] = preparerRendu(cle, m.themes[cle], base); n++; } catch (e) { signaler('enregistrement ' + cle, e); }
+      });
+      return n;
+    } catch (e) {
+      signaler('enregistrements', e);
+      return 0;
+    }
+  }
+  function preparerRendu(cle, t, base) {
+    if (!/^[a-z][a-z0-9_]*$/.test(cle)) throw new Error('clé illisible');
+    if (!t || !t.blocs || !t.blocs.length || !t.boucle || !t.sections || !(t.entree > 0)) throw new Error('entrée incomplète (blocs, boucle, sections, entree)');
+    var fs = RENDU.frequence;
+    var R = {
+      cle: cle, t: t, fs: fs, I: t.intro ? t.intro[1] : 0, B0: t.boucle[0], B1: t.boucle[1], H: t.entree,
+      rang: t.boucle_rang | 0, sauf: t.reprise_sauf || [], m: t.boucle_bloc > 0 ? t.boucle_bloc | 0 : 1,
+      niveau: NIVEAU_RENDU * Math.pow(10, clamp(+t.gain_db || 0, -6, 6) / 20),
+      mesure: (+t.mesure_s || 2) * fs, octets: 0,
+      blocs: t.blocs.map(function (b, k) {
+        if (!(b.fin > b.debut && b.a > b.de && b.de >= b.debut && b.a <= b.fin)) throw new Error('bloc ' + k + ' incohérent');
+        return { k: k, url: base + b.fichier, debut: b.debut, fin: b.fin, de: b.de, a: b.a, octets: b.octets || 0 };
+      }),
+      // [nom, debut, fin, mesures, false (on n'y reprend pas)] : un thème peut changer de tempo, chaque section a
+      // la longueur de ses mesures (`barre`) ; sans `mesures` (un ancien manifeste), mesure_s les compte
+      sections: t.sections.map(function (s, i) {
+        var n = s[3] >= 1 ? Math.round(s[3]) : Math.max(1, Math.round((s[2] - s[1]) / ((+t.mesure_s || 2) * fs)));
+        return { nom: String(s[0]), debut: s[1], fin: s[2], index: i, boucle: i >= (t.boucle_rang | 0), mesures: n, barre: (s[2] - s[1]) / n, reprise: s[4] !== false };
+      })
+    };
+    R.L = R.B1 - R.B0;
+    R.blocs.forEach(function (b) { R.octets += b.octets; });
+    if (!(R.L > 0) || R.H >= R.B0 || R.m >= R.blocs.length || R.blocs[0].de !== 0 || R.blocs[R.m - 1].a !== R.H) throw new Error('boucle ou entrée incohérentes');
+    for (var k = 1; k < R.blocs.length; k++) if (R.blocs[k].de !== (k === R.m ? R.B0 : R.blocs[k - 1].a)) throw new Error('les blocs ne se suivent pas (' + k + ')');
+    if (R.blocs[R.blocs.length - 1].a !== R.B1) throw new Error('le dernier bloc ne finit pas la boucle');
+    return R;
+  }
+  // le rendu d'un thème se joue-t-il ? (un navigateur sans fetch ni promesses : non ; une panne : pas tout de suite)
+  function peutRendre() { return typeof Promise === 'function' && typeof global.fetch === 'function' && !!RENDU; }
+  function enPanne(cle) {
+    var p = PANNES[cle];
+    if (!p) return false;
+    if (!p.definitive && horloge() - p.t > PANNE_RESEAU) { delete PANNES[cle]; return false; }
+    return true;
+  }
+  function rendable(cle) { return !!RENDUS[cle] && peutRendre() && !enPanne(cle); }
+  function panne(cle, raison, definitive) {
+    if (!PANNES[cle]) noterRendu('panne', { cle: cle, raison: String(raison), definitive: !!definitive });
+    PANNES[cle] = { t: horloge(), definitive: !!definitive, raison: String(raison) };
+  }
+
+  // ── la forme d'un thème enregistré, comme structureDe (le juke-box, la reprise) ──
+  function structureRendu(cle) {
+    var R = RENDUS[cle], fs = R.fs, mesure = R.mesure / fs;
+    var mi = 0, mc = 0;
+    var secs = R.sections.map(function (s) {
+      if (s.boucle) mc += s.mesures; else mi += s.mesures;
+      return { nom: s.nom, index: s.index, mesures: s.mesures, secondes: (s.fin - s.debut) / fs, boucle: s.boucle };
+    });
+    var intro = R.I / fs, corps = R.L / fs;
+    return {
+      cle: cle, bpm: R.t.bpm, pas: mesure / 16, mesure: mesure, ordre: secs.map(function (s) { return s.nom; }), boucle: R.rang,
+      sections: secs,
+      intro: { mesures: mi, secondes: intro },
+      corps: { mesures: mc, secondes: corps },
+      periode: { mesures: mc, secondes: corps },
+      redite: intro + corps,
+      rendu: true, fichiers: R.blocs.length, octets: R.octets
+    };
+  }
+  // d'où part un thème enregistré : le début, une section (son nom, son rang), { index, mesure } (une
+  // mesure négative compte depuis la fin), ou { x } (un échantillon du master : le banc)
+  function departRendu(R, depuis) {
+    if (depuis == null) return 0;
+    if (typeof depuis === 'object' && depuis.x != null) return clamp(Math.round(depuis.x), 0, R.B1 - 1);
+    var i = typeof depuis === 'number' ? depuis : typeof depuis === 'string' ? -1 : depuis.index;
+    if (typeof depuis === 'string') for (var j = 0; j < R.sections.length; j++) if (R.sections[j].nom === depuis) { i = j; break; }
+    var s = R.sections[i];
+    if (!s) throw new Error(R.cle + ' : départ inconnu « ' + JSON.stringify(depuis) + ' »');
+    var nbm = s.mesures, dm = typeof depuis === 'object' && depuis.mesure ? depuis.mesure : 0;
+    if (dm < 0) dm = nbm + dm;
+    dm = clamp(Math.floor(dm), 0, nbm - 1);
+    return Math.min(s.fin - 1, Math.round(s.debut + dm * s.barre));
+  }
+  // le bloc qui porte la position x (le premier passage au-delà du bloc 0 se lit dans le second)
+  function blocDe(R, x) {
+    var k;
+    if (x < R.H) { for (k = 0; k < R.m - 1; k++) if (x < R.blocs[k].a) return k; return R.m - 1; }
+    if (x < R.B0) x += R.L;
+    for (k = R.m; k < R.blocs.length; k++) if (x < R.blocs[k].a) return k;
+    return R.blocs.length - 1;
+  }
+  // ce qui suit le bloc k, au bout de son morceau : { k, x (la position où il reprend), boucle (le retour au début) }
+  function suiteDe(R, k) {
+    if (k === R.m - 1) return { k: blocDe(R, R.H + R.L), x: R.H + R.L, boucle: false };
+    if (k === R.blocs.length - 1) return { k: R.m, x: R.B0, boucle: true };
+    return { k: k + 1, x: R.blocs[k].a, boucle: false };
+  }
+  // la section d'une position du master, et le rang du passage (le premier passage, lu dans le bloc 0, se
+  // montre comme la boucle qu'il est)
+  function sectionDe(R, x) {
+    if (x >= R.I && x < R.B0) x += R.L;
+    var s = R.sections[0];
+    for (var i = 0; i < R.sections.length; i++) if (R.sections[i].debut <= x) s = R.sections[i];
+    return s;
+  }
+
+  // ── les MP3 téléchargés (pour tous les contextes) ──
+  var COMPRESSES = { liste: [], octets: 0 };   // [{ url, ab }], le plus récent au bout
+  var TELECHARGEMENTS = {};                    // url → promesse en cours
+  function compresse(url) {
+    for (var i = 0; i < COMPRESSES.liste.length; i++) {
+      if (COMPRESSES.liste[i].url === url) { var e = COMPRESSES.liste.splice(i, 1)[0]; COMPRESSES.liste.push(e); return e.ab; }
+    }
+    return null;
+  }
+  function garderCompresse(url, ab) {
+    COMPRESSES.liste.push({ url: url, ab: ab });
+    COMPRESSES.octets += ab.byteLength;
+    while (COMPRESSES.octets > COMPRESSES_MAX && COMPRESSES.liste.length > 1) COMPRESSES.octets -= COMPRESSES.liste.shift().ab.byteLength;
+  }
+  // rend une promesse d'ArrayBuffer ; une erreur porte `statut` (404…) ou `reseau`. `priorite` ('high', 'low') :
+  // un bloc que la musique attend passe devant les images de la page, un téléchargement d'avance derrière
+  // (un navigateur qui ne connaît pas l'indice l'ignore)
+  function telecharger(url, priorite) {
+    var ab = compresse(url);
+    if (ab) return Promise.resolve(ab);
+    if (TELECHARGEMENTS[url]) return TELECHARGEMENTS[url];
+    var t0 = horloge(), essais = 0;
+    var p = new Promise(function (ok, ko) {
+      (function essai() {
+        essais++;
+        global.fetch(url, priorite ? { priority: priorite } : undefined).then(function (r) {
+          if (!r.ok) { var e = new Error('HTTP ' + r.status + ' ' + url); e.statut = r.status; throw e; }
+          return r.arrayBuffer();
+        }).then(function (b) {
+          garderCompresse(url, b);
+          noterRendu('telecharge', { url: url, octets: b.byteLength, ms: Math.round(horloge() - t0) });
+          ok(b);
+        }, function (e) {
+          if (!e.statut && essais < 2) { global.setTimeout(essai, 1500); return; }
+          if (!e.statut) e.reseau = true;
+          ko(e);
+        });
+      })();
+    });
+    TELECHARGEMENTS[url] = p;
+    var fin = function () { delete TELECHARGEMENTS[url]; };
+    p.then(fin, fin);
+    return p;
+  }
+  function decoder(ctx, ab) {
+    return new Promise(function (ok, ko) {
+      var fini = false;
+      var bien = function (b) { if (!fini) { fini = true; ok(b); } }, mal = function (e) { if (!fini) { fini = true; ko(e || new Error('décodage impossible')); } };
+      try {
+        var p = ctx.decodeAudioData(ab, bien, mal);   // la forme à rappels : celle que comprend un vieux Safari
+        if (p && p.then) p.then(bien, mal);
+      } catch (e) { mal(e); }
+    });
+  }
+  function versTampon(b64) {
+    var bin = global.atob(b64), u = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return u.buffer;
+  }
+
+  // ── le chargeur d'un contexte : les blocs décodés que des thèmes tiennent, l'étalon ──
+  var CHARGEURS = typeof WeakMap === 'function' ? new WeakMap() : null;
+  function chargeurDe(ctx) {
+    var c = CHARGEURS ? CHARGEURS.get(ctx) : ctx.__fusibleChargeur;
+    if (c) return c;
+    c = { ctx: ctx, blocs: {}, octets: 0, pic: 0, decalage: null, file: [], decode: false, decodes: 0, msDecodage: 0, attenteDecalage: [] };
+    if (CHARGEURS) CHARGEURS.set(ctx, c); else ctx.__fusibleChargeur = c;
+    calibrer(c);
+    return c;
+  }
+  // L'ÉTALON : un clic au rang `clic`, encodé comme les blocs. Décodé dans ce contexte, il dit où le
+  // décodeur pose le premier échantillon (0 quand il lit l'étiquette LAME, 1 105 sinon) ; tout
+  // échec laisse 0, que les marges des blocs couvrent.
+  function calibrer(c) {
+    var e = RENDU && RENDU.etalon, fini = function (d, comment) {
+      c.decalage = d;
+      noterRendu('etalon', { decalage: d, comment: comment, frequence: c.ctx.sampleRate });
+      var l = c.attenteDecalage; c.attenteDecalage = [];
+      l.forEach(function (f) { try { f(); } catch (x) { /* rien */ } });
+    };
+    if (!e || !e.mp3 || !global.atob) { fini(0, 'sans étalon'); return; }
+    try {
+      decoder(c.ctx, versTampon(e.mp3)).then(function (b) {
+        var d = b.getChannelData(0), r = c.ctx.sampleRate / RENDU.frequence, best = 0, bi = -1;
+        for (var i = 0; i < d.length; i++) { var v = Math.abs(d[i]); if (v > best) { best = v; bi = i; } }
+        var D = bi / r - e.clic;
+        if (!(best > 0.2) || !(Math.abs(D) < RENDU.marge * 0.6)) { fini(0, 'clic introuvable'); return; }
+        fini(Math.round(D), 'mesuré');
+      }, function () { fini(0, 'étalon indécodable'); });
+    } catch (x) { fini(0, 'étalon illisible'); }
+  }
+  // un thème prend un bloc : il le reçoit décodé (e.etat 'pret', e.buf), ou le reçoit plus tard ; `urgent` passe
+  // devant les autres décodages
+  function prendreBloc(c, R, k, urgent) {
+    var cle = R.cle + '#' + k, e = c.blocs[cle];
+    if (!e) {
+      e = c.blocs[cle] = { cle: cle, R: R, k: k, etat: 'attente', buf: null, users: 0, erreur: null, octets: 0, urgent: !!urgent };
+      demanderBloc(c, e);
+    } else if (urgent && !e.urgent) {
+      e.urgent = true;
+      var i = c.file.indexOf(e);
+      if (i > 0) { c.file.splice(i, 1); c.file.unshift(e); }
+    }
+    e.users++;
+    return e;
+  }
+  function rendreBloc(c, e) {
+    if (!e || e.users <= 0) return;
+    e.users--;
+    if (e.users > 0) return;
+    if (c.blocs[e.cle] === e) delete c.blocs[e.cle];
+    var i = c.file.indexOf(e);
+    if (i >= 0) c.file.splice(i, 1);
+    if (e.buf) { c.octets -= e.octets; e.buf = null; noterRendu('rendu', { bloc: e.cle, octets: c.octets }); }
+    e.etat = 'rendu';
+  }
+  function demanderBloc(c, e) {
+    var b = e.R.blocs[e.k];
+    telecharger(b.url, 'high').then(function (ab) {
+      if (e.etat !== 'attente') return;
+      e.ab = ab;
+      if (e.urgent) c.file.unshift(e); else c.file.push(e);
+      decoderSuivant(c);
+    }, function (err) {
+      if (e.etat !== 'attente') return;
+      e.etat = 'erreur'; e.erreur = err;
+      panne(e.R.cle, err && err.message || err, !!(err && err.statut));
+      prevenir(e);
+    });
+  }
+  // un décodage à la fois : la mémoire et le processeur ne font jamais deux blocs ensemble
+  function decoderSuivant(c) {
+    if (c.decode || !c.file.length) return;
+    var e = c.file.shift();
+    if (e.etat !== 'attente') { decoderSuivant(c); return; }
+    c.decode = true;
+    var t0 = horloge(), ab = e.ab;
+    e.ab = null;
+    decoder(c.ctx, ab.slice(0)).then(function (buf) {
+      c.decode = false;
+      var ms = horloge() - t0;
+      c.decodes++; c.msDecodage += ms;
+      if (e.etat === 'attente' && e.users > 0) {
+        e.buf = buf; e.etat = 'pret'; e.octets = buf.length * buf.numberOfChannels * 4;
+        c.octets += e.octets;
+        if (c.octets > c.pic) c.pic = c.octets;
+        noterRendu('decode', { bloc: e.cle, secondes: Math.round(buf.duration * 10) / 10, ms: Math.round(ms), octets: c.octets });
+        prevenir(e);
+      }
+      decoderSuivant(c);
+    }, function (err) {
+      c.decode = false;
+      if (e.etat === 'attente') { e.etat = 'erreur'; e.erreur = err; panne(e.R.cle, 'décodage : ' + (err && err.message || err), true); prevenir(e); }
+      decoderSuivant(c);
+    });
+  }
+  // ceux qui attendaient ce bloc (le premier d'un thème demandé) : prêt ou en échec
+  function prevenir(e) {
+    var l = e.quand || [];
+    e.quand = [];
+    l.forEach(function (f) { try { f(); } catch (x) { signaler('lecteur', x); } });
+  }
+  // un départ donné au thème enregistré (une section, son rang, { index, mesure }, { x }) dit pour sa
+  // synthèse : la section du même nom (la reprise, un bloc en panne), ou le début
+  function departSynthese(nom, depuis) {
+    var R = RENDUS[nom];
+    if (depuis == null || !R) return null;
+    var sec = null;
+    try {
+      // un nom : la section du même nom dans la partition, sinon le début
+      if (typeof depuis === 'string') return compilerTheme(nom).ordre.indexOf(depuis) >= 0 ? depuis : null;
+      if (typeof depuis === 'object' && depuis.x != null) sec = sectionDe(R, depuis.x);
+      else sec = R.sections[typeof depuis === 'number' ? depuis : depuis.index] || null;
+      var C = compilerTheme(nom), i = sec ? C.ordre.indexOf(sec.nom) : -1;
+      return i < 0 ? null : (typeof depuis === 'object' && depuis.mesure != null ? { index: i, mesure: depuis.mesure } : i);
+    } catch (x) { return null; }
+  }
+  // un départ demandé par le jeu (`setTheme(nom, { depuis })` ; un film : son `musiqueDepuis`) : une section
+  // (son nom, son rang, { index, mesure }) que connaît la version qui jouera — l'enregistrement (les marqueurs
+  // de son master), sinon la partition ; un départ qu'elle ne connaît pas part du début (0)
+  function departDemande(nom, depuis) {
+    if (depuis == null) return 0;
+    var noms;
+    try {
+      noms = rendable(nom) ? RENDUS[nom].sections.map(function (x) { return x.nom; }) : compilerTheme(nom).ordre;
+    } catch (x) { return 0; }
+    var i = typeof depuis === 'string' ? noms.indexOf(depuis) : typeof depuis === 'number' ? depuis : depuis.index;
+    return typeof i === 'number' && i >= 0 && i < noms.length ? depuis : 0;
+  }
+  // aller chercher, sans les décoder, les premiers blocs des thèmes qui joueront sans doute bientôt ; une entrée
+  // { cle, depuis } va chercher le bloc où ce départ tombe (un film qui part d'une section)
+  function economie() {
+    try { return !!(global.navigator && global.navigator.connection && global.navigator.connection.saveData); } catch (x) { return false; }
+  }
+  // (une page qui se charge encore — le contenu, le moteur, les images de l'accueil — passe d'abord : ces
+  // téléchargements-là attendent sa fin et un moment calme ; un thème qu'on demande, lui, n'attend pas.
+  // `tot` : le thème qui jouera au premier geste (l'accueil le demande quand il s'affiche) — son premier
+  // bloc part tout de suite, en priorité haute, devant les images : le premier geste le trouve là, ou en
+  // route ; sur un réseau lent, la première note n'attend plus la fin de la page)
+  var prechargesEnAttente = null;
+  function precharger(cles, tout, tot) {
+    if (!peutRendre() || economie()) return;
+    var doc = global.document;
+    if (!tot && doc && doc.readyState !== 'complete' && global.addEventListener) {
+      if (!prechargesEnAttente) {
+        prechargesEnAttente = [];
+        global.addEventListener('load', function () {
+          var l = prechargesEnAttente; prechargesEnAttente = null;
+          var go = function () { l.forEach(function (a) { precharger(a[0], a[1]); }); };
+          if (global.requestIdleCallback) global.requestIdleCallback(go, { timeout: 1500 }); else global.setTimeout(go, 200);
+        });
+      }
+      if (prechargesEnAttente.length < 8) prechargesEnAttente.push([cles, tout]);
+      return;
+    }
+    (cles || []).forEach(function (c) {
+      var cle = c && typeof c === 'object' ? c.cle : c, R = RENDUS[cle], k = 0;
+      if (!R || enPanne(cle)) return;
+      if (c && typeof c === 'object' && c.depuis != null) { try { k = blocDe(R, departRendu(R, c.depuis)); } catch (x) { k = 0; } }
+      (tout ? R.blocs : R.blocs.slice(k, k + 1)).forEach(function (b) { telecharger(b.url, tot ? 'high' : 'low').then(rienFaire, rienFaire); });
+    });
+  }
+
   // ============================================================== le moteur =
   // Il tourne sur n'importe quel BaseAudioContext : le direct (AudioContext)
   // et le banc d'essai (OfflineAudioContext) passent par le même code.
@@ -1680,6 +2103,9 @@
     // la qualité (MONTAGES) : `pleine` sauf demande ; elle peut changer en route (setQualite)
     var qualite = MONTAGES[opt.qualite] ? opt.qualite : 'pleine';
     var Q = MONTAGES[qualite];
+    // les thèmes enregistrés (LA MUSIQUE ENREGISTRÉE) : partout où le manifeste est passé, sauf `rendus: false`
+    // (la mesure de l'appareil, les maquettes : la synthèse seule)
+    var avecRendus = opt.rendus !== false;
 
     var master = gain(ctx, opt.master == null ? 0.85 : opt.master);
     // Un limiteur doux en sortie : rien ne doit jamais saturer, même si trois
@@ -2155,6 +2581,255 @@
       };
     }
 
+    // ---- un thème enregistré (LA MUSIQUE ENREGISTRÉE, plus haut). Créé, il demande son premier bloc ; il
+    //      ne joue qu'à `lancer(at, fade)`, quand `pret()` (le bloc décodé, le retard du décodeur connu).
+    //      Ses segments : un nœud par morceau de bloc, { k, e (le bloc tenu), src, g, T (trame de départ),
+    //      o (décalage dans le tampon, en trames), J0 (où il devient seul), J (sa jointure), suite } ----
+    function makeEnregistre(nom, depuis) {
+      var R = RENDUS[nom], ch = chargeurDe(ctx), sr = ctx.sampleRate, r = sr / R.fs;
+      var W = RENDU.fondu * r;
+      var x0 = departRendu(R, depuis), k0 = blocDe(R, x0);
+      if (k0 >= R.m && x0 < R.B0) x0 += R.L;    // le premier passage, hors des premiers blocs, se lit dans le second
+      var e0 = prendreBloc(ch, R, k0, true);
+      // parti à moins de DEPART_PRES s de la fin de son bloc, il attend aussi le suivant : sinon sa première
+      // jointure arriverait avant lui, et la musique se retirerait aussitôt partie
+      var suite0 = suiteDe(R, k0);
+      var e1 = (R.blocs[k0].a - x0) / R.fs < DEPART_PRES ? prendreBloc(ch, R, suite0.k, true) : null;
+      var D = 0, etat = 'attente', out = null, segs = [], tenue = null, repli = null, attenteFn = [];
+      var inst = { name: nom, rendu: true, out: null, dead: 0 };
+      function poser(s, rampe) {
+        var b = R.blocs[s.k];
+        s.bd = b.debut;
+        s.src = ctx.createBufferSource();
+        s.src.buffer = s.e.buf;
+        s.g = gain(ctx, rampe ? 0 : 1);
+        if (rampe) rampe(s.g.gain);
+        s.src.connect(s.g);
+        s.g.connect(out);
+        s.src.start(s.T / sr, s.o / sr);
+        s.J = s.T + (b.a - b.debut + D) * r - s.o;   // la trame où ce nœud atteint la fin de son morceau
+        s.suite = suiteDe(R, s.k);
+        s.eSuiv = null;
+        s.fin = null;
+        segs.push(s);
+        // le bloc d'après : téléchargé dès maintenant (décodé plus tard)
+        telecharger(R.blocs[s.suite.k].url, 'low').then(rienFaire, rienFaire);
+      }
+      // le bloc suivant est décodé : son nœud part un paquet avant le fondu, au même échantillon du
+      // master ; les deux fondus (linéaires : la somme des gains vaut 1) finissent sur la jointure
+      function ecrireSuite(s) {
+        var n = R.blocs[s.suite.k], debutFondu = s.J - W;
+        var T2 = Math.floor(debutFondu) - NOEUD_AVANT;
+        var o2 = Math.round(s.o + (T2 - s.T) + ((s.suite.x - R.blocs[s.k].a) + (s.bd - n.debut)) * r);
+        if (o2 < 0) { T2 -= o2; o2 = 0; }
+        var tA = debutFondu / sr, tB = s.J / sr;
+        s.g.gain.setValueAtTime(1, tA);
+        s.g.gain.linearRampToValueAtTime(0, tB);
+        s.fin = Math.ceil(s.J) + NOEUD_AVANT;
+        try { s.src.stop(s.fin / sr); } catch (x) { /* déjà arrêté */ }
+        var e = s.eSuiv;
+        s.eSuiv = null;
+        poser({ k: s.suite.k, e: e, T: T2, o: o2, J0: s.J, passage: s.passage + (s.suite.boucle ? 1 : 0) },
+          function (g) { g.setValueAtTime(0, tA); g.linearRampToValueAtTime(1, tB); });
+        noterRendu('jointure', { cle: nom, de: s.k, vers: n.k, t: Math.round(tB * 1000) / 1000, boucle: s.suite.boucle });
+      }
+      // le bloc suivant n'est pas là à temps : la musique se retire jusqu'à la jointure, et attend
+      function tenir(s) {
+        var tB = s.J / sr, tA = Math.max(now(), tB - FONDU_TENUE);
+        s.g.gain.setValueAtTime(1, tA);
+        s.g.gain.linearRampToValueAtTime(0, Math.max(tB, tA + 0.05));
+        s.fin = Math.ceil(Math.max(tB, tA + 0.05) * sr) + NOEUD_AVANT;
+        try { s.src.stop(s.fin / sr); } catch (x) { /* rien */ }
+        tenue = { k: s.suite.k, x: s.suite.x, e: s.eSuiv || prendreBloc(ch, R, s.suite.k, true), passage: s.passage + (s.suite.boucle ? 1 : 0), J: s.J };
+        s.eSuiv = null;
+        etat = 'tenue';
+        noterRendu('tenue', { cle: nom, bloc: tenue.k });
+      }
+      // il est arrivé : la musique reprend là où elle s'était retirée (le début de ce bloc), en 0,3 s
+      function reprendreTenue() {
+        var b = R.blocs[tenue.k];
+        var T = Math.max(Math.ceil(tenue.J), Math.round((now() + 0.12) * sr));
+        var o = Math.round((tenue.x - b.debut + D) * r), tA = T / sr;
+        var e = tenue.e, passage = tenue.passage;
+        tenue = null;
+        etat = 'joue';
+        poser({ k: b.k, e: e, T: T, o: Math.max(0, o), J0: T, passage: passage }, function (g) { g.setValueAtTime(0, tA); g.linearRampToValueAtTime(1, tA + 0.3); });
+        noterRendu('reprend', { cle: nom, bloc: b.k });
+      }
+      // un bloc qui ne viendra pas : la synthèse reprend le thème, à la section où l'on était
+      function replier(t, x) {
+        etat = 'repli';
+        if (tenue && tenue.e) rendreBloc(ch, tenue.e);
+        tenue = null;
+        if (!MUSIQUE[nom]) { noterRendu('repli', { cle: nom, synthese: false }); return; }
+        var dep = departSynthese(nom, { x: x });
+        try { repli = makeTheme(nom, t, 0.3, dep); } catch (e) { signaler('thème ' + nom, e); return; }
+        if (opt.surSynthese) { try { opt.surSynthese(nom); } catch (e) { /* rien */ } }
+        if (scheduled > t) repli.pump(t, scheduled);
+        noterRendu('repli', { cle: nom, synthese: true, depuis: dep });
+      }
+      inst.pret = function () { return etat === 'attente' && !!e0 && e0.etat === 'pret' && (!e1 || e1.etat !== 'attente') && ch.decalage != null; };
+      inst.echec = function () { return e0 && e0.etat === 'erreur' ? (e0.erreur || new Error('bloc absent')) : null; };
+      // fn() quand le premier bloc est décodé (ou en échec) : le moteur n'attend pas le pas suivant du séquenceur
+      inst.quandPret = function (fn) { attenteFn.push(fn); };
+      inst.verifier = function () {
+        if (!attenteFn.length || !e0 || e0.etat === 'attente' || (e1 && e1.etat === 'attente' && e0.etat === 'pret') || ch.decalage == null) return;
+        var l = attenteFn; attenteFn = [];
+        l.forEach(function (f) { try { f(); } catch (x) { signaler('thème ' + nom, x); } });
+      };
+      inst.lancer = function (at, fade) {
+        etat = 'joue';
+        D = ch.decalage || 0;
+        out = gain(ctx, fade > 0 ? 0.0001 : R.niveau);
+        out.connect(musBus);
+        if (fade > 0) { out.gain.setValueAtTime(0.0001, at); out.gain.linearRampToValueAtTime(R.niveau, at + fade); }
+        inst.out = out;
+        var b = R.blocs[k0], T = Math.max(0, Math.round(at * sr));
+        var e = e0;
+        e0 = null;
+        poser({ k: k0, e: e, T: T, o: Math.max(0, Math.round((x0 - b.debut + D) * r)), J0: T, passage: 0 });
+        if (e1) { segs[0].eSuiv = e1; e1 = null; }
+        noterRendu('lance', { cle: nom, bloc: k0, x: x0, at: Math.round(at * 1000) / 1000, maintenant: Math.round(now() * 1000) / 1000 });
+      };
+      inst.pump = function (t0, t1) {
+        if (repli) repli.pump(t0, t1);
+        if (etat !== 'joue' && etat !== 'tenue') return;
+        var tn = now(), n = tn * sr;
+        // un segment qui s'est tu rend son bloc (le dernier reste : il dit où l'on en est)
+        while (segs.length > 1 && segs[0].fin != null && segs[0].fin < n) {
+          var v = segs.shift();
+          try { v.g.disconnect(); } catch (x) { /* rien */ }
+          rendreBloc(ch, v.e);
+        }
+        if (etat === 'tenue') {
+          if (tenue.e.etat === 'pret') reprendreTenue();
+          else if (tenue.e.etat === 'erreur') replier(Math.max(tn + 0.05, tenue.J / sr), tenue.x);
+          return;
+        }
+        var s = segs[segs.length - 1];
+        if (s.fin != null) return;
+        var reste = s.J / sr - tn;
+        // (pendant le fondu d'un thème qui s'en va, ses blocs sont encore là : le suivant attend qu'il soit parti,
+        // sauf si la jointure presse)
+        if (!s.eSuiv && reste <= AVANCE_DECODAGE && (reste <= DEPART_PRES || !autreQuiSEteint(inst))) s.eSuiv = prendreBloc(ch, R, s.suite.k, true);
+        // (le nœud suivant doit partir dans le futur : sinon il lirait son tampon décalé du retard pris)
+        if (s.eSuiv && s.eSuiv.etat === 'pret' && (s.J - W - NOEUD_AVANT) / sr > tn + 0.02) { ecrireSuite(s); return; }
+        if (s.eSuiv && s.eSuiv.etat === 'erreur') { tenir(s); replier(Math.max(tn + 0.05, s.J / sr), s.suite.x); return; }
+        if (reste <= DECISION_TENUE) tenir(s);
+      };
+      // où en est la musique à l'heure t : la section du master qui sonne (le segment qui est seul à cette heure)
+      inst.position = function (t) {
+        if (repli) return repli.position(t);
+        if (!segs.length) return null;
+        var n = t * sr, s = segs[0];
+        for (var i = segs.length - 1; i >= 0; i--) if (segs[i].J0 <= n + 1e-6) { s = segs[i]; break; }
+        if (etat === 'tenue' && s === segs[segs.length - 1]) n = Math.min(n, s.J - 1);   // retirée : elle attend à la jointure
+        var x = s.bd - D + (s.o + Math.max(0, n - s.T)) / r;
+        var sec = sectionDe(R, x), xs = x >= R.I && x < R.B0 ? x + R.L : x;
+        var mesures = sec.mesures;
+        return {
+          theme: nom, section: sec.nom, index: sec.index, passage: s.passage, boucle: sec.boucle,
+          mesure: clamp(Math.floor((xs - sec.debut) / sec.barre), 0, mesures - 1) + 1, mesures: mesures,
+          secondes: clamp((xs - sec.debut) / R.fs, 0, (sec.fin - sec.debut) / R.fs), rendu: true, x: Math.round(x)
+        };
+      };
+      inst.alleger = function () { if (repli && repli.alleger) repli.alleger.apply(repli, arguments); };
+      inst.enRepli = function () { return etat === 'repli'; };
+      inst.stop = function (t, f) {
+        inst.dead = t + f + 0.4;
+        if (etat === 'attente') { etat = 'fini'; return; }
+        etat = 'fini';
+        if (out) {
+          out.gain.cancelScheduledValues(t);
+          out.gain.setValueAtTime(Math.max(out.gain.value, 0.0001), t);
+          out.gain.linearRampToValueAtTime(0.0001, t + f);
+        }
+        for (var i = 0; i < segs.length; i++) { try { segs[i].src.stop(t + f + 0.3); } catch (x) { /* rien */ } }
+        // ce qui ne se fera jamais entendre (un segment qui partirait après le fondu, le bloc d'après) rend
+        // son bloc tout de suite : le thème qui s'en va ne garde que celui qui joue
+        var garde = [];
+        segs.forEach(function (sg, j) {
+          if (j > 0 && sg.T / sr >= t + f) { try { sg.g.disconnect(); } catch (x) { /* rien */ } rendreBloc(ch, sg.e); }
+          else garde.push(sg);
+          if (sg.eSuiv) { rendreBloc(ch, sg.eSuiv); sg.eSuiv = null; }
+        });
+        segs = garde;
+        if (tenue && tenue.e) { rendreBloc(ch, tenue.e); tenue = null; }
+        if (repli) repli.stop(t, f);
+        noterRendu('arrete', { cle: nom });
+      };
+      // mort et sorti du graphe : chaque bloc tenu est rendu au chargeur (une fois)
+      var libere = false;
+      inst.liberer = function () {
+        if (libere) return;
+        libere = true;
+        segs.forEach(function (s) {
+          try { s.g.disconnect(); } catch (x) { /* rien */ }
+          rendreBloc(ch, s.e);
+          if (s.eSuiv) rendreBloc(ch, s.eSuiv);
+        });
+        segs = [];
+        if (tenue && tenue.e) rendreBloc(ch, tenue.e);
+        tenue = null;
+        if (e0) { rendreBloc(ch, e0); e0 = null; }
+        if (e1) { rendreBloc(ch, e1); e1 = null; }
+        if (out) { try { out.disconnect(); } catch (x) { /* rien */ } }
+        if (repli) { try { repli.out.disconnect(); } catch (x) { /* rien */ } }
+      };
+      // jamais lancé (un autre thème a été demandé entre-temps)
+      inst.abandonner = function () {
+        etat = 'fini'; attenteFn = [];
+        if (e0) { rendreBloc(ch, e0); e0 = null; }
+        if (e1) { rendreBloc(ch, e1); e1 = null; }
+      };
+      // pour le banc : les segments écrits
+      inst._segments = function () {
+        return segs.map(function (s) { return { k: s.k, T: s.T, o: s.o, bd: s.bd, J0: s.J0, J: s.J, passage: s.passage, fin: s.fin, decalage: D, r: r }; });
+      };
+      e0.quand = e0.quand || [];
+      e0.quand.push(function () { inst.verifier(); });
+      if (e1) { e1.quand = e1.quand || []; e1.quand.push(function () { inst.verifier(); }); }
+      if (ch.decalage == null) ch.attenteDecalage.push(function () { inst.verifier(); });
+      return inst;
+    }
+    // un thème enregistré dont le premier bloc est là : il prend la place de celui qui joue, avec le fondu
+    // enchaîné de la synthèse (le même ordre des choses que setTheme). `t0` : l'heure de la demande, quand le
+    // bloc a dû se décoder d'abord — sous un autre thème, il part à la même heure que la synthèse serait partie
+    // (t0 + 0,6 s) si le décodage a tenu dans ce délai, sinon tout de suite : le décodage ne s'ajoute pas au
+    // fondu (un film coupe ses images sur les temps de son thème)
+    function lancerEnregistre(s, t, fade, t0) {
+      var cur = themes.filter(function (x) { return !x.dead; }).pop();
+      var at = t + (cur ? Math.min(fade, 0.6) : 0.05);
+      if (cur && t0 != null) at = Math.max(t + 0.05, t0 + Math.min(fade, 0.6));
+      s.lancer(at, cur ? Math.min(0.8, Math.max(fade, 0.05)) : Math.min(fade, 0.4));
+      themeVoulu = s.name;
+      for (var j = 0; j < slots.length; j++) if (!slots[j].dead) slots[j].musique(t, true);
+      if (cur) cur.stop(t, fade);
+      themes.push(s);
+      if (scheduled > t) s.pump(t, scheduled);
+      if (pad) { pad.stop(t, 1); pad = null; }
+    }
+    // un autre thème est-il encore en train de s'éteindre (son fondu de sortie) ?
+    function autreQuiSEteint(inst) {
+      var t = now();
+      for (var i = 0; i < themes.length; i++) if (themes[i] !== inst && themes[i].dead && themes[i].dead > t) return true;
+      return false;
+    }
+    var attente = null;    // un thème enregistré demandé, qui attend son premier bloc : { s, fade, t0, depuis }
+    function annulerAttente() { if (attente) { attente.s.abandonner(); attente = null; } }
+    function verifierAttente() {
+      var a = attente;
+      if (!a) return;
+      if (a.s.pret()) { attente = null; lancerEnregistre(a.s, now(), a.fade, a.t0); return; }
+      var err = a.s.echec(), joue = themes.some(function (x) { return !x.dead; });
+      if (err || now() - a.t0 > (joue ? ATTENTE_MAX : ATTENTE_SILENCE)) {
+        attente = null;
+        a.s.abandonner();
+        noterRendu('synthese', { cle: a.s.name, raison: err ? String(err.message || err) : 'attente' });
+        if (MUSIQUE[a.s.name]) engine.setTheme(a.s.name, { at: now(), fade: a.fade, depuis: departSynthese(a.s.name, a.depuis), synthese: true });
+      }
+    }
+
     function now() { return ctx.currentTime; }
 
     // Le pas du séquenceur en direct. En qualité légère, l'avance est plus courte (moins de nœuds en
@@ -2177,6 +2852,7 @@
       ctx: ctx,
       // ---- le séquenceur : il écrit les événements jusqu'à `until` ----
       scheduleUntil: function (until) {
+        if (attente) verifierAttente();
         var t0 = scheduled;
         if (until <= t0) return;
         for (var i = 0; i < slots.length; i++) if (!slots[i].dead) slots[i].pump(t0, until);
@@ -2189,7 +2865,7 @@
           return true;
         });
         themes = themes.filter(function (s) {
-          if (s.dead && s.dead < t) { try { s.out.disconnect(); } catch (e) {} return false; }
+          if (s.dead && s.dead < t) { try { s.out.disconnect(); } catch (e) {} if (s.liberer) s.liberer(); return false; }
           return true;
         });
       },
@@ -2206,6 +2882,7 @@
           for (var i = 0; i < slots.length; i++) if (!slots[i].dead) slots[i].stop(t, 0.4);
           for (var j = 0; j < themes.length; j++) if (!themes[j].dead) themes[j].stop(t, 0.4);
           if (pad) { pad.stop(t, 0.5); pad = null; }
+          annulerAttente();
         }
         master.gain.cancelScheduledValues(t);
         master.gain.setValueAtTime(master.gain.value, t);
@@ -2256,16 +2933,31 @@
       //      la musique d'avant continue ----
       setTheme: function (nom, o) {
         o = o || {};
-        if (nom != null && !MUSIQUE[nom]) return;
+        if (nom != null && !MUSIQUE[nom] && !RENDUS[nom]) return;
         var t = o.at == null ? now() : o.at;
-        if (mode !== 'tout') { themeVoulu = nom; return; }
+        if (mode !== 'tout') { themeVoulu = nom; annulerAttente(); return; }
         var cur = themes.filter(function (s) { return !s.dead; }).pop();
         if (cur && cur.name === nom && o.depuis == null) {
+          annulerAttente();
           themeVoulu = nom;
           for (var i = 0; i < slots.length; i++) if (!slots[i].dead) slots[i].musique(t, true);
           return;
         }
+        // l'enregistrement du thème : il joue dès que son premier bloc est décodé ; d'ici là, rien ne change
+        // (l'ancien thème continue, ou le silence). `o.synthese` : la synthèse, même s'il y a un enregistrement
+        if (attente && attente.s.name === nom && o.depuis == null && !o.synthese) return;
+        annulerAttente();
         var fade = o.fade == null ? 1.2 : o.fade, s = null;
+        if (nom != null && avecRendus && !o.synthese && rendable(nom)) {
+          try { s = makeEnregistre(nom, o.depuis); } catch (e) { signaler('thème ' + nom, e); return; }
+          themeVoulu = nom;
+          if (s.pret()) { lancerEnregistre(s, t, fade); return; }
+          attente = { s: s, fade: fade, t0: now(), depuis: o.depuis };
+          s.quandPret(function () { if (attente && attente.s === s) verifierAttente(); });
+          noterRendu('attend', { cle: nom });
+          return;
+        }
+        if (nom != null && !MUSIQUE[nom]) return;    // un enregistrement sans synthèse, qui ne peut pas jouer
         if (nom) {
           try {
             s = makeTheme(nom, t + (cur ? Math.min(fade, 0.6) : 0.05), cur ? Math.min(0.8, Math.max(fade, 0.05)) : Math.min(fade, 0.4), o.depuis);
@@ -2273,6 +2965,7 @@
             signaler('thème ' + nom, e);
             return;
           }
+          if (opt.surSynthese) { try { opt.surSynthese(nom); } catch (e) { /* rien */ } }
         }
         themeVoulu = nom;
         for (var j = 0; j < slots.length; j++) if (!slots[j].dead) slots[j].musique(t, nom != null);
@@ -2284,6 +2977,16 @@
         } else if (!pad && opt.pad !== false) pad = makePad(t, 1.5);
       },
       theme: function () { return themeVoulu; },
+      // le thème enregistré qui attend son premier bloc (ou null) ; ce qui joue : 'rendu', 'synthese' ou null
+      enAttente: function () { return attente ? attente.s.name : null; },
+      version: function () {
+        var cur = themes.filter(function (s) { return !s.dead; }).pop();
+        return cur ? (cur.rendu && !cur.enRepli() ? 'rendu' : 'synthese') : null;
+      },
+      _segments: function () {
+        var cur = themes.filter(function (s) { return !s.dead; }).pop();
+        return cur && cur._segments ? cur._segments() : null;
+      },
       // où en est le thème qui joue (le juke-box l'affiche) : { theme, section,
       // index, mesure, mesures, secondes (depuis le début de la section),
       // passage, boucle } — ou null
@@ -2355,8 +3058,10 @@
       dispose: function () {
         engine.stopClock();
         var t = now();
+        annulerAttente();
         for (var i = 0; i < slots.length; i++) if (!slots[i].dead) slots[i].stop(t, 0.1);
         for (var j = 0; j < themes.length; j++) if (!themes[j].dead) themes[j].stop(t, 0.1);
+        for (var k = 0; k < themes.length; k++) if (themes[k].liberer) themes[k].liberer();
         if (pad) { pad.stop(t, 0.1); pad = null; }
       }
     };
@@ -2372,7 +3077,7 @@
   // Un seul moteur pour la page, créé au PREMIER GESTE du joueur : avant ça,
   // aucun AudioContext n'existe (les navigateurs le refusent, et un jeu qui
   // chante tout seul à l'ouverture est un jeu qu'on referme).
-  var live = null, liveCtx = null;
+  var live = null, liveCtx = null, debloque = false;
   var mode = 'tout';
   var pending = { ambiance: null, tension: 0, year: 1990, theme: null, qualite: null };
   // LA REPRISE — en ville, on quitte un thème et on y revient sans cesse (une carte
@@ -2380,20 +3085,32 @@
   // introduction ferait entendre vingt fois les mêmes mesures. Le thème qu'on quitte
   // laisse sa section ; si on y revient dans les dix minutes (le temps du son, qui
   // s'arrête quand la page est cachée), il reprend à la section suivante.
+  // Un thème enregistré a ses sections (le manifeste) et ses exceptions (`reprise_sauf`) ; s'il a joué
+  // enregistré et revient en synthèse (ou l'inverse), la section se retrouve par son nom.
   var REPRISE_MAX = 600, souvenirs = {};
   function reprise(nom) {
     var t = liveCtx ? liveCtx.currentTime : 0, pos = null;
     try { pos = live.position(); } catch (x) { pos = null; }
-    if (pos && pos.theme && pos.theme !== nom) souvenirs[pos.theme] = { index: pos.index, t: t };
+    if (pos && pos.theme && pos.theme !== nom) souvenirs[pos.theme] = { index: pos.index, section: pos.section, rendu: !!pos.rendu, t: t };
     var s = nom != null && souvenirs[nom];
     if (!s || t - s.t > REPRISE_MAX) return {};
-    var C;
-    try { C = compilerTheme(nom); } catch (x) { return {}; }
-    // la section suivante, sauf celles que le thème refuse (`reprise.sauf`)
-    var sauf = (MUSIQUE[nom].reprise && MUSIQUE[nom].reprise.sauf) || [], i = s.index;
-    for (var n = 0; n <= C.ordre.length; n++) {
-      i = i + 1 >= C.ordre.length ? C.boucle : i + 1;
-      if (sauf.indexOf(C.ordre[i]) < 0) break;
+    var ordre, boucle, sauf, non = [], rendu = rendable(nom);
+    if (rendu) {
+      var R = RENDUS[nom];
+      ordre = R.sections.map(function (x) { return x.nom; }); boucle = R.rang; sauf = R.sauf;
+      non = R.sections.map(function (x) { return !x.reprise; });   // `reprise: false` du master, à son rang
+    } else {
+      if (!MUSIQUE[nom]) return {};
+      var C;
+      try { C = compilerTheme(nom); } catch (x) { return {}; }
+      ordre = C.ordre; boucle = C.boucle; sauf = (MUSIQUE[nom].reprise && MUSIQUE[nom].reprise.sauf) || [];
+    }
+    var i = s.rendu === rendu ? s.index : ordre.indexOf(s.section);
+    if (i < 0) return {};
+    // la section suivante, sauf celles que le thème refuse (`reprise.sauf`, `reprise: false`)
+    for (var n = 0; n <= ordre.length; n++) {
+      i = i + 1 >= ordre.length ? boucle : i + 1;
+      if (sauf.indexOf(ordre[i]) < 0 && !non[i]) break;
     }
     return { depuis: i };
   }
@@ -2405,6 +3122,30 @@
   function reveiller() {
     if (!liveCtx || cachee || liveCtx.state === 'closed') return;
     if (liveCtx.state !== 'running') { try { var p = liveCtx.resume(); if (p && p.catch) p.catch(function () {}); } catch (x) { /* un geste le relancera */ } }
+  }
+  // iOS : un tampon muet joué DANS un geste ouvre la sortie pour de bon (les nœuds écrits plus tard, la musique
+  // enregistrée qui arrive après son décodage, ne sont plus « sans geste »)
+  function debloquer() {
+    if (debloque || !liveCtx) return;
+    try {
+      var b = liveCtx.createBufferSource();
+      b.buffer = liveCtx.createBuffer(1, 1, liveCtx.sampleRate);
+      b.connect(liveCtx.destination); b.start(0);
+      debloque = true;
+    } catch (x) { /* rien */ }
+  }
+  var auGeste = null;
+  function debloquerAuGeste() {
+    if (auGeste || !global.document) return;
+    auGeste = function () {
+      reveiller();
+      debloque = false; debloquer();
+      if (liveCtx && liveCtx.state === 'running') {
+        ['touchend', 'click', 'keydown'].forEach(function (t) { global.document.removeEventListener(t, auGeste, true); });
+        auGeste = null;
+      }
+    };
+    ['touchend', 'click', 'keydown'].forEach(function (t) { global.document.addEventListener(t, auGeste, true); });
   }
   var miseEnVeille = 0;   // combien de fois la page a été cachée (une mesure d'appareil qui l'a été ne vaut rien)
   function cacher() {
@@ -2528,7 +3269,12 @@
     // la qualité : celle que la page a forcée, sinon le verdict gardé pour cette version du moteur, sinon pleine
     // (et la mesure de l'appareil, plus bas)
     if (!pending.qualite && !verdict) verdict = lireVerdict();
-    live = createEngine(liveCtx, liveCtx.destination, { mode: mode, qualite: pending.qualite || (verdict && verdict.q) || 'pleine' });
+    // la mesure de l'appareil juge la synthèse : avec la musique enregistrée, elle attend qu'un thème de
+    // synthèse joue vraiment (un thème sans fichier, un fichier en panne)
+    live = createEngine(liveCtx, liveCtx.destination, {
+      mode: mode, qualite: pending.qualite || (verdict && verdict.q) || 'pleine',
+      surSynthese: function () { if (!pending.qualite && !verdict) mesurerPlusTard(); }
+    });
     live.setYear(pending.year);
     // le thème avant le lieu : le lit d'un lieu né sous un thème naît éteint
     if (pending.theme) live.setTheme(pending.theme, { fade: 0.6 });
@@ -2536,7 +3282,7 @@
     live.setTension(pending.tension);
     // né pendant que la page est cachée (rare : il faut un geste) : il attend qu'elle revienne
     if (cachee) { try { liveCtx.suspend(); } catch (x) { /* rien */ } } else live.startClock();
-    if (!pending.qualite && !verdict) mesurerPlusTard();
+    if (!pending.qualite && !verdict && !Object.keys(RENDUS).length) mesurerPlusTard();
     return live;
   }
 
@@ -2548,7 +3294,12 @@
     // Le premier geste du joueur : c'est là, et seulement là, que le son naît.
     unlock: function () {
       var e = ensure();
-      if (e) reveiller();
+      if (e) {
+        reveiller();
+        debloquer();
+        // (iOS : un `pointerdown` n'ouvre pas toujours le son ; le prochain toucher fini, clic ou touche, si)
+        if (liveCtx && liveCtx.state !== 'running' && !cachee) debloquerAuGeste();
+      }
       return !!e;
     },
     started: function () { return !!live && !!liveCtx && liveCtx.state === 'running'; },
@@ -2559,7 +3310,7 @@
       if (m === 'muet') {
         if (live) { live.dispose(); }
         if (liveCtx) { try { liveCtx.close(); } catch (x) {} }
-        live = null; liveCtx = null;
+        live = null; liveCtx = null; debloque = false;
         return mode;
       }
       var e = ensure();
@@ -2583,12 +3334,19 @@
       pending.year = Number(y) || 1990;
       if (live) live.setYear(pending.year);
     },
-    setTheme: function (nom) {
-      if (nom != null && !MUSIQUE[nom]) return;
-      if (live && nom !== pending.theme) {
-        var o = reprise(nom);
+    // `o.debut` : le thème part de son début (pas de reprise), même s'il jouait déjà — le fondu enchaîné, lui,
+    // reste ; le thème quitté garde sa section pour plus tard, comme d'habitude. `o.depuis` (avec `debut` ou
+    // seul, la même chose) : il part de cette section (un film : son `musiqueDepuis`), si la version qui joue
+    // la connaît — les marqueurs du master enregistré, l'ordre de la partition en synthèse —, sinon du début
+    setTheme: function (nom, o) {
+      if (nom != null && !MUSIQUE[nom] && !RENDUS[nom]) return;
+      var debut = !!(o && (o.debut || o.depuis != null)) && nom != null;
+      // avant le premier geste : le premier bloc du thème qui jouera alors part tout de suite
+      if (!live && nom != null && RENDUS[nom]) precharger([debut ? { cle: nom, depuis: o.depuis } : nom], false, true);
+      if (live && (nom !== pending.theme || debut)) {
+        var r = reprise(nom);
         pending.theme = nom;
-        live.setTheme(nom, o);
+        live.setTheme(nom, debut ? { depuis: departDemande(nom, o.depuis) } : r);
         return;
       }
       pending.theme = nom;
@@ -2603,15 +3361,25 @@
       return pending.theme;
     },
     // ce que le juke-box et le banc affichent, sans rien compiler
+    // (un thème enregistré y ajoute `rendu` : il joue ses fichiers ; `provisoire` : une maquette de la synthèse)
     infos: function (cle) {
-      var th = MUSIQUE[cle];
-      if (!th) return null;
-      return {
-        cle: cle, titre: th.titre || cle, moment: th.moment || '', humeur: th.humeur || '',
-        tonalite: th.tonalite || '', bpm: th.bpm, ville: th.ville === true
+      var th = MUSIQUE[cle], R = RENDUS[cle];
+      if (!th && !R) return null;
+      var i = {
+        cle: cle, titre: (th && th.titre) || cle, moment: (th && th.moment) || '', humeur: (th && th.humeur) || '',
+        tonalite: (th && th.tonalite) || '', bpm: th ? th.bpm : 0, ville: !!th && th.ville === true
       };
+      if (R) {
+        ['titre', 'moment', 'humeur', 'tonalite'].forEach(function (k) { if (R.t[k]) i[k] = R.t[k]; });
+        if (R.t.bpm) i.bpm = R.t.bpm;
+        if (R.t.ville) i.ville = true;
+        i.rendu = rendable(cle);
+        i.provisoire = !!R.t.provisoire;
+      }
+      return i;
     },
-    structure: function (cle) { return structureDe(cle); },
+    // la forme de ce qui jouera : l'enregistrement s'il peut jouer, sinon la synthèse
+    structure: function (cle) { return rendable(cle) ? structureRendu(cle) : structureDe(cle); },
     erreurs: function () { return ERREURS.map(function (e) { return { ou: e.ou, message: e.message }; }); },
     _erreur: function (ou, e) { signaler(ou, e); },
     SILENCE: SILENCE,
@@ -2641,13 +3409,61 @@
     // le banc d'essai : la partition compilée d'un thème (les erreurs d'écriture sortent ici)
     _compiler: function (nom) { var C = compilerTheme(nom); return { ordre: C.ordre, pas: Object.keys(C.sections).map(function (k) { return k + ':' + C.sections[k].pas; }) }; },
     _partition: function (nom) { return compilerTheme(nom); },
+    // la définition d'un thème de synthèse telle que son fichier l'a donnée (l'empaqueteur y lit `reprise`)
+    _definition: function (cle) { return MUSIQUE[cle] || null; },
+    // LA MUSIQUE ENREGISTRÉE : le manifeste (assemble.js, juke_box.js le passent ; `o.base` préfixe les
+    // fichiers), les premiers blocs des thèmes probables (`tout` : tous leurs blocs), et l'état du lecteur
+    // pour la QA (la mémoire décodée, les téléchargements, le retard du décodeur, le journal)
+    enregistrements: function (m, o) { return enregistrements(m, o); },
+    precharger: function (cles, tout) { precharger(cles, tout); },
+    lecteur: function () {
+      var c = liveCtx && CHARGEURS ? CHARGEURS.get(liveCtx) : null, pos = null, pannes = {};
+      try { pos = live ? live.position() : null; } catch (x) { pos = null; }
+      Object.keys(PANNES).forEach(function (k) { pannes[k] = { raison: PANNES[k].raison, definitive: PANNES[k].definitive }; });
+      return {
+        themes: Object.keys(RENDUS), pannes: pannes, possible: peutRendre(),
+        joue: pos ? { theme: pos.theme, rendu: !!pos.rendu, section: pos.section, mesure: pos.mesure, passage: pos.passage } : null,
+        attente: live ? live.enAttente() : null, version: live ? live.version() : null,
+        octetsDecodes: c ? c.octets : 0, picDecodes: c ? c.pic : 0,
+        blocsDecodes: c ? Object.keys(c.blocs).filter(function (k) { return c.blocs[k].etat === 'pret'; }) : [],
+        decodages: c ? c.decodes : 0, msDecodage: c ? Math.round(c.msDecodage) : 0,
+        octetsCompresses: COMPRESSES.octets, compresses: COMPRESSES.liste.map(function (x) { return x.url; }),
+        decalage: c ? c.decalage : null, frequence: liveCtx ? liveCtx.sampleRate : null,
+        journal: JOURNAL_RENDU.slice()
+      };
+    },
+    // le banc : le chargeur d'un contexte (hors ligne), et une promesse tenue quand il n'a plus rien en cours
+    _chargeur: function (ctx) { return chargeurDe(ctx); },
+    _attendre: function (ctx) {
+      var c = chargeurDe(ctx);
+      return new Promise(function (ok) {
+        (function voir() {
+          var occupe = c.decalage == null || c.decode || c.file.length ||
+            Object.keys(c.blocs).some(function (k) { return c.blocs[k].etat === 'attente'; });
+          if (occupe) global.setTimeout(voir, 10); else ok();
+        })();
+      });
+    },
+    _rendus: function () { return RENDUS; },
+    // la QA : un thème depuis une position (une section, { index, mesure }, { x } : un échantillon du master)
+    _depuis: function (nom, depuis) {
+      if (!live || (nom != null && !MUSIQUE[nom] && !RENDUS[nom])) return false;
+      pending.theme = nom;
+      live.setTheme(nom, { depuis: depuis });
+      return true;
+    },
+    _contexte: function () { return liveCtx; },
     play: function (name) { if (live) live.play(name); },
     playAll: function (list, o) { if (live) live.playAll(list, o); },
     stop: function () { if (live) live.dispose(); }
   };
   // les thèmes inscrits, dans l'ordre où leurs fichiers sont arrivés (une copie :
   // la liste se lit à la demande, après que musique/*.js a parlé)
-  Object.defineProperty(API, 'THEMES', { enumerable: true, get: function () { return Object.keys(MUSIQUE); } });
+  // (et ceux qui n'existent qu'enregistrés, après)
+  Object.defineProperty(API, 'THEMES', {
+    enumerable: true,
+    get: function () { var l = Object.keys(MUSIQUE); Object.keys(RENDUS).forEach(function (k) { if (!MUSIQUE[k]) l.push(k); }); return l; }
+  });
 
   global.FusibleAudio = API;
   if (typeof module === 'object' && module.exports) module.exports = API;
