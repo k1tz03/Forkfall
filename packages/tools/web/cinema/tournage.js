@@ -23,6 +23,8 @@
      --brouillon          un essai rapide : maîtresse 720, 12 i/s, formats à la moitié
      --nom "…" --genre m  le héros (le visage des masques) ; défaut : Marc Delorme, m
      --sans-son           pas de musique
+     --son-seul           refaire le son seulement (la musique a changé) et le recoller
+                          dans les vidéos déjà tournées, sans refaire une image
      --chromium <chemin>  défaut : /opt/pw-browsers/chromium s'il existe
      --port <n>           le serveur local (défaut : un port libre)
 
@@ -67,6 +69,7 @@ function lireArgs(argv) {
     else if (a === '--nom') o.nom = v();
     else if (a === '--genre') o.genre = v();
     else if (a === '--sans-son') o.sansSon = true;
+    else if (a === '--son-seul') o.sonSeul = true;
     else if (a === '--chromium') o.chromium = v();
     else if (a === '--port') o.port = +v();
     else throw new Error('option inconnue : ' + a);
@@ -80,10 +83,9 @@ function lireArgs(argv) {
 // ─── la page de tournage : le lecteur, three.js, la trousse, le film, le son, les polices
 function pageHtml(film) {
   const kit = fs.readdirSync(path.join(WEB, 'cinema', 'kit')).filter((f) => /^\d\d_[a-z_]+\.js$/.test(f)).sort();
-  // la musique : audio.js, et ses thèmes s'ils vivent dans leurs propres fichiers (musique/*.js)
-  const sons = ['audio.js'].concat(['musique', 'audio'].filter((d) => fs.existsSync(path.join(WEB, d)) && fs.statSync(path.join(WEB, d)).isDirectory())
-    .flatMap((d) => fs.readdirSync(path.join(WEB, d)).filter((f) => f.endsWith('.js')).sort().map((f) => d + '/' + f)));
-  const scripts = ['art.js'].concat(sons, ['cinema/lecteur.js', 'vendor/three/fusible-three.js'], kit.map((f) => 'cinema/kit/' + f), ['cinema/films/' + film + '.js']);
+  // la musique : audio.js et ses thèmes (musique/<clé>.js), assemblés comme dans la page du jeu
+  // (musique_sources.js : chaque thème dans son filet) ; servis d'un seul tenant (__musique.js)
+  const scripts = ['art.js', '__musique.js', 'cinema/lecteur.js', 'vendor/three/fusible-three.js'].concat(kit.map((f) => 'cinema/kit/' + f), ['cinema/films/' + film + '.js']);
   const police = (fam, fichier, poids, style) => '@font-face{font-family:"' + fam + '";font-weight:' + poids + ';font-style:' + (style || 'normal') + ';src:url(/cinema/polices/' + fichier + ') format("woff2")}';
   return '<!doctype html><meta charset="utf-8"><title>tournage</title><style>' +
     police('Space Mono', 'space-mono-latin-400-normal.woff2', 400) + police('Space Mono', 'space-mono-latin-700-normal.woff2', 700) +
@@ -94,9 +96,12 @@ function pageHtml(film) {
 function serveur(film, port) {
   const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png' };
   const html = pageHtml(film);
+  const sources = path.join(WEB, 'musique_sources.js');
+  const musique = fs.existsSync(sources) ? require(sources).texte() : fs.readFileSync(path.join(WEB, 'audio.js'), 'utf8');
   const srv = http.createServer((q, r) => {
     const u = decodeURIComponent(q.url.split('?')[0]);
     if (u === '/' || u === '/tournage.html') { r.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); return r.end(html); }
+    if (u === '/__musique.js') { r.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8' }); return r.end(musique); }
     const f = path.join(WEB, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
     if (!f.startsWith(WEB) || !fs.existsSync(f) || !fs.statSync(f).isFile()) { r.writeHead(404); return r.end(); }
     r.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' });
@@ -183,7 +188,9 @@ async function main() {
   try {
     await page.goto(url);
     await page.waitForFunction(() => window.__PRET__ && window.FusibleCinema && window.FusibleCinema.films);
-    const info = await page.evaluate((a) => window.FusibleCinema.tournage.preparer(a.film, { taille: a.taille, qualite: a.qualite, heros: { nom: a.nom, genre: a.genre } }), o);
+    const info = o.sonSeul
+      ? await page.evaluate((id) => { const d = window.FusibleCinema.films[id]; return { id: d.id, titre: d.titre, duree: d.duree, sons: (d.sons || []).slice().sort((x, y) => x[0] - y[0]), montages: d.montages || {}, sortie: d.sortie || {}, textes: d.textes || [] }; }, o.film)
+      : await page.evaluate((a) => window.FusibleCinema.tournage.preparer(a.film, { taille: a.taille, qualite: a.qualite, heros: { nom: a.nom, genre: a.genre } }), o);
     if (erreurs.length) throw new Error('la page : ' + erreurs.join(' | '));
     const prep = Date.now() - debut;
     console.log('« ' + info.titre + ' » (' + info.id + ', ' + info.duree + ' s) prêt en ' + hms(prep) + ' ; maîtresse ' + o.taille + '², ' + o.fps + ' i/s');
@@ -228,6 +235,24 @@ async function main() {
         for (const [d0, d1] of s.montage) { for (const [t, n] of info.sons) if (t >= d0 && t < d1) liste.push([t - d0 + off, n]); off += d1 - d0; }
         sons[s.f.montage] = await ecrireWav(s.f.montage, off, liste);
       }
+    }
+    if (o.sonSeul) {
+      // la musique a changé : le nouveau son, recollé sur les images déjà encodées (copiées telles quelles)
+      const rp = path.join(o.out, o.film + '.rapport.json'), rapport = fs.existsSync(rp) ? JSON.parse(fs.readFileSync(rp, 'utf8')) : null;
+      for (const s of sorties) {
+        const mp4 = path.join(o.out, o.film + '.' + s.nom + '.mp4'), wav = s.montage ? sons[s.f.montage] : sons.film;
+        if (!fs.existsSync(mp4) || !wav) { console.warn(s.nom + ' : pas de vidéo ou pas de son ; rien à recoller'); continue; }
+        const tmp = mp4.replace(/\.mp4$/, '.son.mp4');
+        const r = spawnSync('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-i', mp4, '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+          '-c:a', 'aac', '-b:a', s.f.aac, '-ar', '48000', '-ac', '2', '-shortest', '-movflags', '+faststart', tmp]);
+        if (r.status !== 0) throw new Error('ffmpeg ' + s.nom + ' : ' + String(r.stderr || ''));
+        fs.renameSync(tmp, mp4);
+        const octets = fs.statSync(mp4).size, duree = s.temps.length / s.fps;
+        if (rapport && rapport.formats && rapport.formats[s.nom]) Object.assign(rapport.formats[s.nom], { octets, mo: +(octets / 1048576).toFixed(2), mo_par_minute: +(octets / 1048576 / duree * 60).toFixed(2), kbit_s: Math.round(octets * 8 / duree / 1000) });
+        console.log('  ' + s.nom.padEnd(9) + ' le son recollé · ' + (octets / 1048576).toFixed(2) + ' Mo → ' + mp4);
+      }
+      if (rapport) { rapport.son = Object.fromEntries(Object.entries(sons).filter(([, v]) => v)); fs.writeFileSync(rp, JSON.stringify(rapport, null, 2) + '\n'); }
+      return;
     }
     for (const s of sorties) {
       const wav = s.montage ? sons[s.f.montage] : sons.film;
