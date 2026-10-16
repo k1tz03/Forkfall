@@ -18,7 +18,7 @@
  *                   grosse caisse ; un temps de noir
  *   ── la boucle, 112 mesures, 3 min 12 ──
  *   A        16 m.  la tension : la basse, la grosse caisse, le charleston, les
- *                   claps ; l'arc à la neuvième ; une coupure au bout de la phrase
+ *                   claps ; l'arc à la cinquième ; une coupure au bout de la phrase
  *   B        16 m.  l'arc : la basse qui saute à l'octave et dévale, l'arc, les
  *                   stabs ; à la neuvième, le lead qui s'ouvre jusqu'au cri ;
  *                   deux coupures
