@@ -286,6 +286,7 @@ en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus
 | `guitare_claire` | banque GM | E2–E6 | tenu, etouffee | — | +0.35 / 0.30 | guitare électrique claire : les arpèges de nuit |
 | `guitare_saturee` | banque GM | E2–E6 | tenu, crunch, etouffee | — | -0.40 / 0.20 | guitare saturée : les quintes à vide, le mur |
 | `batterie` | banque GM | — | kit | — | +0.00 / 0.20 | batterie standard : la pop, le rock léger |
+| `batterie_balais` | banque GM | — | kit | — | +0.00 / 0.20 | les balais : S frappe, CL claque, S2 frottement (un balai qui tourne, une demi-seconde), K grosse caisse feutrée |
 | `batterie_electro` | banque GM | — | kit | — | +0.00 / 0.20 | batterie électronique des années 80 |
 | `batterie_jazz` | banque GM | — | kit | — | +0.00 / 0.20 | batterie jazz : les balais du soir |
 | `batterie_puissante` | banque GM | — | kit | — | +0.00 / 0.20 | batterie puissante : le stade |

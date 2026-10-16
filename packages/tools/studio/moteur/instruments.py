@@ -684,7 +684,9 @@ def _cat():
                            ('batterie_puissante', 16, 'batterie puissante : le stade'),
                            ('batterie_jazz', 32, 'batterie jazz : les balais du soir'),
                            ('batterie_electro', 24, 'batterie électronique des années 80'),
-                           ('boite_analogique', 25, 'la boîte à rythmes analogique des années 80')):
+                           ('boite_analogique', 25, 'la boîte à rythmes analogique des années 80'),
+                           ('batterie_balais', 40, 'les balais : S frappe, CL claque, S2 frottement (un '
+                            'balai qui tourne, une demi-seconde), K grosse caisse feutrée')):
         met(InstrumentGM(nom, 'batterie', None, {'kit': (128, prog)}, 'kit', car,
                          {'pan': 0.0, 'profondeur': 0.2}, kit=True))
 
