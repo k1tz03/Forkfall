@@ -110,13 +110,13 @@
   var B_DOME_X = 'kx . h . r . h . k . h . r . h .';
   var B_DOME = 'k . h . r . h . k . h . r . h h';
   var B_DOME_T = 'k . h . r . h . k . h . r . t T';
-  var B_RELANCE = 'k . h . r . h . kz . . . t T S S';
+  var B_RELANCE = 'k . h . r . h . kz . . . t T t S';
   var B_PAIN_X = 'kx . h . S . h . k . h . S . h .';
   var B_PAIN = 'k . h . S . h . k . h . S . h h';
-  var B_PAIN_R = 'k . h . S . h . kz . . . t T S S';
+  var B_PAIN_R = 'k . h . S . h . kz . . . t T t S';
   var B_TUNNEL_X = 'kx . h h S c h h k . h h S c h h';
   var B_TUNNEL = 'k . h h S c h h k . h h S c h h';
-  var B_TUNNEL_R = 'k . h h S c h h kz . t t T T S S';
+  var B_TUNNEL_R = 'k . h h S c h h kz . t t T T t S';
   var B_PORTE_X = 'Kx . . . . . . . S . . . . . . .';
   var B_PORTE = 'K . . . . . . . S . . . . . k .';
 
@@ -125,7 +125,7 @@
     tonalite: 'fa mineur',
     humeur: 'un Mondial d\'hiver sous un dôme : des cloches de glace, une nappe immense, une basse qui pulse comme une ventilation',
     ville: true,
-    bpm: 100, gain: 1,
+    bpm: 100, gain: 1.32,
     pompe: { prof: 0.4, rel: 0.25 },
     echo: { pas: 3, retour: 0.5, coupe: 2600 },
     salle: { taille: 1, duree: 5, ton: 3000 },
@@ -134,11 +134,11 @@
       lead:   { inst: 'flute', vol: 0.11, echo: 0.3, rev: 0.45, flotte: { prof: 6, vit: 0.4 }, filtre: 3000, pan: -0.05 },
       harmo:  { inst: 'flute', vol: 0.05, echo: 0.2, rev: 0.45, flotte: { prof: 6, vit: 0.4 }, filtre: 2600, pan: 0.3 },
       glace:  { inst: 'cloche', vol: 0.09, echo: 0.5, rev: 0.55, pan: 0.25 },
-      nappe:  { inst: 'supersaw', vol: 0.08, oct: 3, scies: 5, rev: 0.6, pompe: true, large: 1, flotte: { prof: 10, vit: 0.25 }, filtre: 2000, env: [1.2, 1.5, 0.9, 0.8] },
+      nappe:  { inst: 'supersaw', vol: 0.08, oct: 3, scies: 5, rev: 0.6, pompe: true, large: 1, flotte: { prof: 10, vit: 0.25 }, filtre: 2000, env: [1.2, 1.5, 0.9, 0.5] },
       loin:   { inst: 'vox', vol: 0.07, oct: 4, voyelle: 'ou', vers: 'o', rev: 0.7, flotte: { prof: 12, vit: 0.3 } },
       reese:  { inst: 'reese', vol: 0.1, oct: 1, plancher: 'A1', desaccord: 22, chaleur: 2.2, pompe: true },
       basse:  { inst: 'sqbasse', vol: 0.07, oct: 1, plancher: 'A1', pompe: true, drive: 1.2, filtre: 1100, ton: [1400, 520, 0.04] },
-      batt:   { vol: 0.5, porte: 0.3, tenue: 0.3, rev: 0.35, filtre: 9000 }
+      batt:   { vol: 0.5, drive: 1.2, porte: 0.3, tenue: 0.3, rev: 0.35, filtre: 9000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : le Dôme ──
@@ -148,7 +148,7 @@
         glace: [GLACE_F, SILENCE, GLACE_DB, SILENCE],
         nappe: [NAPPE, TENU, NAPPE, NAPPE],
         basse: [SILENCE, SILENCE, VENT_CROCHES, VENT],
-        batt: [SILENCE, 'i . . . . . . . i . . . . . . .', 'k . . . . . . . k . . . . . . .', 'k . . . r . . . kz . . . t T S S']
+        batt: [SILENCE, 'i . . . . . . . i . . . . . . .', 'k . . . . . . . k . . . . . . .', 'k . . . r . . . kz . . . t T t S']
       },
       // ── la boucle ──
       A: {
@@ -175,7 +175,7 @@
         accords: ['Fm7', 'Fm7', 'Dbmaj7', 'Dbmaj7', 'Bbm7', 'Bbm7', 'Fm7', 'Fm7', 'Fm7'],
         ouvre: { nappe: [2000, 900] },
         nappe: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, TENU],
-        loin: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, SILENCE],
+        loin: ['C5 - - - - - - - - - - - - - - -', TENU, 'C5 - - - - - - - - - - - - - - -', TENU, 'Db5 - - - - - - - - - - - - - - -', TENU, 'C5 - - - - - - - - - - - - - - -', TENU, SILENCE],
         basse: [VENT_NOIRES, VENT_NOIRES, VENT_NOIRES, VENT_NOIRES, RACINE, TENU, RACINE, TENU, TENU],
         glace: [SILENCE, GLACE_LENTE[0], GLACE_LENTE[1], SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE],
         batt: ['kx . . . . . . . . . . . . . . .'].concat(silences(8))
