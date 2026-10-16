@@ -24,7 +24,8 @@
  *   A       16 m.  le poste : la machine (métal et basse en trois), la presse
  *                  en quatre ; la sirène des seize heures aux mesures 13 à 16
  *   B       16 m.  la tréfileuse : le fil (un pincé en doubles croches), la
- *                  sirène qui chante (des quintes qui glissent), la caisse
+ *                  sirène qui chante deux fois quatre mesures (des quintes qui
+ *                  glissent), la caisse
  *   pont    16 m.  le creux, la grande halle à trois heures : la reese, la
  *                  sirène au fond, des gouttes de métal ; quatre mesures pour
  *                  remonter

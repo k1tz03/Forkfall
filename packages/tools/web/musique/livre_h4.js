@@ -21,17 +21,18 @@
  *                  lampadaires, la grosse caisse, la basse
  *   ── la boucle, 112 mesures, 4 min 18 ──
  *   A       16 m.  la route : la pédale de fa dièse, les lampadaires à la
- *                  noire, la batterie de route ; la mélodie entre à la
- *                  mesure 9
+ *                  noire, la batterie de route (le cerclage d'abord, la
+ *                  caisse à la mesure 5) ; la mélodie entre à la mesure 9
  *   B       16 m.  les lampadaires : la pédale lâchée (ré, mi, do dièse
  *                  mineur), les lumières à la double croche, la basse au galop
  *   creux    8 m.  « freine » : tout s'arrête, les lampadaires s'éloignent dans
  *                  l'écho, la lumière au bout du pont
  *   A2      16 m.  la route, la mélodie entière, harmonisée
  *   C       16 m.  1984 : la chanson à la radio (la majeur volé), les mains
- *                  dans les tambours de la fête ; le do dièse qui ramène la nuit
- *   D       16 m.  le virage : la mélodie à l'octave, la grande scie, le sol
- *                  napolitain, le galop
+ *                  de la fête au lieu de la caisse ; le do dièse qui ramène la
+ *                  nuit
+ *   D       16 m.  le virage : la mélodie relancée plus haut (jusqu'au si),
+ *                  doublée par la grande scie, le sol napolitain, le galop
  *   D2       8 m.  le virage, harmonisé, le sommet
  *   pont     8 m.  trois heures : le moteur au ralenti, la nappe, la lumière ;
  *                  deux mesures pour repartir
