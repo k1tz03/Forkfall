@@ -36,7 +36,7 @@ theme = Theme('fin', 'Le Dernier Tour', bpm=76, mesure='4/4', tonalite='la mineu
 
 TON = 'la mineur'
 
-arc = Arc(theme, volume=-12, impact_volume=-14)
+arc = Arc(theme, volume=-16, impact_volume=-14)
 # l'équilibre d'origine des quatre voix de l'arc (la calibration corrigée des synthés a baissé
 # ses voix aiguës plus que son grésillement) : comme dans le thème principal
 for _voix, _db in ((arc.zap, 4.5), (arc.clics, 3.4), (arc.ton, 2.7), (arc.bzz, 0.8)):
@@ -46,8 +46,8 @@ for _voix, _db in ((arc.zap, 4.5), (arc.clics, 3.4), (arc.ton, 2.7), (arc.bzz, 0
 piano = theme.piste('piano', art='tenu', humain=(14, 6), volume=4)                   # le chant
 piano_mg = theme.piste('piano_mg', 'piano', art='tenu', humain=(12, 5), volume=2)     # la main gauche
 choeur = theme.piste('choeur', art='ouh', profondeur=0.7, volume=-6)
-foule = theme.piste('foule', art='o', profondeur=0.85, volume=-7)
-rumeur = theme.piste('rumeur', 'foule', art='rumeur', profondeur=0.9, volume=-8)
+foule = theme.piste('foule', art='o', profondeur=0.85, volume=-5)
+rumeur = theme.piste('rumeur', 'foule', art='rumeur', profondeur=0.9, volume=-6)
 flute = theme.piste('flute', 'flutes', art='sans_vibrato', volume=2)               # le sifflet
 cor = theme.piste('cor', 'cors', art='tenu', volume=-4)
 violons = theme.piste('violons', art='tenu', volume=-6)

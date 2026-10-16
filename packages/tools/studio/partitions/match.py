@@ -52,8 +52,8 @@ foule = theme.piste('foule', art='ah', pan=-0.25, volume=6)
 foule2 = theme.piste('foule2', 'foule', art='ah', pan=0.3, volume=4)       # la tribune d'en face
 rumeur = theme.piste('rumeur', 'foule', art='rumeur', volume=-10)
 mains = theme.piste('mains', 'applaudissements', art='mesure', volume=-2)
-ovation = theme.piste('ovation', 'applaudissements', art='ovation', volume=-1)
-gcaisse = theme.piste('gcaisse', 'grosse_caisse', volume=-3)               # le tambour de tribune
+ovation = theme.piste('ovation', 'applaudissements', art='ovation', volume=2)
+gcaisse = theme.piste('gcaisse', 'grosse_caisse', volume=-7)               # le tambour de tribune
 caisse = theme.piste('caisse', 'caisse_claire', volume=-6)
 caisse_roul = theme.piste('caisse_roul', 'caisse_claire', art='roulement', volume=-8)
 taiko = theme.piste('taiko', volume=-7, eq={'passe_haut': 40})
@@ -325,7 +325,7 @@ GRILLE_B = ['VIi4', 'ivi4', 'VIi4', 'ivi4', 'VI', 'i', 'VI', 'i',
 @theme.section('B', mesures=16)
 def B(s):
     t = temps_accords(GRILLE_B)
-    nuances(s, foule='f', foule2='f', celles_chant='mf', trompettes='mf', trompettes2='mf', cors='mf',
+    nuances(s, foule='f', foule2='f', celles_chant='mf', trompettes='mf', trompettes2='mf', cors='mp',
             gcaisse='fff', trombones='mp', tuba='mf', basses='mf', celles='mf', altos='mp', violons2='p')
     # le canon : la tribune de gauche (m. 1, 3), celle d'en face une mesure plus tard ; aux
     # m. 9–12, elles scandent, les arpèges montent, les trombones pulsent
@@ -374,7 +374,7 @@ def B(s):
 # --- T : la tension ----------------------------------------------------------------------------
 @theme.section('T', mesures=8)
 def T(s):
-    nuances(s, basses='mp', celles='mp', violons='pp', altos='p', foule='p', rumeur='mf', gcaisse='mf')
+    nuances(s, basses='mp', celles='mp', violons='p', altos='mp', foule='mp', rumeur='mf', gcaisse='mf')
     # la pédale de la ; au-dessus, la mineur et fa majeur (le ♭VI de la fiche), puis une fois fa
     # mineur, à la m. 7 (deux mineurs à une tierce : la menace, au plus fort de l'attente)
     s.note(basses, 'A1', 0, s.longueur, vel=76, art='tremolo')
@@ -387,7 +387,7 @@ def T(s):
     for m, notes in ((1, ('E4', 'A4')), (3, ('F4', 'A4')), (5, ('E4', 'A4')), (7, ('F4', 'Ab4'))):
         for h in notes:
             s.note(altos, h, s.m(m), 8, vel=70, art='tremolo')
-    s.expression(violons, [(0, 'pp'), (s.m(8, 4), 'mp')])
+    s.expression(violons, [(0, 'p'), (s.m(8, 4), 'mf')])
     # la tribune retient son souffle : la rumeur, et la tête fredonnée en valeurs doublées
     s.note(rumeur, 'A2', 0, s.longueur, vel=84)
     s.joue(foule, TETE.augmente(2).octave(-1), a=s.m(3) - 2, vel=80, art='o')
