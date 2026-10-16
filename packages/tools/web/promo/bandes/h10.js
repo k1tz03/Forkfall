@@ -5,8 +5,9 @@
    le clapet dans ta veste pour ceux qui ont payé ta campagne ; sur l'escalier nord, un maçon
    mure une marche par mois. Ce qui reste au livre : qui appelle, qui a écrit la loi, le dernier
    soir.
-   Les films : « La première marche » (minuit, deux téléphones, puis le maçon) et « Le match
-   d'après » (la Nord à l'heure bleue) — sans rien dire de ce que la Nord porte, ni pourquoi.
+   Les films : « La première marche » (son extrait : minuit, les deux téléphones sur le bureau) et
+   « Le match d'après » (la Nord à l'heure bleue) — sans rien dire de ce que la Nord porte, ni
+   pourquoi.
    La musique : « Deux téléphones » (livre_h10), ou son master du studio (--musique-studio).
    ═══════════════════════════════════════════════════════════════════════════ */
 'use strict';
@@ -21,7 +22,10 @@ module.exports = bandeDeLivre({
   heros: { prenom: 'Françoise', nom: 'Vasseur', genre: 'f' },
   theme: 'livre_h10',
   extraits: {
-    a: { fichier: '${SP}/extraits/premiere_marche.{format}.mp4', de: 0, pose: 2.5, duree: 7.0 },
+    // minuit, le bureau du club-house : le téléphone du bureau et le clapet qui s'allument (1,5 à
+    // 4,5 s), sous le carton de lieu du film (0,5 à 5 s, en haut à gauche en portrait, x 76 à 539 :
+    // l'aperçu de l'App Store prend sa colonne à gauche pour le garder entier) ; le maçon n'y est pas
+    a: { fichier: '${SP}/extraits/premiere_marche.{format}.mp4', de: 0, pose: 2.5, duree: 7.0, xAppstore: -1 },
     b: { fichier: '${SP}/extraits/match_d_apres.{format}.mp4', de: 0, pose: 3.0, duree: 7.4 },
   },
   // le clapet qui sonne à minuit (montrée), puis le maçon de l'escalier nord (glissée)
@@ -34,12 +38,16 @@ module.exports = bandeDeLivre({
     intro: { titre: "Les socios t'ont élue", sous: 'sur une seule promesse : monter' },
     carte: { titre: 'Monter avant 2040', sous: 'avant que la porte se ferme' },
     ville: { titre: 'Aubérive, 2037', sous: 'trois saisons avant la loi' },
-    objet: { titre: 'Une marche murée par mois', sous: '« par sécurité »', position: BAS_PORTRAIT },
-    nuit: { titre: 'Le clapet sonne la nuit', sous: 'pour ceux qui ont payé ta campagne' },
+    // (la suite du film A montre les deux téléphones à minuit, juste après la carte du clapet ; la
+    // marche murée passe sur le club-house de nuit, avant la carte du maçon)
+    objet: { titre: 'Le clapet sonne la nuit', sous: 'pour ceux qui ont payé ta campagne', position: BAS_PORTRAIT },
+    nuit: { titre: 'Une marche murée par mois', sous: '« par sécurité »' },
     choix: { titre: 'Monter, ou rester en bas ?' },
     fin: { titre: "Ce n'est pas le tien." },
     carte2Ecran: '« Ici Madame Septembre. »',
+    objetEcran: 'Minuit, deux téléphones',
+    nuitEcran: 'Le clapet sonne la nuit',
     finEcran: "Un second clapet. Pas le tien.",
   },
-  legendesCourt: { objet: { titre: 'Une marche murée par mois', sous: '« par sécurité »', position: 'bas' } },
+  legendesCourt: { objet: { titre: 'Le clapet sonne la nuit', sous: 'pour ceux qui ont payé ta campagne', position: 'bas' } },
 });

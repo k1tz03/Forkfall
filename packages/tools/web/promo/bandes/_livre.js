@@ -155,10 +155,12 @@ module.exports = function bandeDeLivre(P) {
   const court = [
     { duree: nc[0] + 'm', source: { moment: 'intro', de: 0.4 }, legende: leg(L.intro) },
     { duree: nc[1] + 'm', source: { moment: 'carte1', de: 0.25 }, legende: leg(L.carte, 'bas') },
-    { duree: nc[2] + 'm', source: { film: 'a', de: A.deCourt != null ? A.deCourt : A.de || 0 }, legende: leg(L.objet) },
+    // (`xAppstore` : la colonne de 886 px prise à gauche, -1, ou à droite, 1, plutôt qu'au milieu —
+    // pour garder entier un carton de lieu du film, posé en haut à gauche en portrait)
+    { duree: nc[2] + 'm', source: { film: 'a', de: A.deCourt != null ? A.deCourt : A.de || 0, xAppstore: A.xAppstore }, legende: leg(L.objet) },
     { duree: nc[3] + 'm', source: { moment: 'nuit', de: 0.3 }, legende: leg(L.nuit) },
     { duree: nc[4] + 'm', source: { moment: 'carte3', de: 0.3 }, legende: leg(L.choix, 'bas') },
-    { duree: nc[5] + 'm', source: { film: 'b', de: Bx.deCourt != null ? Bx.deCourt : Bx.de || 0 } },
+    { duree: nc[5] + 'm', source: { film: 'b', de: Bx.deCourt != null ? Bx.deCourt : Bx.de || 0, xAppstore: Bx.xAppstore } },
     { duree: 'reste', source: { moment: 'accueil', de: { pose: 'cartouche', avant: 1.6 } }, entree: 'fondu', transition: 0.5 },
   ];
   // une légende de l'aperçu peut différer de celle de la bande (`legendesCourt: { objet: … }`)
