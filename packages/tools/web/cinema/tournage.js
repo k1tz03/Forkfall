@@ -120,7 +120,9 @@ async function rendreSon(page, o) {
     const ctx = new OfflineAudioContext(2, n, sr);
     const e = FA.createEngine(ctx, ctx.destination, { seed: FC.kit.hash(o.film) % 100000, pad: false, at: 0 });
     const theme = FC.themeDe(def, FA);
-    if (theme) e.setTheme(theme, { at: 0, fade: o.entree });
+    // `musiqueDepuis` (facultatif) : la section du thème où la vidéo commence (« creux »,
+    // « pont »…), celle que le compositeur a écrite pour ce moment ; sans lui, le début
+    if (theme) e.setTheme(theme, { at: 0, fade: o.entree, depuis: theme === def.musique && def.musiqueDepuis != null ? def.musiqueDepuis : undefined });
     for (const [t, nom] of o.sons) if (t >= 0 && t < o.duree) e.play(nom, { at: t });
     e.scheduleUntil(o.duree);
     const buf = await ctx.startRendering();
