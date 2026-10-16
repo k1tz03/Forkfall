@@ -28,7 +28,7 @@ module.exports = bandeDeLivre({
   // (le moteur y va en répondant à droite : à gauche, la carte de trois heures devient sa variante
   // à la boîte de Steph, que ni le film ni la bande ne montrent)
   cartes: { deux: 'jp.h3.s0_main', trois: 'jp.h3.s1_trois_heures', sens: 'droite' },
-  lieux: { jour: 'friche', nuit: 'halle' },
+  lieux: { jour: 'tabac_stade', nuit: 'halle' },
   legendes: {
     promesse: { titre: 'Aubérive, 1990', sous: "l'usine ferme à Noël" },
     intro: { titre: 'Dix-neuf ans', sous: 'la dernière chose que la ville fabrique' },

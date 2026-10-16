@@ -26,7 +26,7 @@ module.exports = bandeDeLivre({
   },
   // le tableau des clés à minuit (montré), puis la troisième nuit, « Montez au 12 » (glissée)
   cartes: { deux: 'sl.h7.pro6_tableau_mutins', trois: 'sl.h7.a3_deux_heures_dix' },
-  lieux: { jour: 'bar', nuit: 'hotel' },
+  lieux: { jour: 'fontaine', nuit: 'hotel' },
   legendes: {
     promesse: { titre: "Les Cobalts à l'hôtel de la Rive", sous: 'dix jours avant le barrage' },
     intro: { titre: 'Après le fiasco de 2010', sous: 'on te confie les Cobalts' },

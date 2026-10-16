@@ -63,8 +63,9 @@ module.exports = function bandeDeLivre(P) {
   const A_DROITE = { '16x9': 'droite' }, FILM_BAS = { '16x9': 'haut' };
   const leg = (x, pos) => (x ? Object.assign({ position: pos }, typeof x === 'string' ? { titre: x } : x) : undefined);
   const G = P.graine, I = P.index;
+  // (la carte seule : une scène jouée « avant la carte » la couvre d'abord — l'automate la passe)
   const aCarte = (prefixe, sens, sauter) => depart(I, G).concat([['avancer', 'v.card.id.indexOf(' + JSON.stringify(prefixe) + ') === 0', { reponses: sens || 'gauche', saute: sauter || 0 }],
-    ['jouerJusqua', 'etat.carte', { max: 180 }], ['attendre', 1.2]]);
+    ['jouerJusqua', 'etat.carte && !etat.cine && !etat.fondu', { max: 180 }], ['attendre', 1.2]]);
 
   // ─── la musique d'abord : la source qui servira (le master du studio, sinon le banc), ses barres
   const studio = !!MU.masterDe(P.theme);
