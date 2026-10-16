@@ -63,8 +63,8 @@ LA CARTE (110 à la noire ; une mesure = 2,18 s ; le corps boucle : 112 mesures,
   C2   8 m.  2:55  « La voix d'ailleurs », encore : le chœur, les timbales            7
   D2   8 m.  3:12  « Six heures et demie » : le second sommet ; l'horloge sonne six coups
                    (cloches tubulaires), puis la demie : la tête, à l'autre bout du triton 8 → 9
-  S2   8 m.  3:29  « Deux heures » : la voix seule, tout près, chuchote le motif ; le cor
-                   répond de très loin ; presque vide                                1 → 2
+  S2   8 m.  3:29  « Deux heures » : presque rien ; puis la voix seule, tout près, chuchote
+                   la tête, et le cor répond de très loin                            1 → 2
   R    8 m.  3:47  « On recommence » : la grosse caisse, la montée vers A1              4
   Les deux fenêtres presque vides (S1, S2) tombent à 2 min 02 l'une de l'autre : sept sections
   de part et d'autre, chacune juste après un sommet (après un moment lourd, le silence).
@@ -365,8 +365,8 @@ def A1(s):
     nuances(s, voix_f1='fff', voix_f2='fff', basses='p', vibra='mp', sub='f', voix='mf', cors='mf', altos='p', celesta='mp',
             timbales='mp')
     # le premier temps : la montée de R (ou de l'introduction) retombe ici
-    s.note(timbales, 'A2', 0, 1, vel=74)
-    s.note(suspendue, 'C4', 0, 2, vel=66, art='frappe')
+    s.note(timbales, 'A2', 0, 1, vel=84)
+    s.note(suspendue, 'C4', 0, 2, vel=74, art='frappe')
     croches(s, basses, vel=76)
     basse_tenue(s, sub, vel=64)
     triolets_machine(s, vibra, vel=64)
@@ -382,7 +382,7 @@ def A1(s):
 
 @theme.section('A2', mesures=8)
 def A2(s):
-    nuances(s, voix_f1='fff', voix_f2='fff', basses='mp', vibra='mp', celesta='p', sub='f', voix='mf', cors='mf', altos='mp',
+    nuances(s, voix_f1='fff', voix_f2='fff', basses='mp', vibra='p', celesta='p', sub='f', voix='f', cors='mf', altos='mp',
             kick='mf', gcaisse='mf', violons2='pp', tic='f', grains='mf')
     pulsation(s)
     croches(s, basses, vel=80)
@@ -440,7 +440,7 @@ def B2(s):
 
 # --- C : la voix d'ailleurs (la majeur — mib majeur) ---------------------------------------------
 def _ailleurs(s, encore):
-    nuances(s, sub='ff', verre='f', vibra='mp', voix_hachee='mf', cors='ff', trombones='ff', basses='mp',
+    nuances(s, sub='ff', verre='mf', vibra='mp', voix_hachee='mf', cors='f', trombones='f', basses='mp',
             altos='mp', choeur='mp', timbales='f', tic='f', grains='mf')
     s.note(timbales, 'A2', 0, 1, vel=86)
     basse_tenue(s, sub, octave=0, vel=72, glisse=True)
@@ -479,7 +479,7 @@ def C2(s):
 # --- D : les sommets ---------------------------------------------------------------------------
 def _sommet(s, cloches_six_heures):
     nuances(s, voix_f1='fff', voix_f2='fff', basses='mp', celles_tri='mf', violons2='mf', vibra='mp', sub='fff', voix='f',
-            cors='f', trombones='f', celles='f', violons='f', altos='mp', choeur='mp', timbales='f', kick='f',
+            cors='f', trombones='f', celles='f', violons='f', altos='mp', choeur='mf', timbales='f', kick='f',
             gcaisse='f', tuba='mf', tic='f', cloches='f')
     fin = s.m(8, 4)                     # la coupure (D1 : un temps de silence) ; D2 tient
     fin = s.longueur if cloches_six_heures else fin
@@ -528,7 +528,7 @@ def D2(s):
 # --- S : les silences ------------------------------------------------------------------------------
 @theme.section('S1', mesures=8)
 def S1(s):
-    nuances(s, verre='mp', voix_loin='p', celles='p', basses='p', archet='mf')
+    nuances(s, verre='mp', voix_loin='pp', celles='pp', basses='p', archet='mf')
     # on arrache l'oreillette : l'arc, puis presque rien
     arc.poser(s, 0, impact=True, vel=112)
     s.note(archet, 'C4', 0.5, 8, vel=66)
@@ -541,7 +541,7 @@ def S1(s):
     canon(s, TETE, 4, [(celles, 0, 78)], voix_piste=voix_loin, vel_voix=86, machine=False)
     # m. 7–8 : la pulsation revient, pizzicato
     croches(s, basses, vel=64, art='pizzicato', de=7, a=8)
-    s.crescendo(basses, s.m(7), s.m(8, 4), 'p', 'mf')
+    s.crescendo(basses, s.m(7), s.m(8, 4), 'pp', 'p')
 
 
 @theme.section('S2', mesures=8)
@@ -556,8 +556,9 @@ def S2(s):
     s.note(sub, 'A1', 0, s.m(7), vel=52)
     for h in ('A4', 'E5'):                      # la quinte à vide : rien sous « do si »
         s.note(verre, h, 0, s.m(7), vel=54)
-    # deux heures : la voix seule, tout près, elle chuchote le motif ; le cor répond de très loin
-    canon(s, MOTIF, 2, [(cor_loin, 0, 76)], vel_voix=90)
+    # deux heures : presque rien ; puis la voix, seule, tout près, chuchote la tête ; le cor répond
+    # de très loin
+    canon(s, TETE, 6, [(cor_loin, 0, 76)], vel_voix=90)
     # m. 7–8 : les triolets reviennent
     triolets_machine(s, vibra, vel=56, de=7, a=8)
     s.crescendo(vibra, s.m(7), s.m(8, 4), 'pp', 'p')
@@ -605,14 +606,13 @@ def G1(s):
 # --- R : on recommence ------------------------------------------------------------------------------
 @theme.section('R', mesures=8)
 def R(s):
-    nuances(s, voix_f1='fff', voix_f2='fff', basses='p', vibra='mp', marimba='p', kick='mp', gcaisse='mp', sub='f', altos='p',
-            voix='mf', cors='f')
+    nuances(s, voix_f1='fff', voix_f2='fff', basses='p', vibra='p', marimba='p', kick='mp', gcaisse='mp', sub='f', altos='p',
+            voix='f', cors='f')
     pulsation(s)
     croches(s, basses, vel=78)
     basse_tenue(s, sub, vel=64)
     triolets_machine(s, vibra, vel=64)
     triolets_machine(s, marimba, octave=-1, vel=66, de=5)
-    s.crescendo(marimba, s.m(5), s.m(8, 4), 'p', 'mp')
     tenues(s, altos, octave=1, vel=64)
     s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mf')
     canon(s, TETE, 5, [(cors, 0, 86)])
