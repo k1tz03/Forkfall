@@ -54,6 +54,14 @@ Les options utiles : `--moments a,b` et `--profils social,appstore,apple` (tourn
 moment), `--formats 9x16,appstore` (monter une partie), `--force` (refaire ce qui est déjà fait ;
 sinon chaque étape garde ce qui n'a pas changé : un moment, un plan, une musique ont leur empreinte).
 
+Le temps que ça prend (mesuré sur la machine partagée, quatre cœurs, charge 20 à 27) : `tourner jeu`
+18 min (treize moments, trois profils), `tourner h1` 10 min ; `musique` moins d'une minute ;
+`monter`, de 7 à 10 min par format d'une minute (dont 4 à 5 min pour l'encodage final, x264
+`slow`), 4 à 5 min pour l'aperçu de l'App Store ; `ecrans` une minute ; `verifier` quelques
+secondes. Sur la machine partagée, chaque étape lourde (tourner, musique, monter, ecrans) passe par
+le verrou des rendus : `bash $SP/rendu_verrou.sh env NODE_PATH=… node $P <commande> …` (deux rendus
+lourds au plus à la fois ; il ajoute `nice -n 10`).
+
 Ce qui sort, dans `<sortie>` (`$SP/agents/lot-promo` par défaut) :
 
 ```
