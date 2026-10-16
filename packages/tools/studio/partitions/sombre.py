@@ -48,38 +48,38 @@ SEC = 68 / 60.0                 # une seconde, en temps
 # --- l'arc (le son-signature commun) -------------------------------------------------------
 arc = Arc(theme)
 # --- les cordes ----------------------------------------------------------------------------
-basses = theme.piste('basses', 'contrebasses', art='sans_vibrato', volume=0)
-celles = theme.piste('celles', 'violoncelles', art='legato', pan=0.3, volume=0)
-celles_pizz = theme.piste('celles_pizz', 'violoncelles', art='pizzicato', pan=0.35, volume=0)
+basses = theme.piste('basses', 'contrebasses', art='sans_vibrato', volume=6)
+celles = theme.piste('celles', 'violoncelles', art='legato', pan=0.3, volume=9)
+celles_pizz = theme.piste('celles_pizz', 'violoncelles', art='pizzicato', pan=0.35, volume=10)
 celles_trem = theme.piste('celles_trem', 'violoncelles', art='tremolo', pan=0.3, volume=0)
 altos = theme.piste('altos', art='tremolo', volume=0)
-violons2 = theme.piste('violons2', 'violons', art='tremolo', pan=-0.25, volume=0)
-violons = theme.piste('violons', art='tenu', pan=-0.45, profondeur=0.6, volume=-6)
+violons2 = theme.piste('violons2', 'violons', art='tremolo', pan=-0.25, volume=5)
+violons = theme.piste('violons', art='tenu', pan=-0.45, profondeur=0.6, volume=6)
 # --- les cuivres -----------------------------------------------------------------------------
-cors = theme.piste('cors', art='sourdine', volume=0)
+cors = theme.piste('cors', art='sourdine', volume=5)
 cor_bouche = theme.piste('cor_bouche', 'cors', art='sourdine', unisson=1, pan=-0.35, profondeur=0.8,
-                         salle=0.5, volume=0)
-trombones = theme.piste('trombones', art='tenu', volume=0)
-tuba = theme.piste('tuba', art='tenu', volume=0)
-braam = theme.piste('braam', volume=-4)
+                         salle=0.5, volume=6)
+trombones = theme.piste('trombones', art='tenu', volume=2)
+tuba = theme.piste('tuba', art='tenu', volume=6)
+braam = theme.piste('braam', volume=1)
 # --- la voix seule (un chœur « ouh » réduit à une prise, au fond) ------------------------------
 voix = theme.piste('voix', 'choeur', art='ouh', unisson=1, pan=0.15, profondeur=0.9, salle=0.6,
-                   volume=0)
+                   volume=5.5)
 # --- le piano --------------------------------------------------------------------------------
-piano = theme.piste('piano', art='pedale', salle=0.4, volume=0)
-goutte = theme.piste('goutte', 'piano', art='tenu', pan=-0.5, profondeur=0.7, salle=0.7, volume=-6)
+piano = theme.piste('piano', art='pedale', salle=0.4, volume=6)
+goutte = theme.piste('goutte', 'piano', art='tenu', pan=-0.5, profondeur=0.7, salle=0.7, volume=14)
 # --- les percussions --------------------------------------------------------------------------
 # le cœur : la grosse caisse de concert étouffée (son corps), une timbale sourde sur ré (le
 # coup qu'un petit haut-parleur entend)
-coeur = theme.piste('coeur', 'grosse_caisse', eq={'passe_bas': 1200}, profondeur=0.4, salle=0.15,
-                    volume=0)
-coeur_ton = theme.piste('coeur_ton', 'timbales', eq={'passe_bas': 2500}, profondeur=0.5, salle=0.15,
-                        volume=0)
+coeur = theme.piste('coeur', 'grosse_caisse', eq={'passe_bas': 4000}, profondeur=0.4, salle=0.15,
+                    volume=4)
+coeur_ton = theme.piste('coeur_ton', 'timbales', eq={'passe_bas': 5000}, profondeur=0.5, salle=0.15,
+                        volume=10)
 timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=0)
-archet = theme.piste('archet', 'cymbale_suspendue', art='archet', profondeur=0.6, salle=0.5, volume=0)
-tamtam = theme.piste('tamtam', 'tam_tam', art='gratte', salle=0.5, volume=0)
+archet = theme.piste('archet', 'cymbale_suspendue', art='archet', profondeur=0.3, salle=0.5, volume=11.5)
+tamtam = theme.piste('tamtam', 'tam_tam', art='gratte', salle=0.5, volume=7)
 # --- le grain ---------------------------------------------------------------------------------
-sub = theme.piste('sub', 'sub_synthe', volume=-14)
+sub = theme.piste('sub', 'sub_synthe', volume=-12)
 
 
 def nuances(s, **niveaux):
@@ -176,19 +176,23 @@ def intro(s):
 
 @theme.section('S1', mesures=8)
 def S1(s):
-    nuances(s, basses='p', sub='mf', coeur='mf', coeur_ton='mf', celles='mp', voix='mp', archet='mf',
+    nuances(s, basses='p', sub='mf', coeur='f', coeur_ton='f', celles='mp', voix='mp', archet='mf',
             goutte='p')
-    # le premier temps : le cœur, la pédale, le métal frotté
+    # le premier temps : le cœur, la pédale, le métal frotté (la cymbale à l'archet, le tam-tam
+    # gratté dessous)
     s.note(archet, 'C4', 0, 8, vel=84)
+    s.note(tamtam, 'C4', 0, 6, vel=58)
+    s.nuance(tamtam, 'p')
     s.note(basses, 'D2', 0, 32, vel=66)
     s.note(sub, 'D2', 0, 32, vel=62)
     battements(s, 0, s.longueur, 'L d . . . . . . L d . . . . . .', vel=86)
     # le balancier, dès la mesure 2
     balancier(s, 2, 8)
     s.crescendo(celles, s.m(2), s.m(8, 4), 'p', 'mp')
-    # la mèche, fredonnée par une voix seule (elle ne se résout pas : le si♭ s'éteint)
-    s.joue(voix, MECHE, a=s.m(5) - 1, vel=80)
-    s.expression(voix, [(s.m(5) - 1, 'mp'), (s.m(6), 'mf'), (s.m(7, 3), 'p')])
+    # la mèche, chantée par une voix seule, bouche ouverte (elle ne se résout pas : le si♭
+    # s'éteint) ; « ah » plutôt que « ouh » : ses formants passent dans un téléphone
+    s.joue(voix, MECHE, a=s.m(5) - 1, vel=80, art='aah')
+    s.expression(voix, [(s.m(5) - 1, 'p'), (s.m(6), 'mp'), (s.m(7, 3), 'pp')])
     # la goutte : un ré aigu, deux fois
     s.note(goutte, 'D6', s.m(3, 2.5), 1, vel=52)
     s.note(goutte, 'D6', s.m(7, 3.5), 1, vel=46)
@@ -199,7 +203,7 @@ GRILLE_S2 = grille('i i vi vi i i vi vi')
 
 @theme.section('S2', mesures=8)
 def S2(s):
-    nuances(s, basses='mp', coeur='mf', coeur_ton='mf', altos='pp', violons2='pp', cor_bouche='mf',
+    nuances(s, basses='mp', coeur='f', coeur_ton='f', altos='pp', violons2='pp', cor_bouche='mf',
             celles='mp', goutte='p')
     silence = s.m(8)
     # la basse : ré, puis si♭ (la menace)
@@ -235,7 +239,7 @@ GRILLE_S3 = grille('i i II II i i II i')
 
 @theme.section('S3', mesures=8)
 def S3(s):
-    nuances(s, cors='f', trombones='f', basses='mf', celles_trem='mf', piano='mf', coeur='f', coeur_ton='f',
+    nuances(s, cors='f', trombones='ff', basses='mp', celles_trem='f', piano='mp', coeur='mf', coeur_ton='mf',
             violons='p', timb_roul='mf')
     coupe = s.m(8, 3)
     # le premier temps : le braam sur ré, la timbale, le métal
@@ -255,7 +259,7 @@ def S3(s):
         hs = ('D3', 'A3') if ch == 'i' else ('Eb3', 'Bb3')
         for h in hs:
             s.note(celles_trem, h, s.m(m), min(s.m(m + 1), coupe) - s.m(m), vel=86)
-    s.crescendo(celles_trem, 0, s.m(7), 'mf', 'f')
+    s.crescendo(celles_trem, 0, s.m(7), 'f', 'ff')
     # le violon tenu, très haut : le fil qui siffle
     s.note(violons, 'A5', s.m(3), s.m(7) - s.m(3), vel=70)
     s.note(violons, 'Bb5', s.m(7), coupe - s.m(7), vel=74)
@@ -295,13 +299,14 @@ GRILLE_S5 = grille('i i vi vi i i vi vi')
 def S5(s):
     nuances(s, piano='mf', celles_pizz='mf', voix='mp', altos='pp', basses='p', coeur='mf', coeur_ton='mf',
             sub='mf')
-    # le piano grave : ré – mi♭ obstinés (la paire phrygienne), longue-brève
+    # le piano grave : ré – mi♭ obstinés (la paire phrygienne), longue-brève, en octaves ré 2 –
+    # ré 3 (assez haut pour qu'un haut-parleur de téléphone le rende)
     for m in range(1, 9):
         r = 'D' if GRILLE_S5[m - 1] == 'i' else 'Bb'
-        s.note(piano, f'{r}1', s.m(m), 3, vel=84)
-        s.note(piano, f'{r}2', s.m(m), 3, vel=80)
+        s.note(piano, f'{r}2', s.m(m), 3, vel=84)
+        s.note(piano, f'{r}3', s.m(m), 3, vel=78)
         voisin = 'Eb' if r == 'D' else 'Cb'
-        s.note(piano, f'{voisin}2', s.m(m, 4), 1, vel=72)
+        s.note(piano, f'{voisin}3', s.m(m, 4), 1, vel=72)
     # la basse et la sous-basse sur les fondamentales
     for m in (1, 3, 5, 7):
         i = GRILLE_S5[m - 1] == 'i'
@@ -316,8 +321,8 @@ def S5(s):
     # ♭vi aux altos ; la voix seule fredonne la tête renversée (m. 2 et m. 6)
     tenus(s, altos, GRILLE_S5, ACC, vel=70)
     s.expression(altos, [(0, 'pp'), (s.m(8, 4), 'p')])
-    s.joue(voix, TETE_RENVERSEE, a=s.m(1, 4), vel=84)
-    s.joue(voix, TETE_RENVERSEE, a=s.m(5, 4), vel=88)
+    s.joue(voix, TETE_RENVERSEE, a=s.m(1, 4), vel=84, art='aah')
+    s.joue(voix, TETE_RENVERSEE, a=s.m(5, 4), vel=88, art='aah')
     s.expression(voix, [(0, 'mp'), (s.m(6), 'mf'), (s.m(8), 'mp')])
 
 
@@ -328,7 +333,7 @@ CHORAL_TUBA = {'i': 'D2', 'vi': 'Bb1', 'II': 'Eb2'}
 
 @theme.section('S6', mesures=8)
 def S6(s):
-    nuances(s, trombones='mp', tuba='mp', cors='mf', basses='mp', coeur='mf', coeur_ton='mf', archet='mp',
+    nuances(s, trombones='mp', tuba='p', cors='mp', basses='p', coeur='mf', coeur_ton='mf', archet='mp',
             timb_roul='p', sub='mf')
     # le choral des cuivres graves, deux mesures par accord
     tenus(s, trombones, GRILLE_S6, CHORAL_TROMB, vel=88)
@@ -343,6 +348,8 @@ def S6(s):
     # le cœur ; le métal frotté sur ♭II
     battements(s, 0, s.longueur, 'L d . . L d . . L d . . L d . .', vel=86)
     s.note(archet, 'C4', s.m(5), 8, vel=84)
+    s.note(tamtam, 'C4', s.m(5), 6, vel=60)
+    s.nuance(tamtam, 'p')
     # la relance : le roulement de timbales sur ré, qui enfle jusqu'au premier temps de S1
     s.note(timb_roul, 'D2', s.m(7), 8, vel=88)
     s.crescendo(timb_roul, s.m(7), s.m(9), 'pp', 'mf')
