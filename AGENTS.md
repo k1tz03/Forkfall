@@ -363,6 +363,20 @@ Ce que la ville porte en plus des cartes :
   ses bruits (la sonnerie, la sirène, une porte…), parmi les gens de son heure (ou seule, `vide`) ; et
   des **conversations surprises**, en bulles, qu'on entend en passant près de ceux qui parlent. Pour
   regarder une scène sans jouer la carrière : `packages/tools/web/voir_scene.js` (le guide le dit).
+- **Les films** (`packages/tools/web/cinema/`, `docs/design/cinematiques.md`,
+  `content/ville/films_<livre>.yaml`) : vingt courts films en 3D temps réel, deux par livre, de 29 à
+  41 s, posés avant ou après une carte que 73 à 100 % des carrières du livre atteignent, sans rien
+  dévoiler de la suite. La trousse (three.js r186, licence MIT, chargé seulement quand un film joue :
+  matières procédurales, néo-noir sous la pluie, foules instanciées ; un visage n'est jamais modelé,
+  toujours imprimé par art.js), le lecteur (« Passer », le mouvement réduit en images fixes, un carton
+  de secours sans WebGL, une qualité qui baisse d'elle-même sur un téléphone : au plus ~300 appels de
+  dessin, 350 k triangles, 64 Mo de textures en `basse`), les déclencheurs validés par
+  `build_content`, et le tournage (`cinema/tournage.js` : une image maîtresse carrée, quatre formats,
+  la musique du jeu ; lent sur une machine sans carte graphique, une heure et demie par film entier).
+  Un film joue une fois par carrière. **Les bandes-annonces et les boutiques** :
+  `packages/tools/web/promo/` (son README) tourne les moments du jeu en temps virtuel, monte les
+  formats 9:16, 16:9, 4:5 et l'aperçu App Store, fait les captures Apple 6,9" et Google Play et la
+  bannière Google Play ; une bande-annonce de livre se monte d'une commande (`bandes/modele_livre.js`).
 - **La vie des pièces et des rues** (`ville_vie.js`, `content/ville/tableaux.yaml`) : dedans, chacun a
   ses habitudes selon l'ambiance de la pièce (boire, rire, lire, téléphoner à partir des portables,
   fumer avant l'interdiction, changer de table) ; dehors, des tableaux vivants devant les lieux, à
