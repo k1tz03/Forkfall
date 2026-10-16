@@ -33,7 +33,96 @@ _VARIATIONS = [(0.0, 0.0), (3.0, -0.6), (-2.5, -0.3), (1.5, -0.9), (-1.5, -0.2)]
 _UNISSON = [(0.0, 0.0, 0.0), (7.0, 13.0, -0.14), (-6.0, 22.0, 0.14), (4.0, 7.0, -0.07),
             (-9.0, 29.0, 0.08), (10.0, 17.0, -0.2), (-3.0, 35.0, 0.2), (5.0, 4.0, 0.0)]
 
+# Les notes brèves des instruments qui tiennent (cordes, cuivres, bois) jouent tout leur
+# échantillon, la queue de la salle d'enregistrement comprise : dans une suite rapide, ces
+# queues s'empilent (+3 dB chaque fois que les notes vont deux fois plus vite), alors
+# qu'une suite de notes tenues garde son niveau. Une note brève suivie d'une autre à
+# moins de DENSITE_REF secondes (une croche à 120, la figure de la calibration) est donc
+# baissée d'autant : l'énergie d'une suite rapide reste celle d'une suite de croches, et
+# passer de tenu à staccato ne change pas le niveau, en croches comme en doubles croches.
+# Deux attaques à moins de ACCORD_S secondes forment un même accord (l'humanisation les
+# écarte de quelques millisecondes).
+DENSITE_REF = 0.25
+DENSITE_MIN = 0.06
+ACCORD_S = 0.03
+FAMILLES_TENUES = ('cordes', 'cuivres', 'bois')
+
 _NIVEAUX = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'niveaux.json')
+
+
+def _rangees(t, cle, i, v):
+    """La valeur d'une table de zone au demi-ton `i` et à la vélocité `v` : la table a
+    une rangée par vélocité mesurée (`vels`), interpolées en log de vélocité (la plus
+    proche au-delà des rangées extrêmes)."""
+    vels = t.get('vels')
+    if not vels:
+        return float(t[cle][i])
+    vals = [float(r[i]) for r in t[cle]]
+    if len(vels) == 1:
+        return vals[0]
+    return float(np.interp(np.log(max(100 if v is None else v, 1)), np.log(np.array(vels, dtype=float)), vals))
+
+
+def zone_hauteur(nom, art, h, duree=None, v=None):
+    """La correction de zone (dB) d'une note d'un instrument sans échantillons à lui
+    (banque General MIDI, synthé) : une valeur par demi-ton (zones.json, « hauteurs »),
+    la plus proche au-delà de la table ; ou deux (une note brève, une note tenue) que la
+    durée de la note interpole, comme les zones tenues des échantillons. Chaque valeur
+    est mesurée à plusieurs vélocités (une zone du programme répond plus ou moins vite à
+    la vélocité que ses voisines : le filtre qui s'ouvre, l'attaque qui raccourcit) :
+    la vélocité de la note interpole entre elles (100 sans vélocité)."""
+    if isinstance(h, str):
+        return 0.0
+    t = ech.ZONES.get('hauteurs', {}).get(f'{nom}:{art}')
+    if not t:
+        return 0.0
+    if 'db' in t:
+        i = min(max(int(round(h)) - t['de'], 0), len(t['db'][0] if t.get('vels') else t['db']) - 1)
+        return _rangees(t, 'db', i, v)
+    i = min(max(int(round(h)) - t['de'], 0), len(t['long'][0] if t.get('vels') else t['long']) - 1)
+    c, l = _rangees(t, 'court', i, v), _rangees(t, 'long', i, v)
+    if duree is None:
+        return l
+    w = min(1.0, max(0.0, np.log(max(duree, 1e-3) / ech.COURT_S) / np.log(ech.LONG_S / ech.COURT_S)))
+    return c + (l - c) * w
+
+
+def velocite_jouee(nom, art, v):
+    """La vélocité envoyée au synthé General MIDI et le gain (dB) qui la complète. Un
+    programme dont le niveau saute d'une vélocité à la suivante (zones.json : sa table a
+    une `grille`) ne joue que les vélocités de sa grille, la plus proche de la note : ses
+    zones y sont mesurées une à une ; l'écart entre la vélocité écrite et celle de la
+    grille devient un gain, lu sur la loi de vélocité (`ref`, la sonie visée à chaque
+    vélocité de la grille : la loi de l'échantillonneur, comme en dessous de la grille)."""
+    t = ech.ZONES.get('hauteurs', {}).get(f'{nom}:{art}')
+    if not t or 'grille' not in t:
+        return v, 0.0
+    g, ref = t['grille'], t['ref']
+    vs = min(g, key=lambda x: (abs(x - v), x))
+    if v < g[0]:
+        return vs, float(40.0 * np.log10(max(v, 1) / g[0]))
+    lv = np.log(np.array(g, dtype=float))
+    return vs, float(np.interp(np.log(v), lv, ref)) - float(ref[g.index(vs)])
+
+
+def _energie_k(x):
+    """L'énergie d'un signal pondérée K (la sonie, sans porte) : ce que l'éclat garde."""
+    k = dsp.ponderation_k(x)
+    return float(np.sum(k * k))
+
+
+def _intervalles(jeux):
+    """Pour chaque note (triées par instant), le temps jusqu'à l'attaque suivante qui
+    n'appartient pas au même accord (None pour la dernière)."""
+    sortie = []
+    k = 0
+    n = len(jeux)
+    for i, j in enumerate(jeux):
+        k = max(k, i)
+        while k < n and jeux[k].t <= j.t + ACCORD_S:
+            k += 1
+        sortie.append(jeux[k].t - j.t if k < n else None)
+    return sortie
 
 
 class Jeu:
@@ -114,7 +203,8 @@ class InstrumentSfz(Instrument):
     def banque(self, art):
         b = self._banques.get(art)
         if b is None:
-            b = ech.Banque(chemin(self.articulations[art]['sfz']))
+            spec = self.articulations[art]['sfz']
+            b = ech.Banque(chemin(spec), nom=spec)
             self._banques[art] = b
         return b
 
@@ -158,6 +248,8 @@ class InstrumentSfz(Instrument):
         legato_piste = reg.get('legato', False)
         expr = ctx.get('courbes', {}).get('expression')
         jeux = sorted(jeux, key=lambda j: (j.t, j.h if not isinstance(j.h, str) else 0))
+        intervalles = _intervalles(jeux)
+        eclat = float(reg.get('eclat', self.eclat))
         for i, j in enumerate(jeux):
             art = self.art(j, reg)
             spec = self.articulations[art]
@@ -169,12 +261,20 @@ class InstrumentSfz(Instrument):
             oneshot = spec.get('oneshot', False)
             relache = spec.get('relache')
             bref = oneshot and not isinstance(j.h, str)       # une note brève à hauteur
-            if bref and reg.get('bref') and self.famille in ('cordes', 'cuivres', 'bois'):
+            tenue_famille = self.famille in FAMILLES_TENUES
+            coupee = False
+            if bref and reg.get('bref') and tenue_famille:
                 # `bref` sur la piste : la note brève ne joue plus tout son échantillon
                 # (sa queue de salle d'enregistrement) mais sa durée écrite, puis une
-                # relâche courte : un ostinato plus sec, chaque attaque plus nette
+                # relâche courte : un ostinato plus sec, chaque attaque plus nette ; elle
+                # garde l'énergie de la note entière (le niveau ne change pas)
                 oneshot = False
                 relache = float(reg['bref'])
+                coupee = True
+            # la densité : une note brève suivie de près (voir DENSITE_REF)
+            g_densite = 1.0
+            if bref and tenue_famille and intervalles[i] is not None and intervalles[i] < DENSITE_REF:
+                g_densite = float(np.sqrt(max(intervalles[i], DENSITE_MIN) / DENSITE_REF))
             sans_attaque = 0.0
             fondu = 0.0
             duree = j.d
@@ -213,21 +313,29 @@ class InstrumentSfz(Instrument):
                     c += vc
                 else:
                     vg = 0.0
+                infos = {} if coupee else None
                 if croise is not None:
                     x, dec = self._fondu_couches(banque, cle, j.v, duree, c + accord, relache,
                                                  sans_attaque, fondu, alea, expr, croise)
                 else:
                     x, dec = ech.jouer(banque, cle, j.v, duree, desaccord_cents=c + accord, oneshot=oneshot,
                                        relache=relache, sans_attaque_s=sans_attaque,
-                                       fondu_entree_s=fondu, alea=alea, vel_couche=v_couche)
+                                       fondu_entree_s=fondu, alea=alea, vel_couche=v_couche, infos=infos)
                 pos = int(round((j.t - self.avance.get(art, 0.0) + ms / 1000.0) * SR)) - dec
-                g = dsp.gain(self.niveau_art(art) + spec.get('gain', 0.0) + vg) / np.sqrt(k_uni)
-                eclat = float(reg.get('eclat', self.eclat))
+                g = dsp.gain(self.niveau_art(art) + spec.get('gain', 0.0) + vg) / np.sqrt(k_uni) * g_densite
+                if infos:
+                    # la note coupée rend l'énergie de la note entière (au plus +6 dB)
+                    g *= float(np.sqrt(min(4.0, max(1.0, infos['energie_pleine'] / max(infos['energie'], 1e-20)))))
                 if eclat and j.v > 72:
-                    # la note forte « cuivre » : la saturation monte avec la vélocité, le
-                    # niveau reste (saturer compense), le timbre s'éclaire
-                    x = dsp.saturer(x * np.float32(1.0 / max(np.abs(x).max(), 1e-6)),
-                                    eclat * (j.v - 72) / 55.0, asymetrie=0.12) * np.float32(np.abs(x).max())
+                    # la note forte « cuivre » : la saturation monte avec la vélocité et
+                    # éclaire le timbre ; l'énergie pondérée K de la note est rendue telle
+                    # quelle : le niveau reste celui de la vélocité, comme aux autres
+                    # familles (compensée à la crête seulement, la saturation ajoutait
+                    # 2,5 dB à vélocité 96 et 5 dB à 120, un peu plus aux notes brèves)
+                    pic = max(float(np.abs(x).max()), 1e-6)
+                    y = dsp.saturer(x * np.float32(1.0 / pic), eclat * (j.v - 72) / 55.0,
+                                    asymetrie=0.12) * np.float32(pic)
+                    x = y * np.float32(np.sqrt(_energie_k(x) / max(_energie_k(y), 1e-20)))
                 _ajouter(sortie, x, pos, g, 1.0 - place, 1.0 + place)
         return sortie
 
@@ -263,31 +371,52 @@ class InstrumentGM(Instrument):
         syn = Synthe.pour(self.banque_sf)
         for art, liste in sorted(par_art.items()):
             bq, prog = self.articulations[art]
-            canaux = {}
-            evs = []
-            for u in range(k_uni):
-                canal = 9 if self.kit else u
-                canaux[canal] = (bq, prog)
-                if k_uni > 1 and not self.kit:
-                    c, ms, _ = _UNISSON[u % len(_UNISSON)]
-                    evs.append((0, 'sens', canal, 2, 0))
-                    evs.append((0, 'pb', canal, 0, int(8192 + c / 200.0 * 8192)))
-                else:
-                    ms = 0.0
-                for j in liste:
-                    if self.kit:
-                        cle = PIECES_GM.get(j.h, j.h) if isinstance(j.h, str) else int(j.h)
-                    else:
-                        cle = int(round(j.h))
-                    t0 = int(round((j.t - self.avance.get(art, 0.0) + ms / 1000.0) * SR))
-                    t1 = t0 + max(64, int(j.d * SR))
-                    if 0 <= t0 < n:
-                        evs.append((t0, 'on', canal, cle, j.v))
-                        evs.append((min(t1, n - 1), 'off', canal, cle, 0))
+            # l'égalisation des zones : les notes dont la correction diffère sont rendues
+            # à part (le rendu est linéaire : la somme est le rendu commun), chacune
+            # avec son gain, sans toucher à la vélocité (donc au timbre)
+            groupes = {}
+            for j in liste:
                 if self.kit:
-                    break
-            y = syn.rendre(evs, n, canaux)
-            sortie += y * np.float32(dsp.gain(self.niveau_art(art)) / np.sqrt(k_uni if not self.kit else 1))
+                    gz, v = 0.0, j.v
+                else:
+                    v, gv = velocite_jouee(self.nom, art, j.v)
+                    gz = round(zone_hauteur(self.nom, art, j.h, j.d, v) + gv, 1)
+                groupes.setdefault(gz, []).append((j, v))
+            for gz, groupe in sorted(groupes.items()):
+                # plusieurs groupes : chacun n'est rendu qu'à partir de sa première note
+                # (un départ aligné sur les blocs de 64 du synthé : le même son)
+                depart = 0
+                if len(groupes) > 1:
+                    t_min = min(j.t - self.avance.get(art, 0.0) for j, _ in groupe)
+                    depart = max(0, (int(t_min * SR) - SR // 10) // 64 * 64)
+                canaux = {}
+                evs = []
+                for u in range(k_uni):
+                    canal = 9 if self.kit else u
+                    canaux[canal] = (bq, prog)
+                    if k_uni > 1 and not self.kit:
+                        c, ms, _ = _UNISSON[u % len(_UNISSON)]
+                        evs.append((0, 'sens', canal, 2, 0))
+                        evs.append((0, 'pb', canal, 0, int(8192 + c / 200.0 * 8192)))
+                    else:
+                        ms = 0.0
+                    for j, v in groupe:
+                        if self.kit:
+                            cle = PIECES_GM.get(j.h, j.h) if isinstance(j.h, str) else int(j.h)
+                        else:
+                            cle = int(round(j.h))
+                        t0 = int(round((j.t - self.avance.get(art, 0.0) + ms / 1000.0) * SR))
+                        t1 = t0 + max(64, int(j.d * SR))
+                        if 0 <= t0 < n:
+                            evs.append((t0, 'on', canal, cle, v))
+                            evs.append((min(t1, n - 1), 'off', canal, cle, 0))
+                    if self.kit:
+                        break
+                if depart:
+                    evs = [(max(0, e[0] - depart),) + tuple(e[1:]) for e in evs]
+                y = syn.rendre(evs, n - depart, canaux)
+                sortie[depart:] += y * np.float32(dsp.gain(self.niveau_art(art) + gz) /
+                                                  np.sqrt(k_uni if not self.kit else 1))
         return sortie
 
 
@@ -347,7 +476,8 @@ class InstrumentSynthe(Instrument):
                     cache[cle] = x
             if p['mono'] and niveau0 > 0:
                 x = dsp.fondu(x, entree=int(0.004 * SR))
-            _ajouter(sortie, x, pos, g)
+            gz = zone_hauteur(self.nom, 'tenu', j.h, None, j.v)
+            _ajouter(sortie, x, pos, g * dsp.gain(gz) if gz else g)
             prec = j
         return sortie
 
@@ -416,24 +546,102 @@ class InstrumentCouches(Instrument):
     def rendre(self, jeux, n, ctx):
         sortie = np.zeros((n, 2), dtype=np.float32)
         reg = ctx['reglages']
-        for nom, transp, g_db, arts, dvel in self.couches:
-            inst = INSTRUMENTS[nom]
-            js = []
-            for j in jeux:
-                a = self.art(j, reg)
+        # chaque articulation a son niveau calibré (niveaux.json), comme les autres
+        # instruments : on rend les couches articulation par articulation
+        par_art = {}
+        for j in jeux:
+            par_art.setdefault(self.art(j, reg), []).append(j)
+        for a, groupe in sorted(par_art.items()):
+            partiel = np.zeros((n, 2), dtype=np.float32)
+            for nom, transp, g_db, arts, dvel in self.couches:
+                inst = INSTRUMENTS[nom]
                 a2 = arts.get(a, arts.get('*', '='))
                 if a2 is False:
                     continue
                 if a2 == '=':
                     a2 = a
-                h = j.h + transp if not isinstance(j.h, str) else j.h
-                js.append(Jeu(j.t, j.d, h, max(1, min(127, j.v + dvel)), a2, j.p, j.rang))
-            if not js:
-                continue
-            sous = dict(ctx)
-            sous['reglages'] = {k: v for k, v in reg.items() if k in ('legato',)}
-            sortie += inst.rendre(js, n, sous) * np.float32(dsp.gain(g_db))
-        return sortie * np.float32(dsp.gain(self.niveau))
+                js = [Jeu(j.t, j.d, j.h + transp if not isinstance(j.h, str) else j.h,
+                          max(1, min(127, j.v + dvel)), a2, j.p, j.rang) for j in groupe]
+                sous = dict(ctx)
+                sous['reglages'] = {k: v for k, v in reg.items() if k in ('legato',)}
+                partiel += inst.rendre(js, n, sous) * np.float32(dsp.gain(g_db))
+            sortie += partiel * np.float32(dsp.gain(self.niveau_art(a)))
+        return sortie
+
+
+# ---------------------------------------------------------------------------------
+# La foule du stade (moteur/foule.py)
+
+class InstrumentFoule(Instrument):
+    """La foule du stade qui chante : 'o', 'ah' (le chant, la rumeur dessous, le stade
+    autour), 'rumeur' (la rumeur seule, qui suit la durée et la vélocité des notes)."""
+    sorte = 'fabrication'
+
+    def __init__(self, *a, rumeur_db=-22.0, **kw):
+        super().__init__(*a, **kw)
+        self.rumeur_db = rumeur_db
+
+    def rendre(self, jeux, n, ctx):
+        from . import foule
+        reg = ctx['reglages']
+        par_art = {}
+        for j in jeux:
+            par_art.setdefault(self.art(j, reg), []).append(j)
+        sortie = np.zeros((n, 2), dtype=np.float32)
+        for art, liste in sorted(par_art.items()):
+            if art == 'rumeur':
+                y = foule.InstrumentFoule.rumeur_seule(self, liste, n, ctx)
+            else:
+                y = foule.InstrumentFoule.chant(self, liste, n, ctx, art,
+                                                lambda h, _prog, v, a=art: zone_hauteur(self.nom, a, h, None, v))
+            sortie += y * np.float32(dsp.gain(self.niveau_art(art)))
+        return sortie
+
+    def phrase_audition(self):
+        """La tête d'un motif dans le grave (la2–fa3) sur « o », puis resserrée dans
+        la3–ré4 sur « ah », chacune finie par une note tenue ; puis la rumeur seule."""
+        from .theorie import hauteur as hh
+        j = []
+        t = 0.4
+        for art, notes in (('o', 'A2:.5 E3:.5 F3:2 C3:.5 B2:.5 D3:1 A2:3'),
+                           ('ah', 'A3:.5 C4:.5 D4:2 C4:.5 B3:.5 C4:1 A3:3')):
+            for x in notes.split():
+                h, d = x.split(':')
+                d = float(d) * 0.625          # des noires à 96
+                j.append(Jeu(t, d, hh(h), 100, art, None, len(j)))
+                t += d
+            t += 1.0
+        j.append(Jeu(t, 4.0, hh('A2'), 90, 'rumeur', None, len(j)))
+        return j, t + 10.0
+
+
+class InstrumentApplaudissements(Instrument):
+    """Une tribune qui frappe dans ses mains : 'mesure' (chaque note, un coup de toute la
+    tribune), 'ovation' (sans pulsation, enfle pendant la note). La hauteur ne compte pas."""
+    sorte = 'fabrication'
+
+    def rendre(self, jeux, n, ctx):
+        from . import foule, synthe
+        reg = ctx['reglages']
+        par_art = {}
+        for j in jeux:
+            par_art.setdefault(self.art(j, reg), []).append(j)
+        sortie = np.zeros((n, 2), dtype=np.float32)
+        for art, liste in sorted(par_art.items()):
+            if art == 'ovation':
+                y = foule.applaudir_ovation(liste, n, synthe.graine_note(ctx.get('graine'), ctx.get('piste'),
+                                                                          ctx.get('segment')))
+            else:
+                y = foule.applaudir_mesure(liste, n)
+            sortie += foule.au_loin(y, sec=0.6, stade=0.8) * np.float32(dsp.gain(self.niveau_art(art)))
+        return sortie
+
+    def phrase_audition(self):
+        """Quatre mesures à 120 en mesure (les temps 2 et 4, puis tous les temps), puis une
+        ovation de six secondes."""
+        j = [Jeu(0.5 + 0.5 * k, 0.2, 60, 100, 'mesure', None, k) for k in range(16) if k % 2 == 1 or k >= 8]
+        j.append(Jeu(9.0, 6.0, 60, 110, 'ovation', None, len(j)))
+        return j, 20.0
 
 
 # ---------------------------------------------------------------------------------
@@ -522,6 +730,7 @@ def _cat():
         'legato': {'sfz': O + 'TrumpetSus.sfz', 'legato': True},
         'staccato': {'sfz': O + 'TrumpetStac.sfz', 'oneshot': True},
         'sourdine': {'sfz': O + 'TrumpetStraightMuteSus.sfz'},
+        'harmon': {'sfz': O + 'TrumpetHarmonMuteSus.sfz'},
     }, 'tenu', 'deux trompettes : l\'éclat, les fanfares', {'pan': 0.25, 'profondeur': 0.6}, unisson=2,
         avance={'tenu': 0.015}, eclat=1.4))
     met(_sfz('trombones', 'cuivres', ('E2', 'F5'), {
@@ -649,6 +858,18 @@ def _cat():
     }, 'tenu', 'orgue à tuyaux : la messe, le vertige', {'pan': 0.0, 'profondeur': 0.85}))
     met(InstrumentGM('celesta', 'claviers', ('C4', 'C8'), {'frappe': (0, 8)}, 'frappe',
                      'célesta : le conte, le mystère', {'pan': -0.3, 'profondeur': 0.5}))
+    # deux voix de la banque générale qui manquaient aux époques : le jouet (la maquette du
+    # livre 5) et le piano électrique des années 1996–2006 et de la ville la nuit (« fm » : le
+    # numérique propre ; « desaccorde » : les lames désaccordées) ; leurs niveaux sont calibrés
+    # comme les autres (niveaux.json, banc.py --calibrer)
+    met(InstrumentGM('boite_a_musique', 'claviers', ('C4', 'C8'), {'frappe': (0, 10)}, 'frappe',
+                     'boîte à musique : le jouet, la maquette, le ressort qui se détend',
+                     {'pan': 0.2, 'profondeur': 0.45}))
+    met(InstrumentGM('piano_electrique', 'claviers', ('E1', 'G7'), {'lames': (0, 4), 'fm': (0, 5),
+                                                                     'desaccorde': (8, 4)}, 'lames',
+                     'piano électrique à lames (« fm » : la cloche numérique ; « desaccorde » : les lames '
+                     'désaccordées) : la nuit, le bar, la vitrine, le bureau la nuit',
+                     {'pan': 0.0, 'profondeur': 0.3, 'largeur': 0.9}))
 
     # --- le chœur et les voix (General MIDI) ---
     met(InstrumentGM('choeur', 'choeur', ('C3', 'C6'), {'aah': (0, 52), 'ouh': (0, 53)}, 'aah',
@@ -658,6 +879,12 @@ def _cat():
     met(InstrumentGM('voix_synthe', 'choeur', ('C3', 'C6'), {'tenu': (0, 54)}, 'tenu',
                      'voix de synthèse : un chœur de machine', {'pan': 0.0, 'profondeur': 0.5},
                      avance={'tenu': 0.05}))
+    # le sifflet (un homme qui siffle, enregistré : un son presque pur, un vibrato de voix) : une
+    # phrase rare, jamais un ostinato (au-dessus de do6 il devient perçant)
+    met(InstrumentGM('sifflet', 'bois', ('C5', 'C7'), {'tenu': (0, 78)}, 'tenu',
+                     'sifflet humain : quelqu\'un qui siffle en marchant, une phrase rare (la route, le '
+                     'dimanche)', {'pan': 0.0, 'profondeur': 0.4},
+                     avance={'tenu': 0.03}))
 
     met(InstrumentGM('nappe_gm', 'synthes', ('C2', 'C7'), {'chaude': (0, 89), 'halo': (0, 94),
                                                          'atmosphere': (0, 99), 'verre': (0, 92),
@@ -686,7 +913,7 @@ def _cat():
                            ('batterie_electro', 24, 'batterie électronique des années 80'),
                            ('boite_analogique', 25, 'la boîte à rythmes analogique des années 80'),
                            ('batterie_balais', 40, 'les balais : S frappe, CL claque, S2 frottement (un '
-                            'balai qui tourne, une demi-seconde), K grosse caisse feutrée')):
+                            'balai qui tourne, une demi-seconde), K grosse caisse feutrée ; la promenade')):
         met(InstrumentGM(nom, 'batterie', None, {'kit': (128, prog)}, 'kit', car,
                          {'pan': 0.0, 'profondeur': 0.2}, kit=True))
 
@@ -696,6 +923,13 @@ def _cat():
                      'tenu', 'pupitre de contrebasses (banque générale)', {'pan': 0.55, 'profondeur': 0.45}))
     met(InstrumentGM('taiko_gm', 'percussions', ('C2', 'C4'), {'frappe': (0, 116)}, 'frappe',
                      'taiko (banque générale)', {'pan': 0.0, 'profondeur': 0.7}))
+
+    # --- la ville, le jour et la nuit (banque générale) ---
+    met(InstrumentGM('contrebasse_jazz', 'cordes', ('E1', 'G3'), {'pince': (0, 32)}, 'pince',
+                     'contrebasse pincée du bal : la marche souple, le demi-temps de la nuit',
+                     {'pan': 0.05, 'profondeur': 0.2}))
+    met(InstrumentGM('guitare_nylon', 'guitares', ('E2', 'B5'), {'tenu': (0, 24)}, 'tenu',
+                     'guitare à cordes de nylon : les arpèges pincés du jour', {'pan': -0.3, 'profondeur': 0.3}))
 
     # --- les synthétiseurs ---
     met(InstrumentSynthe('basse_synthe', 'synthes', ('E1', 'C4'), {'tenu': None}, 'tenu',
@@ -797,6 +1031,17 @@ def _cat():
                           'banque générale sous lui', {'pan': 0.5, 'profondeur': 0.4},
                           couches=[('contrebasses', 0, 0.0, {'*': '='}, 0),
                                    ('pupitre_basses', 0, -3.0, {'*': '='}, 0)]))
+
+    # --- la foule du stade (fabriquée : moteur/foule.py ; elle porte son stade, pas de salle) ---
+    met(InstrumentFoule('foule', 'choeur', ('G2', 'E4'), {'o': None, 'ah': None, 'rumeur': None}, 'o',
+                        'la foule du stade : des milliers d\'hommes à l\'unisson sur « o » ou « ah », de '
+                        'loin, la rumeur dessous ; `rumeur` seule',
+                        {'pan': 0.0, 'profondeur': 0.2, 'largeur': 1.0, 'salle': 0.0},
+                        avance={'o': 0.09, 'ah': 0.09}))
+    met(InstrumentApplaudissements('applaudissements', 'percussions', None, {'mesure': None, 'ovation': None},
+                                   'mesure', 'une tribune qui frappe dans ses mains : en mesure (chaque note, '
+                                   'un coup) ou l\'ovation qui enfle pendant la note',
+                                   {'pan': 0.0, 'profondeur': 0.2, 'largeur': 1.0, 'salle': 0.0}))
     return I
 
 

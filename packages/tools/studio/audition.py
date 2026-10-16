@@ -7,7 +7,11 @@
     python3 packages/tools/studio/audition.py --accordage
         joue trois notes de chaque instrument mélodique et mesure leur hauteur (la
         fondamentale estimée contre la note écrite, en cents) et l'instant de leur
-        attaque (contre le temps écrit, en millisecondes)."""
+        attaque (contre le temps écrit, en millisecondes).
+    python3 packages/tools/studio/audition.py foule --telephone --out <dossier>
+        le test du téléphone : la phrase de l'instrument en mono, passée dans un
+        passe-bande 400 Hz–6 kHz ; la hauteur lue au milieu de chaque note contre la note
+        écrite (<instrument>_telephone.wav pour l'oreille)."""
 import argparse
 import os
 import sys
@@ -198,7 +202,7 @@ def table():
                 else:
                     arts.append(art)
             sorte = {'échantillons': 'échantillons', 'General MIDI': 'banque GM', 'synthèse': 'synthèse',
-                     'couches': 'couches'}[inst.sorte]
+                     'couches': 'couches', 'fabrication': 'fabriqué'}[inst.sorte]
             uni = getattr(inst, 'unisson', 1)
             pupitre = f'{uni} prises' if uni > 1 else '—'
             pan = inst.mix.get('pan', 0.0)
@@ -208,7 +212,10 @@ def table():
 
 
 def phrase(inst):
-    """Une phrase type selon l'instrument : (jeux, durée totale)."""
+    """Une phrase type selon l'instrument : (jeux, durée totale). Un instrument peut
+    donner la sienne (`phrase_audition`)."""
+    if hasattr(inst, 'phrase_audition'):
+        return inst.phrase_audition()
     j = []
     if isinstance(inst, InstrumentRythmes) or inst.famille == 'batterie':
         motif = ['K', 'H', 'S', 'H', 'K', 'K', 'S', 'O']
@@ -244,6 +251,77 @@ def phrase(inst):
     return j, t + 5.0
 
 
+def hauteur_lue(x, h, bas=400.0, haut=3000.0, rangs=10):
+    """La note que l'oreille lit dans `x` (mono) là où l'on attend `h` : chaque demi-ton
+    de h − 12 à h + 12 reçoit la somme des amplitudes du spectre à ses harmoniques de
+    rang 1 à `rangs` qui tombent dans la bande (pondérées 1/√k) : sans fondamentale, la
+    hauteur se lit sur les premiers harmoniques, ceux que l'oreille sépare. Rend (la
+    note la plus saillante, la marge en dB entre la meilleure note de la même classe
+    que `h` et la meilleure des autres)."""
+    n = len(x)
+    N = 1 << int(np.ceil(np.log2(max(n, 4096) * 4)))
+    X = np.abs(np.fft.rfft(x * np.hanning(n), N))
+    sal = {}
+    for c in range(h - 12, h + 13):
+        f0 = frequence(c)
+        s = 0.0
+        for k in range(1, rangs + 1):
+            fk = k * f0
+            if fk > haut:
+                break
+            if fk < bas:
+                continue
+            i = int(round(fk * N / SR))
+            s += float(X[max(0, i - 2):i + 3].max()) / np.sqrt(k)
+        sal[c] = s
+    meilleure = max(sal, key=sal.get)
+    meme = max(v for c, v in sal.items() if (c - h) % 12 == 0)
+    autre = max(v for c, v in sal.items() if (c - h) % 12 != 0)
+    return meilleure, 20 * np.log10(max(meme, 1e-12) / max(autre, 1e-12))
+
+
+def telephone(nom_i, dossier):
+    """Le test du téléphone : la phrase d'audition de l'instrument, en mono, passée dans
+    un passe-bande 400 Hz–6 kHz (un haut-parleur de téléphone) ; pour chaque note à
+    hauteur, trame par trame (80 ms, tous les 20 ms), la note que l'oreille lit
+    (`hauteur_lue`) contre la note écrite. Une note se lit quand la note écrite l'emporte
+    sur la moitié de ses trames au moins (l'octave à part : sans son grave, une note se
+    lit souvent une octave plus haut, c'est la même ligne)."""
+    from scipy import signal
+    inst = INSTRUMENTS[nom_i]
+    jeux, duree = phrase(inst)
+    y = inst.rendre(jeux, int(duree * SR), {'reglages': {}, 'courbes': {}})
+    m = y.mean(axis=1)
+    t = signal.sosfilt(signal.butter(4, [400.0, 6000.0], 'bandpass', fs=SR, output='sos'), m).astype(np.float32)
+    if dossier:
+        os.makedirs(dossier, exist_ok=True)
+        sf.write(os.path.join(dossier, f'{nom_i}_telephone.wav'), t * (0.5 / max(np.abs(t).max(), 1e-9)), SR,
+                 subtype='PCM_24')
+    lues = justes = 0
+    marges = []
+    w = int(0.08 * SR)
+    for j in jeux:
+        if isinstance(j.h, str) or j.d < 0.25 or j.art == 'rumeur':
+            continue
+        gagnees = 0
+        ms = []
+        debut = int((j.t + 0.05) * SR)
+        fin = int((j.t + j.d - 0.02) * SR) - w
+        for a in range(debut, max(debut + 1, fin), int(0.02 * SR)):
+            _, marge = hauteur_lue(t[a:a + w], int(j.h))
+            ms.append(marge)
+            gagnees += marge > 0
+        part = gagnees / len(ms)
+        lues += 1
+        justes += part >= 0.5
+        marges.append(float(np.median(ms)))
+        print(f'{nom(j.h):>5s}  lue sur {100 * part:3.0f} % des trames, marge médiane {np.median(ms):+5.1f} dB'
+              + ('' if part >= 0.5 else '  ✗'))
+    print(f'{nom_i} : {justes}/{lues} notes lues à leur hauteur au téléphone (mono, 400 Hz–6 kHz), '
+          f'marge médiane {np.median(marges):+.1f} dB')
+    return justes, lues
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('instruments', nargs='*')
@@ -252,6 +330,7 @@ def main(argv=None):
     ap.add_argument('--echantillons', action='store_true', help='vérifie chaque échantillon')
     ap.add_argument('--ecrire', action='store_true', help='avec --echantillons : écrit moteur/accords.json')
     ap.add_argument('--table', action='store_true', help='la table des instruments (Markdown)')
+    ap.add_argument('--telephone', action='store_true', help='le test du téléphone (mono, 400 Hz–6 kHz)')
     a = ap.parse_args(argv)
     if a.table:
         table()
@@ -261,6 +340,10 @@ def main(argv=None):
         return
     if a.echantillons:
         echantillons(a.ecrire)
+        return
+    if a.telephone:
+        for nom_i in a.instruments:
+            telephone(nom_i, a.out)
         return
     os.makedirs(a.out, exist_ok=True)
     from banc import dessiner
