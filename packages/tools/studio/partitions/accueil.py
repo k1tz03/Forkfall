@@ -77,11 +77,13 @@ et section par section contre le mélange d'origine (toutes les pistes à ± 1,6
 seul fader ne rendait pas est dans RETOUCHES ; les quatre voix de l'arc reprennent leur
 équilibre d'origine (la calibration des synthés avait baissé ses voix aiguës de 2 à 4 dB).
 
-Le banc (rendu complet, avant la reprise) :
-  boucle −16,02 LUFS · crête −1,20 dBTP · bandes <250 37 % · 250–2k 58 % · 2–6k 4,2 % ·
-  >6k 0,2 % · couture identique au bit, saut −1,83 dB · grave au milieu (corr. 0,894)
-  sections : intro −22,8 · A −19,0 · B −16,9 · C1 −14,4 · creux −20,9 · A2 −17,2 · B2 −15,1 ·
-  C2 −13,6
+Le banc (rendu complet, repris sur le studio corrigé) :
+  boucle −16,01 LUFS · crête −1,20 dBTP · bandes <250 36 % · 250–2k 60 % · 2–6k 3,6 % ·
+  >6k 0,1 % · couture identique au bit, saut −1,05 dB · grave au milieu (corr. 0,884)
+  sections : intro −23,7 · A −18,8 · B −16,7 · C1 −14,4 · creux −20,7 · A2 −17,1 · B2 −15,0 ·
+  C2 −13,7 (avant la reprise : −22,8 · −19,0 · −16,9 · −14,4 · −20,9 · −17,2 · −15,1 · −13,6)
+  au téléphone (mono, 400 Hz–6 kHz) : la mélodie devant de +2,9 dB en C1, +2,5 en C2 ; la basse
+  coupée sous 200 Hz se suit sur 86 % des temps
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
