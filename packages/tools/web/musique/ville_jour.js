@@ -143,7 +143,7 @@
     titre: 'Promenade', moment: 'la ville le jour (un jour sur deux)', tonalite: 'sol dorien',
     humeur: "la marche tranquille d'un été qui sent l'orage : une basse carrée qui chaloupe, un scintillement",
     ville: true,
-    bpm: 98, swing: 0.13, gain: 1.7,
+    bpm: 98, swing: 0.13, gain: 1.8,
     pompe: { prof: 0.35, rel: 0.25 },
     echo: { pas: 3, retour: 0.4, coupe: 2400 },
     salle: { taille: 0.65, duree: 2.4, ton: 4000 },
@@ -159,7 +159,7 @@
       fredon: { inst: 'vox', vol: 0.065, voyelle: 'ou', vers: 'o', rev: 0.5, echo: 0.15, pan: 0.1 },
       gronde: { inst: 'reese', vol: 0.065, oct: 2, desaccord: 11, chaleur: 1.4, ton: [1100, 450, 0.5] },
       basse:  { inst: 'sqbasse', vol: 0.09, oct: 2, pompe: true, drive: 1.1, filtre: 2400, ton: [3000, 1100, 0.08] },
-      batt:   { vol: 0.55, porte: 0.35, tenue: 0.2, rev: 0.18, filtre: 11000 }
+      batt:   { vol: 0.5, porte: 0.35, tenue: 0.2, rev: 0.18, filtre: 11000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : on sort ──
