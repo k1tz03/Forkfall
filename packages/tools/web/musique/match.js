@@ -5,8 +5,8 @@
  * pousse entre les coups de grosse caisse, puis roule en doubles croches) ; et
  * la tribune : un mur de voix « oh » qui respire avec la grosse caisse, un
  * chant en valeurs longues (une quinte qui monte, un saut d'octave), trois
- * stabs qui lui répondent au bout des phrases. Ce qui
- * n'appartient qu'à ce thème : les montées — la caisse claire qui accélère
+ * stabs qui lui répondent au bout des phrases. Ce qui n'appartient qu'à ce
+ * thème : les montées — la caisse claire qui accélère
  * (noires, croches, doubles croches, la caisse « gated »), le filtre qui
  * s'ouvre, la tribune qui se lève (« oh » qui devient « ah »), un dernier temps
  * où seul le souffle monte — et la retombée sur la grosse caisse et la cymbale.
@@ -21,10 +21,11 @@
  *   B2        8 m.  le chant harmonisé, les stabs
  *   montee    8 m.  la montée : noires, croches, doubles croches, la caisse
  *                   « gated », le souffle ; la foule se lève
- *   C        16 m.  la poussée, le sommet : la basse qui roule, le chant en
- *                   valeurs longues puis le chant entier, harmonisé
- *   mitemps   8 m.  le creux : la basse seule et fermée, la foule qui murmure,
- *                   le carillon du stade
+ *   C        16 m.  la poussée, le sommet : la basse qui roule, la reese, le
+ *                   chant en valeurs longues ; puis le chant entier, harmonisé,
+ *                   sur l'arpège à trois contre quatre
+ *   mitemps   8 m.  le creux : la reese qui bourdonne, la foule qui murmure, le
+ *                   carillon du stade ; la grosse caisse et la basse reviennent
  *   reprise   8 m.  le retour des vestiaires : la grosse caisse revient, la basse
  *                   s'ouvre, la tribune rappelle
  *   A2        8 m.  la seconde mi-temps : la basse qui double ses coups, l'arpège
