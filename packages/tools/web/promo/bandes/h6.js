@@ -19,7 +19,8 @@ module.exports = bandeDeLivre({
   heros: { prenom: 'Martine', nom: 'Estève', genre: 'f' },
   theme: 'livre_h6',
   extraits: {
-    a: { fichier: '${SP}/extraits/papier_thermique.{format}.mp4', de: 0, pose: 3.0, duree: 7.4 },
+    // l'horloge du bureau qui passe à 23 h 58, puis le fax qui sort sa page (dès 2,3 s)
+    a: { fichier: '${SP}/extraits/papier_thermique.{format}.mp4', de: 0, pose: 5.6, duree: 7.4, deCourt: 2.4 },
     b: { fichier: '${SP}/extraits/la_buanderie.{format}.mp4', de: 0, pose: 3.0, duree: 7.2 },
   },
   // la page du fax de 23 h 58 (montrée), puis la photo qui sort le lendemain (glissée)

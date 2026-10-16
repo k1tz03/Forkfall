@@ -116,7 +116,9 @@ module.exports = function bandeDeLivre(P) {
     { id: 'carte3', profils: ['social', 'appstore', 'apple'], heros: P.heros, prepare: aCarte(P.cartes.trois, P.cartes.sens, P.cartes.sauteTrois),
       tournage: [['attendre', reste(1.2, GLISSE + 1.0, 0.3, s(7), sc(4))], ['pose', 'carte'],
         ['glisser', P.cartes.sensTrois || 'gauche', { duree: 0.8, ampleur: 0.44, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.0]] },
-    { id: 'stade', profils: ['social', 'apple'], heros: P.heros, prepare: auStade(I, G),
+    // (la carte du match peut sortir sous le fondu de la ville qui va au stade : le doigt toucherait le
+    // fondu et sélectionnerait le texte — mesuré aux livres 5 et 8 ; on attend qu'il se lève)
+    { id: 'stade', profils: ['social', 'apple'], heros: P.heros, prepare: auStade(I, G).concat([['attendreQue', '!etat.fondu && !etat.cine', 20], ['attendre', 0.6]]),
       // le plan part 2,4 s avant la pose
       tournage: [['attendre', 0.6], ['glisser', 'gauche', { duree: 0.6, ampleur: 0.45 }], ['attendre', 3.2], ['pose', 'stade'], ['attendre', reste(2.0, 2.4, 0, s(9))]] },
     { id: 'accueil', profils: ['appstore', 'apple', 'google'], heros: P.heros, profil: { runs: 1 }, prepare: [['attendre', 1.6]],

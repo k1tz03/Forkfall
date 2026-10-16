@@ -18,7 +18,9 @@ module.exports = bandeDeLivre({
   heros: { prenom: 'Claude', nom: 'Vaquez', genre: 'm' },
   theme: 'livre_h5',
   extraits: {
+    // la maquette au 1/200 (Gégé, en bas : « Et la 14B, ils la mettent où ? »), puis la vraie tribune Est
     a: { fichier: '${SP}/extraits/seconde_tranche.{format}.mp4', de: 0, pose: 2.5, duree: 7.2 },
+    // la tribune Est qui brûle sous la pluie (le carton « 3 h 40 » jusqu'à 4 s)
     b: { fichier: '${SP}/extraits/chene_1931.{format}.mp4', de: 0, pose: 3.0, duree: 6.8 },
   },
   // « Ici le Conseil » au téléphone beige (montrée), puis la vitrine de l'agence (glissée)
