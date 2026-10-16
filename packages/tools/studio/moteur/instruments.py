@@ -649,6 +649,17 @@ def _cat():
     }, 'tenu', 'orgue à tuyaux : la messe, le vertige', {'pan': 0.0, 'profondeur': 0.85}))
     met(InstrumentGM('celesta', 'claviers', ('C4', 'C8'), {'frappe': (0, 8)}, 'frappe',
                      'célesta : le conte, le mystère', {'pan': -0.3, 'profondeur': 0.5}))
+    # deux voix de la banque générale qui manquaient aux époques : le jouet (la maquette du
+    # livre 5) et le piano électrique des années 1996–2006 (« fm » : le numérique propre).
+    # Leur niveau (`niveau`, dB) est mesuré comme banc.py --calibrer (sonie maximale sur 400 ms
+    # d'une note de vélocité 100 → −20 LUFS) : la boîte +7,6 ; le piano électrique « lames » −0,9
+    # (« fm » sort 3,4 dB plus bas à vélocité égale) ; une clé de niveaux.json les remplacerait
+    met(InstrumentGM('boite_a_musique', 'claviers', ('C4', 'C8'), {'frappe': (0, 10)}, 'frappe',
+                     'boîte à musique : le jouet, la maquette, le ressort qui se détend',
+                     {'pan': 0.2, 'profondeur': 0.45}, niveau=7.6))
+    met(InstrumentGM('piano_electrique', 'claviers', ('E1', 'G7'), {'lames': (0, 4), 'fm': (0, 5)}, 'lames',
+                     'piano électrique à lames (« fm » : la cloche numérique) : la vitrine, le bureau la nuit',
+                     {'pan': -0.15, 'profondeur': 0.3}, niveau=-0.9))
 
     # --- le chœur et les voix (General MIDI) ---
     met(InstrumentGM('choeur', 'choeur', ('C3', 'C6'), {'aah': (0, 52), 'ouh': (0, 53)}, 'aah',
