@@ -4,7 +4,8 @@
  *
  * Une berline grise sur la place peinte, la pluie sur la tôle, et le lundi à
  * sept heures un répondeur qui parle avec la voix de l'absent. Le bip est un
- * sinus pur sur si (988 Hz : le « bip » des répondeurs, et la tonique) ; après
+ * sinus pur sur si (988 Hz : à vingt cents du kilohertz des répondeurs, et
+ * c'est la tonique) ; après
  * lui, le piano électrique dit le message sur la prosodie de la phrase (« C'est
  * Roland. Ne mets pas Bréhaut samedi. » : ré, do dièse, si — puis la, si, do
  * dièse, ré…), sans un mot. La basse ne marche pas : elle tient, puis glisse —
@@ -172,7 +173,7 @@
       piano: { inst: 'epiano', vol: 0.085, oct: 3, rev: 0.25, pompe: true, flotte: { prof: 5, vit: 0.41 }, pan: -0.15 },
       brume: { inst: 'nappe', vol: 0.075, oct: 3, rev: 0.45, pompe: true, flotte: { prof: 12, vit: 0.33 }, filtre: 1400 },
       lead:  { inst: 'lead', vol: 0.1, echo: 0.35, rev: 0.4, flotte: { prof: 9, vit: 0.4 }, filtre: 2200, pan: 0.2 },
-      radio: { inst: 'pulse', duty: 0.25, vol: 0.05, filtre: 1500, rev: 0.15, echo: 0.1, flotte: 6, pan: 0.35 },
+      radio: { inst: 'pulse', duty: 0.125, vol: 0.05, filtre: 1500, rev: 0.15, echo: 0.1, flotte: 6, pan: 0.35 },
       envol: { inst: 'supersaw', vol: 0.075, oct: 3, scies: 5, desaccord: 14, rev: 0.45, pompe: true, flotte: { prof: 10, vit: 0.36 }, filtre: 2600, env: [0.4, 0.8, 0.85, 0.35] },
       reese: { inst: 'reese', vol: 0.1, oct: 1, plancher: 'F#1', desaccord: 8, pompe: true },
       basse: { inst: 'basse', vol: 0.09, oct: 1, plancher: 'E1', pompe: true, drive: 1.2, filtre: 1100, ton: [900, 380, 0.12] },
