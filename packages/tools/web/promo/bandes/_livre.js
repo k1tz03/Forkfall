@@ -14,7 +14,7 @@
      6  le film A (sa suite)                  l'objet du livre            (P.legendes.objet)
      7  la ville, la nuit                     la menace                   (P.legendes.nuit)
      8  une carte du livre (trois), glissée   le choix                    (P.legendes.choix)
-     9  le film B                             —
+     9  le film B                             — (ou P.legendes.filmB, quand sa suite a ses propres cartons)
     10  le samedi à la Rive                   —
     11  le film B (sa suite)                  la dernière ligne           (P.legendes.fin)
     12  la fin : le titre au néon, le livre, le logo, la disponibilité
@@ -144,7 +144,7 @@ module.exports = function bandeDeLivre(P) {
     { duree: d(5), source: { film: 'a', de: dA2 }, legende: leg(L.objet, FILM_BAS) },
     { duree: d(6), source: { moment: 'nuit', de: 0.3 }, cadre: VILLE, legende: leg(L.nuit, A_DROITE) },
     { duree: d(7), source: { moment: 'carte3', de: 0.3 }, cadre: ECRAN, legende: leg(L.choix, A_DROITE) },
-    { duree: d(8), source: { film: 'b', de: Bx.de || 0 } },
+    { duree: d(8), source: { film: 'b', de: Bx.de || 0 }, legende: leg(L.filmB, FILM_BAS) },
     { duree: d(9), source: { moment: 'stade', de: { pose: 'stade', avant: 2.4 } }, cadre: VILLE },
     { duree: d(10), source: { film: 'b', de: dB2 }, legende: leg(L.fin, FILM_BAS) },
     { duree: 'reste', source: { carton: 'fin', image: P.panorama || '${WEB}/accueil/panorama_nuit.webp', livre: { titre: P.titre, ligne: P.ligne },

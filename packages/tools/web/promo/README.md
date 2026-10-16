@@ -108,7 +108,10 @@ avec le côté (le livre 3 répond à droite). Une bande plus fine s'écrit à l
 Ce qu'une bande de livre peut régler, en plus du modèle : la position ou le temps d'une légende
 (`{ titre, sous, position: { '16x9': 'haut' }, de: 2.2, a: -0.7 }` — un extrait de film a ses
 propres cartons, son titre, ses sous-titres : la légende les évite), `objet: undefined` (pas de
-légende sur la suite du film A, quand le film y pose son titre), `extraits.x.deCourt` (où l'aperçu
+légende sur la suite du film A, quand le film y pose son titre ; de même `fin: undefined` pour le
+film B, et `filmB`, une légende sur son premier plan), les légendes des captures (`carteEcran`,
+`introEcran`, `villeEcran`, `objetEcran`, `carte2Ecran`, `nuitEcran`, `choixEcran`, `stadeEcran`,
+`finEcran` : une capture dit ce que son image montre), `extraits.x.deCourt` (où l'aperçu
 de l'App Store prend l'extrait), `extraits.x.suite` (où reprend sa seconde moitié), `lieux.toucheJour`,
 `lieux.toucheNuit`, `lieux.trancheJour`, `repliques` (l'introduction avancée de n répliques),
 `moments: { jour: { … } }` (retoucher un moment), `legendesCourt` (d'autres légendes pour l'aperçu),

@@ -22,8 +22,14 @@ module.exports = bandeDeLivre({
   extraits: {
     // le four du fournil, puis (dès 1,5 s) la chemise noire sur la table farinée, les ciseaux sur la manche
     a: { fichier: '${SP}/extraits/seconde_manche.{format}.mp4', de: 0, pose: 3.0, duree: 7.0 },
+    // un chantier d'Al-Dorado dans la brume de chaleur, les grues ; dès 3,5 s le titre du film
+    // (« AL-DORADO · 2030 / Vingt degrés dedans ») au milieu, un ouvrier en orange sur l'échafaudage :
+    // son premier plan n'a qu'une mesure (avant le titre), sa suite finit la bande sur ce titre
     b: { fichier: '${SP}/extraits/baie_vitree.{format}.mp4', de: 0, pose: 3.0, duree: 7.0 },
   },
+  // (les durées visées, en proportions : deux mesures par plan au banc, le premier plan du film B
+  // ramené à une, la fin à quatre)
+  visees: [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 4],
   // la montre gravée DÔME 2030 (montrée), puis le brassard noir du capitaine (glissée)
   cartes: { deux: 'sl.h9.a2_montre_page', trois: 'sl.h9.pro5_brassard' },
   lieux: { jour: 'boulangerie_residentiel', nuit: 'eglise' },
@@ -35,8 +41,10 @@ module.exports = bandeDeLivre({
     objet: { titre: 'Un brassard noir', sous: "taillé dans la chemise d'un mort" },
     nuit: { titre: "Le ministère t'appelle", sous: 'sans dire son nom' },
     choix: { titre: 'Le pays te demande de sourire.' },
-    fin: { titre: '« Vous irez quand même ? »' },
+    // (la question sur le chantier, avant le titre du film ; la suite se tait : le film y pose son titre)
+    filmB: { titre: '« Vous irez quand même ? »' },
+    fin: undefined,
     carte2Ecran: "L'émirat envoie une montre",
-    finEcran: 'Vingt degrés dedans',
+    finEcran: 'Al-Dorado, trente-neuf degrés dehors',
   },
 });
