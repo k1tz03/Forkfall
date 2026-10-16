@@ -7,8 +7,8 @@
        encore (content/ville/scenes_h1.yaml, « La presse de minuit » : c'est là,
        et pas dans la buvette, qu'on imprime les masques ; le carton qui attend
        sous la table de la buvette porte leur nom) ;
-     · la presse : l'encre, la platine, une feuille levée vers l'ampoule — ton
-       visage sort par quatre (le visage du héros de la carrière, art.js, imprimé
+     · la presse : le cliché encré, la platine, la pile de sortie, une épreuve
+       pendue sous l'ampoule — ton visage sort par quatre (le visage du héros de la carrière, art.js, imprimé
        noir sur blanc : « noir sur blanc », dit la carte de la présentation) ;
      · la cour : les masques sèchent sur une corde, sous une ampoule nue, la
        pluie au bord de la tôle. Gégé, hors champ, une ligne ;
@@ -190,20 +190,19 @@
     amp.position.set(0.1, 3.4, -0.45); s.add(amp);
     var amp2 = P.ampoule({ fil: 0.7, intensite: 5, ombre: false, balancement: 0.02, graine: "etabli", halo: 0.4 });
     amp2.position.set(-2.4, 3.4, -1.5); s.add(amp2);
-    // la feuille qu'on lève vers l'ampoule, et les deux mains qui la tiennent
+    // une épreuve pendue à la ficelle de l'atelier, sous l'ampoule : elle sèche à contre-jour,
+    // deux pinces de bois (la corde de la cour, déjà)
     var feuilleLevee = P.feuille({ texture: tex.feuille, largeur: 0.42, hauteur: 0.546, gondole: 1.4, courbe: 0.15 });
     var tenue = new THREE.Group(); tenue.add(feuilleLevee); s.add(tenue);
-    var mPeau = new THREE.MeshStandardMaterial({ color: "#7d5a44", roughness: 0.7, emissive: new THREE.Color("#6a2414"), emissiveIntensity: 0.22 }); K.garder(mPeau);
-    var mManche = new THREE.MeshStandardMaterial({ color: "#2b3036", roughness: 0.95 }); K.garder(mManche);
-    // les doigts qui pincent le haut de la feuille (quatre devant, le pouce derrière) ; le
-    // reste de la main est hors du cadre
-    var gDoigt = new THREE.CapsuleGeometry(0.0085, 0.05, 4, 8); K.garder(gDoigt);
+    var mPince = K.mat.bois({ couleur: "#a8835a", lames: 1, graine: "pince-atelier" });
     [-1, 1].forEach(function (sg) {
-      var main = new THREE.Group(); main.position.set(sg * 0.165, 0.262, 0.0); main.rotation.z = -sg * 0.25; tenue.add(main);
-      for (var d = 0; d < 4; d++) { var dg = new THREE.Mesh(gDoigt, mPeau); dg.position.set((d - 1.5) * 0.019, 0.02 - Math.abs(d - 1.5) * 0.006, 0.012); dg.rotation.x = -0.15; main.add(dg); }
-      var pouce = new THREE.Mesh(gDoigt, mPeau); pouce.position.set(0, 0.012, -0.012); pouce.scale.set(1.15, 0.8, 1.15); main.add(pouce);
-      var paume = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), mPeau); paume.scale.set(1.2, 0.9, 0.7); paume.position.set(0, 0.075, 0.0); main.add(paume); K.garder(paume.geometry);
+      // la pince mord le bord du haut : ses deux mâchoires de part et d'autre du papier (qui
+      // se courbe d'un centimètre vers l'avant au bord), le ressort au-dessus
+      var at = new THREE.Group(); at.position.set(sg * 0.16, 0.262, 0.011); at.rotation.z = sg * 0.04; tenue.add(at);
+      P.boite(at, 0.013, 0.072, 0.008, mPince, 0, 0.012, 0.011); P.boite(at, 0.013, 0.072, 0.008, mPince, 0, 0.012, -0.011);
+      P.cylindre(at, 0.0045, 0.0045, 0.03, K.mat.metal({ couleur: "#6d6a66", rugosite: 0.4 }), 0, 0.03, 0, { rx: PI / 2, cotes: 8 });
     });
+    var ficelle = P.cylindre(s, 0.0022, 0.0022, 5, K.garder(new THREE.MeshStandardMaterial({ color: "#7b7364", roughness: 0.9 })), -0.55, 1.80 + 0.262 + 0.03, 0.14, { rz: PI / 2, cotes: 6 });
     var poussiere = K.particules.poussiere({ n: 900, zone: { min: [-1.2, 0.6, -1.8], max: [1.4, 2.8, 0.8] }, couleur: "#ffd7a0", opacite: 0.9, taille: 0.01,
       lumieres: [{ pos: [0.1, 2.3, -0.45], couleur: "#FFD49A", intensite: 2.4, rayon: 2.2 }] });
     s.add(poussiere);
@@ -537,17 +536,18 @@
       // la platine se lève et le couvre (le coup), retombe : l'encre brille de nouveau
       { de: 5.2, a: 7.6, decor: "atelier", entree: "coupe",
         camera: { pos: K_cles([[0, [0.3, 1.5, -0.24]], [2.4, [0.25, 1.45, -0.32]]], "lin"), cible: [0.15, 0.98, -0.87], fov: 46, epaule: 0.2 },
-        look: { exposition: 1.6, contraste: 1.22 } },
+        look: { exposition: 1.3, contraste: 1.22 } },
       // 3 · la pile de sortie : ton visage sort par quatre, une feuille de plus à chaque coup
       { de: 7.6, a: 10.0, decor: "atelier", entree: "coupe",
         camera: { pos: K_cles([[0, [-0.12, 1.62, 0.12]], [2.4, [-0.2, 1.5, 0.02]]], "douce"), cible: [-0.6, 0.86, -0.56], fov: 40, epaule: 0.18 } },
-      // 4 · la feuille levée vers l'ampoule : quatre fois ton visage, à contre-jour
+      // 4 · une épreuve pendue sous l'ampoule : quatre fois ton visage, à contre-jour
       { de: 10.0, a: 13.0, decor: "atelier", entree: "coupe",
         camera: { pos: K_cles([[0, [-0.5, 1.62, 1.3]], [3.0, [-0.53, 1.68, 1.12]]], "douce"), cible: [-0.52, 1.92, 0.1], fov: 32, epaule: 0.18 },
         maj: function (l, p, c) {
           var d = c.decors.atelier;
-          d.tenue.position.set(-0.55, 1.66 + K_lisse(0, 1.4, l) * 0.16, 0.14);
-          d.tenue.rotation.set(-0.16 + K_fbm(l * 0.4, 3) * 0.04, K_fbm(l * 0.3, 5) * 0.06, K_fbm(l * 0.5, 7) * 0.03);
+          // pendue : elle tourne un peu sur sa ficelle, l'ampoule la traverse
+          d.tenue.position.set(-0.55, 1.80, 0.14);
+          d.tenue.rotation.set(-0.06 + K_fbm(l * 0.4, 3) * 0.05, K_fbm(l * 0.3, 5) * 0.12, K_fbm(l * 0.5, 7) * 0.025);
           d.feuille.transparence(0.25 + 0.5 * K_lisse(0.3, 1.8, l));
         } },
       // 5 · la cour : la corde, les masques, l'ampoule ; on longe la corde sous la pluie

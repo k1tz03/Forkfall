@@ -407,7 +407,7 @@ buvette (`intro_h1.yaml`).
 | 1 | 0–5,2 | la rue du Port sous la pluie, de haut, puis à hauteur d'homme vers la vitrine des Cartonnages de la Rive ; un ouvrier fume sur le seuil ; carton « Aubérive, rue du Port / La veille du premier match · 23 h 40 » | le lieu et l'heure ; la presse est là, et pas à la buvette |
 | 2 | 5,2–7,6 | le cliché : ton visage à l'envers, quatre fois, sur le zinc ; les rouleaux l'encrent ; la platine se lève et retombe (le coup : `une`) | « ton visage sort par quatre » |
 | 3 | 7,6–10 | la pile de sortie : une feuille de plus à chaque coup, « TIRAGE 3000 » en pied | trois mille |
-| 4 | 10–13 | une feuille levée vers l'ampoule, à contre-jour, entre deux doigts | le visage, noir sur blanc |
+| 4 | 10–13 | une épreuve pendue à la ficelle de l'atelier, sous l'ampoule, à contre-jour, deux pinces de bois | le visage, noir sur blanc ; la corde de la cour, déjà |
 | 5 | 13–19 | la cour : les masques sèchent sur une corde sous une ampoule nue, la pluie au bord de la tôle ; Gégé, hors champ : « Trois mille. Personne n'en parle avant le coup d'envoi. Pas même au vestiaire. » | la seule ligne ; au neutre |
 | 6 | 19–23,6 | la Nord, vide et mouillée ; les pylônes claquent un à un (`porte`), le dernier monte en blanc | la Rive attend |
 | 7 | 23,6–27,5 | des silhouettes déroulent un tifo du dernier rang vers le bas : NORD, ton visage | le virage prépare |
