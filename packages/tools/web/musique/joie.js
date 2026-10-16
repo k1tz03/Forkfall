@@ -6,7 +6,8 @@
  * qui roule comme une boule à facettes ; quatre temps au sol, les claps sur le
  * deux et le quatre dans une grande salle sombre, le charleston ouvert entre
  * les temps ; des accords plaqués à contretemps, puis des cordes de grandes
- * scies. L'accroche monte : trois notes syncopées dont la plus haute grimpe
+ * scies. Tout va par octaves : la mélodie aussi, un carré creux doublé à
+ * l'octave grave par un second carré. L'accroche monte : trois notes syncopées dont la plus haute grimpe
  * d'un demi-ton à chaque mesure (mi, fa, sol, sol dièse… la). Au sommet la
  * même accroche monte jusqu'en do majeur par deux accords majeurs volés au
  * mineur (la bémol, si bémol) ; puis la nuit reprend tout, et l'on retombe en
@@ -43,6 +44,10 @@
   var NAPPE2 = 'X - - - - - - - X - - - - - - -';
   function silences(n) { var l = []; for (var i = 0; i < n; i++) l.push(SILENCE); return l; }
   function fois(n, l) { var r = []; for (var i = 0; i < n; i++) r = r.concat(l); return r; }
+  // la même ligne, d'une octave à l'autre (les notes écrites seulement)
+  function octave(l, d) {
+    return l.map(function (b) { return b.replace(/([A-G][#b]?)(\d)/g, function (m, n, o) { return n + (+o + d); }); });
+  }
 
   // ── la basse carrée en octaves, en croches (la boule à facettes) ──
   var DISCO = 'R . 8 . R . 8 . R . 8 . R 8 R 8';
@@ -153,14 +158,16 @@
     tonalite: 'la mineur → do majeur',
     humeur: "la fête au bord de la nuit : une basse en octaves, des claps, une accroche qui grimpe d'un demi-ton",
     ville: true,
-    bpm: 122, gain: 1.4,
+    bpm: 122, gain: 1.36,
     pompe: { prof: 0.6, rel: 0.2 },
     echo: { pas: 3, retour: 0.38, coupe: 2600 },
     salle: { taille: 0.75, duree: 2.8, ton: 4200 },
     cassette: { sature: 1, coupe: 10500, bas: 55, souffle: 0.004, flotte: { prof: 3, vit: 0.33 } },
     voix: {
-      lead:   { inst: 'pulse', duty: 0.3, vol: 0.13, filtre: 3400, echo: 0.28, rev: 0.3, flotte: { prof: 5, vit: 0.5 }, pan: 0.05 },
-      harmo:  { inst: 'pulse', duty: 0.3, vol: 0.055, filtre: 3000, echo: 0.12, rev: 0.3, pan: -0.3 },
+      lead:   { inst: 'pulse', duty: 0.5, vol: 0.11, filtre: 3400, env: [0.003, 0.25, 0.65, 0.1], echo: 0.28, rev: 0.3,
+                flotte: { prof: 5, vit: 0.5 }, pan: 0.05 },
+      grave:  { inst: 'pulse', duty: 0.5, vol: 0.06, filtre: 2400, env: [0.003, 0.25, 0.65, 0.1], echo: 0.12, rev: 0.25, pan: -0.12 },
+      harmo:  { inst: 'pulse', duty: 0.5, vol: 0.05, filtre: 3000, env: [0.003, 0.25, 0.65, 0.1], echo: 0.12, rev: 0.3, pan: -0.3 },
       stab:   { inst: 'stab', vol: 0.15, oct: 4, echo: 0.2, rev: 0.25, pompe: true, pan: -0.2 },
       cordes: { inst: 'supersaw', vol: 0.11, oct: 4, scies: 5, desaccord: 16, large: 0.85, rev: 0.38, pompe: true,
                 flotte: { prof: 8, vit: 0.45 }, filtre: 4200, env: [0.12, 0.6, 0.85, 0.3] },
@@ -186,6 +193,7 @@
         stab: STAB,
         cordes: [NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE],
         lead: silences(4).concat(MONTE, [ARRIVEE], silences(3), MONTE_VITE),
+        grave: octave(silences(4).concat(MONTE, [ARRIVEE], silences(3), MONTE_VITE), -1),
         batt: fete(D_DISCO_X, D_DISCO, D_DISCO, D_DISCO_FIN)
       },
       B: {
@@ -195,6 +203,7 @@
         stab: STAB,
         cordes: [NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU],
         lead: REFRAIN,
+        grave: octave(REFRAIN, -1),
         batt: fete(D_REFRAIN_X, D_REFRAIN, D_REFRAIN, D_REFRAIN_FIN)
       },
       // le creux : au bord de la nuit
@@ -214,7 +223,8 @@
         copie: 'A', harmo: true,
         basse: DISCO2,
         stab: [STAB[1], STAB[0]],
-        lead: silences(4).concat(MONTE_VITE, [ARRIVEE], silences(3), MONTE)
+        lead: silences(4).concat(MONTE_VITE, [ARRIVEE], silences(3), MONTE),
+        grave: octave(silences(4).concat(MONTE_VITE, [ARRIVEE], silences(3), MONTE), -1)
       },
       // la montée : jusqu'en do majeur, par la bémol et si bémol
       montee: {
@@ -224,6 +234,7 @@
         cordes: [NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU],
         stab: STAB,
         lead: MONTEE_DO,
+        grave: octave(MONTEE_DO, -1),
         batt: fete(D_REFRAIN_X, D_REFRAIN, D_REFRAIN, D_REFRAIN_FIN)
       },
       sommet: {
@@ -234,6 +245,7 @@
         cordes: [NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE2, NAPPE],
         stab: STAB,
         lead: SOMMET,
+        grave: octave(SOMMET, -1),
         batt: fete(D_SOMMET_X, D_SOMMET, D_SOMMET, D_SOMMET_FIN)
       },
       // la nuit reprend : retour en la mineur

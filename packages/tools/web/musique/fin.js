@@ -3,9 +3,9 @@
  * d'une carrière, et l'épilogue de 2050 du dossier de 1974.
  *
  * La mélancolie : la dernière chanson de la soirée, le slow qu'on danse quand
- * la salle se vide. Le seul thème en douze-huit : un `swing` de deux tiers
- * fait des trois premières doubles croches de chaque temps un triolet exact
- * (on n'écrit que les cases 0, 1 et 2 de chaque temps). Une basse ronde, un
+ * la salle se vide. En douze-huit : un `swing` de deux tiers fait des trois
+ * premières doubles croches de chaque temps un triolet exact (on n'écrit que
+ * les cases 0, 1 et 2 de chaque temps), et la case 3 se tait. Une basse ronde, un
  * piano électrique qui égrène l'accord en triolets, une nappe large ; un lead
  * en larmes qui prend son élan d'une croche et glisse d'une quarte vers le
  * haut, puis retombe. Et la cassette qui fatigue : au second couplet et dans

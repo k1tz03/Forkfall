@@ -3,7 +3,7 @@
  * un jour sur deux dans les dix livres (l'autre jour, le thème du livre).
  *
  * Le thème qu'on entend le plus : il doit s'user le moins. La marche
- * tranquille d'un été qui sent l'orage. Le seul thème qui chaloupe (`swing`) :
+ * tranquille d'un été qui sent l'orage. Elle chaloupe (`swing`, un huitième) :
  * une basse carrée souple qui rebondit d'une octave à l'autre et descend en
  * marchant ; des accords étouffés à contretemps, comme une guitare qu'on
  * gratte du bout des doigts ; un pincé tout en haut qui scintille dans son
@@ -21,7 +21,8 @@
  *   ── la boucle, 104 mesures, 4 min 15 ──
  *   A         16 m.  la marche : la basse chaloupée, les contretemps étouffés, le
  *                    scintillement ; l'accroche au bout des deux phrases
- *   B         16 m.  le soleil : l'air, la caisse claire douce, une nappe
+ *   B         16 m.  le soleil : l'air, la caisse claire douce, une nappe ; le
+ *                    scintillement se tait (l'oreille se repose de l'aigu)
  *   A2        16 m.  la marche plus loin : la basse plus bavarde, le scintillement
  *                    à trois contre quatre, l'accroche harmonisée
  *   orage     16 m.  le creux : le tonnerre, les gouttes, le vent ; la reese qui
@@ -187,7 +188,6 @@
                   'Ebmaj7', 'Fmaj7', 'Dm7', 'Gm7', 'Ebmaj7', 'Fmaj7', 'Gm7', 'Am7 D7'],
         basse: SOLEIL,
         chop: CHOP_SOLEIL,
-        scint: SCINT,
         nappe: [NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE, NAPPE2],
         lead: AIR,
         batt: soleil(D_SOLEIL_X, D_SOLEIL, D_SOLEIL_O, D_SOLEIL_FIN)

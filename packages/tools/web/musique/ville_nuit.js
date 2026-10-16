@@ -3,8 +3,8 @@
  * en ville, dans les dix livres.
  *
  * Ralenti, moite, délavé. Une nappe de grandes scies qui ondule comme une
- * bande qui a pris l'eau (le flottement le plus profond de la bande
- * originale), une basse ronde en demi-temps, une caisse « gated » énorme sur
+ * bande qui a pris l'eau (vingt-quatre cents, lentement), une basse ronde en
+ * demi-temps, une caisse « gated » énorme sur
  * le troisième temps ; un saxophone de synthèse qui entre toujours en retard
  * et glisse d'une note à l'autre ; et une enseigne au néon qui grésille — un
  * carré nasillard qui clignote par saccades, jamais au même endroit. Les
@@ -23,7 +23,7 @@
  *   minuit   16 m.  le creux : une horloge, la basse en notes longues, la nappe
  *                   fermée, le piano électrique d'un bar qui ferme
  *   A2       16 m.  le boulevard encore : la basse qui marche un peu plus, le
- *                   piano d'abord, puis le saxophone harmonisé
+ *                   piano d'abord, puis le saxophone harmonisé ; l'enseigne se tait
  *   C        16 m.  la nuit au plus haut : la nappe qui s'ouvre, les claps dans
  *                   la caisse, le saxophone au plus aigu, harmonisé
  *   retour    8 m.  l'enseigne seule, la basse qui se referme, la relance
@@ -190,7 +190,7 @@
       A2: {
         copie: 'A', harmo: true,
         basse: DEMI2,
-        neon: NEON_VIF,
+        neon: null,
         ep: [EP_APPEL[0], EP_APPEL[1], EP_APPEL[0], EP_APPEL[1], EP_APPEL[0], EP_APPEL[1], EP_APPEL[0], SILENCE]
           .concat(silences(8)),
         batt: nuit(D_NUIT_X, D_NUIT2, D_NUIT, D_NUIT_PASSE, D_NUIT_FIN)
