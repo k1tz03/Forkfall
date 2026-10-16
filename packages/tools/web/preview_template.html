@@ -1398,6 +1398,12 @@ window.FusibleContenu.pret((function () {
   var SON_MODES = ["tout", "gestes", "muet"];
   var SON_TIP = { tout: "Ambiances et musique", gestes: "Gestes seulement", muet: "Muet" };
   var audio = window.FusibleAudio || null;
+  // QA : ?son=legere ou ?son=pleine force la qualité du moteur (audio.js, MONTAGES) ; rien n'est gardé.
+  // Sans ce paramètre la page choisit seule, au premier geste, en mesurant l'appareil (localStorage fusible.son.v1).
+  try {
+    var sonQualite = /[?&]son=(pleine|legere)\b/.exec(location.search);
+    if (audio && audio.setQualite && sonQualite) audio.setQualite(sonQualite[1]);
+  } catch (e) { /* rien */ }
   var sonMode = SON_MODES.indexOf(profile.son) >= 0 ? profile.son : "tout";
   var btnSon = $("btnSon");
   var SON_TENSION = {

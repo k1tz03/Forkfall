@@ -474,7 +474,18 @@ Ce que la ville porte en plus des cartes :
   <dossier>`) les joue tous en direct, pour l'oreille du porteur. Sur une même machine, le rendu
   hors ligne se refait au bit près (l'écho n'a plus qu'un retard dans sa boucle : deux retards
   imbriqués se faisaient servir par Chromium dans un ordre qui changeait d'un rendu à l'autre) ;
-  d'une machine à l'autre, une crête peut bouger d'un dixième de décibel.
+  d'une machine à l'autre, une crête peut bouger d'un dixième de décibel. (Avec le Chromium 141
+  de Playwright, deux rendus du même code diffèrent pourtant de quelques millionièmes, −109 dB, moins
+  qu'un bit d'un WAV 16 bits presque partout : un nœud à trois entrées les somme dans l'ordre d'un
+  ensemble de pointeurs. Pour prouver qu'un changement d'`audio.js` laisse la qualité pleine intacte,
+  `node packages/tools/web/journal_son.js` compare, appel par appel, ce que le moteur demande à Web Audio.)
+  **La qualité légère** (`audio.js`, `MONTAGES`) : le même son monté moins cher pour le direct d'un
+  téléphone modeste (trois scies à la grande scie, plus de flottement de voix, des filtres en `k-rate`,
+  une seconde d'avance au séquenceur) ; `pleine`, le son écrit, reste le défaut du banc, du juke-box et
+  des rendus, et `banc_son.js --legere` rend l'autre. Au premier geste, sans verdict gardé
+  (`localStorage` `fusible.son.v1` : `{ q, vitesse, v }`, refait quand `VERSION_SON` monte), la page rend
+  une seconde de « Fusible » C2 hors ligne et passe en légère au-dessous de ×3,5 ; `FusibleAudio.qualite()`
+  le dit, `FusibleAudio.setQualite()` (ou `?son=legere` dans l'adresse) le force.
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,

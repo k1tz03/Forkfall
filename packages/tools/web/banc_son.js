@@ -20,6 +20,18 @@
 //   --annee <a>        l'année (le timbre des voix `epoque`), défaut 1990
 //   --avec <f.js>      charge aussi ce fichier de thème (un brouillon hors de musique/)
 //   --sans-images      ni spectrogramme ni courbe
+//   --legere           rend en qualité légère (le montage allégé du direct d'un téléphone
+//                      modeste, audio.js MONTAGES) ; les sorties prennent le suffixe
+//                      _legere (<thème>_legere.wav…) pour se comparer à la pleine, et la
+//                      ligne dit « légère » : sources et vitesse sont celles de la
+//                      qualité rendue. Sans l'option, la qualité pleine : le son écrit
+//   --direct           écrit les notes comme le séquenceur du direct, à l'avance et à la
+//                      cadence de la qualité rendue (pleine : 1,5 s tous les quarts de
+//                      seconde ; légère : 1 s tous les 0,15 s) au lieu des fenêtres de 2 s
+//                      du banc (3 s d'avance) : le temps de rendu et les nœuds en attente
+//                      sont ceux d'un téléphone. --legere le prend d'office ; la pleine
+//                      garde ses fenêtres de toujours (ses rendus ne bougent pas) et
+//                      prend le suffixe _direct avec cette option
 //   --verifier         compile seulement, en Node, sans navigateur : les fautes
 //                      d'écriture et la forme de chaque thème (rapide)
 //
@@ -67,8 +79,14 @@ function args() {
     else if (x === '--depuis') o.depuis = a[++i];
     else if (x === '--avec') o.avec.push(path.resolve(a[++i]));
     else if (x === '--sans-images') o.images = false;
+    else if (x === '--legere' || x === '--légère') o.legere = true;
+    else if (x === '--direct') o.direct = true;
     else if (x === '--verifier') o.verifier = true;
-    else if (x === '-h' || x === '--help') { console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 33).map((l) => l.replace(/^\/\/ ?/, '')).join('\n')); process.exit(0); }
+    else if (x === '-h' || x === '--help') {
+      // l'en-tête du fichier, jusqu'aux cibles (qui ont leur page : bande_originale.md)
+      const l = fs.readFileSync(__filename, 'utf8').split('\n').slice(1), n = l.findIndex((s) => /^\/\/ LES CIBLES/.test(s));
+      console.log(l.slice(0, n > 0 ? n - 1 : 33).map((s) => s.replace(/^\/\/ ?/, '')).join('\n')); process.exit(0);
+    }
     else if (x.startsWith('--')) { console.error('banc_son : option inconnue ' + x); process.exit(2); }
     else o.themes.push(x);
   }
@@ -134,15 +152,32 @@ async function rendreDansLaPage({ nom, o, cibles }) {
   ['createBiquadFilter', 'createGain', 'createStereoPanner', 'createWaveShaper', 'createConvolver', 'createDelay', 'createChannelMerger', 'createChannelSplitter']
     .forEach((m) => { const f = ctx[m].bind(ctx); ctx[m] = function () { noeuds[m] = (noeuds[m] || 0) + 1; return f.apply(null, arguments); }; });
 
-  const e = A.createEngine(ctx, ctx.destination, { seed: 1, pad: false, at: 0 });
+  const e = A.createEngine(ctx, ctx.destination, { seed: 1, pad: false, at: 0, qualite: o.legere ? 'legere' : 'pleine' });
   e.setYear(o.annee);
   e.setTheme(nom, { at: 0, fade: 0, depuis: o.depuis == null ? undefined : o.depuis });
-  // une fenêtre glissante, comme en direct : le graphe reste petit
-  const PAS = 2;
-  e.scheduleUntil(Math.min(duree, PAS + 1));
-  for (let t = PAS; t < duree; t += PAS) {
-    const tq = Math.round(t * sr / 128) * 128 / sr;
-    ctx.suspend(tq).then(() => { e.scheduleUntil(Math.min(duree + 1, tq + PAS + 1)); ctx.resume(); });
+  // une fenêtre glissante : le graphe reste petit.
+  if (!(o.direct || o.legere)) {
+    // les fenêtres du banc de toujours (2 s, écrites 3 s d'avance) : les rendus de la qualité pleine ne
+    // bougent pas. (Le son d'un balayage de filtre de section dépend de l'avance du séquenceur : voir
+    // `debut` dans audio.js — d'où ces fenêtres figées pour la référence.)
+    const PAS = 2;
+    e.scheduleUntil(Math.min(duree, PAS + 1));
+    for (let t = PAS; t < duree; t += PAS) {
+      const tq = Math.round(t * sr / 128) * 128 / sr;
+      ctx.suspend(tq).then(() => { e.scheduleUntil(Math.min(duree + 1, tq + PAS + 1)); ctx.resume(); });
+    }
+  } else {
+    // comme le séquenceur du direct de la qualité rendue : ses notes aussi d'avance, et aussi souvent
+    // (e.avance(), e.cadence() : 1,5 s tous les quarts de seconde en pleine, 1 s tous les 0,15 s en légère).
+    // Le temps de rendu et les nœuds en attente sont ceux d'un téléphone ; l'élargissement du direct,
+    // lui, ne joue que si le fil principal prend du retard.
+    const AV = e.avance(), CAD = e.cadence();
+    e.scheduleUntil(Math.min(duree + 1, AV));
+    for (let k = 1; k * CAD < duree; k++) {
+      const tq = Math.round(k * CAD * sr / 128) * 128 / sr;   // un paquet de 128 échantillons : le seul grain où le rendu s'arrête
+      if (tq >= duree) break;
+      ctx.suspend(tq).then(() => { e.scheduleUntil(Math.min(duree + 1, tq + AV)); ctx.resume(); });
+    }
   }
   const t0 = performance.now();
   const buf = await ctx.startRendering();
@@ -309,7 +344,7 @@ async function rendreDansLaPage({ nom, o, cibles }) {
   }
   window.__wav = new Uint8Array(out.buffer);
   return {
-    nom, titre: inf.titre, bpm: inf.bpm, ville: inf.ville || /^(ville_|livre_)/.test(nom), duree, rendu,
+    nom, titre: inf.titre, bpm: inf.bpm, ville: inf.ville || /^(ville_|livre_)/.test(nom), duree, rendu, qualite: e.qualite(),
     moyenne, intensite, mesureCorps: !!mesureDe, crete: db(crete * crete), aigus250: h250 / tot, aigus6k: h6k / tot,
     structure: { intro: S.intro, corps: S.corps, periode: S.periode, redite: S.redite, ordre: S.ordre, boucle: S.boucle },
     couture, sources: { pointe, ou: ouPointe, moyenne: cumul / duree, parSeconde: iv.length / duree }, noeuds,
@@ -337,17 +372,22 @@ async function main() {
   let rapport = { themes: {} };
   try { rapport = JSON.parse(fs.readFileSync(jsonPath, 'utf8')); } catch (e) { /* nouveau */ }
   const lignes = [];
+  // ce qui distingue ce rendu de la référence (la pleine, sur les fenêtres de 2 s) : le suffixe de ses fichiers et sa marque
+  const suffixe = o.legere ? '_legere' : o.direct ? '_direct' : '';
+  const marque = o.legere ? ' [légère]' : o.direct ? ' [direct]' : '';
   for (const nom of themes) {
     if (tous.indexOf(nom) < 0) { console.log(`${nom.padEnd(12)} ✗ thème inconnu (${tous.join(', ')})`); continue; }
     let r;
     try {
-      r = await page.evaluate(rendreDansLaPage, { nom, o: { duree: o.duree, boucle: !!o.boucle, couture: !!o.couture, depuis: o.depuis, annee: o.annee, images: o.images }, cibles: CIBLES });
+      r = await page.evaluate(rendreDansLaPage, { nom, o: { duree: o.duree, boucle: !!o.boucle, couture: !!o.couture, depuis: o.depuis, annee: o.annee, images: o.images, legere: !!o.legere, direct: !!o.direct }, cibles: CIBLES });
     } catch (e) {
       console.log(`${nom.padEnd(12)} ✗ ${String(e.message || e).split('\n')[0]}`);
       continue;
     }
-    // le WAV, par morceaux de 6 Mo
-    const wav = path.join(o.out, nom + '.wav');
+    // le WAV, par morceaux de 6 Mo (la qualité légère, et la pleine écrite comme en direct, ont leurs propres
+    // fichiers : on les compare au rendu de référence, la pleine sur les fenêtres du banc)
+    const fich = nom + suffixe;
+    const wav = path.join(o.out, fich + '.wav');
     const fd = fs.openSync(wav, 'w');
     for (let i = 0; i < r.octets; i += 6 << 20) {
       const b64 = await page.evaluate(({ i, n }) => {
@@ -362,13 +402,13 @@ async function main() {
     await page.evaluate(() => { window.__wav = null; });
     const sorties = [path.basename(wav)];
     if (o.images) {
-      const png = path.join(o.out, nom + '.png');
+      const png = path.join(o.out, fich + '.png');
       execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', wav, '-lavfi', 'showspectrumpic=s=1400x520:legend=1:scale=log:fscale=log', png]);
-      fs.writeFileSync(path.join(o.out, nom + '_courbe.png'), Buffer.from(r.courbe, 'base64'));
-      sorties.push(path.basename(png), nom + '_courbe.png');
+      fs.writeFileSync(path.join(o.out, fich + '_courbe.png'), Buffer.from(r.courbe, 'base64'));
+      sorties.push(path.basename(png), fich + '_courbe.png');
     }
     if (o.mp3) {
-      const mp3 = path.join(o.out, nom + '.mp3');
+      const mp3 = path.join(o.out, fich + '.mp3');
       const x = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', wav, '-codec:a', 'libmp3lame', '-b:a', '192k', mp3], { encoding: 'utf8' });
       if (x.status === 0) sorties.push(path.basename(mp3)); else console.log('   (mp3 : ' + (x.stderr || '').trim() + ')');
     }
@@ -386,21 +426,22 @@ async function main() {
     if (r.sources.pointe > CIBLES.sources) revoir.push('trop de sources');
     if (r.erreurs.length) revoir.push('erreurs');
     const couture = r.couture ? ` · couture ${r.couture.mesure >= 0 ? '+' : ''}${fr(r.couture.mesure)} dB${Math.abs(r.couture.mesure) > CIBLES.couture && Math.abs(r.couture.mesure) <= CIBLES.coutureMax ? ' (à écouter)' : ''}` : '';
-    const ligne = `${nom.padEnd(11)} ${('« ' + r.titre + ' »').padEnd(22)} moy ${fr(r.moyenne)} dB${r.mesureCorps ? ' (corps)' : ''} · int ${fr(r.intensite)} · crête ${fr(r.crete)} · >250 Hz ${fr(r.aigus250 * 100)} % · >6 kHz ${fr(r.aigus6k * 100)} % · ` +
+    const ligne = `${nom.padEnd(11)} ${('« ' + r.titre + ' »').padEnd(22)}${marque} moy ${fr(r.moyenne)} dB${r.mesureCorps ? ' (corps)' : ''} · int ${fr(r.intensite)} · crête ${fr(r.crete)} · >250 Hz ${fr(r.aigus250 * 100)} % · >6 kHz ${fr(r.aigus6k * 100)} % · ` +
       `boucle ${mmss(S.periode.secondes)} (${S.periode.mesures} m.) · redite ${mmss(S.redite)}${couture} · ×${fr(vitesse)} · ${r.sources.pointe} sources (${r.sources.ou}), ${Math.round(r.sources.moyenne)} en moyenne  ` +
       (revoir.length ? '✗ ' + revoir.join(', ') : '✓');
     console.log(ligne);
     for (const e of r.erreurs) console.log('   erreur : ' + e.ou + ' : ' + e.message);
     console.log('   → ' + path.relative(process.cwd(), o.out) + '/{' + sorties.join(', ') + '}');
     lignes.push(ligne);
-    rapport.themes[nom] = Object.assign(r, { vitesse, revoir, date: new Date().toISOString(), options: { boucle: !!o.boucle, couture: !!o.couture, depuis: o.depuis, annee: o.annee } });
+    rapport.themes[fich] = Object.assign(r, { vitesse, revoir, date: new Date().toISOString(), options: { boucle: !!o.boucle, couture: !!o.couture, depuis: o.depuis, annee: o.annee, qualite: r.qualite, direct: !!(o.direct || o.legere) } });
   }
   await browser.close();
-  // l'ensemble : un fondu enchaîné ne doit pas sauter d'un thème à l'autre
-  const moy = Object.keys(rapport.themes).map((k) => [k, rapport.themes[k].moyenne]);
+  // l'ensemble : un fondu enchaîné ne doit pas sauter d'un thème à l'autre (entre les rendus de même sorte)
+  const sorte = (k) => (/_legere$/.test(k) ? '_legere' : /_direct$/.test(k) ? '_direct' : '');
+  const moy = Object.keys(rapport.themes).filter((k) => sorte(k) === suffixe).map((k) => [k, rapport.themes[k].moyenne]);
   if (moy.length > 1) {
     const vals = moy.map((x) => x[1]), hi = Math.max(...vals), lo = Math.min(...vals);
-    console.log(`l'ensemble (${moy.length} thèmes dans banc.json) : moyennes de ${fr(lo)} à ${fr(hi)} dB, écart ${fr(hi - lo)} dB` +
+    console.log(`l'ensemble (${moy.length} thèmes${o.legere ? ' en qualité légère' : o.direct ? ' écrits comme en direct' : ''} dans banc.json) : moyennes de ${fr(lo)} à ${fr(hi)} dB, écart ${fr(hi - lo)} dB` +
       (hi - lo > 2 * CIBLES.ecart ? ` ✗ (au plus ${fr(2 * CIBLES.ecart)})` : ' ✓'));
   }
   if (erreursPage.length) console.log('erreurs de la page : ' + erreursPage.join(' | '));
