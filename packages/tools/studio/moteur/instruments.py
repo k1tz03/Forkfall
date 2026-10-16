@@ -858,6 +858,18 @@ def _cat():
     }, 'tenu', 'orgue à tuyaux : la messe, le vertige', {'pan': 0.0, 'profondeur': 0.85}))
     met(InstrumentGM('celesta', 'claviers', ('C4', 'C8'), {'frappe': (0, 8)}, 'frappe',
                      'célesta : le conte, le mystère', {'pan': -0.3, 'profondeur': 0.5}))
+    # deux voix de la banque générale qui manquaient aux époques : le jouet (la maquette du
+    # livre 5) et le piano électrique des années 1996–2006 et de la ville la nuit (« fm » : le
+    # numérique propre ; « desaccorde » : les lames désaccordées) ; leurs niveaux sont calibrés
+    # comme les autres (niveaux.json, banc.py --calibrer)
+    met(InstrumentGM('boite_a_musique', 'claviers', ('C4', 'C8'), {'frappe': (0, 10)}, 'frappe',
+                     'boîte à musique : le jouet, la maquette, le ressort qui se détend',
+                     {'pan': 0.2, 'profondeur': 0.45}))
+    met(InstrumentGM('piano_electrique', 'claviers', ('E1', 'G7'), {'lames': (0, 4), 'fm': (0, 5),
+                                                                     'desaccorde': (8, 4)}, 'lames',
+                     'piano électrique à lames (« fm » : la cloche numérique ; « desaccorde » : les lames '
+                     'désaccordées) : la nuit, le bar, la vitrine, le bureau la nuit',
+                     {'pan': 0.0, 'profondeur': 0.3, 'largeur': 0.9}))
 
     # --- le chœur et les voix (General MIDI) ---
     met(InstrumentGM('choeur', 'choeur', ('C3', 'C6'), {'aah': (0, 52), 'ouh': (0, 53)}, 'aah',
@@ -913,10 +925,6 @@ def _cat():
                      'taiko (banque générale)', {'pan': 0.0, 'profondeur': 0.7}))
 
     # --- la ville, le jour et la nuit (banque générale) ---
-    met(InstrumentGM('piano_electrique', 'claviers', ('E1', 'G6'), {'lames': (0, 4), 'fm': (0, 5),
-                                                                     'desaccorde': (8, 4)}, 'lames',
-                     'piano électrique à lames : la nuit, le bar, les néons',
-                     {'pan': 0.0, 'profondeur': 0.3, 'largeur': 0.9}))
     met(InstrumentGM('contrebasse_jazz', 'cordes', ('E1', 'G3'), {'pince': (0, 32)}, 'pince',
                      'contrebasse pincée du bal : la marche souple, le demi-temps de la nuit',
                      {'pan': 0.05, 'profondeur': 0.2}))

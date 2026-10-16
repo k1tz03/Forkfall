@@ -290,10 +290,11 @@ du vrai instrument.
 | `toms` | échantillons | C2–C4 | frappe (3×2) | — | -0.10 / 0.70 | tom de concert (accordé par la hauteur écrite, autour de D3) |
 | `vibraphone` | échantillons | F3–F6 | frappe (2×1), dure (2×1) | — | -0.15 / 0.50 | vibraphone : la nuit, les néons |
 | `xylophone` | échantillons | F4–C8 | frappe (1×1) | — | +0.12 / 0.60 | xylophone : sec, joueur, pointu |
+| `boite_a_musique` | banque GM | C4–C8 | frappe | — | +0.20 / 0.45 | boîte à musique : le jouet, la maquette, le ressort qui se détend |
 | `celesta` | banque GM | C4–C8 | frappe | — | -0.30 / 0.50 | célesta : le conte, le mystère |
 | `orgue` | échantillons | C2–C7 | tenu (1×1), doux (1×1) | — | +0.00 / 0.85 | orgue à tuyaux : la messe, le vertige |
 | `piano` | échantillons | A0–C8 | tenu (3×1), pedale (3×1) | — | -0.05 / 0.35 | piano de concert (trois nuances) : la confidence, le martèlement |
-| `piano_electrique` | banque GM | E1–G6 | lames, fm, desaccorde | — | +0.00 / 0.30 | piano électrique à lames : la nuit, le bar, les néons |
+| `piano_electrique` | banque GM | E1–G7 | lames, fm, desaccorde | — | +0.00 / 0.30 | piano électrique à lames |
 | `choeur` | banque GM | C3–C6 | aah, ouh | 2 prises | +0.00 / 0.70 | chœur mixte « aah » / « ouh » : l'épopée, la messe |
 | `foule` | fabriqué | G2–E4 | o, ah, rumeur | — | +0.00 / 0.20 | la foule du stade : des milliers d'hommes à l'unisson sur « o » ou « ah », de loin, la rumeur dessous ; `rumeur` seule |
 | `voix_synthe` | banque GM | C3–C6 | tenu | — | +0.00 / 0.50 | voix de synthèse : un chœur de machine |
