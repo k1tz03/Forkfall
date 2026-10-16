@@ -31,7 +31,7 @@ import numpy as np
 from . import dsp, echantillonneur as ech, rendu
 from .dsp import SR
 from .ecriture import Note, Theme
-from .instruments import (FAMILLES, INSTRUMENTS, InstrumentConception, InstrumentCouches,
+from .instruments import (FAMILLES, INSTRUMENTS, InstrumentConception, InstrumentCouches, InstrumentFoule,
                           InstrumentGM, InstrumentRythmes, InstrumentSfz, InstrumentSynthe, Jeu)
 from .theorie import nom as nom_note
 
@@ -280,7 +280,8 @@ def zones_banque(args):
 
 
 def _instruments_par_hauteur():
-    """Les instruments sans échantillons à nous (General MIDI à hauteur, synthés)."""
+    """Les instruments sans échantillons à nous (General MIDI à hauteur, synthés, la
+    foule qui chante ; pas sa rumeur, qui n'a pas de hauteur)."""
     sortie = []
     for nom_i in sorted(INSTRUMENTS):
         inst = INSTRUMENTS[nom_i]
@@ -288,15 +289,17 @@ def _instruments_par_hauteur():
             sortie += [(nom_i, a) for a in inst.articulations]
         elif isinstance(inst, InstrumentSynthe):
             sortie.append((nom_i, 'tenu'))
+        elif isinstance(inst, InstrumentFoule):
+            sortie += [(nom_i, a) for a in inst.articulations if a != 'rumeur']
     return sortie
 
 
 def zones_hauteurs(args):
-    """La correction par demi-ton d'une articulation GM ou d'un synthé, mesurée comme
-    l'articulation est calibrée (`figures`) : brève, la moyenne (note brève, note seule) ;
-    tenue d'un instrument qui n'a que des tenues (une nappe, le chœur), la note tenue ;
-    tenue d'un instrument qui a des brèves, deux corrections par demi-ton (note brève,
-    note tenue), que la durée interpole. Les synthés varient sans à-coups (le filtre
+    """La correction par demi-ton d'une articulation GM, d'un synthé ou de la foule,
+    mesurée comme l'articulation est calibrée (`figures`) : brève, la moyenne (note brève,
+    note seule) ; tenue d'un instrument qui n'a que des tenues (une nappe, le chœur, la
+    foule), la note tenue ; tenue d'un instrument qui a des brèves, deux corrections par
+    demi-ton (note brève, note tenue), que la durée interpole. Les synthés varient sans à-coups (le filtre
     suit la note) : leur courbe est lissée (un polynôme de degré 2) ; les banques GM ont
     leurs zones à elles : un point par demi-ton. Une rangée par vélocité de VELS_ZONES
     (une zone répond plus ou moins vite à la vélocité que ses voisines : la nappe
@@ -379,7 +382,8 @@ def gain_articulation(res):
 def ancienne_mesure(nom_i):
     """Les percussions sans hauteur, les batteries, les sons de conception : la mesure
     d'origine (une frappe, huit croches, un roulement de deux secondes, un motif de
-    batterie), sa sonie maximale sur 400 ms mise à −20 LUFS."""
+    batterie ; l'ovation, six secondes : elle enfle pendant la note), sa sonie maximale
+    sur 400 ms mise à −20 LUFS."""
     inst = INSTRUMENTS[nom_i]
     sortie = {}
     h = int((inst.etendue[0] + inst.etendue[1]) / 2) - 5 if inst.etendue else 60
@@ -392,9 +396,11 @@ def ancienne_mesure(nom_i):
                 jeux = [Jeu(0.2, 2.0, h, 100, art, None, 0)]
             else:
                 jeux = [Jeu(0.2 + 0.25 * i, 0.2, h, 100, art, None, i) for i in range(8)]
+        elif art == 'ovation':
+            jeux = [Jeu(0.2, 6.0, h, 100, art, None, 0)]
         else:
             jeux = [Jeu(0.2, 2.0, h, 100, art, None, 0)]
-        y = inst.rendre(jeux, int(5 * SR), {'reglages': {}, 'courbes': {}})
+        y = inst.rendre(jeux, int((11 if art == 'ovation' else 5) * SR), {'reglages': {}, 'courbes': {}})
         y = dsp.panoramique(y, 0.0, 0.7)
         v = float(dsp.sonie_court_terme(y, fenetre=0.4, pas=0.05).max())
         sortie[art] = round(-20.0 - v, 1)

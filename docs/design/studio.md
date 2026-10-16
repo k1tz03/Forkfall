@@ -68,6 +68,9 @@ python3 banc.py <dossier>/<clé>.wav
 python3 audition.py cors violons --out <dossier>
 # vérifier les instruments : la hauteur et l'attaque de trois notes de chacun
 python3 audition.py --accordage
+# le test du téléphone : la phrase d'un instrument en mono, 400 Hz–6 kHz, la note lue
+# trame par trame contre la note écrite (§ 4.2)
+python3 audition.py foule --telephone --out <dossier>
 # la hauteur de chaque échantillon ; --ecrire range les corrections (moteur/accords.json)
 python3 audition.py --echantillons [--ecrire]
 # la table des instruments de ce document, régénérée depuis le catalogue
@@ -237,15 +240,16 @@ minutes, il reprend à la section qui suit celle qu'il a quittée. Donc :
 
 ## 4. Les instruments
 
-`Sorte` : échantillons (l'orchestre de chambre ou la bibliothèque communautaire,
-lus par l'échantillonneur), banque GM (FluidSynth), synthèse (numpy), couches
-(plusieurs instruments ensemble). `Articulations (a×b)` : `a` couches de vélocité
-traversées par une même note, `b` tours de rôle (une note répétée change
-d'échantillon). `Pupitre` : un soliste rejoué en plusieurs prises désaccordées de
-quelques cents et décalées de quelques millisecondes. `Place` : le panoramique par
-défaut (−1 gauche, +1 droite) / la profondeur (0 devant, 1 au fond). Les étendues sont
-en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus proche
-(transposé), mais s'éloigne vite du vrai instrument.
+`Sorte` : échantillons (l'orchestre de chambre ou la bibliothèque communautaire, lus
+par l'échantillonneur), banque GM (FluidSynth), synthèse (numpy), couches (plusieurs
+instruments ensemble), fabriqué (la foule du stade et ses mains, § 4.2).
+`Articulations (a×b)` : `a` couches de vélocité traversées par une même note, `b`
+tours de rôle (une note répétée change d'échantillon). `Pupitre` : un soliste rejoué
+en plusieurs prises désaccordées de quelques cents et décalées de quelques
+millisecondes. `Place` : le panoramique par défaut (−1 gauche, +1 droite) / la
+profondeur (0 devant, 1 au fond). Les étendues sont en sons réels ; une note hors
+étendue est jouée depuis l'échantillon le plus proche (transposé), mais s'éloigne vite
+du vrai instrument.
 
 | Instrument | Sorte | Étendue | Articulations (couches de vélocité × tours de rôle) | Pupitre | Place | Caractère |
 |---|---|---|---|---|---|---|
@@ -266,6 +270,7 @@ en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus
 | `flutes` | échantillons | C4–C7 | tenu (1×1), sans_vibrato (2×1), legato (1×1), staccato (3×1) | 2 prises | -0.12 / 0.50 | deux flûtes : l'air, la lumière |
 | `hautbois` | échantillons | A#3–G6 | tenu (2×1), sans_vibrato (2×1), legato (2×1), staccato (3×1) | — | +0.10 / 0.50 | hautbois : la plainte, le chant pastoral |
 | `piccolo` | échantillons | D5–C8 | tenu (1×1), staccato (1×1) | — | -0.18 / 0.55 | piccolo : la pointe, à petites doses |
+| `applaudissements` | fabriqué | — | mesure, ovation | — | +0.00 / 0.20 | une tribune qui frappe dans ses mains : en mesure (chaque note, un coup) ou l'ovation qui enfle pendant la note |
 | `caisse_claire` | échantillons | — | frappe (5×2), timbre_off (4×2), roulement (3×1), cercle (1×2) | — | +0.05 / 0.70 | caisse claire d'orchestre (timbre) : les marches, les roulements |
 | `carillon` | échantillons | — | monte (1×1), descend (1×1), vite (1×1) | — | +0.40 / 0.60 | carillon à tiges : la poussière d'étoiles d'une transition |
 | `claps` | échantillons | — | frappe (1×6), seul (4×1) | — | +0.00 / 0.40 | claquements de mains d'un groupe |
@@ -287,6 +292,7 @@ en sons réels ; une note hors étendue est jouée depuis l'échantillon le plus
 | `orgue` | échantillons | C2–C7 | tenu (1×1), doux (1×1) | — | +0.00 / 0.85 | orgue à tuyaux : la messe, le vertige |
 | `piano` | échantillons | A0–C8 | tenu (3×1), pedale (3×1) | — | -0.05 / 0.35 | piano de concert (trois nuances) : la confidence, le martèlement |
 | `choeur` | banque GM | C3–C6 | aah, ouh | 2 prises | +0.00 / 0.70 | chœur mixte « aah » / « ouh » : l'épopée, la messe |
+| `foule` | fabriqué | G2–E4 | o, ah, rumeur | — | +0.00 / 0.20 | la foule du stade : des milliers d'hommes à l'unisson sur « o » ou « ah », de loin, la rumeur dessous ; `rumeur` seule |
 | `voix_synthe` | banque GM | C3–C6 | tenu | — | +0.00 / 0.50 | voix de synthèse : un chœur de machine |
 | `basse_electrique` | banque GM | E1–G4 | doigts, mediator, slap | — | +0.00 / 0.10 | basse électrique : le groove |
 | `guitare_claire` | banque GM | E2–E6 | tenu, etouffee | — | +0.35 / 0.30 | guitare électrique claire : les arpèges de nuit |
@@ -472,6 +478,78 @@ conception n'ont pas bougé (± 0,2 dB).
 | `violons` | tenu **+2,6** (+6 / +1 / +1) · legato **+0,8** (+4 / −1 / −1) · staccato **−2,8** (−1 / −2 / −5) · pizzicato **+5,1** (+8 / +3 / +5) · tremolo **+1,8** (+5 / +1 / −1) |
 | `voix_synthe` | tenu **+1,2** (+1 / +3 / 0) |
 | `xylophone` | frappe **+2,0** (+1 / +2 / +4) |
+
+### 4.2 La foule du stade (`foule`, `applaudissements`)
+
+Deux instruments fabriqués (`moteur/foule.py`) avec ce qui est installé, à graine fixe
+(la bibliothèque n'a pas de foule, et rien ne se télécharge) :
+
+- **`foule`** : des milliers d'hommes qui chantent à l'unisson, de loin, dans un stade.
+  `o` (le défaut) et `ah` : dix prises du chœur de la banque générale (« ouh » et
+  « aah », la voyelle demandée en majorité), chacune une voix rendue une fois
+  (désaccordée de ± 8 cents, une dérive lente de ± 4 cents, en retard de 0 à 25 ms, ses
+  attaques qui flottent de 8 ms, sa vélocité de ± 8, sa couleur de voyelle, son niveau),
+  posée deux fois dans l'image (un second rang plus loin, de l'autre côté) : vingt
+  pupitres de supporters. Deux voix par prise se passent la ligne (celle qui finit
+  s'éteint en 0,12 s quand l'autre attaque : la queue du chœur ne traîne pas sous la
+  note suivante) ; les formants d'une voix d'homme (« o » 450 et 850 Hz, « ah » 700 et
+  1 150 Hz) ; la distance (l'air mange les aigus) et le stade : des réflexions espacées
+  sur le toit et les tribunes (15 à 300 ms), la tribune d'en face (jusqu'à 650 ms, plus
+  faible), une queue d'une seconde à ciel ouvert, sombre, rien sous 180 Hz — pas de
+  cathédrale. Sous le chant, la rumeur : un grondement de voix et de souffles (un bruit
+  mis en forme, des bosses à 300 et 650 Hz) qui enfle et retombe lentement (une houle
+  de ± 3 dB) et suit la nuance et la durée des notes, 22 dB sous le chant. `rumeur` :
+  la rumeur seule. Étendue G2–E4.
+- **`applaudissements`** : une tribune qui frappe dans ses mains. `mesure` : chaque
+  note est un coup de toute la tribune — 48 mains, chacune à sa place dans l'image, avec
+  son claquement (quarante, tirés une fois des mains seules et des groupes de la
+  bibliothèque, transposés, filtrés), son avance ou son retard propre et un flottement
+  d'un coup à l'autre (± 30 ms en tout) ; une main sur vingt-cinq se tait parfois.
+  `ovation` : des applaudissements sans pulsation qui enflent pendant la note (64 mains
+  qui arrivent dans la première seconde et demie, chacune à son rythme, 3,2 à 5,8
+  frappes par seconde, puis qui s'arrêtent une à une dans les 2,5 s qui suivent), la
+  clameur dessous ; un `crescendo` sur la piste la fait enfler davantage. La hauteur
+  écrite ne compte pas.
+
+Ils sont calibrés comme les autres (`banc.py --calibrer foule applaudissements`) : la
+foule par demi-ton et par figures (`o`, `ah` et `rumeur` à 2,9 dB l'une de l'autre au
+plus, chacune égale sur l'étendue à 1,7 dB près), les mains comme les percussions sans
+hauteur (un coup, à −20 LUFS de sonie maximale sur 400 ms ; l'ovation, sur une note de
+six secondes).
+
+**Le test du téléphone** (`python3 audition.py foule --telephone --out <dossier>`) : la
+phrase d'audition de la foule (la tête d'un motif dans la2–fa3 sur « o », puis
+resserrée dans la3–ré4 sur « ah ») en mono, passée dans un passe-bande 400 Hz–6 kHz ;
+trame par trame (80 ms), la note que l'oreille lit — la somme des harmoniques qu'elle
+sépare, la fondamentale étant coupée — contre la note écrite. Les 14 notes se lisent à
+leur hauteur (la tête grave, 7 sur 7 — mi 3, la plus fragile, sur 56 % de ses trames ;
+la tête médium, 7 sur 7, sur 78 à 100 % des trames), marge médiane +2,1 dB. Plus de
+rumeur ou plus de stade la brouille : la rumeur à −14 dB sous le chant au lieu de −22,
+11 notes sur 14 ; le stade à part égale du son direct, 4 croches sur 14 se lisaient sur
+la note d'avant (d'où ses réflexions espacées, sombres, et sa part de 0,3).
+
+**Le coût et l'exemple** : la foule ne rend que vingt voix de chœur (dix prises, deux
+voix chacune), sur la seule durée où elle chante, puis la convolution du stade ; les
+mains rejouent quarante claquements calculés une fois. L'audition des deux instruments
+(42 s de son, `python3 audition.py foule applaudissements --out <dossier>`) se rend en
+6,9 s, 0,76 Go de mémoire de pointe. L'exemple, « La tribune » (`partitions/_foule.py`,
+huit mesures à 96 : la foule chante la tête d'un motif à l'unisson sur « o », puis sur
+« ah », puis resserrée dans la3–ré4, sur la grosse caisse aux temps 1 et 3 et les mains
+aux temps 2 et 4 ; la dernière note tenue ; l'ovation, la foule retombée en rumeur), se
+rend en 24 s (26 s de calcul par minute de master, dont 5,8 s pour les vingt secondes de
+la foule et 1,3 s pour les mains), 1,1 Go de mémoire de pointe ; deux rendus sont
+identiques au bit. Son banc :
+
+```
+_foule « La tribune »  boucle -16.02 LUFS · master -16.46 · court terme -17.4..-14.7 · crête -1.20 dBTP
+  bandes <250 47 % · 250–2k 49 % · 2–6k 4.2 % · >6k 0.0 % · stéréo côtés/milieu -4.1 dB, corr. 0.437 (grave 0.893)
+  couture : écart -240.0 dB, saut +1.69 dB, spectre 14.34 dB, clic ×1.0 · durée 54.0 s, boucle 20.0 s · rendu 26.4 s/min
+  sonie ✓ · crête ✓ · médium ✓ · aigus ✓ · couture ✓ · grave au milieu ✓
+  sections : A -16.0
+```
+
+Les pistes : la foule −18,2 LUFS, la grosse caisse −20,6, les mains −21,8, la basse
+pizzicato −31,6 (un fond).
 
 ## 5. Le mélange
 
@@ -710,6 +788,15 @@ Deux rendus successifs de la démonstration donnent deux WAV identiques au bit.
     note).
 - **La boîte à rythmes** est synthétique : la grosse caisse et la caisse claire gagnent
   à être doublées par la `caisse_claire` ou la `grosse_caisse` de l'orchestre.
+- **La foule** est un chœur d'opéra joué de loin par vingt pupitres : pas de cris, pas
+  de paroles, pas d'accent ; sa rumeur est un bruit mis en forme, pas des voix. Elle
+  chante des hommes : au-dessus de mi 4 elle s'éclaircit. Ses prises flottent de 8 à
+  25 ms : une ligne plus rapide que la croche à 96 se brouille. Plus de rumeur, ou plus
+  de stade, et la ligne ne se lit plus au téléphone (§ 4.2) : monter la rumeur à part
+  (`rumeur`, sur sa propre piste) plutôt que dans le chant.
+- **Les applaudissements** tirent quarante claquements de la même bibliothèque : de
+  près et seuls, l'oreille reconnaît les mêmes mains ; une ovation de plus de dix
+  secondes devient un bruit (la doubler par la `foule` sur `rumeur`, ou finir).
 
 ## 11. L'arborescence
 
@@ -720,14 +807,15 @@ packages/tools/studio/
   rendre.py             partition → master, repères, écoute (et le banc)
   banc.py               les mesures, les images, la calibration et la preuve des niveaux
   audition.py           un instrument seul, l'accord, la table des instruments
-  partitions/           un fichier par thème ; _modele.py, demo_studio.py
+  partitions/           un fichier par thème ; _modele.py, demo_studio.py, _foule.py
   moteur/
     ecriture.py         ce qu'une partition importe : Theme, motifs, briques, nuances
     theorie.py          notes, tonalités, modes, accords par chiffres romains
-    instruments.py      le catalogue (noms français), les quatre sortes d'instruments
+    instruments.py      le catalogue (noms français), les cinq sortes d'instruments
     echantillonneur.py  le lecteur SFZ : couches, tours de rôle, boucles, legato
     fluide.py           FluidSynth par ctypes (les banques General MIDI)
     synthe.py           la synthèse : oscillateurs, filtre, montées, impacts, boîte à rythmes
+    foule.py            la foule du stade et ses mains (fabriquées : chœur, stade, rumeur, claquements)
     dsp.py              filtres, saturation, compresseur, limiteur, salles, sonie
     noyau.c, noyau.py   les boucles échantillon par échantillon (compilées en cache)
     rendu.py            segments, pistes, bus, envois, assemblage, master
@@ -745,3 +833,6 @@ packages/tools/studio/
   égalisées une à une, chaque articulation est calibrée en contexte sur des figures de
   musique, dans trois registres et à trois vélocités (§ 4.1). Un fader réglé avant se
   corrige de l'opposé de la table « ce qui a changé ».
+- **Octobre 2026, deuxième passe — la tribune.** Deux instruments fabriqués : la `foule`
+  qui chante le motif à l'unisson, de loin, dans un stade, et les `applaudissements` en
+  mesure ou en ovation (§ 4.2) ; l'exemple « La tribune » (`partitions/_foule.py`).

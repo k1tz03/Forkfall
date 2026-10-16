@@ -570,6 +570,81 @@ class InstrumentCouches(Instrument):
 
 
 # ---------------------------------------------------------------------------------
+# La foule du stade (moteur/foule.py)
+
+class InstrumentFoule(Instrument):
+    """La foule du stade qui chante : 'o', 'ah' (le chant, la rumeur dessous, le stade
+    autour), 'rumeur' (la rumeur seule, qui suit la durée et la vélocité des notes)."""
+    sorte = 'fabrication'
+
+    def __init__(self, *a, rumeur_db=-22.0, **kw):
+        super().__init__(*a, **kw)
+        self.rumeur_db = rumeur_db
+
+    def rendre(self, jeux, n, ctx):
+        from . import foule
+        reg = ctx['reglages']
+        par_art = {}
+        for j in jeux:
+            par_art.setdefault(self.art(j, reg), []).append(j)
+        sortie = np.zeros((n, 2), dtype=np.float32)
+        for art, liste in sorted(par_art.items()):
+            if art == 'rumeur':
+                y = foule.InstrumentFoule.rumeur_seule(self, liste, n, ctx)
+            else:
+                y = foule.InstrumentFoule.chant(self, liste, n, ctx, art,
+                                                lambda h, _prog, v, a=art: zone_hauteur(self.nom, a, h, None, v))
+            sortie += y * np.float32(dsp.gain(self.niveau_art(art)))
+        return sortie
+
+    def phrase_audition(self):
+        """La tête d'un motif dans le grave (la2–fa3) sur « o », puis resserrée dans
+        la3–ré4 sur « ah », chacune finie par une note tenue ; puis la rumeur seule."""
+        from .theorie import hauteur as hh
+        j = []
+        t = 0.4
+        for art, notes in (('o', 'A2:.5 E3:.5 F3:2 C3:.5 B2:.5 D3:1 A2:3'),
+                           ('ah', 'A3:.5 C4:.5 D4:2 C4:.5 B3:.5 C4:1 A3:3')):
+            for x in notes.split():
+                h, d = x.split(':')
+                d = float(d) * 0.625          # des noires à 96
+                j.append(Jeu(t, d, hh(h), 100, art, None, len(j)))
+                t += d
+            t += 1.0
+        j.append(Jeu(t, 4.0, hh('A2'), 90, 'rumeur', None, len(j)))
+        return j, t + 10.0
+
+
+class InstrumentApplaudissements(Instrument):
+    """Une tribune qui frappe dans ses mains : 'mesure' (chaque note, un coup de toute la
+    tribune), 'ovation' (sans pulsation, enfle pendant la note). La hauteur ne compte pas."""
+    sorte = 'fabrication'
+
+    def rendre(self, jeux, n, ctx):
+        from . import foule, synthe
+        reg = ctx['reglages']
+        par_art = {}
+        for j in jeux:
+            par_art.setdefault(self.art(j, reg), []).append(j)
+        sortie = np.zeros((n, 2), dtype=np.float32)
+        for art, liste in sorted(par_art.items()):
+            if art == 'ovation':
+                y = foule.applaudir_ovation(liste, n, synthe.graine_note(ctx.get('graine'), ctx.get('piste'),
+                                                                          ctx.get('segment')))
+            else:
+                y = foule.applaudir_mesure(liste, n)
+            sortie += foule.au_loin(y, sec=0.6, stade=0.8) * np.float32(dsp.gain(self.niveau_art(art)))
+        return sortie
+
+    def phrase_audition(self):
+        """Quatre mesures à 120 en mesure (les temps 2 et 4, puis tous les temps), puis une
+        ovation de six secondes."""
+        j = [Jeu(0.5 + 0.5 * k, 0.2, 60, 100, 'mesure', None, k) for k in range(16) if k % 2 == 1 or k >= 8]
+        j.append(Jeu(9.0, 6.0, 60, 110, 'ovation', None, len(j)))
+        return j, 20.0
+
+
+# ---------------------------------------------------------------------------------
 # Le catalogue
 
 O = 'orchestre/'
@@ -928,6 +1003,17 @@ def _cat():
                           'banque générale sous lui', {'pan': 0.5, 'profondeur': 0.4},
                           couches=[('contrebasses', 0, 0.0, {'*': '='}, 0),
                                    ('pupitre_basses', 0, -3.0, {'*': '='}, 0)]))
+
+    # --- la foule du stade (fabriquée : moteur/foule.py ; elle porte son stade, pas de salle) ---
+    met(InstrumentFoule('foule', 'choeur', ('G2', 'E4'), {'o': None, 'ah': None, 'rumeur': None}, 'o',
+                        'la foule du stade : des milliers d\'hommes à l\'unisson sur « o » ou « ah », de '
+                        'loin, la rumeur dessous ; `rumeur` seule',
+                        {'pan': 0.0, 'profondeur': 0.2, 'largeur': 1.0, 'salle': 0.0},
+                        avance={'o': 0.09, 'ah': 0.09}))
+    met(InstrumentApplaudissements('applaudissements', 'percussions', None, {'mesure': None, 'ovation': None},
+                                   'mesure', 'une tribune qui frappe dans ses mains : en mesure (chaque note, '
+                                   'un coup) ou l\'ovation qui enfle pendant la note',
+                                   {'pan': 0.0, 'profondeur': 0.2, 'largeur': 1.0, 'salle': 0.0}))
     return I
 
 
