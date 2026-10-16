@@ -67,7 +67,8 @@
 
   // le texte qui casse en lignes dans une largeur, deux lignes au plus (puis on réduit)
   function lignes(x, texte, largeur, police, taille, max) {
-    var mots = String(texte).split(/\s+/), out = [], cur = "";
+    // (les espaces insécables restent dans le mot : « ventes ? » ne laisse pas son « ? » seul)
+    var mots = String(texte).split(/[ \t\n\r]+/), out = [], cur = "";
     x.font = police.replace("{t}", taille);
     mots.forEach(function (m) {
       var essai = cur ? cur + " " + m : m;
