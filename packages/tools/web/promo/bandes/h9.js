@@ -20,6 +20,7 @@ module.exports = bandeDeLivre({
   heros: { prenom: 'Catherine', nom: 'Rocher', genre: 'f' },
   theme: 'livre_h9',
   extraits: {
+    // le four du fournil, puis (dès 1,5 s) la chemise noire sur la table farinée, les ciseaux sur la manche
     a: { fichier: '${SP}/extraits/seconde_manche.{format}.mp4', de: 0, pose: 3.0, duree: 7.0 },
     b: { fichier: '${SP}/extraits/baie_vitree.{format}.mp4', de: 0, pose: 3.0, duree: 7.0 },
   },
