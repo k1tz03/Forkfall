@@ -19,19 +19,22 @@
  *   intro      4 m.  (une fois) le clapet sonne seul, le fixe répond, la reese
  *                    tombe, le roulement
  *   ── la boucle, 120 mesures, 4 min 08 ──
- *   A         16 m.  la ville en 2040 : le demi-temps, la reese, la nappe ; les
- *                    deux téléphones se répondent (m. 4-5 et 12-13)        [3]
+ *   A         16 m.  la ville en 2040 : le demi-temps (léger, puis serré à la
+ *                    mesure 9), la reese qui s'ouvre, la nappe, l'enseigne qui
+ *                    clignote ; les deux téléphones se répondent (m. 4-5 et
+ *                    12-13)                                               [3]
  *   B         16 m.  Madame Septembre : la mélodie à la grande scie, en valeurs
  *                    longues ; les sonneries dans ses silences            [4]
  *   escalier  16 m.  le creux : la montée qui perd une marche par mesure, la
- *                    truelle, les coups derrière le mur ; quatre mesures pour
- *                    remonter                                        [1 → 2,5]
+ *                    nappe, la reese une mesure sur quatre, la truelle, les
+ *                    coups derrière le mur ; quatre mesures pour remonter
+ *                                                                   [1 → 2,5]
  *   A2        16 m.  la ville, la reese plus mobile, la mélodie en contrechant,
- *                    harmonisée                                         [3,5]
+ *                    harmonisée ; les téléphones se taisent             [3,5]
  *   C         16 m.  la dernière marche : quatre temps au sol, la mélodie haute,
  *                    harmonisée                                           [5]
  *   clapets    8 m.  deux clapets sur le comptoir : les deux sonneries seules
- *                    sur la pédale, la reese qui glisse                  [2,5]
+ *                    sur la pédale, la reese qui glisse, fermée          [2,5]
  *   B2         8 m.  Madame Mai : la mélodie, la nappe ouverte             [4]
  *   C2         8 m.  la dernière marche, au sommet                        [5]
  *   retour    16 m.  la retombée : la reese se referme, les deux sonneries une
@@ -72,6 +75,7 @@
   var R_TOMBE = 'R - - - - - - - 7 - - - ~5 - - -';
   var R_SAUTE = 'R - - R . . R - - - ~8 - - - 5 -';
   var R_APPEL = 'R - - - - - - - R - - R - - ~8 -';     // elle appelle la mesure suivante
+  var R_POSE = 'R - - - - - . . R - - . . . . .';       // posée : deux notes courtes, la ville au loin
 
   // LA MÉLODIE À LA GRANDE SCIE
   var LEAD_B = [
@@ -116,24 +120,27 @@
   ];
 
   // la batterie : le demi-temps, saturé
-  var B_NUIT_X = 'Kx . h . h . k h S . h . h . k h';
-  var B_NUIT = 'K . h . h . k h S . h . h h k h';
-  var B_NUIT_T = 'K . h . h . k h S . h . T T T T';
-  var B_RELANCE = 'K . h . h . k h kz . . . T T S S';
-  var B_SEPT_X = 'Kx . h h h . k h S c h h h . k h';
-  var B_SEPT = 'K . h h h . k h S c h h h . k h';
-  var B_SOL_X = 'Kx h h h kS c h h k h h h kS c h h';     // la dernière marche : quatre temps au sol
-  var B_SOL = 'K h h h kS c h h k h h h kS c h h';
-  var B_SOL_R = 'K h h h kS c h h kz . T T T T S S';
-  var B_CLAP_X = 'Kx . . . . . . . S . . . . . . .';
-  var B_CLAP = 'K . . . . . k . S . . . . . . .';
+  var B_LEGER_X = 'kx . . . h . k . S . . . h . k .';    // la ville au loin : la croche, pas plus
+  var B_LEGER = 'k . . . h . k . S . . . h . k .';
+  var B_NUIT_X = 'kx . h . h . k h S . h . h . k h';
+  var B_NUIT = 'k . h . h . k h S . h . h h k h';
+  var B_NUIT_T = 'k . h . h . k h S . h . T T T T';
+  var B_RELANCE = 'k . h . h . k h kz . . . T T S S';
+  var B_SEPT_X = 'kx . h h h . k h S c h h h . k h';
+  var B_SEPT = 'k . h h h . k h S c h h h . k h';
+  var B_SOL_X = 'kx h h h S c h h k h h h S c h h';      // la dernière marche : la caisse sur deux et quatre
+  var B_SOL = 'k h h h S c h h k h h h S c h k';
+  var B_SOL_R = 'k h h h S c h h kz . T T T T S S';
+  var B_CLAP_X = 'kx . . . . . . . S . . . . . . .';
+  var B_CLAP = 'k . . . . . k . S . . . . . . .';
+  var NEON = '. . X . . . X . . . X . . X . .';      // une enseigne qui clignote
 
   A.theme('livre_h10', {
     titre: 'Deux téléphones', moment: 'la ville le jour, livre 10 (et son introduction)',
     tonalite: 'do dièse mineur',
     humeur: 'la ville la nuit en 2040 : une reese lourde qui glisse, deux sonneries qui se répondent, un escalier qu\'on mure',
     ville: true,
-    bpm: 116, gain: 1,
+    bpm: 116, gain: 1.33,
     pompe: { prof: 0.6, rel: 0.2 },
     echo: { pas: 3, retour: 0.4, coupe: 3200 },
     salle: { taille: 0.7, duree: 3, ton: 4500 },
@@ -144,9 +151,10 @@
       fixe:    { inst: 'sub', vol: 0.06, echo: 0.3, rev: 0.3, pan: -0.35 },
       clapet:  { inst: 'pulse', duty: 0.25, vol: 0.05, filtre: 3000, echo: 0.35, rev: 0.25, pan: 0.35 },
       marches: { inst: 'pluck2', vol: 0.08, oct: 4, filtre: 2800, echo: 0.4, rev: 0.2, pan: 0.1 },
-      nappe:   { inst: 'supersaw', vol: 0.08, oct: 3, scies: 5, rev: 0.45, pompe: true, large: 1, flotte: { prof: 8, vit: 0.35 }, filtre: 2600, env: [0.25, 0.8, 0.85, 0.3] },
-      reese:   { inst: 'reese', vol: 0.12, oct: 1, plancher: 'A1', desaccord: 14, chaleur: 2.6, pompe: true, ton: [2200, 700, 0.3], filtre: 2400 },
-      batt:    { vol: 0.55, drive: 1.4, porte: 0.6, tenue: 0.22, rev: 0.18, filtre: 11000 }
+      neon:    { inst: 'pluck2', vol: 0.12, oct: 4, filtre: 2600, pompe: true, echo: 0.2, rev: 0.15, pan: -0.15 },
+      nappe:   { inst: 'supersaw', vol: 0.13, oct: 3, scies: 5, rev: 0.45, pompe: true, large: 1, flotte: { prof: 8, vit: 0.35 }, filtre: 2600, env: [0.25, 0.8, 0.85, 0.3] },
+      reese:   { inst: 'reese', vol: 0.085, oct: 1, plancher: 'C2', desaccord: 14, chaleur: 2.6, pompe: true, ton: [3000, 1000, 0.3], filtre: 2800 },
+      batt:    { vol: 0.5, drive: 1.2, porte: 0.6, tenue: 0.22, rev: 0.18, filtre: 11000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : le clapet sonne ──
@@ -162,12 +170,13 @@
       // ── la boucle ──
       A: {
         accords: ['C#m', 'C#m', 'Dmaj7/C#', 'C#m', 'A', 'A', 'G#sus4', 'G#', 'C#m', 'C#m', 'Dmaj7/C#', 'C#m', 'F#m', 'A', 'G#sus4', 'G#'],
-        ouvre: { nappe: [1200, 2400] },
-        reese: [R_GLISSE, R_TOMBE, R_GLISSE, R_SAUTE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
+        ouvre: { nappe: [1600, 3000], reese: [800, 2600] },
+        reese: [R_POSE, R_POSE, R_POSE, R_SAUTE, R_POSE, R_POSE, R_GLISSE, R_APPEL, R_GLISSE, R_TOMBE, R_GLISSE, R_SAUTE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
         nappe: [NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE],
+        neon: NEON,
         fixe: a(4, 16, FIXE).map(function (b, i) { return i === 11 ? FIXE : b; }),
         clapet: a(5, 16, CLAPET).map(function (b, i) { return i === 12 ? CLAPET_FIN : b; }),
-        batt: [B_NUIT_X].concat(fois(B_NUIT, 6)).concat([B_NUIT_T, B_NUIT_X]).concat(fois(B_NUIT, 6)).concat([B_RELANCE])
+        batt: [B_LEGER_X].concat(fois(B_LEGER, 6)).concat([B_NUIT_T, B_NUIT_X]).concat(fois(B_NUIT, 6)).concat([B_RELANCE])
       },
       // Madame Septembre
       B: {
@@ -175,6 +184,7 @@
         ouvre: { nappe: [1600, 3000] },
         reese: [R_GLISSE, R_TOMBE, R_GLISSE, R_SAUTE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
         nappe: NAPPE,
+        neon: NEON,
         lead: LEAD_B.concat(silences(4)).concat(LEAD_B_FIN),
         clapet: a(10, 16, CLAPET),
         fixe: a(9, 16, FIXE),
@@ -186,15 +196,16 @@
         ouvre: { nappe: [2400, 1000] },
         marches: [escalier(8), escalier(7), escalier(6), escalier(5), escalier(4), escalier(3), escalier(2), escalier(1)].concat(silences(8)),
         nappe: [NAPPE, TENU, TENU, TENU, NAPPE, TENU, TENU, TENU, NAPPE, TENU, TENU, TENU, NAPPE, NAPPE, NAPPE, NAPPE],
-        reese: [RACINE, TENU, TENU, TENU, RACINE, TENU, TENU, TENU, RACINE, TENU, TENU, TENU, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
+        reese: [RACINE, SILENCE, SILENCE, SILENCE, RACINE, SILENCE, SILENCE, SILENCE, RACINE, SILENCE, SILENCE, SILENCE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
         clapet: silences(10).concat(['. . . . . . . . B5 B5 . G#5 . . . .']).concat(silences(5)),
-        batt: ['x . . . . . . . . . . . . . . .', SILENCE, 'm . . . . . . . . . . . . . . .', SILENCE,
+        batt: ['kx . . . . . . . . . . . . . . .', SILENCE, 'm . . . . . . . . . . . . . . .', SILENCE,
                'm . . . . . . . m . . . . . . .', SILENCE, 'm . . . . . . . m . . . m . . .', SILENCE,
                'T . . . T . . . T . . . . . . .', SILENCE, 'T . . . T . . . T . . . . . . .', 'm . . . m . . . m . . . m . . .',
-               'K . . . . . . . S . . . . . . .', 'K . h . h . k h S . h . h . . .', B_NUIT, B_RELANCE]
+               'k . . . . . . . S . . . . . . .', 'k . h . h . k h S . h . h . . .', B_NUIT, B_RELANCE]
       },
       A2: {
         copie: 'A', harmo: true,
+        fixe: SILENCE, clapet: SILENCE,           // le contrechant a la parole
         reese: [R_SAUTE, R_TOMBE, R_GLISSE, R_SAUTE, R_SAUTE, R_TOMBE, R_GLISSE, R_APPEL],
         lead: silences(4).concat(LEAD_A2).concat(silences(8)),
         batt: [B_NUIT_X].concat(fois(B_NUIT, 6)).concat([B_NUIT_T, B_SEPT_X]).concat(fois(B_SEPT, 6)).concat([B_RELANCE])
@@ -212,12 +223,12 @@
       // deux clapets sur le comptoir
       clapets: {
         accords: ['C#m', 'C#m', 'Dmaj7/C#', 'Dmaj7/C#', 'C#m', 'C#m', 'Dmaj7/C#', 'G#'],
-        ouvre: { nappe: [900, 1800] },
+        ouvre: { nappe: [900, 1800], reese: [700, 1300] },
         reese: [R_GLISSE, R_TOMBE, R_GLISSE, R_TOMBE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
         nappe: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE],
         clapet: [CLAPET, SILENCE, SILENCE, SILENCE, CLAPET, SILENCE, SILENCE, SILENCE],
         fixe: [SILENCE, FIXE, SILENCE, SILENCE, SILENCE, FIXE, SILENCE, SILENCE],
-        batt: [B_CLAP_X, B_CLAP, B_CLAP, B_CLAP, B_CLAP, B_CLAP, 'K . h . h . k h S . h . h h k h', B_RELANCE]
+        batt: [B_CLAP_X, B_CLAP, B_CLAP, B_CLAP, B_CLAP, B_CLAP, 'k . h . h . k h S . h . h h k h', B_RELANCE]
       },
       // Madame Mai
       B2: {
@@ -230,7 +241,7 @@
         copie: 'C',
         accords: ['A', 'B', 'C#m', 'E', 'F#m', 'A', 'G#sus4', 'G#'],
         lead: LEAD_C.slice(8),
-        batt: [B_SOL_X, B_SOL, B_SOL, B_SOL, B_SOL, B_SOL, B_SOL, 'K h h h kS c h h k . h . kS . . .']
+        batt: [B_SOL_X, B_SOL, B_SOL, B_SOL, B_SOL, B_SOL, B_SOL, 'k h h h S c h h k . h . S . . .']
       },
       // la retombée
       retour: {
@@ -238,11 +249,12 @@
         ouvre: { reese: [2200, 500], nappe: [2000, 900] },
         reese: [R_GLISSE, R_TOMBE, R_GLISSE, R_SAUTE, R_GLISSE, R_TOMBE, R_GLISSE, R_APPEL],
         nappe: [NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU, NAPPE, NAPPE],
+        neon: fois(NEON, 8).concat(silences(8)),
         fixe: a(9, 16, FIXE),
         clapet: a(10, 16, CLAPET_FIN),
-        batt: [B_NUIT_X, B_NUIT, B_NUIT, B_NUIT, 'K . . . h . k . S . . . h . . .', 'K . . . h . k . S . . . h . . .', 'K . . . h . k . S . . . h . . .', 'K . . . h . k . S . . . h . k .',
-               'K . . . . . . . S . . . . . . .', 'K . . . . . . . S . . . . . . .', 'K . . . . . k . S . . . . . . .', 'K . . . . . k . S . . . . . k .',
-               'K . h . h . k h S . h . h . k h', B_NUIT, B_NUIT_T, B_RELANCE]
+        batt: [B_NUIT_X, B_NUIT, B_NUIT, B_NUIT, 'k . . . h . k . S . . . h . . .', 'k . . . h . k . S . . . h . . .', 'k . . . h . k . S . . . h . . .', 'k . . . h . k . S . . . h . k .',
+               'k . . . . . . . S . . . . . . .', 'k . . . . . . . S . . . . . . .', 'k . . . . . k . S . . . . . . .', 'k . . . . . k . S . . . . . k .',
+               'k . h . h . k h S . h . h . k h', B_NUIT, B_NUIT_T, B_RELANCE]
       }
     },
     ordre: ['intro', 'A', 'B', 'escalier', 'A2', 'C', 'clapets', 'B2', 'C2', 'retour'], boucle: 1
