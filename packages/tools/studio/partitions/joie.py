@@ -59,7 +59,7 @@ pieds = theme.piste('pieds', 'grosse_caisse', volume=-5)                   # les
 pieds_t = theme.piste('pieds_t', 'taiko', volume=-12, eq={'passe_haut': 45})
 mains = theme.piste('mains', 'applaudissements', art='mesure', volume=-5)                  # la place, sur 4
 claps = theme.piste('claps', volume=-14)                                    # les mains légères
-ovation = theme.piste('ovation', 'applaudissements', art='ovation', volume=-7)
+ovation = theme.piste('ovation', 'applaudissements', art='ovation', volume=-3)
 caisse = theme.piste('caisse', 'caisse_claire', volume=-6)                  # la caisse de défilé
 cercle = theme.piste('cercle', 'caisse_claire', art='cercle', volume=-16)
 caisse_roul = theme.piste('caisse_roul', 'caisse_claire', art='roulement', volume=-9)
@@ -68,7 +68,7 @@ timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=-6)
 cymbales = theme.piste('cymbales', volume=-5)
 etouffee = theme.piste('etouffee', 'cymbales', art='etouffee', volume=-10)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=-10)
-cloches = theme.piste('cloches', volume=-7)
+cloches = theme.piste('cloches', volume=-1)
 glock = theme.piste('glock', 'glockenspiel', volume=-4)
 # --- les cuivres -----------------------------------------------------------------------
 trompettes = theme.piste('trompettes', art='tenu', volume=0)
@@ -78,7 +78,7 @@ trombones = theme.piste('trombones', art='tenu', volume=-3)
 tuba = theme.piste('tuba', volume=-2)
 # --- les bois --------------------------------------------------------------------------
 flutes = theme.piste('flutes', art='tenu', volume=4)
-hautbois = theme.piste('hautbois', art='tenu', volume=-3)
+hautbois = theme.piste('hautbois', art='tenu', volume=1)
 clarinettes = theme.piste('clarinettes', art='tenu', volume=-4)
 bassons = theme.piste('bassons', art='staccato', bref=0.15, volume=-3)
 # --- les cordes ------------------------------------------------------------------------
