@@ -544,8 +544,9 @@
     // les cartes : un atlas peint (chaque rangée une carte), des cartes posées en 3D dans
     // leurs cases (une géométrie, un appel) ; celle de ta mère dépasse un peu plus
     var nomMere = nomDeFamille(ctx.heros);
-    var noms = ["FERRAND M.", "BONNET Y.", "ROCHER C.", "PERRIN A.", "GUISARD J.", "NKOLO S.", "TRAORÉ F.", "VAQUEZ R.", "MARCHETTI L.", "DELAUNAY G.", "SANNIER B.", "RICCI A.",
-      "OLLIER P.", "BETOMBO H.", "ROUSSEL D.", "SABBAH N.", "LOURENÇO M.", "BARÈGE C.", "BIANCHI E.", "CHASTAIN R.", "PEYRARD J.", "VOLLAIRE S.", "NOGARET T.", "ESTÈVE V."];
+    // (des noms inventés, sans écho d'un footballeur, d'un entraîneur ni d'un dirigeant réels)
+    var noms = ["FERRAND M.", "BONNET Y.", "ROCHER C.", "COURTIAL A.", "GUISARD J.", "NKOLO S.", "TRAORÉ F.", "VAQUEZ R.", "BRUNEAU L.", "MOLINIER G.", "SANNIER B.", "RICCI A.",
+      "OLLIER P.", "BETOMBO H.", "ROUSSEL D.", "SABBAH N.", "LOURENÇO M.", "BARÈGE C.", "VIGNAUD E.", "TESTARD R.", "PEYRARD J.", "VOLLAIRE S.", "NOGARET T.", "ESTÈVE V."];
     var NC = 24, MERE = 19, heures = ["15:58", "16:00", "16:01", "16:02"];
     var atl = K.tex.canvas(512, 2048), ax = atl.getContext("2d"), rowH = 2048 / NC;
     for (var ci = 0; ci < NC; ci++) {
