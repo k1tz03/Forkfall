@@ -22,8 +22,8 @@
        un soleil blanc, vingt degrés dedans ; derrière la vitre, la neige.
    Il se joue avant sl.h9.a4_manche* (S0, créneau 16 : toutes les carrières y
    passent) : la carte où Marie-Jo glisse un second brassard noir dans le sac à
-   pain. Le film s'arrête avant : la manche n'est pas encore coupée, le sac est
-   vide ; il ne dit pas à qui elle ira, la carte le demande. « Manche », c'est
+   pain. Le film s'arrête avant : la manche n'est pas encore coupée, le sac n'a
+   que sa baguette ; il ne dit pas à qui elle ira, la carte le demande. « Manche », c'est
    aussi la manche d'un barrage : demain, l'aller.
 
    LES PLANS (38,5 s) — la lumière, ce que chaque plan dit
