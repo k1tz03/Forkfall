@@ -26,6 +26,9 @@
      --magasins a,b       ecrans : apple, google (défaut : les deux)
      --formats a,b        monter : 9x16, 16x9, 4x5, appstore (défaut : ceux de la bande)
      --force              refaire même ce qui est déjà fait
+     --musique-studio <d> les masters du studio (<clé>.wav + <clé>.json, docs/design/studio.md § 7) :
+                          un thème qui y a son master est coupé dedans, les autres au banc
+                          (défaut : $FUSIBLE_MUSIQUE_STUDIO ; plusieurs dossiers séparés par « : »)
      --engine, --ville    site : le moteur compilé et les tuiles de la ville
    ═══════════════════════════════════════════════════════════════════════════ */
 'use strict';
@@ -61,9 +64,11 @@ async function main() {
   const cmd = o._[0];
   const t0 = Date.now();
   if (!cmd || cmd === 'aide' || o.help || o.h) {
-    console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 29).map((l) => l.replace(/^ {0,3}/, '')).join('\n'));
+    console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 32).map((l) => l.replace(/^ {0,3}/, '')).join('\n'));
     return;
   }
+  // les masters du studio : la configuration (bandes/_livre.js) et la musique les cherchent là
+  if (o['musique-studio'] && o['musique-studio'] !== true) process.env.FUSIBLE_MUSIQUE_STUDIO = path.resolve(String(o['musique-studio']));
   if (cmd === 'site') return site(o);
   if (cmd === 'verifier') return require('./lib/controle').verifierTout(o);
   const cfg = bandeDe(o);

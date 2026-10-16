@@ -10,7 +10,7 @@ packages/tools/web/promo/
   promo.js            la ligne de commande (une commande par étape, ou `tout`)
   lib/commun.js       les chemins, les formats, les profils, Chromium, ffmpeg, la palette du jeu
   lib/tournage.js     le tournage du jeu : les moments, le temps virtuel, le vocabulaire des étapes
-  lib/musique.js      la musique : le banc (banc_son.js) rend le thème, on le monte sur les mesures
+  lib/musique.js      la musique : le master du studio s'il existe (sinon le banc, banc_son.js), montée sur les mesures
   lib/cartons.js      HTML et CSS rendus par Chromium : légendes, cartons, captures, bannière
   lib/scenes.js       les scènes de ces cartons (la langue du jeu : brun, crème, la couleur du livre)
   lib/montage.js      le montage : les plans sur les mesures, les cadres, la chaîne, la livraison
@@ -18,6 +18,7 @@ packages/tools/web/promo/
   lib/controle.js     ffprobe, le niveau sonore, le poids, les planches contact
   bandes/jeu.js       la bande du jeu, « Fusible »
   bandes/h1.js        la bande du livre 1, « Trois mille visages »
+  bandes/h2.js … h10.js    les bandes des livres 2 à 10, sur le modèle (bandes/_livre.js les fabrique)
   bandes/modele_livre.js   le modèle des livres 2 à 10 (à copier) ; bandes/_livre.js le fabrique
   bandes/_communs.js  les débuts de moments partagés, les fantômes, les pièces du dossier
 ```
@@ -53,7 +54,9 @@ node $P decoupage jeu                        # le script de la bande, plan par p
 Les options utiles : `--moments a,b` et `--profils social,appstore,apple` (tourner une partie),
 `--poses` (tourner sans vidéo : les images fixes seules, en quelques secondes — pour régler un
 moment), `--formats 9x16,appstore` (monter une partie), `--force` (refaire ce qui est déjà fait ;
-sinon chaque étape garde ce qui n'a pas changé : un moment, un plan, une musique ont leur empreinte).
+sinon chaque étape garde ce qui n'a pas changé : un moment, un plan, une musique ont leur empreinte),
+`--musique-studio <dossier>` (les masters du studio : voir « Le master du studio », plus bas ; ou
+`FUSIBLE_MUSIQUE_STUDIO`, plusieurs dossiers séparés par « : »).
 
 Le temps que ça prend (mesuré sur la machine partagée, quatre cœurs, charge 20 à 27) : `tourner jeu`
 18 min (treize moments, trois profils), `tourner h1` 10 min ; `musique` moins d'une minute ;
@@ -79,9 +82,11 @@ livrables/rapport.json                  ffprobe, niveau, poids, écarts, pour ch
 
 ## Monter la bande d'un livre (2 à 10), une fois ses extraits de film tournés
 
-Chaque réalisateur rend, pour chacun de ses deux films, un extrait de 6 à 8 s :
-`$SP/agents/<branche>/extraits/<film>.{16x9,9x16,4x5}.mp4` (les branches : `lot-films-r1` livres 1
-et 2, `r2` 3 et 4, `r3` 5 et 6, `r4` 7 et 8, `r5` 9 et 10). Alors :
+Les neuf bandes sont écrites (`bandes/h2.js` … `h10.js`). Chaque film a un extrait de 6 à 8 s,
+`<film>.{16x9,9x16,4x5}.mp4` : tourné par son réalisateur (`$SP/agents/lot-films-r<n>/extraits/`),
+ou, pour ceux de la liste du coordinateur (`$SP/extraits/liste.txt` : le film, de, à, et `f`
+quand le héros est une héroïne), dans `$SP/extraits/`, un à la fois. Chaque bande dit où sont les
+siens (`extraits.a.fichier`, `extraits.b.fichier`). Pour un livre dont les extraits sont là :
 
 ```bash
 cp packages/tools/web/promo/bandes/modele_livre.js packages/tools/web/promo/bandes/h3.js
@@ -96,8 +101,35 @@ première carte glissée, la ville le jour et la nuit, deux cartes du livre atte
 le samedi à la Rive, la cartouche de l'accueil), un montage d'une minute coupé sur les mesures du
 thème du livre (les extraits A et B, chacun en deux temps), l'aperçu de l'App Store (~28 s), dix
 captures. Les cartes : `dart run packages/tools/bin/simulate.dart --trace <graine> --postulat
-<index> --seasons 1` liste dans l'ordre celles que le moteur sert. Une bande plus fine s'écrit à
-la main, comme `bandes/h1.js`.
+<index> --seasons 1` liste dans l'ordre celles que le moteur sert ; l'étape `avancer` répond, elle,
+toujours du même côté (`cartes.sens`, à gauche par défaut) : une variante de carte peut changer
+avec le côté (le livre 3 répond à droite). Une bande plus fine s'écrit à la main, comme `bandes/h1.js`.
+
+Ce qu'une bande de livre peut régler, en plus du modèle : la position ou le temps d'une légende
+(`{ titre, sous, position: { '16x9': 'haut' }, de: 2.2, a: -0.7 }` — un extrait de film a ses
+propres cartons, son titre, ses sous-titres : la légende les évite), `objet: undefined` (pas de
+légende sur la suite du film A, quand le film y pose son titre), `extraits.x.deCourt` (où l'aperçu
+de l'App Store prend l'extrait), `extraits.x.suite` (où reprend sa seconde moitié), `lieux.toucheJour`,
+`lieux.toucheNuit`, `lieux.trancheJour`, `repliques` (l'introduction avancée de n répliques),
+`moments: { jour: { … } }` (retoucher un moment), `legendesCourt` (d'autres légendes pour l'aperçu),
+`visees` (les durées visées des douze plans), `duree`, `dureeCourt`, `marge`.
+
+**La musique se change d'une commande.** `_livre.js` lit les barres de la source qui servira — le
+master du studio du thème s'il est dans `--musique-studio`, sinon la partition du banc — et y coupe
+ses plans : la bande part du début du thème (ou de `morceaux`, `studio.morceaux`), ~60 s de mesures
+entières, l'aperçu ≤ 29 s ; chaque coupe tombe sur la barre la plus proche de son temps visé. Les
+moments, eux, ne dépendent pas de la musique : chacun dure son plan visé plus une mesure lente
+(`marge`, 3 s) — un master plus lent que le banc n'y fige pas d'image, et changer de musique ne
+demande pas de retourner (si une musique très lente le demandait quand même, `monter` le dit :
+« plan n : « moment » manque de x s » ; alors `tourner hN --moments <id> --force` avec une `marge`
+plus grande). Quand les masters arrivent (`<dossier>/livre_hN.wav` + `.json`) :
+
+```bash
+V="VERROU_CLASSE=basse bash $SP/rendu_verrou.sh env NODE_PATH=/opt/node22/lib/node_modules"
+eval $V node $P musique hN --sp $SP --sortie <sortie> --musique-studio <dossier>   # la musique, coupée dans le master
+eval $V node $P monter hN --sp $SP --sortie <sortie> --musique-studio <dossier>    # les quatre formats, sur ses barres
+node $P decoupage hN --musique-studio <dossier>                                      # (le script, sans rien rendre)
+```
 
 ## Une configuration de bande
 
@@ -170,6 +202,30 @@ La musique fait le temps. `musique: { theme, morceaux: [{ depuis: section|null, 
 { entree, sortie }, niveau: -14, crete: -1 }` : chaque morceau est un rendu du banc depuis une
 section, coupé sur ses barres de mesure `[de, a[` ; les morceaux se suivent (une collure de 40 ms).
 Le niveau : −14 LUFS intégrés, la vraie crête sous −1 dBTP (un limiteur, puis la mesure EBU R128).
+
+**Le master du studio** (la bande originale jouée par de vrais instruments, `docs/design/studio.md`
+§ 7). Quand `--musique-studio <dossier>` (ou `FUSIBLE_MUSIQUE_STUDIO`) contient `<clé>.wav` et
+`<clé>.json` pour le thème d'un montage, les morceaux sont coupés dans le master, à l'échantillon,
+au lieu d'être rendus au banc ; sans master, rien ne change. Ce qu'il faut savoir :
+- **Les barres** se lisent dans le JSON : chaque section a son `debut`, sa `fin`, ses `mesures` (une
+  section peut avoir son tempo) ; dans une rampe d'accelerando ou de ritardando (`bpm=(96, 72)` dans
+  la partition, `packages/tools/studio/partitions/<clé>.py`, celle que le JSON nomme), la barre k sur
+  m tombe à ln(1 + (q − 1)·k/m) / ln q de la section, q = t1/t0 (au studio, le tempo varie
+  linéairement en temps). Le montage cale ses plans sur ces barres (`barres` du résultat) : un
+  `'2m'` dure deux vraies mesures.
+- **`depuis`** : `null` part du début du master (l'introduction) ; une section du corps, de son
+  premier passage ; une section de l'introduction, d'elle-même (`fois: 1` : la deuxième fois qu'une
+  section revient). Les mesures continuent d'une section à l'autre ; au-delà du second passage, le
+  morceau reprend à `boucle.debut` (boucler, c'est jouer la suite, au bit près : le contrat du studio).
+- **Les collures** finissent sur la barre : le morceau qui entre prend 40 ms d'élan dans le master,
+  celui qui sort s'arrête sur sa barre — le premier temps arrive entier (au banc, la collure commence
+  sur la barre et adoucit l'attaque ; mesuré sur la démonstration du studio : le premier temps de C y
+  perdait les trois quarts de son attaque). Le limiteur rattrape son retard (`latency`) : la musique
+  tombe à l'échantillon sur ses barres (au banc, elle arrive 4 ms après).
+- **D'autres sections pour le master** : `musique.studio.morceaux` (les sections du banc et celles du
+  studio n'ont pas les mêmes noms) ; une section absente du master est une erreur qui liste les siennes.
+- **L'empreinte** d'une musique montée compte le master (son JSON, la taille et la date du WAV) : un
+  master qui arrive ou change se recoupe ; le banc garde la sienne.
 
 Un plan dure `'2m'` (mesures), `'3t'` (temps) ou des secondes, et `'reste'` pour le dernier. Ses
 champs :
