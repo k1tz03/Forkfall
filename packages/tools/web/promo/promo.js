@@ -14,6 +14,7 @@
      ecrans <bande>       compose les captures d'écran des boutiques (Apple 6,9", Google Play)
      banniere <bande>     la bannière de Google Play (1024 × 500), si la bande en déclare une
      tout <bande>         tourner, musique, monter, ecrans, banniere
+     decoupage <bande>    le script de la bande, plan par plan (temps, mesures, source, cadre, légendes)
      verifier             relit les livrables : ffprobe, niveau sonore, poids (rapport.json)
 
    Les options :
@@ -21,6 +22,8 @@
      --sortie <dossier>   où tout s'écrit (défaut : <sp>/agents/lot-promo) : travail/, livrables/
      --site <dossier>     le site assemblé (défaut : <sortie>/site)
      --moments a,b        tourner : ces moments seulement ;  --profils social,appstore,apple,google
+     --poses              tourner : les images fixes seules, sans vidéo (pour régler un moment)
+     --magasins a,b       ecrans : apple, google (défaut : les deux)
      --formats a,b        monter : 9x16, 16x9, 4x5, appstore (défaut : ceux de la bande)
      --force              refaire même ce qui est déjà fait
      --engine, --ville    site : le moteur compilé et les tuiles de la ville
@@ -58,12 +61,13 @@ async function main() {
   const cmd = o._[0];
   const t0 = Date.now();
   if (!cmd || cmd === 'aide' || o.help || o.h) {
-    console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 30).map((l) => l.replace(/^ {0,3}/, '')).join('\n'));
+    console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 29).map((l) => l.replace(/^ {0,3}/, '')).join('\n'));
     return;
   }
   if (cmd === 'site') return site(o);
   if (cmd === 'verifier') return require('./lib/controle').verifierTout(o);
   const cfg = bandeDe(o);
+  if (cmd === 'decoupage') { console.log(require('./lib/montage').decoupage(cfg)); return; }
   const faire = {
     tourner: () => require('./lib/tournage').tourner(cfg, o),
     musique: () => require('./lib/musique').musiques(cfg, o),

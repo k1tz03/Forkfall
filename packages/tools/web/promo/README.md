@@ -46,7 +46,8 @@ node $P monter jeu --sp $SP                  # les quatre formats, vérifiés, e
 node $P ecrans jeu --sp $SP                  # les captures Apple 6,9" et Google Play
 node $P banniere jeu --sp $SP                # la bannière de Google Play (si la bande en a une)
 node $P tout h1 --sp $SP                     # tout, dans l'ordre
-node $P verifier --sp $SP                    # relire les livrables (ffprobe, niveau, poids)
+node $P verifier --sp $SP                    # relire les livrables (ffprobe, niveau, poids, captures, bannière)
+node $P decoupage jeu                        # le script de la bande, plan par plan (rien n'est rendu)
 ```
 
 Les options utiles : `--moments a,b` et `--profils social,appstore,apple` (tourner une partie),

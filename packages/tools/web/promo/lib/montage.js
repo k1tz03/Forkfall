@@ -282,4 +282,29 @@ async function monter(cfg, o) {
   return bilan;
 }
 
-module.exports = { monter, calculer, images };
+// ─── le découpage d'une bande, plan par plan (le script) : le temps, les mesures, la source, le cadre, ce qui s'écrit
+function decoupage(cfg) {
+  const lignes = [];
+  for (const [nom, mt] of Object.entries(cfg.montages || {})) {
+    const mus = mt.musique || cfg.musique;
+    const bpm = MU.bpmDe(mus.theme), M = 240 / bpm;
+    const morceaux = mus.morceaux && mus.morceaux.length ? mus.morceaux : [{ depuis: null, de: 0, a: mus.mesures || 30 }];
+    const total = morceaux.reduce((s, m) => s + m.a - m.de, 0) * M;
+    const formats = Object.keys(cfg.formats || {}).filter((f) => cfg.formats[f] === nom);
+    lignes.push('## ' + cfg.id + ' · ' + nom + ' (' + formats.join(', ') + ') — ' + total.toFixed(2) + ' s, « ' + mus.theme + ' » ' + bpm + ' bpm, ' +
+      morceaux.map((m) => (m.depuis || 'début') + ' [' + m.de + '–' + m.a + '[').join(' + '));
+    for (const p of calculer(mt.plans, M, total)) {
+      const s = p.source || {};
+      const src = s.moment ? 'jeu : ' + s.moment + (s.de && s.de.pose ? ' (' + s.de.avant + ' s avant la pose « ' + s.de.pose + ' »)' : '') :
+        s.film ? 'film : ' + s.film + ' à ' + (+s.de || 0).toFixed(2) + ' s' : s.carton ? 'carton : ' + s.carton : 'noir';
+      const L = p.legende ? [p.legende.titre, p.legende.sous].filter(Boolean).join(' / ') :
+        s.carton ? [s.livre && s.livre.titre, s.livre && s.livre.ligne, s.titre, s.sous, s.phrase, s.carton === 'fin' ? 'FUSIBLE' : null, s.disponibilite].filter(Boolean).join(' / ').replace(/\n/g, ' ') : '—';
+      const cad = p.cadre ? ' [' + Object.entries(p.cadre).map(([f, v]) => f + ' ' + (typeof v === 'string' ? v : v.mode)).join(', ') + ']' : '';
+      lignes.push(String(p.i + 1).padStart(2) + ' | ' + (p.debut / FPS).toFixed(2) + '–' + (p.fin / FPS).toFixed(2) + ' s | ' + Math.round(p.n / FPS / M) + ' m | ' +
+        src + cad + ' | ' + (p.entree && p.entree !== 'coupe' ? p.entree + ' · ' : '') + L);
+    }
+  }
+  return lignes.join('\n');
+}
+
+module.exports = { monter, calculer, images, decoupage };
