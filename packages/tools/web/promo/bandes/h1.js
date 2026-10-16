@@ -6,9 +6,9 @@
    sous la fenêtre. Ce qui reste au livre : qui a gratté, ce que le père a fait.
 
    La musique : « Trois mille masques » (livre_h1), 120 à la noire, une mesure = 2 s.
-   L'intro et la marche (12 mesures), le creux — l'homme sous la fenêtre (8) —, puis B3,
-   tout le stade : quatre mesures a cappella, puis tout le monde et la cymbale (8), et
-   deux mesures de retour. 30 mesures = 60 s. L'App Store : l'intro (4) et B3 (10), 28 s.
+   L'intro et la marche (12 mesures), le creux — l'homme sous la fenêtre (8) —, puis les dix
+   premières mesures de B3, tout le stade (la fin en fondu). 30 mesures = 60 s. L'App Store :
+   l'intro (4) et B3 (10), 28 s.
 
    Le film : « Trois mille masques » (cinema/films/trois_mille_masques.js), tourné dans
    chaque format par la trousse du cinéma (docs/design/cinematiques.md § 11).
