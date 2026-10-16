@@ -424,11 +424,18 @@ Ce que la ville porte en plus des cartes :
   un fichier par thème ; la bible et le guide du compositeur : `docs/design/bande_originale.md`) :
   des thèmes NOIRS écrits note à note et synthétisés (aucun fichier son) — de la synthé noire et
   moite qui rejoue les années quatre-vingt sur une cassette fatiguée, parce que la première
-  partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. La bible en
-  prévoit vingt ; « Fusible » à l'accueil est le modèle (une basse qui court en octaves, une
-  accroche de quatre notes, une boucle de trois minutes) ; La Filature (ville le jour), Néons (le
-  soir), La Rive (le stade), Garde à vue (une carte sombre) et Le Dernier Tour (la fin, sur le
-  motif de l'ancien thème de l'accueil) attendent leurs compositeurs. En fondu enchaîné, et un
+  partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. **Les vingt
+  thèmes de la bible sont écrits** (octobre 2026, cinq compositeurs) : « Fusible » à l'accueil, le
+  modèle (une basse qui court en octaves, une accroche de quatre notes) ; un thème par livre, chacun
+  sur l'objet de son livre (le chœur des masques, le bip du répondeur, la sirène de seize heures,
+  les lampadaires d'une oreille à l'autre, la fanfare qui rétrécit, l'horloge du fax, les trois coups
+  de la chambre 12, la voix de l'oreillette en triolets, les cloches de glace du dôme, les deux
+  sonneries) ; Promenade (la ville le jour, un orage d'été au milieu), Néons (le soir), Les Quartiers
+  (la découverte), La Montée (la joie), La Rive (le stade), Garde à vue (une carte sombre), Les Douze
+  Pages (le suspense), Court-circuit (l'éclair), Le Dernier Tour (la fin). Les boucles des thèmes de
+  ville durent de 4 min 07 à 4 min 23 avant de se redire, les autres de 2 min 43 à 3 min 15 ; les
+  vingt moyennes tiennent de −21,6 à −20,8 dB. L'accroche de « Fusible » revient deux fois en
+  tout : dans Court-circuit et au dernier tour. En fondu enchaîné, et un
   jingle au départ d'une histoire. **Où chacun joue** (bible § 4, `themeDuMoment` du gabarit) : en
   ville le jour, le thème du livre en cours (`livre_hN`) un jour sur deux, le premier compris (son
   introduction jouée a le même : une scène jouée demande `musique: livre`), la promenade l'autre ; les

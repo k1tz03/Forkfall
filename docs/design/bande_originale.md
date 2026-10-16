@@ -191,6 +191,11 @@ thème ; une faute de syntaxe arrête l'assemblage avec le nom du fichier et la 
   autant de mesures qu'elle a d'`accords` (« Am E » : deux accords dans la mesure). Une voix porte
   une mesure (répétée) ou une liste de mesures (qui tourne, et repart du début à chaque section :
   trois mesures dans une section de seize tournent à contretemps des phrases de quatre).
+- **La reprise** : le jeu quitte un thème et y revient sans cesse ; retrouvé dans les dix minutes,
+  il reprend à la section qui suit celle qu'il a quittée, pas à l'introduction (qui ne joue qu'à une
+  entrée neuve). Chaque section du corps doit donc pouvoir ouvrir le morceau à froid (la grosse caisse
+  et la cymbale sur le premier temps, la basse dès la première mesure). `reprise: { sauf: ['creux'] }`
+  nomme les sections où le jeu ne reprend jamais (un creux presque muet ouvrirait mal une carte).
 - **Copier** : `B2: { copie: 'B', harmo: true, batt: [...] }` reprend B et remplace ce qu'on donne.
   `harmo: true` fait chanter la voix `harmo` sous la voix `lead` (seulement elle), sur une note de
   l'accord.
