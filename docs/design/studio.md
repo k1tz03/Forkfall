@@ -117,7 +117,7 @@ def A(s):
 def B(s):
     ...
 
-theme.forme(intro=['intro'], corps=['A', 'B', 'A', 'C'])
+theme.forme(intro=['intro'], corps=['A', 'B', 'A'])   # A revient : s.fois vaut 0 puis 1
 ```
 
 - `Theme(clé, titre, bpm, mesure, tonalite, graine, ville, moment, humeur, boucle_min)` :

@@ -20,7 +20,7 @@ from .ecriture import Ecrivain, NUANCES
 from .instruments import FAMILLES, Jeu, instrument
 
 PREROLL = 1.0       # s avant le début d'un segment (attaques en avance, humanisation)
-QUEUE = 10.0        # s après sa fin (relâches, réverbes, échos)
+QUEUE = 14.0        # s après sa fin (relâches, réverbes, échos, un tam-tam qui sonne)
 
 # l'humanisation par défaut, par famille : (écart de temps en ms, écart de vélocité)
 HUMAIN = {'cordes': (9, 6), 'cuivres': (10, 6), 'bois': (8, 6), 'percussions': (4, 5),
@@ -382,9 +382,9 @@ def rendre_segment(theme, seg, journal=None):
             mouille *= enveloppe_pompe(n, _declencheurs(theme, seg, p.get('source', 'temps')),
                                        p['profondeur'], p['relache'])[:, None]
         pre += mouille * np.float32(dsp.gain(s.get('retour', 0.0)))
-    # la dernière seconde du tampon s'efface : un son plus long que la queue (un tam-tam)
-    # ne s'arrête jamais net au milieu du passage suivant
-    fin = int(1.0 * SR)
+    # les trois dernières secondes du tampon s'effacent : un son plus long que la queue
+    # (un tam-tam) ne s'arrête jamais net au milieu du passage suivant
+    fin = int(3.0 * SR)
     pre[-fin:] *= np.cos(np.linspace(0, np.pi / 2, fin, dtype=np.float32))[:, None] ** 2
     return pre
 
@@ -413,6 +413,9 @@ def rendre(theme, journal=None, rapide=False):
     corps, _ = construire(theme, theme.corps, 'corps', deja)
     if not theme.corps:
         raise ValueError('le corps (la boucle) est vide : theme.forme(intro=[…], corps=[…])')
+    if corps.duree < QUEUE + PREROLL:
+        print(f'! le corps dure {corps.duree:.1f} s, moins que sa queue ({QUEUE:.0f} s) : la fin du second '
+              f'passage porte encore la queue du premier, la couture ne sera pas exacte au bit')
     pre_intro = rendre_segment(theme, intro, journal) if theme.intro else None
     pre_corps = rendre_segment(theme, corps, journal)
     n_intro = int(round(intro.duree * SR)) if theme.intro else 0

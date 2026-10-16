@@ -29,11 +29,11 @@ theme = Theme('_modele', 'Le Modèle', bpm=88, mesure='4/4', tonalite='fa mineur
 piano = theme.piste('piano', volume=0, salle=0.3)
 violons = theme.piste('violons', volume=4, art='tremolo')           # articulation par défaut
 celles = theme.piste('violoncelles', volume=-3, art='legato')
-pizz = theme.piste('pizz', 'contrebasses', art='pizzicato', volume=-2)
+pizz = theme.piste('pizz', 'contrebasses', art='pizzicato', volume=-5)
 kick = theme.piste('kick', 'boite_a_rythmes', volume=-3)
 charley = theme.piste('charley', 'boite_a_rythmes', volume=-5, pan=0.3)
 # la basse pompe sous la grosse caisse (la piste « kick ») ; un filtre plus sombre
-basse = theme.piste('basse', 'basse_synthe', volume=-5, pompe=pompe(0.5, 0.2, source='kick'),
+basse = theme.piste('basse', 'basse_synthe', volume=-8, pompe=pompe(0.5, 0.2, source='kick'),
                     synthe={'filtre': {'coupure': 220.0}})
 nappe = theme.piste('nappe', 'nappe_synthe', volume=-10, humain=0)
 
