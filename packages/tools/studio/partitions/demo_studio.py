@@ -28,26 +28,28 @@ theme = Theme('demo_studio', 'La démonstration du studio', bpm=96, mesure='4/4'
               humeur='épique hybride, néons noirs, la place au soleil, le tutti')
 
 # --- les pistes : l'orchestre ---------------------------------------------------------
+# (les faders ont été corrigés de l'opposé de ce qui a changé à la calibration des
+# niveaux, studio.md § 4.1 : le tuba n'a plus besoin de +7 dB pour sortir du grave)
 violons = theme.piste('violons', volume=-1.5)
-violons2 = theme.piste('violons2', 'violons', pan=-0.22, volume=2)
-altos = theme.piste('altos', volume=1.5)
-celles = theme.piste('violoncelles', volume=1)
-basses = theme.piste('contrebasses', 'basses_film', volume=-1.5)
-cors = theme.piste('cors', volume=-3.5)
-trompettes = theme.piste('trompettes', volume=2)
+violons2 = theme.piste('violons2', 'violons', pan=-0.22, volume=-3.5)
+altos = theme.piste('altos', volume=-2)
+celles = theme.piste('violoncelles', volume=2)
+basses = theme.piste('contrebasses', 'basses_film', volume=1)
+cors = theme.piste('cors', volume=1.5)
+trompettes = theme.piste('trompettes', volume=0.5)
 trombones = theme.piste('trombones', volume=2.5)
-tuba = theme.piste('tuba', volume=7)
+tuba = theme.piste('tuba', volume=-2)
 braam = theme.piste('braam', volume=1.5)
-flutes = theme.piste('flutes', volume=-1)
-clarinettes = theme.piste('clarinettes', volume=4)
-bassons = theme.piste('bassons', volume=5)
+flutes = theme.piste('flutes', volume=1.5)
+clarinettes = theme.piste('clarinettes', volume=-3.5)
+bassons = theme.piste('bassons', volume=-2.5)
 timbales = theme.piste('timbales', volume=1.5)
-taiko = theme.piste('taiko', volume=1)
+taiko = theme.piste('taiko', volume=2)
 cymbales = theme.piste('cymbales', volume=2)
 suspendue = theme.piste('cymbale_suspendue', volume=0)
 tamtam = theme.piste('tam_tam', volume=0)
-glock = theme.piste('glockenspiel', volume=3)
-choeur = theme.piste('choeur', volume=1)
+glock = theme.piste('glockenspiel', volume=-1)
+choeur = theme.piste('choeur', volume=-0.5)
 # --- les synthés et la batterie -------------------------------------------------------
 sub = theme.piste('sub', 'sub_synthe', volume=-8)
 kick = theme.piste('kick', 'boite_a_rythmes', volume=3, bus='batterie')
@@ -55,16 +57,16 @@ caisse = theme.piste('caisse', 'caisse_claire', volume=-5, bus='batterie', salle
                      porte=porte(duree=0.28), pan=0.0, profondeur=0.0)
 claps = theme.piste('claps', 'boite_a_rythmes', volume=-2, bus='batterie', porte=porte(duree=0.22), pan=-0.1)
 charley = theme.piste('charley', 'boite_a_rythmes', volume=-4, bus='batterie', pan=0.3, plaque=0.1)
-basse_s = theme.piste('basse_s', 'basse_synthe', volume=2, pompe=pompe(0.55, 0.17, source='kick'),
+basse_s = theme.piste('basse_s', 'basse_synthe', volume=0.5, pompe=pompe(0.55, 0.17, source='kick'),
                        eq={'passe_haut': 38})
 reese = theme.piste('reese', 'basse_reese', volume=-5)
-arp = theme.piste('arp', 'arpege_synthe', volume=-4, pompe=pompe(0.4, 0.15, source='kick'), echo=0.35,
+arp = theme.piste('arp', 'arpege_synthe', volume=-2, pompe=pompe(0.4, 0.15, source='kick'), echo=0.35,
                    pan=0.3)
-nappe = theme.piste('nappe', 'nappe_synthe', volume=-3, pompe=pompe(0.7, 0.22, source='kick'), largeur=1.4)
-lead = theme.piste('lead', 'lead_synthe', volume=0, echo=0.3, salle=0.22)
+nappe = theme.piste('nappe', 'nappe_synthe', volume=-5, pompe=pompe(0.7, 0.22, source='kick'), largeur=1.4)
+lead = theme.piste('lead', 'lead_synthe', volume=-2, echo=0.3, salle=0.22)
 effets = theme.piste('effets', volume=-1)
 # --- la place --------------------------------------------------------------------------
-basse_e = theme.piste('basse_e', 'basse_electrique', volume=3)
+basse_e = theme.piste('basse_e', 'basse_electrique', volume=0)
 batterie = theme.piste('batterie', volume=-6)
 
 theme.salle('echo', bpm=112, temps=0.75, retour=0.42)
