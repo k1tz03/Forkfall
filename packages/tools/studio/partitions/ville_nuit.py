@@ -35,7 +35,7 @@ LA CARTE (la boucle : 88 mesures, 257,6 s ; l'introduction : 4 mesures, 11,7 s)
   F2      8 m.  3:07  FENÊTRE                                                                  1
   A4      8 m.  3:31  la dernière rue : la navette, LA NUIT à moitié                          5
   B2      8 m.  3:54  le comptoir, plus tard ; la relance                                     5
-Fenêtres (reprise=False ; et les quatre premières mesures du creux) : 0:47, 1:57, 3:07.
+Fenêtres (reprise=False ; le creux aussi, qui s'ouvre presque muet) : 0:47, 1:57, 3:07.
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
@@ -64,13 +64,13 @@ violons = theme.piste('violons', art='legato', volume=-1.8, profondeur=0.55, sal
 celles = theme.piste('celles', 'violoncelles', art='legato', volume=-2.5)
 cb = theme.piste('cb', 'contrebasses', art='sans_vibrato', volume=-7)
 clar = theme.piste('clar', 'clarinettes', unisson=1, volume=-1.6, retard=0.03, pan=0.15)
-trompette = theme.piste('trompette', 'trompettes', art='harmon', unisson=1, volume=-4, pan=0.25,
+trompette = theme.piste('trompette', 'trompettes', art='harmon', unisson=1, volume=-8, pan=0.25,
                         profondeur=0.8, salle=0.5, echo=0.18, retard=0.05, eq={'passe_bas': 6500})
 cors = theme.piste('cors', volume=-6)
 timbales = theme.piste('timbales', volume=-6)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=-10)
 # la signature commune
-arc = Arc(theme, volume=-6, impact_volume=-9)
+arc = Arc(theme, volume=-3, impact_volume=-9)
 
 theme.salle('echo', temps=0.75, retour=0.3)
 
@@ -175,14 +175,15 @@ CLAR_2 = mel('D4:3 C4:.5 A3:.5 | E4:4 | F4:1 E4:1 D4:2 | C4:2.5 A3:.5 G3:1 | Bb3
 # --- l'introduction --------------------------------------------------------------------------------
 @theme.section('intro', mesures=4)
 def intro(s):
-    arc.poser(s, 0, impact=False, vel=104)
+    arc.poser(s, 0, impact=False, vel=108)
+    # l'enseigne grésille d'abord ; l'accord vient juste après
     for h in EP['re m9']:
-        s.note(ep, h, 0.05, 3.9, vel=70)
+        s.note(ep, h, 0.3, 3.7, vel=70)
     for h in EP['sib maj7#11']:
         s.note(ep, h, s.m(2), 3.9, vel=66)
     ep_comp(s, ['re m9', 'do sus4'], de=3, vel=66)
     s.nuance(ep, 'mf')
-    s.note(basse, 'D2', 0, 3.5, vel=80)
+    s.note(basse, 'D2', 0.3, 3.2, vel=80)
     s.note(basse, 'Bb1', s.m(2), 3.5, vel=78)
     basse_ligne(s, 'D2 - - - - - . A1 | C2 - - - G2 - C2 .', de=3, vel=82)
     s.nuance(basse, 'mf')
@@ -291,7 +292,7 @@ GRILLE_C = ['re m9', 're m9', 'sib maj7', 'sib maj7', 'sib maj7', 'sib maj7|do5'
             'sol m9', 'sib maj7', 're m9', 'do add9', 'sol m9', 'sib maj7', 'do sus4', 'do']
 
 
-@theme.section('C', mesures=16)
+@theme.section('C', mesures=16, reprise=False)
 def C(s):
     silence = s.m(16, 4)
     # m. 1–4 : presque rien — le ré tenu à l'archet, l'accord du piano électrique, la nappe
@@ -315,7 +316,7 @@ def C(s):
     # m. 9–16 : les violoncelles chantent, le piano électrique arpège, ça remonte
     s.joue(celles, mel('D3:3 F3:1 | A3:4 | G3:2 F3:1 E3:1 | F3:4 | Bb3:3 A3:1 | G3:2 D3:2 | E3:3 F3:1 | G3:3 r:1'),
            a=s.m(9), vel=84)
-    s.expression(celles, [(s.m(9), 'mp'), (s.m(13), 'mf'), (s.m(16), 'f'), (silence, 'mf')])
+    s.expression(celles, [(s.m(9), 'p'), (s.m(13), 'mp'), (s.m(16), 'f'), (silence, 'mf')])
     for i, ch in enumerate(GRILLE_C[8:]):
         notes = EP[ch]
         motif = arpege(notes, '1 2 3 4 3 2 4 3', pas=0.5, vel=58)
