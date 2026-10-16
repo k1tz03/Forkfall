@@ -4,20 +4,20 @@
  * La poussée. Quatre temps au sol ; une basse qui cogne à contretemps (elle
  * pousse entre les coups de grosse caisse, puis roule en doubles croches) ; et
  * la tribune : un mur de voix « oh » qui respire avec la grosse caisse, un
- * chant en valeurs longues (une quinte qui monte, un saut d'octave), les claps
- * du virage qui répondent au bout des phrases (deux, puis trois). Ce qui
+ * chant en valeurs longues (une quinte qui monte, un saut d'octave), trois
+ * stabs qui lui répondent au bout des phrases. Ce qui
  * n'appartient qu'à ce thème : les montées — la caisse claire qui accélère
  * (noires, croches, doubles croches, la caisse « gated »), le filtre qui
  * s'ouvre, la tribune qui se lève (« oh » qui devient « ah »), un dernier temps
  * où seul le souffle monte — et la retombée sur la grosse caisse et la cymbale.
  * Mi mineur (i, VI, III, VII : l'hymne ; si majeur pour pousser) ; 128.
  *
- *   entree    4 m.  (une fois) les grilles : les tambours du virage, la foule
+ *   entree    4 m.  (une fois) les grilles : les toms qui roulent, la foule
  *                   qui monte, la basse qui s'ouvre, un roulement
  *   ── la boucle, 104 mesures, 3 min 15 ──
  *   A        16 m.  l'échauffement : la basse à contretemps, le charleston, la
  *                   foule qui s'éclaire ; les claps entrent à la neuvième mesure
- *   B         8 m.  la tribune : le chant, les claps du virage au bout des phrases
+ *   B         8 m.  la tribune : le chant, les stabs qui répondent au bout des phrases
  *   B2        8 m.  le chant harmonisé, les stabs
  *   montee    8 m.  la montée : noires, croches, doubles croches, la caisse
  *                   « gated », le souffle ; la foule se lève
@@ -32,7 +32,7 @@
  *   montee2   8 m.  la montée, aux toms
  *   C2        8 m.  le dernier quart d'heure : le chant harmonisé, la reese sous
  *                   la basse ; le second sommet
- *   sortie    8 m.  la sortie : la basse se referme, les claps, la relance
+ *   sortie    8 m.  la sortie : la basse se referme, la réponse des stabs, la relance
  *
  * Toutes les sections du corps partent d'un premier temps franc (grosse caisse
  * et cymbale, la basse dans la mesure) : le thème peut reprendre à chacune.
@@ -96,7 +96,7 @@
   var D_SOL_X = 'Kx . h . k . h . k . h . k . h .';
   var D_CLAP = 'k . h . kc . h . k . h . kc . h .';
   var D_CLAP_X = 'Kx . h . kc . h . k . h . kc . h .';
-  var D_VIRAGE = 'kc . c . k . h . kc . c . kc . h .';      // les claps du virage : deux, puis trois
+  var STAB_REPONSE = '. . . . . . . . X . X . X . . .';     // la réponse au bout des phrases du chant
   var D_DROP = 'k . h h kc . o . k . h h kc . o .';
   var D_DROP_X = 'Kx . h h kc . o . k . h h kc . o .';
   var D_RELANCE = 'k . h . kc . h . kz . t . T . t T';        // le souffle sur la seconde moitié, les toms
@@ -168,13 +168,13 @@
         lead: CHANT,
         basse: B_POUSSE2,
         foule: NAPPE,
-        stab: STAB_TRIBUNE,
-        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_VIRAGE, D_CLAP, D_CLAP, D_CLAP, D_VIRAGE]
+        stab: [STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_REPONSE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_REPONSE],
+        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP]
       },
       B2: {
         copie: 'B', harmo: true,
-        stab: STAB_TRIBUNE,
-        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_VIRAGE, D_CLAP, D_CLAP, D_CLAP, D_RELANCE]
+        stab: [STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_REPONSE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE],
+        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_RELANCE]
       },
       montee: {
         accords: ['Am', 'Am', 'C', 'C', 'D', 'D', 'B', 'B'],
@@ -191,9 +191,10 @@
         reese: [RACINE, RACINE, RACINE, RACINE, RACINE, RACINE, RACINE, RACINE].concat(silences(8)),
         arp: silences(8).concat([ARP_TROIS, ARP_TROIS, ARP_TROIS, ARP_TROIS, ARP_TROIS, ARP_TROIS, ARP_TROIS, ARP_TROIS]),
         foule: NAPPE,
-        stab: STAB_POUSSE,
-        batt: [D_DROP_X, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_VIRAGE,
-               D_DROP_X, D_DROP, D_DROP, D_VIRAGE, D_DROP, D_DROP, D_DROP, D_RELANCE_C]
+        stab: [STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_REPONSE,
+               STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_REPONSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE],
+        batt: [D_DROP_X, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP,
+               D_DROP_X, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_RELANCE_C]
       },
       mitemps: {
         accords: ['Em', 'Em', 'Cmaj7', 'Cmaj7', 'Am', 'Am', 'B7', 'B7'],
@@ -220,10 +221,10 @@
         accords: ['Em', 'Em', 'C', 'C', 'Am', 'Am', 'B', 'B'],
         basse: B_DOUBLE,
         arp: ARP_TROIS,
-        stab: STAB_TRIBUNE,
+        stab: [STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_REPONSE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE, STAB_TRIBUNE],
         foule: [NAPPE, TENU],
         lead: silences(4).concat(APPEL),
-        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_VIRAGE, D_CLAP, D_CLAP, D_CLAP, D_RELANCE]
+        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_CLAP, D_RELANCE]
       },
       montee2: {
         copie: 'montee',
@@ -237,8 +238,8 @@
         basse: B_ROULE2,
         reese: RACINE,
         foule: NAPPE,
-        stab: STAB_POUSSE,
-        batt: [D_DROP_X, D_DROP, D_DROP, D_VIRAGE, D_DROP, D_DROP, D_DROP, D_RELANCE_C]
+        stab: [STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_REPONSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE, STAB_POUSSE],
+        batt: [D_DROP_X, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_DROP, D_RELANCE_C]
       },
       sortie: {
         accords: ['Em', 'Em', 'C', 'C', 'Am', 'Am', 'B', 'B'],
@@ -246,7 +247,8 @@
         basse: B_POUSSE,
         foule: [NAPPE, TENU, NAPPE, TENU, SILENCE, SILENCE, SILENCE, SILENCE],
         lead: [CHANT[0], CHANT[1], SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE],
-        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_VIRAGE, D_SOL, D_SOL, D_SOL, D_RELANCE]
+        stab: [SILENCE, SILENCE, SILENCE, STAB_REPONSE, SILENCE, SILENCE, SILENCE, SILENCE],
+        batt: [D_CLAP_X, D_CLAP, D_CLAP, D_CLAP, D_SOL, D_SOL, D_SOL, D_RELANCE]
       }
     },
     ordre: ['entree', 'A', 'B', 'B2', 'montee', 'C', 'mitemps', 'reprise', 'A2', 'montee2', 'C2', 'sortie'], boucle: 1

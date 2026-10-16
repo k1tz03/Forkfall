@@ -2,10 +2,10 @@
  * FUSIBLE — la bande originale : « Court-circuit » (enerve), le mode éclair,
  * Le Fusible : dix minutes, quatre jauges qui tuent.
  *
- * Énervé. Une basse saturée en doubles croches dont l'accent tombe toutes les
- * trois doubles croches (il tourne contre la grosse caisse cognée, quatre au
- * sol) ; le mi, le fa qui grince (phrygien), la quinte diminuée quand ça
- * chauffe. Ce qui n'appartient qu'à ce thème : les COUPURES — le courant saute,
+ * Énervé. Une basse saturée en doubles croches qui cogne avec la grosse caisse
+ * (quatre au sol) et saute : deux doubles croches manquent dans chaque mesure,
+ * un mauvais contact ; le mi, le fa qui grince (phrygien), la quinte diminuée
+ * quand ça chauffe. Ce qui n'appartient qu'à ce thème : les COUPURES — le courant saute,
  * tout le groupe se tait d'un coup pendant un temps (deux à la fin des
  * phrases), et repart sur la grosse caisse ; l'arc d'une basse acide qui
  * crépite ; un lead saturé dont le filtre s'ouvre jusqu'au cri. Au second
@@ -27,8 +27,8 @@
  *   coupure   8 m.  le court-circuit, le creux : la basse qui bégaie, fermée,
  *                   les crépitements, l'arc seul ; la grosse caisse revient
  *   D        16 m.  le délestage : le demi-temps, la basse en croches, une grande
- *                   scie sombre, les stabs à trois contre quatre ; à la
- *                   neuvième, une mélodie en valeurs longues
+ *                   scie sombre, les stabs qui boitent ; à la neuvième, une
+ *                   mélodie en valeurs longues
  *   A2       16 m.  la remise sous tension : la quinte diminuée dans la basse,
  *                   l'arc, le lead qui monte
  *   C2       16 m.  la surtension, second sommet : tout ; l'accroche du titre,
@@ -57,15 +57,17 @@
     return c.join(' ');
   }
 
-  // LA BASSE : l'accent toutes les trois doubles croches (3 + 3 + 3 + 3 + 4)
-  var RIFF_A = ['E2! E2 E3 E2! E2 E3 E2! E2 E3 E2! E2 E3 F2! F2 E2 E2',
-                'E2! E2 E3 E2! E2 E3 E2! E2 E3 E2! E2 E3 G2! F2 E2 D2'];
-  var RIFF_B = ['E3! E2 E2 E3! E2 E2 E3! E2 E2 E3! E2 E2 F3! E2 F2 E2',
-                'E3! E2 E2 E3! E2 E2 C3! C2 C2 B2! B2 B2 A2! G2 F2 E2'];
-  var RIFF_C = ['E2! E2 E3 E2! E2 E3 E2! E2 E3 Bb2! Bb2 E3 A2! A2 E2 E2',
-                'E2! E2 E3 E2! E2 E3 E2! E2 E3 Bb2! A2 G2 F2! F2 E2 D2'];
-  var RIFF_MI = 'E2! E2 E3 E2! E2 E3 E2! E2 E3 E2! E2 E3 E2! E2 E3 E2';     // le mi seul (sous l'accroche)
-  var PANNE = 'E2! E2 E3 E2! E2 E3 E2! E2 E3 E2! E2 E3 E2 D2 C2 B1';          // le courant baisse
+  // LA BASSE : des doubles croches saturées, l'accent avec la grosse caisse ; deux doubles
+  // croches manquent dans chaque mesure (après le deuxième temps, au milieu du troisième) :
+  // un mauvais contact — le court-circuit en petit, à chaque mesure
+  var RIFF_A = ['E2! E2 E3 E2 E2! . E2 E3 E2! E2 . E2 F2! F2 E3 E2',
+                'E2! E2 E3 E2 E2! . E2 E3 E2! E2 . E2 G2! F2 E2 D2'];
+  var RIFF_B = ['E3! E2 E2 E3 E3! . E2 E2 E3! E2 . E2 F3! E2 F2 E2',
+                'E3! E2 E2 E3 C3! . C2 C2 B2! B2 . B2 A2! G2 F2 E2'];
+  var RIFF_C = ['E2! E2 E3 E2 E2! . E2 E3 Bb2! Bb2 . E2 A2! A2 E3 E2',
+                'E2! E2 E3 E2 E2! . E2 E3 Bb2! A2 . G2 F2! F2 E2 D2'];
+  var RIFF_MI = 'E2! E2 E3 E2 E2! . E2 E3 E2! E2 . E2 E2! E2 E3 E2';     // le mi seul (sous l'accroche)
+  var PANNE = 'E2! E2 E3 E2 E2! . E2 E3 E2! E2 . E2 E2 D2 C2 B1';          // le courant baisse
   var BEGAIE = ['E2 . . . . . . . . . . . . . . .', 'E2 . . E2 . . . E2 . E2 . . . . E2 E2',
                 '. . E2 . . E2 . . E2 . . E2 . . . .', 'E2 E2 . . E2 . . E2 . E2 E2 . . . . .',
                 'E2 . E2 . E2 . E2 . E2 . E2 . E2 . E2 .', 'E2 . E2 . E2 . E2 . E2 . E2 . E2 E3 E2 E3',
@@ -129,7 +131,7 @@
 
   var STAB_A = '. . . . . . X . . . . . . . . .';
   var STAB_B = '. . . X . . X . . . . X . . X .';
-  var STAB_TROIS = '. . X . . X . . X . . X . . X .';                   // trois contre quatre
+  var STAB_D = '. . X . . . . . . . X . . X . .';                       // le délestage : trois coups qui boitent
 
   // LA BATTERIE : la grosse caisse cognée, quatre au sol ; les coupures
   var D_A = 'K . h . kSc . h . K . h . kSc . h .';
@@ -148,7 +150,7 @@
   A.theme('enerve', {
     titre: 'Court-circuit', moment: 'le mode éclair, Le Fusible', tonalite: 'mi phrygien',
     humeur: 'une basse saturée en doubles croches, la grosse caisse cognée, le cri filtré, les coupures',
-    bpm: 140, gain: 1.26,
+    bpm: 140, gain: 1.32,
     pompe: { prof: 0.65, rel: 0.12 },
     echo: { pas: 2, retour: 0.25, coupe: 3500 },
     salle: { taille: 0.4, duree: 1.4, ton: 5500 },
@@ -218,7 +220,7 @@
         lead: silences(8).concat(LENT.slice(8)),
         basse: BASSE_D,
         nappe: fois([NAPPE, TENU], 7).concat([NAPPE, NAPPE]),
-        stab: STAB_TROIS,
+        stab: STAB_D,
         batt: [D_DEMI_X, D_DEMI, D_DEMI, D_DEMI_K, D_DEMI, D_DEMI, D_DEMI, D_DEMI_R,
                D_DEMI_X, D_DEMI, D_DEMI, D_DEMI_K, D_DEMI, D_DEMI, D_DEMI_K, 'K . . . K . . . Kz . h . K . S S']
       },
