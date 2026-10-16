@@ -244,10 +244,9 @@ async function main() {
       const t = maitresse[k];
       const demandes = sorties.filter((s) => s.i < s.temps.length && Math.abs(s.temps[s.i] - t) < 1e-5);
       const r = await page.evaluate(([t, dem]) => {
-        const FC = window.FusibleCinema, a0 = performance.now();
-        const inf = FC.tournage.rendre(t);
-        const ms = performance.now() - a0;
-        return { ms, plan: FC.tournage.film().indice(t), appels: inf.appels, triangles: inf.triangles, images: dem.map((d) => FC.tournage.composer(d[0], d[1], t, 0.95)) };
+        // mesurer : l'image, et l'attente que la carte graphique (ici SwiftShader) l'ait finie
+        const FC = window.FusibleCinema, inf = FC.tournage.mesurer(t);
+        return { ms: inf.ms, plan: FC.tournage.film().indice(t), appels: inf.appels, triangles: inf.triangles, images: dem.map((d) => FC.tournage.composer(d[0], d[1], t, 0.95)) };
       }, [t, demandes.map((s) => [s.l, s.h])]);
       const pp = parPlan[r.plan] || (parPlan[r.plan] = { images: 0, ms: 0, appels: 0, triangles: 0 });
       pp.images++; pp.ms += r.ms; pp.appels = Math.max(pp.appels, r.appels); pp.triangles = Math.max(pp.triangles, r.triangles);

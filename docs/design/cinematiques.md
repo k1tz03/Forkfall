@@ -339,15 +339,16 @@ réparties sur le film, `ffmpeg tile`), `<id>.wav` et `<id>.court.wav`, `<id>.ra
 Mesurés sur le film de référence (`<id>.rapport.json`, `FusibleCinema.tournage.mesurer`,
 `Film.memoire()`). Par décor, au plus fort du plan : appels de dessin et triangles en
 qualité haute (le tournage) et basse (un téléphone), et le temps d'une image maîtresse
-1920² au tournage (Chromium + SwiftShader, quatre cœurs partagés avec d'autres travaux) :
+1920² au tournage, jusqu'à ce que la carte graphique l'ait finie (Chromium + SwiftShader,
+quatre cœurs partagés avec un autre tournage ; seule sur la machine, la rue en prend 3,6 s) :
 
 | décor | appels haute / basse | triangles haute / basse | ms / image (1920²) |
 |---|---|---|---|
-| la rue du Port | 225 / 128 | 33 k / 16 k | ⟨RUE⟩ |
-| l'atelier (le cliché, la pile, la feuille) | 155 / 42 | 12 k / 4 k | ⟨ATELIER⟩ |
-| la cour (les masques) | 153 / 37 | 36 k / 13 k | ⟨COUR⟩ |
-| la Rive (tribune, pylônes, tifo, 3 000 masques) | 622 / 336 | 392 k / 239 k | ⟨STADE⟩ |
-| l'escalier du club-house | 105 / 26 | 3 k / 1 k | ⟨ESCALIER⟩ |
+| la rue du Port | 225 / 128 | 33 k / 16 k | 6,0 s |
+| l'atelier (le cliché, la pile, l'épreuve) | 166 / 42 | 10 k / 4 k | 3,9 à 12,0 s (la pile) |
+| la cour (les masques) | 153 / 37 | 36 k / 13 k | 4,9 s |
+| la Rive (tribune, pylônes, tifo, 3 000 masques) | 622 / 336 | 392 k / 239 k | 5,8 à 8,5 s |
+| l'escalier du club-house | 105 / 26 | 3 k / 1 k | 6,4 s |
 
 La mémoire des textures du film entier : **553 Mo en haute** (180 textures : chaque
 matière garde sa graine), **112 Mo en moyenne**, **53 Mo en basse** (93 textures : les
