@@ -522,6 +522,7 @@ def _cat():
         'legato': {'sfz': O + 'TrumpetSus.sfz', 'legato': True},
         'staccato': {'sfz': O + 'TrumpetStac.sfz', 'oneshot': True},
         'sourdine': {'sfz': O + 'TrumpetStraightMuteSus.sfz'},
+        'harmon': {'sfz': O + 'TrumpetHarmonMuteSus.sfz'},
     }, 'tenu', 'deux trompettes : l\'éclat, les fanfares', {'pan': 0.25, 'profondeur': 0.6}, unisson=2,
         avance={'tenu': 0.015}, eclat=1.4))
     met(_sfz('trombones', 'cuivres', ('E2', 'F5'), {
@@ -694,6 +695,21 @@ def _cat():
                      'tenu', 'pupitre de contrebasses (banque générale)', {'pan': 0.55, 'profondeur': 0.45}))
     met(InstrumentGM('taiko_gm', 'percussions', ('C2', 'C4'), {'frappe': (0, 116)}, 'frappe',
                      'taiko (banque générale)', {'pan': 0.0, 'profondeur': 0.7}))
+
+    # --- la ville, le jour et la nuit (banque générale) ---
+    met(InstrumentGM('piano_electrique', 'claviers', ('E1', 'G6'), {'lames': (0, 4), 'fm': (0, 5),
+                                                                     'desaccorde': (8, 4)}, 'lames',
+                     'piano électrique à lames : la nuit, le bar, les néons',
+                     {'pan': 0.0, 'profondeur': 0.3, 'largeur': 0.9}))
+    met(InstrumentGM('contrebasse_jazz', 'cordes', ('E1', 'G3'), {'pince': (0, 32)}, 'pince',
+                     'contrebasse pincée du bal : la marche souple, le demi-temps de la nuit',
+                     {'pan': 0.05, 'profondeur': 0.2}))
+    met(InstrumentGM('guitare_nylon', 'guitares', ('E2', 'B5'), {'tenu': (0, 24)}, 'tenu',
+                     'guitare à cordes de nylon : les arpèges pincés du jour', {'pan': -0.3, 'profondeur': 0.3}))
+    met(InstrumentGM('sifflet', 'bois', ('C5', 'C7'), {'tenu': (0, 78)}, 'tenu',
+                     'sifflet : quelqu\'un qui siffle en marchant', {'pan': 0.1, 'profondeur': 0.4}))
+    met(InstrumentGM('batterie_balais', 'batterie', None, {'kit': (128, 40)}, 'kit',
+                     'batterie aux balais : la promenade', {'pan': 0.0, 'profondeur': 0.25}, kit=True))
 
     # --- les synthétiseurs ---
     met(InstrumentSynthe('basse_synthe', 'synthes', ('E1', 'C4'), {'tenu': None}, 'tenu',
