@@ -96,10 +96,10 @@
   var MOQUE2 = ['C5 C5 G5 . F5 Eb5 C5 . B4 . . . G4 . . .', SILENCE];
   // elle ralentit (la mousse verte) : les notes s'écartent
   var RALENTIT = [
-    'G4 . C5 . Eb5 . D5 . . C5 . . G4 . . .', 'Eb4 . . . G4 . . . . C5 . . . . . .',
-    'Ab4 . . . . . C5 . . . . . . . F4 .', '. . . . . . . . . Eb4 . . . . . .',
-    'Ab4 . . . . . . . . . . . . C5 . .', '. . . . . . . . . . . . . . . .',
-    'B4 . . . . . . . . . . . . . . .', '. . . . . . . . . . . . . . . .'
+    'C5 . . C5 G5 . . F5 . . Eb5 . . . C5 .', '. . G4 . . . . . Eb5 . . . . . . .',
+    'Eb5 . . . . . C5 . . . . . . . . .', '. . . . . . . . Ab4 . . . . . . .',
+    'F5 . . . . . . . . . . . . C5 . .', '. . . . . . . . . . . . . . . .',
+    'B4 . . . . . . . . . . . . . . .', '. . . . . . . . . . . . G4 . . .'
   ];
   // mardi, dix-huit heures : six coups de cloche grave
   var SIX_COUPS = ['C4 - - - C4 - - - C4 - - - C4 - - -', 'C4 - - - C4 - - - - - - - - - - -'];
@@ -115,43 +115,43 @@
   var QUINTES = 'C3 - - - - - - - - - - - - - - -';
 
   // ── la batterie : la caisse sèche et ses roulements ; la « gated » au sommet
-  var M_X = 'Kx . . . s . . . K . . . s . . .';
-  var M = 'K . . . s . . . K . . . s . . .';
-  var M_R = 'K . . . s . . . K . . . s . s s';
-  var M_ROULE = 'K . . . s . . . s s s s s s s s';
-  var M_RELANCE = 'K . . . s . . . Kz . s s s s S S';
-  var G_X = 'Kx . . . S . . . K . . . S . . .';         // la fanfare : la caisse « gated »
-  var G = 'K . . . S . . . K . . . S . . .';
-  var G_T = 'K . . . S . . . K . T . S . T T';
-  var G_ROULE = 'K . . . S . . . T T T T T T T T';          // les timbales
-  var C_X = 'Kx . . . . . . . s . . . . . . .';         // le Conseil : le demi-temps
-  var C = 'K . . . . . . . s . . . . . T .';
-  var C_R = 'K . . . . . . . s . . . s . s s';
+  var M_X = 'kx . . . s . . . k . . . s . . .';
+  var M = 'k . . . s . . . k . . . s . . .';
+  var M_R = 'k . . . s . . . k . . . s . s s';
+  var M_ROULE = 'k . . . s . . . s s s s s s s s';
+  var M_RELANCE = 'k . . . s . . . kz . s s s s S S';
+  var G_X = 'kx . . . S . . . k . . . S . . .';         // la fanfare : la caisse « gated »
+  var G = 'k . . . S . . . k . . . S . . .';
+  var G_T = 'k . . . S . . . k . T . S . T T';
+  var G_ROULE = 'k . . . S . . . t . t . T . T T';          // les timbales
+  var C_X = 'kx . . . . . . . s . . . . . . .';         // le Conseil : le demi-temps
+  var C = 'k . . . . . . . s . . . . . T .';
+  var C_R = 'k . . . . . . . s . . . s . s s';
 
   A.theme('livre_h5', {
     titre: 'La Maquette', moment: 'la ville le jour, livre 5 (La Maquette)',
     tonalite: 'do mineur',
     humeur: 'un stade en carton dans une vitrine : une fanfare de cuivres qui rétrécit, une marche, une boîte à musique qui se moque',
     ville: true,
-    bpm: 96, gain: 1.2,
+    bpm: 96, gain: 1.76,
     pompe: { prof: 0.4, rel: 0.25 },
     echo: { pas: 4, retour: 0.33, coupe: 2400 },
     salle: { taille: 0.65, duree: 2.6, ton: 3800 },
     cassette: { sature: 1, coupe: 10000, bas: 40, souffle: 0.004, flotte: { prof: 3, vit: 0.35 } },
     voix: {
-      boite:   { inst: 'cloche', vol: 0.1, faux: 22, echo: 0.3, rev: 0.4, pan: 0.25 },
-      lead:    { inst: 'cuivre', vol: 0.12, env: [0.04, 0.3, 0.7, 0.14], ton: [2600, 1500, 0.2], rev: 0.35, echo: 0.12, flotte: { prof: 5, vit: 0.5 }, pan: 0.05 },
+      boite:   { inst: 'cloche', vol: 0.12, faux: 22, echo: 0.3, rev: 0.4, pan: 0.25 },
+      lead:    { inst: 'cuivre', vol: 0.13, env: [0.04, 0.3, 0.7, 0.14], ton: [2600, 1500, 0.2], rev: 0.35, echo: 0.12, flotte: { prof: 5, vit: 0.5 }, pan: 0.05 },
       harmo:   { inst: 'cuivre', vol: 0.06, env: [0.04, 0.3, 0.7, 0.14], ton: [2400, 1300, 0.2], rev: 0.35, pan: -0.25 },
-      pah:     { inst: 'cuivre', vol: 0.075, oct: 4, env: [0.02, 0.18, 0.4, 0.1], rev: 0.3, pompe: true, pan: -0.15 },
-      tenue:   { inst: 'cuivre', vol: 0.07, oct: 3, env: [0.12, 0.6, 0.8, 0.3], ton: [1800, 1200, 0.5], rev: 0.4, flotte: { prof: 6, vit: 0.4 }, pan: -0.1, filtre: 2400 },
+      pah:     { inst: 'cuivre', vol: 0.085, oct: 4, env: [0.02, 0.18, 0.4, 0.1], rev: 0.3, pompe: true, pan: -0.15 },
+      tenue:   { inst: 'cuivre', vol: 0.09, oct: 3, env: [0.12, 0.6, 0.8, 0.3], ton: [1800, 1200, 0.5], rev: 0.4, flotte: { prof: 6, vit: 0.4 }, pan: -0.1, filtre: 2400 },
       quintes: { inst: 'cuivre', vol: 0.07, env: [0.12, 0.6, 0.8, 0.3], ton: [1800, 1200, 0.5], rev: 0.45, pan: -0.2 },
       quintes2: { inst: 'cuivre', vol: 0.07, env: [0.12, 0.6, 0.8, 0.3], ton: [1800, 1200, 0.5], rev: 0.45, pan: 0.2 },
       envol:   { inst: 'supersaw', vol: 0.07, scies: 5, desaccord: 16, large: 0.85, rev: 0.4, flotte: { prof: 7, vit: 0.45 }, filtre: 4200, env: [0.03, 0.5, 0.82, 0.25] },
-      mousse:  { inst: 'pad', vol: 0.06, oct: 3, rev: 0.5, pompe: true, flotte: { prof: 12, vit: 0.3 }, filtre: 1600 },
+      mousse:  { inst: 'pad', vol: 0.075, oct: 3, rev: 0.5, pompe: true, flotte: { prof: 12, vit: 0.3 }, filtre: 1600 },
       cloche:  { inst: 'cloche', vol: 0.12, faux: 8, echo: 0.2, rev: 0.6, pan: -0.2 },
       reese:   { inst: 'reese', vol: 0.1, oct: 1, plancher: 'G1', desaccord: 9, pompe: true, filtre: 1400 },
       basse:   { inst: 'basse', vol: 0.09, oct: 1, plancher: 'E1', pompe: true, drive: 1.3, filtre: 1900, ton: [1300, 520, 0.08] },
-      batt:    { vol: 0.66, porte: 0.45, tenue: 0.2, rev: 0.3, filtre: 12000 }
+      batt:    { vol: 0.5, porte: 0.45, tenue: 0.2, rev: 0.3, filtre: 12000 }
     },
     sections: {
       // ── l'introduction, jouée une fois : la vitrine ──
@@ -161,7 +161,7 @@
         boite: [BOITE[0], BOITE[1], SILENCE, SILENCE],
         tenue: [SILENCE, SILENCE, NAPPE, NAPPE],
         basse: [SILENCE, SILENCE, RACINE, BOUM_MONTE],
-        batt: [SILENCE, SILENCE, 'K . . . . . . . K . . . . . . .', M_ROULE]
+        batt: [SILENCE, SILENCE, 'k . . . . . . . k . . . . . . .', M_ROULE]
       },
       // ── la boucle ──
       // la vitrine : la marche, la boîte qui tourne son air
@@ -182,7 +182,7 @@
         lead: FANFARE.concat([FANFARE[0], FANFARE[1]]).concat(silences(2)).concat(['Eb5 - - - - - - - C5 - - - Ab4 - - -', 'F4 - - - Ab4 - - - C5 - - - - - - -', 'D5 - - - - - - - - - - - - - - -', '- - - - - - - - . . . . . . . .']),
         harmo: true,
         boite: silences(10).concat(MOQUE).concat(silences(2)).concat(MOQUE2),
-        batt: [G_X, G, G, G_T, G, G, G, G_ROULE, M_X, M, M, M_R, M, M, 'K . . . s . . . K . . . s . . .', M_RELANCE]
+        batt: [G_X, G, G, G_T, G, G, G, G_ROULE, M_X, M, M, M_R, M, M, 'k . . . s . . . k . . . s . . .', M_RELANCE]
       },
       // la mousse verte : le stade fond, la boîte qui ralentit
       creux: {
@@ -191,7 +191,7 @@
         mousse: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, TENU],
         basse: [RACINE, TENU, RACINE, TENU, RACINE, TENU, RACINE, '- - - - - - - - . . . . . . . .'],
         boite: RALENTIT,
-        batt: ['bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, 'K . . . s . . . K . . . s s s s']
+        batt: ['bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, 'k . . . s . . . k . . . s s s s']
       },
       // la vitrine, avec un contrechant de cuivre ; la fanfare en six mesures
       A2: {
@@ -213,7 +213,7 @@
         reese: [FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, FUNEBRE_B, RACINE, '- - - - - - - - . . . . . . . .'],
         tenue: [NAPPE, TENU, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU, NAPPE, TENU, NAPPE, NAPPE, NAPPE, TENU],
         lead: silences(8).concat(FUNEBRE),
-        batt: [C_X, C, C, C_R, C, C, C, C_R, C_X, C, C, C_R, C, C, 'K . . . . . . . s . . . s s s s', M_RELANCE]
+        batt: [C_X, C, C, C_R, C, C, C, C_R, C_X, C, C, C_R, C, C, 'k . . . . . . . s . . . s s s s', M_RELANCE]
       },
       // la tribune Est : toute la fanfare, la grande scie, les timbales ; puis la flamme
       D: {
@@ -238,7 +238,7 @@
         boite: silences(4).concat(['C5 . . C5 G5 . F5 . Eb5 . C5 . . . . .', SILENCE, 'C4 . . C4 G4 . F4 . . . . . . . . .', SILENCE]),
         basse: [BOUM, BOUM, 'R - - - . . . . R - - - . . . .', BOUM, RACINE, TENU, TENU, '- - - - - - - - . . . . . . . .'],
         pah: [PAH, PAH, PAH, PAH, SILENCE, SILENCE, SILENCE, SILENCE],
-        batt: [G_X, G, G, 'Kx . . . S . . . K . . . S . . .', 'bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, '. . . . . . . . . . . . s . s s']
+        batt: [G_X, G, G, 'kx . . . S . . . k . . . S . . .', 'bx . . . . . . . . . . . . . . .', SILENCE, SILENCE, '. . . . . . . . . . . . s . s s']
       },
       // les cuivres se dégonflent ; la boîte seule ; la marche revient
       retour: {
@@ -248,7 +248,7 @@
         boite: [SILENCE, SILENCE, BOITE[2], BOITE[3], SILENCE, SILENCE, SILENCE, SILENCE],
         basse: [RACINE, TENU, BOUM, BOUM, BOUM, BOUM, BOUM, BOUM_MONTE],
         pah: [SILENCE, SILENCE, SILENCE, SILENCE, PAH, PAH, PAH, PAH2],
-        batt: ['Kx . . . . . . . . . . . . . . .', SILENCE, 'K . . . . . . . K . . . . . . .', 'K . . . s . . . K . . . s . . .', M, M, M, M_RELANCE]
+        batt: ['kx . . . . . . . . . . . . . . .', SILENCE, 'k . . . . . . . k . . . . . . .', 'k . . . s . . . k . . . s . . .', M, M, M, M_RELANCE]
       }
     },
     ordre: ['intro', 'A', 'B', 'creux', 'A2', 'C', 'D', 'D2', 'retour'], boucle: 1
