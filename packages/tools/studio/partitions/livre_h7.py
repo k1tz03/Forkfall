@@ -65,8 +65,9 @@ LA CARTE (76 à la noire ; une mesure de 4/4 = 3,16 s, de 3/4 = 2,37 s ; le corp
                      le motif, le chœur au fond sur le lamento (les bougies)           5 → 6
   G      8 m.  3:12  « Passez-moi la 12 » : le second sommet — les cordes à trois octaves
                      chantent le motif, les cors la mèche, le lamento en contre-chant   7 → 8
-  H      8 m.  3:37  « Six heures » : le trousseau, la mèche au cor sur la pédale ; la
-                     dernière mesure enfle vers la sonnette de A                         3
+  H      8 m.  3:37  « Six heures » : le trousseau, puis presque rien — la pédale, la
+                     cymbale frottée, la mèche au cor lointain (la seconde fenêtre) ; le
+                     lamento revient, la dernière mesure enfle vers la sonnette de A  1 → 3
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
@@ -625,20 +626,23 @@ def G(s):
 # --- H : six heures (la relance) ------------------------------------------------------------------
 @theme.section('H', mesures=8)
 def H(s):
-    nuances(s, basses='mp', celles_tenu='pp', altos='mp', piano_mg='f', cor_loin='f', sub='mf')
+    nuances(s, basses='p', celles_tenu='pp', altos='p', piano_mg='f', cor_loin='mf', sub='mp')
     trousseau(s, 0.25, vel=0)
     s.note(archet, 'C4', s.m(1, 3), 6, vel=58)
-    # la pédale de mib (la menace demeure), puis le lamento
+    # m. 1–4 : la fenêtre — la pédale de mib, la cymbale frottée, le cor au loin (la menace
+    # demeure) ; m. 5–8 : les murs reviennent avec le lamento
     s.note(basses, 'Eb2', 0, s.m(5), vel=74)
     basse(s, basses, vel=74, de=s.m(5))
+    s.crescendo(basses, s.m(5), s.m(8, 4), 'p', 'mp')
     s.note(piano_mg, 'Eb2', 0, 2, vel=60)
     basse(s, sub, octave=-1, vel=54, jusqua=s.m(5))
-    voix(s, celles_tenu, rangs=(0, 1), vel=66)
-    voix(s, altos, rangs=(2,), vel=66)
+    voix(s, celles_tenu, rangs=(0, 1), vel=66, de=s.m(5))
+    voix(s, altos, rangs=(2,), vel=66, de=s.m(5))
     s.crescendo(celles_tenu, s.m(5), s.m(8, 4), 'pp', 'p')
+    s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mp')
     # la mèche au cor lointain, sur la pédale
     s.joue(cor_loin, MECHE, a=s.m(1, 4), vel=84)
-    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'f', 'p')
+    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'mf', 'p')
     # le piano reprend la basse du lamento ; la dernière mesure enfle vers la sonnette de A
     for d, l, c in plages(grille_de(s), de=s.m(5)):
         s.note(piano_mg, hauteur(ACCORDS[c][0]) + 12, d, min(l, 2), vel=56)
