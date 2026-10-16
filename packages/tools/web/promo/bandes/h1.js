@@ -64,7 +64,7 @@ module.exports = {
       prepare: auStade(0, G),
       tournage: [['attendre', 0.6], ['pose', 'carte'], ['glisser', 'gauche', { duree: 0.6, ampleur: 0.45 }], ['attendre', 3.2], ['pose', 'stade'], ['attendre', 2.0]] },
     // l'accueil : la cartouche du livre 1 (« Commence ici »)
-    { id: 'h1_accueil', profils: ['appstore', 'apple'], profil: { runs: 0 },
+    { id: 'h1_accueil', profils: ['appstore', 'apple', 'google'], profil: { runs: 0 },
       prepare: [['attendre', 1.6]],
       tournage: [['attendre', 0.8], ['defiler', '#postulats .postulat[data-index="0"]', { duree: 1.0, marge: 96 }], ['attendre', 1.2], ['pose', 'cartouche'], ['attendre', 2.6]] },
   ],

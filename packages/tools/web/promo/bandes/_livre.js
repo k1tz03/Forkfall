@@ -75,7 +75,7 @@ module.exports = function bandeDeLivre(P) {
       tournage: [['attendre', 1.2], ['pose', 'carte'], ['glisser', P.cartes.sensTrois || 'gauche', { duree: 0.8, ampleur: 0.44, tenue: 0.5, pose: 'glisse' }], ['attendre', 1.8]] },
     { id: 'stade', profils: ['social', 'apple'], heros: P.heros, prepare: auStade(I, G),
       tournage: [['attendre', 0.6], ['glisser', 'gauche', { duree: 0.6, ampleur: 0.45 }], ['attendre', 3.2], ['pose', 'stade'], ['attendre', 2.0]] },
-    { id: 'accueil', profils: ['appstore', 'apple'], heros: P.heros, profil: { runs: 1 }, prepare: [['attendre', 1.6]],
+    { id: 'accueil', profils: ['appstore', 'apple', 'google'], heros: P.heros, profil: { runs: 1 }, prepare: [['attendre', 1.6]],
       tournage: [['attendre', 0.8], ['defiler', '#postulats .postulat[data-index="' + I + '"]', { duree: 1.0, marge: 96 }], ['attendre', 1.2], ['pose', 'cartouche'], ['attendre', 2.6]] },
   ];
 
