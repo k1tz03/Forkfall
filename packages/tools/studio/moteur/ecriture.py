@@ -432,7 +432,7 @@ _REGLAGES_PISTE = {
     'volume', 'pan', 'largeur', 'profondeur', 'salle', 'plaque', 'echo', 'bus', 'eq',
     'sature', 'comp', 'pompe', 'porte', 'humain', 'unisson', 'transpose', 'art',
     'legato', 'expression', 'synthe', 'kit', 'programme', 'retard', 'muet', 'solo',
-    'octaves', 'filtre', 'glisse', 'mono', 'eclat',
+    'octaves', 'filtre', 'glisse', 'mono', 'eclat', 'bref',
 }
 
 

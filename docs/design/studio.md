@@ -345,6 +345,7 @@ Ce que l'échantillonneur fait pour qu'un instrument sonne vrai :
 | `pompe` | `pompe(0.6, 0.18, source='kick')` | le pompage : la piste plonge à chaque note de la piste `kick` (ou `'temps'` : chaque noire) et remonte en 0,18 s |
 | `porte` | `porte(duree=0.28)` | la réverbe « gated » : une plaque dense ouverte 0,28 s à chaque coup, fermée net (la caisse claire des années 80) |
 | `art`, `legato`, `unisson`, `transpose`, `retard` | `art='tremolo'` | l'articulation par défaut, le legato, les prises du pupitre, la transposition, un retard (s) |
+| `bref` | `0.2` | les notes brèves (staccato, pizzicato) des cordes, des bois et des cuivres ne jouent plus tout leur échantillon (avec la queue de la salle d'enregistrement) : leur durée écrite, puis cette relâche (s). Un ostinato de doubles croches y gagne 2 à 3 dB de contraste d'attaque, et perd un peu d'ampleur |
 | `humain` | `(9, 6)` ou `0` | l'humanisation : écart de temps (ms) et de vélocité ; à graine fixe (la même note bouge toujours pareil). Par défaut : cordes 9 ms, cuivres 10, bois 8, chœur 12, percussions 4, synthés 0 |
 | `synthe` | `{'filtre': {'coupure': 220}}` | un synthé : son patch, champ par champ (`moteur/synthe.py`, `PATCH_DEFAUT`) |
 | `bus`, `muet`, `solo`, `mono`, `eclat`, `expression` | `bus='synthes'` | le bus, couper, isoler, mono, l'éclat des cuivres, une expression fixe |
@@ -515,6 +516,8 @@ Deux rendus successifs de la démonstration donnent deux WAV identiques au bit.
 - **Les notes répétées** n'ont que deux prises (spiccato) : un ostinato de doubles
   croches sur une seule note devient mécanique au-delà de deux mesures. Varier les
   hauteurs (l'octave, la quinte), les accents (`accents='X x x X x x X x'`), l'humanisation.
+  Les notes brèves jouent par défaut tout leur échantillon (la salle d'enregistrement
+  sonne dessous) : pour un ostinato plus sec et plus net, `bref=0.2` sur la piste.
 - **Le crescendo** d'une note tenue est un gain : son timbre ne s'éclaire pas. Pour un
   vrai crescendo, enchaîner deux notes (la seconde à une vélocité plus haute) ou doubler
   par un roulement de cymbale.

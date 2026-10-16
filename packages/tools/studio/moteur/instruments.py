@@ -168,6 +168,13 @@ class InstrumentSfz(Instrument):
                 accord = 100.0 * (j.h - hauteur(spec['reference']))
             oneshot = spec.get('oneshot', False)
             relache = spec.get('relache')
+            bref = oneshot and not isinstance(j.h, str)       # une note brève à hauteur
+            if bref and reg.get('bref') and self.famille in ('cordes', 'cuivres', 'bois'):
+                # `bref` sur la piste : la note brève ne joue plus tout son échantillon
+                # (sa queue de salle d'enregistrement) mais sa durée écrite, puis une
+                # relâche courte : un ostinato plus sec, chaque attaque plus nette
+                oneshot = False
+                relache = float(reg['bref'])
             sans_attaque = 0.0
             fondu = 0.0
             duree = j.d
@@ -201,7 +208,7 @@ class InstrumentSfz(Instrument):
                 if k_uni == 1:
                     c, ms, place = 0.0, 0.0, 0.0
                 alea = ((j.rang * 7 + u * 3) % 10) / 10 + 0.05
-                if oneshot and not isinstance(j.h, str):
+                if bref:
                     vc, vg = _VARIATIONS[j.rang % len(_VARIATIONS)]
                     c += vc
                 else:
