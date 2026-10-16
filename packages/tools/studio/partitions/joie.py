@@ -52,7 +52,7 @@ arc = Arc(theme)
 for _voix, _db in ((arc.zap, 4.5), (arc.clics, 3.4), (arc.ton, 2.7), (arc.bzz, 0.8)):
     _voix.reglages['volume'] = _voix.reglages.get('volume', 0.0) + _db
 # --- la place -------------------------------------------------------------------------
-foule = theme.piste('foule', 'foule', art='ah', pan=-0.1, volume=0)
+foule = theme.piste('foule', art='ah', pan=-0.1, volume=3)
 rumeur = theme.piste('rumeur', 'foule', art='rumeur', volume=-12)
 choeur = theme.piste('choeur', art='aah', volume=-9)
 pieds = theme.piste('pieds', 'grosse_caisse', volume=-5)                   # les pieds sur le bois
@@ -60,24 +60,24 @@ pieds_t = theme.piste('pieds_t', 'taiko', volume=-12, eq={'passe_haut': 45})
 mains = theme.piste('mains', 'applaudissements', art='mesure', volume=-5)                  # la place, sur 4
 claps = theme.piste('claps', volume=-14)                                    # les mains légères
 ovation = theme.piste('ovation', 'applaudissements', art='ovation', volume=-7)
-caisse = theme.piste('caisse', 'caisse_claire', volume=-8)                  # la caisse de défilé
+caisse = theme.piste('caisse', 'caisse_claire', volume=-6)                  # la caisse de défilé
 cercle = theme.piste('cercle', 'caisse_claire', art='cercle', volume=-16)
 caisse_roul = theme.piste('caisse_roul', 'caisse_claire', art='roulement', volume=-9)
 timbales = theme.piste('timbales', volume=-4)
 timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=-6)
 cymbales = theme.piste('cymbales', volume=-5)
-etouffee = theme.piste('etouffee', 'cymbales', art='etouffee', volume=-18)
+etouffee = theme.piste('etouffee', 'cymbales', art='etouffee', volume=-10)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=-10)
-cloches = theme.piste('cloches', volume=-15)
-glock = theme.piste('glock', 'glockenspiel', volume=-14)
+cloches = theme.piste('cloches', volume=-7)
+glock = theme.piste('glock', 'glockenspiel', volume=-4)
 # --- les cuivres -----------------------------------------------------------------------
 trompettes = theme.piste('trompettes', art='tenu', volume=0)
 trompettes2 = theme.piste('trompettes2', 'trompettes', art='tenu', pan=0.35, volume=-2)
-cors = theme.piste('cors', art='tenu', volume=0)
-trombones = theme.piste('trombones', art='tenu', volume=-1)
-tuba = theme.piste('tuba', volume=2)
+cors = theme.piste('cors', art='tenu', volume=1)
+trombones = theme.piste('trombones', art='tenu', volume=-3)
+tuba = theme.piste('tuba', volume=-2)
 # --- les bois --------------------------------------------------------------------------
-flutes = theme.piste('flutes', art='tenu', volume=-3)
+flutes = theme.piste('flutes', art='tenu', volume=4)
 hautbois = theme.piste('hautbois', art='tenu', volume=-3)
 clarinettes = theme.piste('clarinettes', art='tenu', volume=-4)
 bassons = theme.piste('bassons', art='staccato', bref=0.15, volume=-3)
@@ -86,9 +86,9 @@ violons = theme.piste('violons', volume=-4)
 violons2 = theme.piste('violons2', 'violons', pan=-0.2, volume=-6)
 altos = theme.piste('altos', volume=-5)
 celles = theme.piste('celles', 'violoncelles', bref=0.18, volume=-3)
-celles_chant = theme.piste('celles_chant', 'violoncelles', art='tenu', pan=0.25, volume=-3)
-basses = theme.piste('basses', 'basses_film', volume=-4)
-harpe = theme.piste('harpe', volume=-5)
+celles_chant = theme.piste('celles_chant', 'violoncelles', art='tenu', pan=0.25, volume=0)
+basses = theme.piste('basses', 'basses_film', volume=0)
+harpe = theme.piste('harpe', volume=-2)
 # --- le grain --------------------------------------------------------------------------
 sub = theme.piste('sub', 'sub_synthe', volume=-18)
 effets = theme.piste('effets', volume=-8)
@@ -330,7 +330,7 @@ def cymbale_vers(s, fin, art='monte_2s', vel=90):
 
 @theme.section('intro', mesures=4)
 def intro(s):
-    nuances(s, trompettes='f', trompettes2='f', cors='f', trombones='f', tuba='f', basses='f', celles='f',
+    nuances(s, pieds='f', trompettes='f', trompettes2='f', cors='f', trombones='f', tuba='f', basses='f', celles='f',
             violons='mf', timbales='f')
     arc.poser(s, 0)
     # m. 1 : l'arc seul ; les roulements ; « fu-si » au quatrième temps, en octaves
@@ -356,7 +356,7 @@ GRILLE_V1 = ['I', 'bVII', 'IV', 'I', 'IV IV IV V', 'bVII I I I', 'IV IV IV bVII'
 @theme.section('V1', mesures=16)
 def V1(s):
     t = temps(GRILLE_V1)
-    nuances(s, celles='mf', basses='mf', violons2='mp', altos='mp', cors='mf', clarinettes='mp', flutes='mf',
+    nuances(s, pieds='mf', celles='mf', basses='mf', violons2='mp', altos='mp', cors='ff', clarinettes='mp', flutes='mf',
             harpe='mp', violons='pp', foule='mf')
     # le premier temps marqué : la cymbale, le pied, la basse
     s.note(cymbales, 'C4', 0, 2, vel=80)
@@ -394,7 +394,7 @@ PONCTUATIONS = {1: (('F5', 'A5'), ('A5', 'C6')), 3: (('A5', 'C6'), ('F5', 'A5'))
 @theme.section('R1', mesures=16)
 def R1(s):
     t = temps(GRILLE_R1)
-    nuances(s, foule='f', cors='f', trompettes='mf', trompettes2='mf', trombones='mf', tuba='mf', celles='mf',
+    nuances(s, pieds='f', foule='f', cors='f', trompettes='mf', trompettes2='mf', trombones='mf', tuba='mf', celles='mf',
             basses='mf', violons2='mp', altos='mp', violons='p', flutes='mf', caisse='mf', choeur='mp')
     s.note(cymbales, 'C4', 0, 2, vel=104)
     s.note(timbales, 'F2', 0, 1, vel=104)
@@ -486,7 +486,7 @@ def poum_pa(s, t, de, a, vel=90):
 @theme.section('V2', mesures=16)
 def V2(s):
     t = temps(GRILLE_V2)
-    nuances(s, trompettes='f', trompettes2='mf', clarinettes='mp', tuba='mf', trombones='mf', cors='mf',
+    nuances(s, pieds='f', trompettes='f', trompettes2='mf', clarinettes='mp', tuba='mf', trombones='mf', cors='mf',
             basses='mp', caisse='mf')
     s.note(cymbales, 'C4', 0, 2, vel=92)
     # la caisse de défilé, la grosse caisse sur 1 et 3, la cymbale étouffée sur 2 et 4
@@ -517,7 +517,7 @@ GRILLE_P = ['vi', 'vi', 'IV IV IV V5', 'vi', 'IV IV IV V', 'vi', 'ii ii ii vi', 
 @theme.section('P', mesures=16)
 def P(s):
     t = temps(GRILLE_P)
-    nuances(s, celles_chant='mf', harpe='mp', basses='mp', altos='p', violons2='p', violons='p', rumeur='p',
+    nuances(s, pieds='mf', tuba='mf', celles_chant='mf', harpe='mp', basses='mp', altos='p', violons2='p', violons='p', rumeur='p',
             cors='mp', trompettes='mf', trompettes2='mf', trombones='mp')
     # la mineur : la harpe en croches, les cordes en trémolo, la basse pincée, la place au loin
     harpe_croches(s, t, 1, 12, vel=70)
@@ -574,7 +574,7 @@ GRILLE_R2 = ['IV IV IV V', 'bVII I I I', 'IV IV IV bVII', 'I', 'vi vi vi V', 'IV
 def R2(s):
     t = temps(GRILLE_R2)
     silence = s.m(6, 3)
-    nuances(s, foule='ff', cors='f', trombones='f', celles_chant='f', choeur='mf', trompettes='f',
+    nuances(s, pieds='f', foule='ff', cors='f', trombones='f', celles_chant='f', choeur='mf', trompettes='f',
             trompettes2='f', tuba='f', celles='f', basses='f', violons='mf', violons2='mf', altos='mf', caisse='f')
     s.note(cymbales, 'C4', 0, 2, vel=112)
     s.note(timbales, 'F2', 0, 1, vel=112)
@@ -679,7 +679,8 @@ GRILLE_V3 = ['I', 'bVII', 'IV', 'I', 'IV IV IV V', 'bVII I I I', 'IV IV IV bVII'
 @theme.section('V3', mesures=16)
 def V3(s):
     t = temps(GRILLE_V3)
-    nuances(s, bassons='mp', harpe='mp', celles='mp', basses='mp', violons='p', flutes='mf', hautbois='mf')
+    nuances(s, pieds='mp', cors='f', bassons='mp', harpe='mp', celles='mp', basses='mp', violons='p', flutes='mf',
+            hautbois='mf')
     s.note(pieds, 'K', 0, 1, vel=74)
     s.note(cymbales, 'C4', 0, 2, vel=64)
     # les bassons sautillent (l'octave en 3+3+2), les pizz sur 1, la harpe en croches
@@ -717,7 +718,7 @@ GRILLE_F = ['bVI bVI bVII bVII', 'I', 'I', 'I', 'IV IV IV V', 'bVII I I I', 'bVI
 @theme.section('F', mesures=16)
 def F(s):
     t = temps(GRILLE_F)
-    nuances(s, trompettes='f', trompettes2='f', cors='f', trombones='f', tuba='f', basses='f', celles='f',
+    nuances(s, pieds='f', trompettes='f', trompettes2='f', cors='f', trombones='f', tuba='f', basses='f', celles='f',
             violons='mf', foule='f', choeur='mf', violons2='mp', altos='mp', caisse='mf')
     # m. 1–2 : la fanfare, la place avec elle : la♭ si♭ | DO
     s.note(cymbales, 'C4', 0, 2, vel=104)

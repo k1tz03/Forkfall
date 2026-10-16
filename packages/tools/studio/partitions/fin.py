@@ -242,7 +242,7 @@ CHOEUR_B1 = ((1, 1, 4, ('A3', 'C4', 'E4')), (2, 1, 4, ('A3', 'C4', 'F4')), (3, 1
 @theme.section('B1', mesures=8)
 def B1(s):
     t = temps(GRILLE_B1)
-    nuances(s, choeur='p', celles='p', basses='p', flute='mp')
+    nuances(s, choeur='p', celles='p', basses='p', flute='mp', cor='mf')
     for m, b, d, notes in CHOEUR_B1:
         for h in notes:
             s.note(choeur, h, s.m(m, b), d, vel=72)
