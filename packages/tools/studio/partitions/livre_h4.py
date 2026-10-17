@@ -29,7 +29,8 @@ LA CARTE (104 à la noire, une mesure = 2,308 s ; le corps boucle : 108 mesures,
                            lampadaires ; la guitare : la tête (3,5 s)                2 → 4
   A          16 m.  0:00   LA ROUTE : pédale de fa#, le moteur, les lampadaires, la boîte à
                            rythmes (le cercle, puis la caisse) ; m. 10-14 la guitare : le
-                           motif en valeurs longues ; m. 14 sa tête, encore         4 → 5,5
+                           motif en valeurs longues, devant (les lampadaires s'effacent sous
+                           elle) ; m. 14 sa tête, encore                            4 → 5,5
   B          16 m.  0:37   LES LAMPADAIRES : la pédale lâchée (ré mi fa#m, do#m, si m), les
                            lumières en doubles croches, la basse au galop ; la tête en canon
                            (cors, trombones), qui monte d'un degré ; dernier temps : silence
@@ -48,21 +49,22 @@ LA CARTE (104 à la noire, une mesure = 2,308 s ; le corps boucle : 108 mesures,
                            de volant (sol majeur, ♭II), trombones, timbales, toms ; le sommet ;
                            m. 16 le moteur et la boîte se taisent, l'accord tient   7,5 → 9
   clairiere  12 m.  3:23   LA CLAIRIÈRE : le moteur se tait (les mains sur les genoux) ; une
-                           timbale très douce, i–IV en dorien, les cordes seules ; m. 4 LE
-                           SIFFLET (une phrase) ; m. 7 la guitare répond en dorien ; m. 9 le
-                           moteur repart                                            2 → 3
-  retour      8 m.  3:51   LA ROUTE REVIENT : pédale, moteur, lampadaires, la tête ; la
-                           dernière mesure sur ♭VII relance la première (l'accord qui bat,
-                           les toms, un roulement de timbale)                         4 → 5
+                           timbale et un accord de harpe, puis i–IV en dorien, les cordes
+                           seules ; m. 4 LE SIFFLET (une phrase) ; m. 7 la guitare répond en
+                           dorien ; m. 9 le moteur repart                           2 → 3
+  retour      8 m.  3:51   LA ROUTE REVIENT : pédale, moteur, lampadaires, la tête (devant,
+                           comme dans A) ; la dernière mesure sur ♭VII relance la première
+                           (l'accord qui bat, les toms, un roulement de timbale)      4 → 5
   Les fenêtres presque vides (la sonie à court terme 8 dB au moins sous la boucle) : le creux
   (18 s) ; la dernière mesure de D et le début de la clairière, les cordes seules jusqu'au
   sifflet (12 s) ; entre elles, 1 min 52 et 1 min 54. Le sommet (D) : 37 s. L'arc :
   l'introduction, le creux, la radio. Deux sections que des films citent : `creux` et `C`.
 
-LE BANC (le rendu final) : boucle −16,01 LUFS, crête −1,20 dBTP ; < 250 Hz 31 %, 250 Hz–2 kHz
-59 %, 2–6 kHz 8,7 %, > 6 kHz 1,6 % ; corrélation du grave 0,907 ; couture : saut +2,37 dB, clic
-×1,0. Par section : intro −18,8 · A −16,6 · B −15,8 · creux −25,5 · A2 −15,9 · C −17,2 ·
-D −13,2 · clairière −21,0 · retour −17,0 LUFS.
+LE BANC (le rendu final) : boucle −16,01 LUFS, crête −1,20 dBTP ; < 250 Hz 30 %, 250 Hz–2 kHz
+59 %, 2–6 kHz 9,4 %, > 6 kHz 1,6 % ; corrélation du grave 0,906 ; couture : saut +2,37 dB, clic
+×1,0. Par section : intro −18,9 · A −16,1 · B −15,9 · creux −25,2 · A2 −16,0 · C −17,4 ·
+D −13,3 · clairière −21,1 · retour −16,7 LUFS. Au téléphone (mono, 400 Hz–6 kHz), la mélodie
+contre le reste pendant le motif : A m. 10-14 +8,1 dB (médiane), la tête du retour +9 à +10 dB.
 
 Le téléphone : la guitare, les cordes et la radio vivent dans 250 Hz–2 kHz ; le moteur
 s'entend par les violoncelles (fa#2) ; la radio est filtrée (320 Hz–3,6 kHz) comme une vraie.
@@ -89,6 +91,10 @@ arc = Arc(theme)
 
 # --- la guitare et le sifflet ------------------------------------------------------------------
 guitare = theme.piste('guitare', 'guitare_claire', pan=0.18, salle=0.42, echo=0.16, volume=7.5)
+# la même guitare quand elle chante le motif dans A et le retour, un peu plus de présence (2,5 kHz) :
+# elle passe devant les lampadaires sur un petit haut-parleur
+guitare_chant = theme.piste('guitare_chant', 'guitare_claire', pan=0.18, salle=0.42, echo=0.16,
+                            eq={'cloches': [(2500, 3.5, 1.0)]}, volume=7.5)
 sifflet = theme.piste('sifflet', profondeur=0.55, salle=0.5, pan=-0.1, volume=-1.5)
 # --- les cordes -----------------------------------------------------------------------------------
 violons = theme.piste('violons', art='tenu', volume=4)
@@ -185,6 +191,16 @@ def tremolo(s, piste, de, a, pas=0.25, prof=-9.0):
         t += pas
     pts.append((a, 0.0))
     s.automation(piste, 'volume', pts)
+
+
+def devant(s, de, fin, harpe_normale='mf'):
+    """Pendant que la guitare chante le motif (de `de` à `fin`, en temps), elle passe devant : sa
+    voix claire (`guitare_chant`), nuance f, un trémolo moins profond (−4 dB au lieu de −8) ; les
+    lampadaires (la harpe, l'arpège) s'effacent sous elle (p), puis reprennent leur place."""
+    s.nuance(guitare_chant, 'f', de)
+    tremolo(s, guitare_chant, de, fin, prof=-4.0)
+    s.expression(harpe, [(de - 1, harpe_normale), (de, 'p'), (fin - 1, 'p'), (fin, harpe_normale)])
+    s.expression(arp, [(de - 1, 'fff'), (de, 'p'), (fin - 1, 'p'), (fin, 'fff')])
 
 
 # le moteur : des croches sur une note (la pédale), l'octave qui bouge un peu, jamais deux
@@ -309,10 +325,12 @@ def A(s):
     for m in range(1, 10):
         for h in voicing(grille[m - 1], 'F#3'):
             s.note(guitare, h, s.m(m), 4, vel=78 if m % 2 else 68)
-    s.expression(guitare, [(0, 'p'), (s.m(2), 'mp'), (s.m(10), 'mp'), (s.m(10, 3), 'mf')])
-    s.joue(guitare, LENT, a=s.m(10, 3), vel=98)
-    s.joue(guitare, TETE_LENTE, a=s.m(14, 3), vel=94)
+    s.expression(guitare, [(0, 'p'), (s.m(2), 'mp')])
     tremolo(s, guitare, 0, s.longueur, prof=-8.0)
+    # m. 10 : le motif, la guitare devant les lampadaires
+    s.joue(guitare_chant, LENT, a=s.m(10, 3), vel=98)
+    s.joue(guitare_chant, TETE_LENTE, a=s.m(14, 3), vel=94)
+    devant(s, s.m(10, 3), s.m(16))
     # le vibraphone double l'attaque des notes longues, de loin
     s.joue(vibra, LENT.coupe(0, 10), a=s.m(10, 3), vel=66)
     cymbale_vers(s, s.m(17), 'monte_2s', vel=78)
@@ -624,9 +642,14 @@ def clairiere(s):
         s.batterie(kick, 'K : X . . . . . . . X . . . . . . .', a=s.m(m), jusqua=s.m(m + 1), vel=90)
         s.batterie(boite, 'SR : . . . . X . . . . . . . X . . .', a=s.m(m), jusqua=s.m(m + 1), vel=90)
     s.note(basses, 'F#1', s.m(9), 16, vel=60, art='tenu')
-    # le premier temps marqué, très doux (une timbale, la contrebasse) : la section ouvre à froid
-    s.note(timbales, 'F#2', 0, 1, vel=62)
-    s.note(basses, 'F#1', 0, 4, vel=56, art='tenu')
+    # le premier temps marqué, doux (une timbale, un accord de harpe, la contrebasse) : la section
+    # ouvre à froid, et la fenêtre presque vide commence sur ce souffle
+    s.note(timbales, 'F#2', 0, 1, vel=84)
+    for h in voicing('i', 'F#3', DOR):
+        s.note(harpe, h, 0, 2, vel=84)
+    s.expression(harpe, [(0, 'mf'), (s.m(1, 3), 'p')])
+    s.note(basses, 'F#1', 0, 4, vel=64, art='tenu')
+    s.expression(basses, [(0, 'p'), (s.m(2), 'pp')])
     cymbale_vers(s, s.m(13), 'monte_2s', vel=76)
 
 
@@ -649,7 +672,8 @@ def retour(s):
         for h in voicing(route[m - 1], 'F#3'):
             s.note(guitare, h, s.m(m), 4, vel=76 if m % 2 else 66)
     # la tête, et le ré tenu sur ♭VI–♭VII : la dernière mesure (♭VII) relance la route
-    s.joue(guitare, TETE_LENTE, a=s.m(6, 3), vel=96)
+    s.joue(guitare_chant, TETE_LENTE, a=s.m(6, 3), vel=96)
+    devant(s, s.m(6, 3), s.m(8))
     tremolo(s, guitare, 0, s.longueur, prof=-8.0)
     # la dernière mesure relance la route : l'accord de ♭VII qui bat, un roulement de timbale
     for h in voicing('bVII', 'F#3'):
