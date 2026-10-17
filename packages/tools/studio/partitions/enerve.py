@@ -446,10 +446,10 @@ def C2(s):
 @theme.section('T1', mesures=8)
 def T1(s):
     t = temps_de('i i II i i i i II')
-    nuances(s, basse_s='mp', kit='mp', kick='p', nappe='mf', piano='f')
+    nuances(s, basse_s='p', kit='p', kick='pp', nappe='mp', piano='f')
     # la pulsation ne s'arrête pas : la grosse caisse douce, le charleston ; la cymbale marque
     # l'arrivée
-    s.note(kit, 'C', 0, 1, vel=96)
+    s.note(kit, 'C', 0, 1, vel=82)
     for b in range(32):
         s.note(kick, 'K', b, 0.25, vel=96)
         s.note(kit, 'H', b + 0.5, 0.25, vel=72)
@@ -576,7 +576,7 @@ def R(s):
     la nappe), la tête aux trombones, doux, dans le grave ; m. 5 la caisse claire et les
     violoncelles reviennent ; m. 7–8 les toms, la montée : A1 repart."""
     t = temps_de('i i II i i i VI VII')
-    nuances(s, basse_s='mf', basses='mp', kick='mf', kit='mp', caisse_g='mp', trombones='f', nappe='mf')
+    nuances(s, basse_s='mp', basses='p', kick='mp', kit='p', caisse_g='p', trombones='mf', nappe='mp')
     s.note(kit, 'C', 0, 1, vel=100)
     for b in range(32):
         s.note(kick, 'K', b, 0.25, vel=100 if b < 16 else 108)
