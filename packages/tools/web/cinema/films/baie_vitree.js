@@ -44,7 +44,9 @@
    |   |          | un homme en casque marche le long de la planche ; « Al-Dorado · 2030 /
    |   |          | Vingt degrés dedans » | l'homme debout, et la carte qui vient
    Le mouvement réduit : une image par plan (`fixe`). La coupe de 30 s (`montages.court`)
-   garde les six plans, resserrés. La musique : livre_h9 (la ventilation, les cloches),
+   garde les six plans, resserrés. La musique : film_baie_vitree, écrite sous ses images
+   (packages/tools/studio/partitions/film_baie_vitree.py : chaque coupe sur un premier temps ;
+   rien sous la porte ni sous le carillon) ; sinon livre_h9 (la ventilation, les cloches),
    `match` en secours.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function (global) {
@@ -439,6 +441,7 @@
     titre: "La baie vitrée",
     duree: 40.5,
     musique: "livre_h9",
+    musiqueFilm: "film_baie_vitree",
     secours: "match",
     couleur: GLACE,
     affiche: 35.6,
