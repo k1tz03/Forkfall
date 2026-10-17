@@ -68,6 +68,26 @@ LA CARTE (110 à la noire ; une mesure = 2,18 s ; le corps boucle : 112 mesures,
   R    8 m.  3:47  « On recommence » : la grosse caisse, la montée vers A1              4
   Les deux fenêtres presque vides (S1, S2) tombent à 2 min 02 l'une de l'autre : sept sections
   de part et d'autre, chacune juste après un sommet (après un moment lourd, le silence).
+
+Les fenêtres (la ville) : S1 et S2, 11,3 s et 10,0 s sous −28 LUFS à court terme (12 dB sous la
+boucle) ; la voix n'y fait que chuchoter. La voix chante 46 mesures sur 112 (41 %) ; avec les
+réponses de l'orchestre (le canon, une mesure après elle), un peu plus de la moitié.
+
+Le téléphone (le banc du mélange : mono, 400 Hz–6 kHz) : partout où elle joue, la mélodie (la
+voix et ce qui lui répond) garde 1,7 à 8,5 dB d'avance sur le reste (A1 +3,7, A2 +2,9, B1 +7,8,
+C1 +2,7, D1 +3,0, G1 +4,9, B2 +8,5, C2 +3,4, D2 +3,0, S2 +4,0, R +1,7) ; la basse coupée sous
+200 Hz se lit sur 72 % des temps (97 à 100 % aux sommets).
+
+Le mélange : la voix devant (−20 LUFS de piste sur la boucle, −21 hachée), les cors qui lui
+répondent juste derrière, la machine (vibraphone, célesta, marimba, violoncelles en triolets)
+6 à 9 dB sous la voix, les nappes une douzaine ; le tic de la boîte à rythmes porte l'air
+(1,2 % au-dessus de 6 kHz là où il joue).
+
+Le banc (rendu complet) :
+  boucle −16,01 LUFS · crête −1,20 dBTP · bandes <250 32 % · 250–2k 65 % · 2–6k 2,5 % ·
+  >6k 0,7 % · couture identique au bit, saut −2,58 dB · grave au milieu (corr. 0,847)
+  sections : intro −18,6 · A1 −17,5 · A2 −17,4 · B1 −16,5 · C1 −15,6 · D1 −13,4 · S1 −28,5 ·
+  A3 −17,9 · F1 −18,2 · G1 −16,1 · B2 −15,6 · C2 −15,1 · D2 −13,3 · S2 −24,5 · R −17,6
 """
 import random
 
