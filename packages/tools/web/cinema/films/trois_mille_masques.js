@@ -492,6 +492,7 @@
     titre: "Trois mille masques",
     duree: 41.0,
     musique: "livre_h1",
+    musiqueFilm: "film_trois_mille_masques",
     secours: "match",
     couleur: ROUGE,
     affiche: 30.6,
