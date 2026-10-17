@@ -35,6 +35,15 @@ LA CARTE (120 à la noire, une mesure = 2 s ; le corps boucle : 128 mesures, 256
   F     16 m.  3:44  la finale : la fanfare (la♭ si♭ | DO), la place chante le motif et la
                      montée volée, la danse ; les coups relancent le couplet          8 → 6
   Les fenêtres : W1 et W2 (le jeu n'y reprend pas). L'arc : l'intro, le silence de R2.
+
+Le banc (rendu complet) :
+  boucle −16,01 LUFS · crête −1,20 dBTP · bandes <250 28 % · 250–2k 69 % · 2–6k 3,0 % ·
+  >6k 0,2 % · couture identique au bit, saut +0,14 dB · grave au milieu (corr. 0,813)
+  sections : intro −13,6 · V1 −18,3 · R1 −14,8 · W1 −31,1 · V2 −16,8 · P −19,3 · R2 −13,8 ·
+  W2 −32,9 · V3 −19,0 · F −14,0 ; une fenêtre toutes les 112 à 128 s
+  au téléphone (mono, 400 Hz–6 kHz) : la mélodie devant de +6,7 dB en V1, +5,4 en R1, +2,1 en
+  V2 (la seconde trompette, en tierces sous la marche, comptée dans l'accompagnement) ; la
+  basse coupée sous 200 Hz se suit sur 60 % des temps
 """
 from moteur.ecriture import *
 from moteur.theorie import fondamentale
