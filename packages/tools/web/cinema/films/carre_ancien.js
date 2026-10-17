@@ -381,6 +381,7 @@
     titre: "Le carré ancien",
     duree: 37.0,
     musique: "livre_h4",
+    musiqueFilm: "film_carre_ancien",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     musiqueDepuis: "creux",
     secours: "sombre",
     affiche: 21.6,
