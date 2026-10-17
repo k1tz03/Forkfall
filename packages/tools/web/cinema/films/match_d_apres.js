@@ -45,8 +45,10 @@
    |   |          | recule, la Nord entière ; « Aubérive · 2040 / Les Deux Téléphones » |
    |   |          | le titre
    Le mouvement réduit : une image par plan (`fixe`). La coupe de 30 s (`montages.court`)
-   garde les cinq plans, resserrés. La musique : livre_h10 (ses deux sonneries
-   d'ouverture sur l'heure bleue), `match` en secours. Aucune réplique : la minute.
+   garde les cinq plans, resserrés. La musique : film_match_d_apres, écrite sous ses images
+   (packages/tools/studio/partitions/film_match_d_apres.py : elle s'arrête avec les panneaux,
+   se tait pendant la minute et reprend sur le premier masque) ; sinon livre_h10 (ses deux
+   sonneries d'ouverture sur l'heure bleue), `match` en secours. Aucune réplique : la minute.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function (global) {
   "use strict";
@@ -354,6 +356,7 @@
     titre: "Le match d'après",
     duree: 38.5,
     musique: "livre_h10",
+    musiqueFilm: "film_match_d_apres",
     secours: "match",
     couleur: AMBRE,
     affiche: 36.2,

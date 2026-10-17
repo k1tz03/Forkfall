@@ -753,20 +753,26 @@ def B2(s):
 @theme.section('C3', mesures=8)
 def C3(s):
     t = dome()
-    nuances(s, coupole='pp', coupole_voix='pp', celles_chant='mf', altos='mf', air='pp')
+    nuances(s, coupole='pp', coupole_voix='pp', celles_chant='mf', altos='mf', violons='mf', air='ppp')
     s.note(timbales, 'F2', 0, 1, vel=74)
     s.note(carillon, 'C5', 0, 4, vel=70, art='descend')
     s.note(sub, 'F1', 0, 32, vel=66)
-    souffles(s, t, vel=84, cordes=('pp', 'p'), basse=('pp', 'p'))
-    dome_choeur(s, t, vel=70, art='ouh', haut=False)
-    s.crescendo(coupole, 0, s.m(6), 'pp', 'mp')
-    s.expression(coupole, [(s.m(6), 'mp'), (s.m(8, 4), 'p')])
+    souffles(s, t, vel=74, cordes=('pp', 'pp'), basse=('pp', 'p'))
+    dome_choeur(s, t, vel=62, art='ouh', haut=False)
+    s.crescendo(coupole, 0, s.m(6), 'pp', 'p')
+    s.expression(coupole, [(s.m(6), 'p'), (s.m(8, 4), 'pp')])
     # le motif RENVERSÉ autour de fa (la menace : fa sib | lab ── ré mib | do fa), aux
-    # violoncelles et aux altos à l'octave
+    # violoncelles, aux altos à l'octave et aux violons deux octaves au-dessus, doucement : au
+    # téléphone, les violoncelles sont sous 400 Hz, et le motif restait 6 dB sous le souffle et la
+    # nappe ; les violons le portent dans la bande d'un petit haut-parleur (la nappe −3 dB, l'air
+    # des violons aigus, qui la frôlait, ppp)
     inv = MOTIF_DOR.coupe(0, 7.75).inverse('F4')
     s.joue(celles_chant, inv.octave(-1), a=s.m(1, 4), vel=92)
     s.joue(altos, inv, a=s.m(1, 4), vel=84)
+    s.joue(violons, inv.octave(1), a=s.m(1, 4), vel=80)
     s.joue(celles_chant, inv.octave(-1).coupe(0, 4), a=s.m(5, 4), vel=86)
+    s.joue(altos, inv.coupe(0, 4), a=s.m(5, 4), vel=80)
+    s.joue(violons, inv.octave(1).coupe(0, 4), a=s.m(5, 4), vel=78)
     # les grains de verre : quelques notes de l'accord, très loin
     for m, c, pos in ((2, 'i', (1.5, 2.75)), (4, 'IV', (2.5,)), (6, 'i', (0.5, 2.5)), (8, 'IV', (1.5,))):
         notes = voicing(c, 'F5')
