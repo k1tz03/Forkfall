@@ -26,6 +26,15 @@ LA CARTE (76 à la noire, une mesure = 3,16 s ; le corps boucle : 50 mesures, ~1
                      soupir) ; la dernière mesure s'ouvre sur ♭VII (sol) ; un
                      souffle, et « la mi » en croches relance le motif               6 → 2
   Le creux : C. L'arc : l'intro et le premier temps de C.
+
+Le banc (deuxième rendu complet ; le premier ratait la couture, +7,1 dB : la boucle repartait
+d'un accord frappé après la queue d'une note ; d'où la relance en croches) :
+  boucle −16,02 LUFS · crête −1,20 dBTP · bandes <250 36 % · 250–2k 62 % · 2–6k 1,9 % ·
+  >6k 0,0 % · couture identique au bit, saut −0,55 dB · grave au milieu (corr. 0,862)
+  sections : intro −19,7 · A1 −18,4 · A2 −20,4 · B1 −14,8 · B2 −14,3 · C −20,9 · D −14,5
+  au téléphone (mono, 400 Hz–6 kHz) : la mélodie devant de +13,7 dB en A1, +5,1 en B1, +3,4
+  en D (les violons, qui y doublent la montée puis chantent le soupir, comptés avec elle) ; la
+  basse coupée sous 200 Hz se suit sur 76 % des temps
 """
 from moteur.ecriture import *
 from moteur.theorie import fondamentale
