@@ -150,6 +150,20 @@ def harpe_arpege(s, grille, de=1, vel=72, decal=0, piste=None, figs=FIGS):
         s.joue(p, m, a=s.m(de + i))
 
 
+def premier_temps(s, ch, cloche=None, vel=94, timbale=None):
+    """Le premier temps marqué (le jeu peut reprendre le thème à cette section) : la
+    fondamentale de l'accord à la harpe et aux violoncelles pizz., une frappe claire (une
+    cloche, le triangle), une timbale s'il le faut."""
+    r = BASSE[ch]
+    s.note(harpe, r, 0, 2, vel=vel)
+    s.note(vc_pz, r, 0, 1, vel=vel)
+    s.note(triangle, 'TR', 0, 2, vel=vel - 22)
+    if cloche:
+        s.note(cloches, cloche, 0, 4, vel=vel - 8)
+    if timbale:
+        s.note(timbales, timbale, 0, 1, vel=vel - 6)
+
+
 def pizz_graves(s, grille, de=1, vel=76, piste=None):
     """Les violoncelles pizz. : la fondamentale au premier temps, la quinte au troisième."""
     p = piste or vc_pz
@@ -219,7 +233,7 @@ def intro(s):
 # --- A : la porte ---------------------------------------------------------------------------------
 @theme.section('A', mesures=8)
 def A(s):
-    s.note(cloches, 'F4', 0, 4, vel=66)
+    premier_temps(s, 'fa', cloche='F4', vel=90)
     s.nuance(cloches, 'mp')
     harpe_arpege(s, BALANCE, vel=74)
     s.nuance(harpe, 'mf')
@@ -235,8 +249,8 @@ def A(s):
 # --- B : la rue nouvelle (LA QUESTION aux bois) ----------------------------------------------------
 @theme.section('B', mesures=8)
 def B(s):
+    premier_temps(s, 'fa', cloche='C5', vel=90)
     harpe_arpege(s, GRILLE_B, vel=70, decal=1)
-    s.note(triangle, 'TR', 0, 2, vel=58)
     s.nuance(harpe, 'mp')
     pizz_graves(s, GRILLE_B)
     s.nuance(vc_pz, 'mp')
@@ -257,8 +271,7 @@ def B(s):
 # --- C : le cor (la réponse) ---------------------------------------------------------------------
 @theme.section('C', mesures=8)
 def C(s):
-    s.note(cloches, 'C5', 0, 4, vel=66)
-    s.note(triangle, 'TR', 0, 2, vel=62)
+    premier_temps(s, 'fa', cloche='C5', vel=92)
     harpe_arpege(s, GRILLE_C, vel=70, decal=2)
     s.nuance(harpe, 'mp')
     pizz_graves(s, GRILLE_C)
@@ -295,7 +308,7 @@ def F1(s):
 # --- A2 : l'autre rive (le hautbois : LA QUESTION) -------------------------------------------------
 @theme.section('A2', mesures=8)
 def A2(s):
-    s.note(cloches, 'A4', 0, 4, vel=70)
+    premier_temps(s, 'fa', cloche='A4', vel=92)
     harpe_arpege(s, GRILLE_A2, vel=72, decal=1)
     s.nuance(harpe, 'mf')
     pizz_graves(s, GRILLE_A2)
@@ -314,6 +327,7 @@ def A2(s):
 # --- D : les cloches (les médiantes chromatiques) ----------------------------------------------------
 @theme.section('D', mesures=8)
 def D(s):
+    premier_temps(s, 'fa', vel=96, timbale='F2')
     harpe_arpege(s, GRILLE_D, vel=74, decal=2)
     s.nuance(harpe, 'mf')
     pizz_graves(s, GRILLE_D)
@@ -351,6 +365,7 @@ def D(s):
 # --- E : l'inquiétude (fa dorien : fa m – SIb ; RÉb MIb FA) --------------------------------------------
 @theme.section('E', mesures=8)
 def E(s):
+    premier_temps(s, 'fa m9', vel=96)
     # la harpe dans le grave, une figure obstinée
     for i, ch in enumerate(GRILLE_E):
         s.joue(harpe, arpege(HARPE[ch][:5], '1 3 2 4 3 5 4 3', pas=0.5, vel=70, duree=1.0), a=s.m(i + 1))
@@ -383,9 +398,8 @@ def E(s):
 # --- C2 : le cor, plus haut (le motif) -----------------------------------------------------------------
 @theme.section('C2', mesures=8)
 def C2(s):
-    s.note(cloches, 'F4', 0, 4, vel=78)
+    premier_temps(s, 'fa', cloche='F4', vel=98)
     s.note(cymbales, 'C4', 0, 2, vel=64)
-    s.note(triangle, 'TR', 0, 2, vel=64)
     harpe_arpege(s, GRILLE_C, vel=72, decal=3)
     s.nuance(harpe, 'mf')
     pizz_graves(s, GRILLE_C, vel=80)
@@ -425,6 +439,7 @@ def F2(s):
 @theme.section('G', mesures=8)
 def G(s):
     silence = s.m(8, 4)
+    premier_temps(s, 'fa', vel=100, timbale='F2')
     # les cordes graves : doubles croches 3+3+2 (le moteur du thème principal)
     figs = ['X x x X x x X x X x x X x x X x', 'X x x X x x X x X x x X x X x x', 'X x X x x X x x X x x X x x X x']
     for i, ch in enumerate(GRILLE_G):
@@ -557,6 +572,7 @@ def S(s):
 # --- H : la descente ------------------------------------------------------------------------------
 @theme.section('H', mesures=8)
 def H(s):
+    premier_temps(s, 'fa', cloche='A4', vel=94)
     harpe_arpege(s, GRILLE_H, vel=70, decal=2)
     s.expression(harpe, [(0, 'mf'), (s.m(8, 4), 'mp')])
     pizz_graves(s, GRILLE_H)
@@ -571,7 +587,6 @@ def H(s):
     # le cor, une dernière fois : la tête, loin
     s.joue(cor, phrase('tete', TON, octave=3), a=s.m(4, 4), vel=84)
     s.expression(cor, [(0, 'mp'), (s.m(8), 'p')])
-    s.note(cloches, 'A4', 0, 4, vel=70)
     s.nuance(cloches, 'mp')
 
 
