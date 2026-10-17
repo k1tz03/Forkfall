@@ -549,16 +549,16 @@ def S2(s):
     nuances(s, verre='pp', voix='p', voix_f1='mp', voix_f2='mp', cor_loin='mp', basses='p', sub='mp',
             vibra='pp', timbales='p', archet='mf')
     # le premier temps marqué, très doux (le jeu peut reprendre ici) : une timbale, une lame
-    s.note(timbales, 'A2', 0, 1, vel=70)
-    s.note(vibra, 'A4', 0, 2, vel=64)
+    s.note(timbales, 'A2', 0, 1, vel=60)
+    s.note(vibra, 'A4', 0, 2, vel=56)
     s.note(archet, 'C4', s.m(2), 8, vel=56)
     s.note(basses, 'A1', 0, s.m(7), vel=54, art='tenu')
     s.note(sub, 'A1', 0, s.m(7), vel=52)
     for h in ('A4', 'E5'):                      # la quinte à vide : rien sous « do si »
         s.note(verre, h, 0, s.m(7), vel=54)
-    # deux heures : presque rien ; puis la voix, seule, tout près, chuchote la tête ; le cor répond
-    # de très loin
-    canon(s, TETE, 6, [(cor_loin, 0, 76)], vel_voix=90)
+    # deux heures : presque rien ; puis la voix, seule, tout près, chuchote la tête (m. 7) ; le cor
+    # répond de très loin, sa mèche sur le premier temps de R
+    canon(s, TETE, 7, [(cor_loin, 0, 76)], vel_voix=90)
     # m. 7–8 : les triolets reviennent
     triolets_machine(s, vibra, vel=56, de=7, a=8)
     s.crescendo(vibra, s.m(7), s.m(8, 4), 'pp', 'p')
