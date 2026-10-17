@@ -20,8 +20,9 @@ et à chaque octave tous redescendent d'un cran, sans qu'on l'entende.
 
 LA CARTE (le corps : 72 mesures, 162 s)
   intro   2 m.  100        l'ARC à découvert ; l'horloge démarre ; la pédale de fa      2
-  P1     16 m.  100  0:00  « première page » : l'horloge en noires, violoncelles en doubles
-                           croches pp, pédale ; m. 5 la tête en noires répétées (cors
+  P1     16 m.  100  0:00  « première page » : le braam au premier temps (la montée de P7
+                           y tombe), puis l'horloge en noires, violoncelles en doubles
+                           croches p, pédale ; m. 5 la tête en noires répétées (cors
                            bouchés) ; m. 9 les altos, i – ♭II ; m. 13 la tête aux cors et
                            aux trombones ; m. 15–16 la montée → impact                3 → 4,5
   P2      8 m.  110  0:38  « la deuxième » : l'impact ; l'horloge en croches ; les violons ;
@@ -60,9 +61,9 @@ altos = theme.piste('altos', art='staccato', bref=0.15, pan=0.15, volume=5)
 violons = theme.piste('violons', art='staccato', bref=0.15, pan=-0.45, volume=6)
 basses = theme.piste('basses', 'contrebasses', art='sans_vibrato', volume=4)
 trem = theme.piste('trem', 'violons', art='tremolo', pan=-0.25, volume=4)
-g_bas = theme.piste('g_bas', 'violoncelles', art='tenu', legato=True, pan=0.35, volume=2)
-g_mil = theme.piste('g_mil', 'altos', art='tenu', legato=True, pan=0.1, volume=2)
-g_haut = theme.piste('g_haut', 'violons', art='tenu', legato=True, pan=-0.35, volume=2)
+g_bas = theme.piste('g_bas', 'violoncelles', art='tenu', legato=True, pan=0.35, volume=4)
+g_mil = theme.piste('g_mil', 'altos', art='tenu', legato=True, pan=0.1, volume=4)
+g_haut = theme.piste('g_haut', 'violons', art='tenu', legato=True, pan=-0.35, volume=4)
 # --- les cuivres ----------------------------------------------------------------------------
 cors = theme.piste('cors', art='sourdine', volume=5.5)
 trompettes = theme.piste('trompettes', art='sourdine', volume=6)
@@ -70,15 +71,15 @@ trombones = theme.piste('trombones', art='tenu', volume=2.5)
 tuba = theme.piste('tuba', art='tenu', volume=2)
 braam = theme.piste('braam', volume=-1.5)
 # --- l'horloge, le piano ----------------------------------------------------------------------
-xylo = theme.piste('xylo', 'xylophone', pan=-0.2, salle=0.2, volume=6)
+xylo = theme.piste('xylo', 'xylophone', pan=-0.2, salle=0.2, volume=8)
 piano = theme.piste('piano', art='pedale', salle=0.35, volume=10)
 # --- les percussions --------------------------------------------------------------------------
 timbales = theme.piste('timbales', volume=5)
 timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=2)
-caisse = theme.piste('caisse', 'caisse_claire', volume=4)
+caisse = theme.piste('caisse', 'caisse_claire', volume=2.5)
 caisse_roul = theme.piste('caisse_roul', 'caisse_claire', art='roulement', volume=7)
-taiko = theme.piste('taiko', volume=2, eq={'passe_haut': 40})
-suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=2)
+taiko = theme.piste('taiko', volume=3, eq={'passe_haut': 40})
+suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=4)
 effets = theme.piste('effets', volume=2)
 # --- le grain ---------------------------------------------------------------------------------
 sub = theme.piste('sub', 'sub_synthe', volume=-14)
@@ -275,7 +276,7 @@ GRILLE_P1 = 'i i II i i i II i i i II i i II i II'.split()
 def P1(s):
     nuances(s, xylo='mf', basses='mp', celles='p', altos='pp', cors='mf', trombones='mf', sub='mf',
             timbales='mf', trem='pp')
-    impact(s)
+    impact(s, braam_aussi=True)     # la montée de P7 tombe ici : la boucle repart sur un coup
     horloge(s, 0, s.longueur, 1.0, vel=82)
     s.note(basses, 'F2', 0, s.longueur, vel=66)
     s.note(sub, 'F2', 0, s.longueur, vel=58)
@@ -301,7 +302,7 @@ GRILLE_P2 = 'II II i i II II i i'.split()
 
 @theme.section('P2', mesures=8, bpm=110)
 def P2(s):
-    nuances(s, xylo='mf', basses='mf', celles='mf', altos='mp', violons='p', trompettes='mf', trombones='mp',
+    nuances(s, xylo='mf', basses='mf', celles='mp', altos='mp', violons='p', trompettes='mf', trombones='mp',
             sub='mf', trem='p')
     silence = s.m(8, 3)            # deux temps de silence (1,1 s) avant l'impact de P3
     impact(s)
@@ -327,7 +328,7 @@ GRILLE_P3 = 'i II i II i II i II'.split()
 
 @theme.section('P3', mesures=8, bpm=120)
 def P3(s):
-    nuances(s, xylo='mf', basses='mf', celles='mf', altos='mf', violons='mp', cors='f', trombones='mf',
+    nuances(s, xylo='mf', basses='mf', celles='mp', altos='mp', violons='mp', cors='f', trombones='mf',
             tuba='mf', caisse='mp', trem='mp', sub='f')
     impact(s, braam_aussi=True)
     horloge(s, 0, s.longueur, 0.5, vel=86, accents=[8, 0, 2, 0])
@@ -351,8 +352,8 @@ def P3(s):
 
 @theme.section('P4', mesures=8, bpm=120, mesure='5/4')
 def P4(s):
-    nuances(s, xylo='mf', basses='mf', celles='f', altos='mf', violons='mf', cors='f', trombones='f',
-            tuba='f', taiko='f', sub='f', timbales='f')
+    nuances(s, xylo='mf', basses='mf', celles='ff', altos='f', violons='mf', cors='ff', trombones='ff',
+            tuba='f', taiko='ff', sub='f', timbales='f')
     silence = s.m(8, 4)            # les deux derniers groupes (« 2 + 2 ») se taisent : une seconde
     # le premier temps : taïko et timbale
     s.note(timbales, 'F2', 0, 1, vel=110)
