@@ -618,12 +618,12 @@ def E(s):
     # la tête renversée au violoncelle seul
     nuances(s, celles_chant='mf', harmonique='p', sub='p', pedale='pp')
     # sous les deux phrases du violoncelle, l'horloge se fait discrète (elle partageait sa bande)
-    horloge(s, 1, 8, vel=78, creux=[(15, 19.5), (23, 27.5)])
+    horloge(s, 1, 8, vel=78, creux=[(12, 28)])
     s.note(papier, 'C5', s.m(2), 3 * SEC, vel=60)
-    s.note(fax_ton, 'C7', s.m(3), 6, vel=70)
+    s.note(fax_ton, 'C7', s.m(3), 4, vel=70)
     s.joue(celles_chant, RENVERSE.octave(1), a=s.m(5) - 1, vel=80)    # sol4 do4 si3 : le violoncelle tendu
     s.joue(celles_chant, RENVERSE.octave(1), a=s.m(7) - 1, vel=76)
-    s.note(harmonique, 'D6', s.m(5), 16, vel=64)
+    s.note(harmonique, 'D6', s.m(7, 4), 5, vel=64)       # après la seconde phrase du violoncelle
     # la pédale, à peine, dès la première mesure (la section peut ouvrir le morceau)
     s.note(pedale, 'D2', 0, 32, vel=54)
     s.note(sub, 'D2', 0, 32, vel=46)
@@ -693,7 +693,7 @@ def V(s):
     t = temps_accords(GRILLE_V)
     nuances(s, celles='mf', basses='mf', violons2='mf', altos='mf', violons='mp', cors='f', trombones='f',
             tromp_st='mf', batterie='mf', sub='mf', violons_chant='mf')
-    chant = [(19, 28)]
+    chant = [(4, 28)]           # la longue ligne des cors (m. 2–5), puis le motif (m. 6–7)
     s.note(timbales, 'G2', 0, 1, vel=100)
     horloge(s, 1, 8, vel=80)
     casse(s, 1, 8, motifs=(CASSE_B2, CASSE_B), orchestre=True)
@@ -710,7 +710,7 @@ def V(s):
     s.joue(trombones, MOTIF.octave(-1), a=s.m(6) - 1, vel=104)
     s.joue(violons_chant, MOTIF.octave(1), a=s.m(6) - 1, vel=88)
     nappe(s, violons, t, 'D5', vel=64, art='tremolo')
-    s.crescendo(violons, 0, s.m(8, 4), 'p', 'mp')
+    s.crescendo(violons, 0, s.m(8, 4), 'pp', 'p')
     fax_chant(s, t, 1, 8, motif='x x . x x . x x x . x x . x x .', vel=76)
     roulement(s, timb_roul, 'D2', s.m(8), s.m(8, 3), 'mp', 'f', vel=92)
     s.joue(cors, ANAC, a=s.m(8, 4), vel=104)
@@ -784,7 +784,7 @@ def J(s):
     t = temps_accords(GRILLE_J)
     nuances(s, celles='mf', basses='mf', violons2='mf', altos='mf', cors='f', trombones='f', batterie='mf',
             pedale='p', sub='mf', violons='mf', tromb_st='mf', trompettes='f', violons_chant='mf')
-    chant = [(3, 12), (19, 28), (35, 44), (47, 50.5), (57, 60)]
+    chant = [(0, 12), (16, 28), (32, 44), (44, 50.5), (56, 60)]     # dès la mesure de l'anacrouse
     s.note(timbales, 'D2', 0, 1, vel=100)
     horloge(s, 1, 16, vel=78)
     casse(s, 1, 16, orchestre=False)
@@ -854,8 +854,8 @@ GRILLE_K = ['i', 'bII', 'i', 'bII', 'i', 'bII', 'V-5', 'i']
 def K(s):
     # LE TERMINUS : le palier le plus dense : la tête partout, les trompettes, ♭II sur la pédale
     t = temps_accords(GRILLE_K)
-    nuances(s, celles='f', basses='f', violons='f', violons2='f', altos='f', trompettes='ff', trombones='f',
-            tromb_st='f', batterie='f', sub='mf', cors='f', timbales='f')
+    nuances(s, celles='f', basses='f', violons='mp', violons2='mf', altos='mf', trompettes='ff', trombones='f',
+            tromb_st='f', batterie='f', sub='mf', cors='ff', timbales='f', violons_chant='mf')
     appels = [(3, 5.5), (11, 13.5), (19, 21.5), (24, 31)]     # les appels des trompettes
     s.note(cymbales, 'C4', 0, 2, vel=112)
     s.note(timbales, 'D2', 0, 1, vel=112)
@@ -872,11 +872,12 @@ def K(s):
     s.joue(trompettes, mel('A4:4 | Bb4:3'), a=s.m(7), vel=100)
     # les cors tiennent leurs tierces une octave plus haut (si♭4–do5 : dans la bande du téléphone)
     s.joue(cors, mel('Bb4:4 | C5:4 | Bb4:4 | C5:4 | Bb4:4 | C5:4 | A4:4 | Bb4:3'), a=0, vel=96)
+    s.joue(violons_chant, mel('Bb4:4 | C5:4 | Bb4:4 | C5:4 | Bb4:4 | C5:4 | A4:4 | Bb4:3'), a=0, vel=82)
     for m in range(1, 9):
         s.note(timbales, 'D2', s.m(m), 1, vel=96)
         s.note(timbales, 'D2', s.m(m, 3.5), 0.5, vel=84)
     piques(s, tromb_st, t, 1, 7, grave='D3', vel=98)
-    fax_chant(s, t, 1, 8, motif='x x x x x x x x x x x x x x x x', vel=76)
+    fax_chant(s, t, 1, 8, motif='x x x x x x x x x x x x x x x x', vel=64)
     # les trois appels de L, chacun à sa vitesse : les trombones (élargi), les cors, les violons
     s.joue(trombones, ANAC.augmente(2).octave(-1), a=s.m(8, 3), vel=106)
     s.note(effets, 'G3', s.m(7), 8, vel=104, art='montee')
