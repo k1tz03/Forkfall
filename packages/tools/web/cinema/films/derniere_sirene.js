@@ -621,6 +621,7 @@
     titre: "La dernière sirène",
     duree: 38.0,
     musique: "livre_h3",
+    musiqueFilm: "film_derniere_sirene",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     musiqueDepuis: "creux",
     secours: "sombre",
     couleur: ORANGE,
