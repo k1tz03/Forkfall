@@ -51,9 +51,11 @@
    | 6 | 27–37    | on monte l'escalier dans la brume, le gyrophare balaie les marches ;
    |   |          | « Aubérive · 2037 / Les Deux Téléphones » | trente-trois marches
    Le mouvement réduit : une image par plan (`fixe`). La coupe de 30 s (`montages.court`)
-   garde les six plans, resserrés. La musique : livre_h10 (son introduction : le
-   clapet sonne, le fixe répond ; la ville commence avec le matin), `ville_nuit` en
-   secours.
+   garde les six plans, resserrés. La musique : film_premiere_marche, écrite sous ses images
+   (packages/tools/studio/partitions/film_premiere_marche.py : le clapet sonne pendant qu'il
+   vibre, le fixe pendant qu'il s'allume ; chaque coupe sur un premier temps ; rien sous la
+   portière ni sous le bloc) ; sinon livre_h10 (son introduction : le clapet sonne, le fixe
+   répond ; la ville commence avec le matin), `ville_nuit` en secours.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function (global) {
   "use strict";
@@ -433,6 +435,7 @@
     titre: "La première marche",
     duree: 37.0,
     musique: "livre_h10",
+    musiqueFilm: "film_premiere_marche",
     secours: "ville_nuit",
     couleur: AMBRE,
     affiche: 33.4,
