@@ -19,11 +19,12 @@ LA CARTE (76 à la noire, une mesure = 3,16 s ; le corps boucle : 50 mesures, ~1
                      de la nostalgie (do → si sur ré) ; le sifflet chante le motif        5
   B2     8 m.  1:16  le cor chante la réponse ; les cordes enflent sur ré7 → ré6, puis
                      s'éteignent (ritardando)                                         6 → 3
-  C      8 m.  1:42  2050 : la foule seule, de loin, chante le motif et sa réponse
+  C      8 m.  1:43  2050 : la foule seule, de loin, chante le motif et sa réponse
                      (aucun instrument) ; l'ARC très loin au premier temps ; la rumeur    2
-  D     10 m.  2:10  le retour : le piano, les cordes, le cor : la montée en valeurs
+  D     10 m.  2:11  le retour : le piano, les cordes, le cor : la montée en valeurs
                      doublées sur ♭VI ♭VII | LA MAJEUR ; ré → ré m → la (le dernier
-                     soupir) ; la dernière mesure s'ouvre sur ♭VII (sol)              6 → 2
+                     soupir) ; la dernière mesure s'ouvre sur ♭VII (sol) et enfle
+                     jusqu'au raccord (les cordes), où le piano reprend seul      6 → 2 → 4
   Le creux : C. L'arc : l'intro et le premier temps de C.
 """
 from moteur.ecriture import *
@@ -46,8 +47,8 @@ for _voix, _db in ((arc.zap, 4.5), (arc.clics, 3.4), (arc.ton, 2.7), (arc.bzz, 0
 piano = theme.piste('piano', art='tenu', humain=(14, 6), volume=4)                   # le chant
 piano_mg = theme.piste('piano_mg', 'piano', art='tenu', humain=(12, 5), volume=2)     # la main gauche
 choeur = theme.piste('choeur', art='ouh', profondeur=0.7, volume=-6)
-foule = theme.piste('foule', art='o', profondeur=0.85, volume=-5)
-rumeur = theme.piste('rumeur', 'foule', art='rumeur', profondeur=0.9, volume=-6)
+foule = theme.piste('foule', art='o', profondeur=0.85, volume=-6)
+rumeur = theme.piste('rumeur', 'foule', art='rumeur', profondeur=0.9, volume=-7)
 flute = theme.piste('flute', 'flutes', art='sans_vibrato', volume=2)               # le sifflet
 cor = theme.piste('cor', 'cors', art='tenu', volume=-4)
 violons = theme.piste('violons', art='tenu', volume=-6)
@@ -199,8 +200,10 @@ GRILLE_A1 = G_MOTIF + ['I', 'bVI', 'IV7 IV7 IV6 IV6', 'iv iv iv6 iv6', 'i']
 def A1(s):
     t = temps(GRILLE_A1)
     nuances(s, piano='mp', piano_mg='p')
-    # m. 1–4 : le motif (son anacrouse à la fin de la section d'avant), la chute sur IV–iv–I
-    enonce(s, piano, MOTIF.coupe(2, 16), tuple((t0 - 2, d, n) for t0, d, n in ALTO_MOTIF), 0, vel=84)
+    # m. 1–4 : le motif (son anacrouse à la fin de la section d'avant), la chute sur IV–iv–I ;
+    # le fa d'abord, seul sur sa basse, les voix intérieures au deuxième temps
+    alto = tuple((t0 - 2, d, n) for t0, d, n in ALTO_MOTIF)
+    enonce(s, piano, MOTIF.coupe(2, 16), ((1, 3, alto[0][2]),) + alto[1:], 0, vel=84)
     main_gauche(s, t, 1, 8, vel=58)
     # m. 5–8 : l'interlude : ♭VI, ré7 → ré6, ré m → ré m6 (la sixte du dorien), la m
     for m, b, d, notes in ((5, 1, 4, ('F4', 'A4', 'C5')), (6, 1, 2, ('F#4', 'A4', 'C5')),
@@ -316,8 +319,11 @@ def D(s):
     for m, notes in ((3, ('C5', 'F5')), (4, ('D5', 'G5')), (5, ('C#5', 'E5', 'A5')), (6, ('C#5', 'E5', 'A5'))):
         for h in notes:
             s.note(violons, h, s.m(m), 4, vel=72)
-    for p in (choeur, altos, violons, celles, basses):
+    # les nappes (chœur, altos) un cran sous les violons, qui doublent la montée en haut
+    for p in (violons, celles, basses):
         s.expression(p, [(s.m(3), 'pp'), (s.m(5), 'mf'), (s.m(6, 4), 'mp')])
+    for p in (choeur, altos):
+        s.expression(p, [(s.m(3), 'pp'), (s.m(5), 'mp'), (s.m(6, 4), 'mp')])
     roulement(s, timb_roul, 'A2', s.m(4, 3), s.m(5), 'pp', 'mp', vel=70)
     # m. 6 : la dernière étincelle du piano (la majeur qui monte)
     s.joue(piano, mel('C#6:.5 E6:.5 A6:2'), a=s.m(6, 2), vel=62)
@@ -330,13 +336,18 @@ def D(s):
     for m, notes in ((7, ('F#4', 'A4', 'D5')), (8, ('F4', 'A4', 'D5')), (9, ('C#4', 'E4', 'A4'))):
         for i, h in enumerate(notes):
             s.note(piano, h, s.m(m), 4, vel=58 if i < 2 else 64)
-    for p in (violons, altos, choeur, celles, basses):
-        s.expression(p, [(s.m(7), 'mp'), (s.m(9, 4), 'pp')])
-    s.expression(piano, [(s.m(7), 'mp'), (s.m(10), 'p')])
-    # m. 10 : sol, ouvert ; « la mi » relance le motif
+    s.expression(choeur, [(s.m(7), 'mp'), (s.m(9, 4), 'pp')])
+    s.expression(piano, [(s.m(7), 'mp'), (s.m(9, 4), 'p'), (s.m(10, 3), 'mp')])
+    # m. 10 : sol, ouvert, et la relance : les cordes enflent jusqu'au raccord, où le piano
+    # reprend seul le motif (elles s'éteignent sur leur relâche) ; « la mi » au piano
     for h in ('D4', 'G4', 'B4'):
-        s.note(piano, h, s.m(10), 2, vel=50)
-    s.joue(piano, ANACROUSE, a=s.m(10, 3), vel=78)
+        s.note(piano, h, s.m(10), 4, vel=54)
+    for p, notes in ((violons, ('B4', 'D5')), (altos, ('B3', 'D4'))):
+        for h in notes:
+            s.note(p, h, s.m(10), 4, vel=62)
+    for p in (violons, altos, celles, basses):
+        s.expression(p, [(s.m(7), 'mp'), (s.m(9, 4), 'pp'), (s.m(10, 2), 'pp'), (s.longueur, 'mf')])
+    s.joue(piano, ANACROUSE, a=s.m(10, 3), vel=84)
 
 
 theme.forme(intro=['intro'], corps=['A1', 'A2', 'B1', 'B2', 'C', 'D'])
