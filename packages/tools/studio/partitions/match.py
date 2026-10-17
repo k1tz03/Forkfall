@@ -32,6 +32,14 @@ LA CARTE (124 à la noire, une mesure = 1,935 s ; le corps boucle : 80 mesures, 
   Les creux : T, et l'ouverture de A2. L'arc : l'intro et le silence d'avant le but.
   La mélodie (la foule, les cuivres qui répondent, le contre-chant) : 49 mesures sur 80 ;
   plus que la moitié, parce qu'une tribune chante : les m. 9–12 de A et de B scandent.
+
+Le banc (rendu complet) :
+  boucle −16,01 LUFS · crête −1,34 dBTP · bandes <250 40 % · 250–2k 56 % · 2–6k 4,2 % ·
+  >6k 0,1 % · couture identique au bit, saut +1,30 dB · grave au milieu (corr. 0,912)
+  sections : intro −16,9 · A −16,6 · B −16,1 · T −21,1 · C −13,8 · A2 −17,6 · B2 −15,1
+  au téléphone (mono, 400 Hz–6 kHz) : la mélodie devant de +4,7 dB en A, +5,4 en C, +2,5 en B2 ;
+  la basse coupée sous 200 Hz se suit sur 62 % des temps (une pédale de la sous des accords
+  qui bougent : la note la plus forte reste souvent la pédale)
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
