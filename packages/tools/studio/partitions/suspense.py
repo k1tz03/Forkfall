@@ -29,11 +29,12 @@ LA CARTE (le corps : 72 mesures, 162 s)
                            la tête en croches répétées (trompettes bouchées) ; timbales ;
                            montée → deux temps de silence                                5
   P3      8 m.  120  0:56  « la troisième » : le braam ; la caisse claire ; la tête en
-                           doubles croches (cors, trombones) toutes les deux mesures ; i – ♭II
-                           à chaque mesure                                              6,5
+                           doubles croches (cors, trompettes à l'octave, trombones) toutes
+                           les deux mesures ; i – ♭II à chaque mesure                   6,5
   P4      8 m. 120 5/4 1:12 « la gamme sans fin » : 3+3+2+2 dans les accents des cordes
                            (la basse tient la pédale) ; la gamme sans fin ; la tête en doubles
-                           croches ; taïkos ; montée → SILENCE (une seconde)              8
+                           croches (cors, trompettes à l'octave, trombones) ; taïkos ;
+                           montée → SILENCE (une seconde)                                 8
   P5      8 m.  100  1:32  « le souffle » : l'horloge seule, la pédale ; le piano chante le
                            motif en valeurs doublées ; trémolo pp ; ça repart               3
   P6     16 m.  110  1:51  « l'avant-dernière » : les doubles croches, i – ♭vi ; la tête en
