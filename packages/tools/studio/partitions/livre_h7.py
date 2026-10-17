@@ -68,8 +68,33 @@ LA CARTE (76 à la noire ; une mesure de 4/4 = 3,16 s, de 3/4 = 2,37 s ; le corp
   G      8 m.  3:12  « Passez-moi la 12 » : le second sommet — les cordes à trois octaves
                      chantent le motif, les cors la mèche, le lamento en contre-chant   7 → 8
   H      8 m.  3:37  « Six heures » : le trousseau, puis presque rien — la pédale, la
-                     cymbale frottée, la mèche au cor lointain (la seconde fenêtre) ; le
-                     lamento revient, la dernière mesure enfle vers la sonnette de A  1 → 3
+                     cymbale frottée, la mèche au cor lointain (une fenêtre) ; le lamento
+                     revient, la dernière mesure enfle vers la sonnette de A          1 → 3
+
+Les fenêtres (la ville) : la fin de V1 (la main gauche seule, qui s'éteint), le début de E
+(l'ampoule meurt, la sonnette au loin) et le début de H (le trousseau, la cymbale frottée, le
+cor au loin) : 7 à 12 s chacune sous −26 LUFS à court terme (10 dB sous la boucle), à 1 min 04,
+1 min 36 et 1 min 22 l'une de l'autre. La mélodie joue 38 mesures sur 81 (47 % ; 51 % si l'on
+compte les accords tenus des cors à la fin de D).
+
+Le téléphone (le banc du mélange : mono, 400 Hz–6 kHz) : là où elle joue, la mélodie garde
+1,7 à 7,7 dB d'avance sur le reste (A +2,1, B +3,2, V1 +7,7, C +2,3, D +4,1, E +3,4, V2 +5,4,
+F +4,7 — la clarinette à l'octave des violoncelles, sans elle −0,1 —, G +1,7) ; en H, −2,4 dB :
+c'est la fenêtre, le cor y est plus loin que la cymbale frottée. La basse coupée sous 200 Hz se
+lit sur 64 % des temps (sa fondamentale ou sa quinte y est la note la plus forte).
+
+Le mélange : la mélodie devant (cors, violoncelles, clarinette, piano : −19 à −22 LUFS de
+piste sur la boucle), l'accompagnement 4 à 8 dB dessous, les voix tenues une douzaine ; la
+sonnette, la signature, juste sous la mélodie ; les creux 7 à 9 dB sous les deux sommets.
+Au-dessus de 6 kHz, presque rien (0,1 %) : seuls la sonnette et le trousseau y montent ; le
+huis clos reste sombre, comme l'accueil (les montées de cymbale vivent entre 2 et 6 kHz, et un
+plateau d'« air » sur les bus n'y a presque rien changé).
+
+Le banc (rendu complet) :
+  boucle −16,01 LUFS · crête −1,34 dBTP · bandes <250 30 % · 250–2k 67 % · 2–6k 3,4 % ·
+  >6k 0,1 % · couture identique au bit, saut +2,42 dB · grave au milieu (corr. 0,847)
+  sections : intro −20,2 · porte0 −19,2 · A −19,1 · B −17,6 · V1 −18,8 · C −16,2 · D −12,9 ·
+  K −18,8 · E −19,0 · V2 −17,9 · F −15,6 · G −13,4 · H −21,6
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
