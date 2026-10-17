@@ -454,6 +454,7 @@
     titre: "L'homme sous la fenêtre",
     duree: 35.6,
     musique: "livre_h1",
+    musiqueFilm: "film_sous_la_fenetre",
     secours: "suspense",
     couleur: ROUGE,
     affiche: 34.0,
