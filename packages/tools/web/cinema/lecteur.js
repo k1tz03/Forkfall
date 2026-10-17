@@ -162,10 +162,12 @@
   FC.enCours = function () { return !!EN_COURS; };
   FC.passer = function () { if (EN_COURS) EN_COURS.finir("passe"); };
 
-  // la musique du film : son thème s'il existe (les thèmes des livres arrivent avec
+  // la musique du film : celle qu'on a écrite sous ses images (`musiqueFilm`, un master du
+  // studio, film_<id>) quand le jeu l'a, sinon son thème (les thèmes des livres arrivent avec
   // le moteur de musique), sinon son secours, sinon on ne touche à rien
   function themeDe(def, audio) {
     var th = (audio && audio.THEMES) || [];
+    if (def.musiqueFilm && th.indexOf(def.musiqueFilm) >= 0) return def.musiqueFilm;
     if (def.musique && th.indexOf(def.musique) >= 0) return def.musique;
     if (def.secours && th.indexOf(def.secours) >= 0) return def.secours;
     return null;

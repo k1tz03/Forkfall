@@ -198,6 +198,7 @@ navigateur : la page reste à l'écoute pendant qu'un film se prépare).
     titre: "Mon film", duree: 32,
     musique: "livre_h1", secours: "ville_nuit",
     musiqueDepuis: "creux",         // facultatif : la section du thème où le film commence
+    musiqueFilm: "film_mon_film",   // facultatif : la musique écrite sous ses images (un master du studio) ; le jeu la préfère quand il l'a
     affiche: 21.5,                  // le temps de l'affiche
     habillage: { vignette: 0.55, grain: 0.075, ratioPaysage: 2.35, ratioPortrait: 0 },
     sortie: { noir: 1.4 },
