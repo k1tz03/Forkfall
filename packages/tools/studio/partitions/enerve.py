@@ -316,8 +316,8 @@ def A1(s):
     accents_basses(s, t)
     fondamentales(s, nappe, t, 3, vel=70)
     # m. 5 : les trombones martèlent la tête en diminution, deux fois
-    s.joue(trombones, TETE_DIM.octave(-1), a=s.m(5) - 0.5, vel=110)
-    s.joue(trombones, TETE_DIM.octave(-1), a=s.m(7) - 0.5, vel=114)
+    s.joue(trombones, TETE_DIM, a=s.m(5) - 0.5, vel=110)
+    s.joue(trombones, TETE_DIM, a=s.m(7) - 0.5, vel=114)
 
 
 @theme.section('A2', mesures=8)
@@ -347,7 +347,7 @@ GRILLE_B = 'i VII VI VII i VII VI VII'
 def B1(s):
     t = temps_de(GRILLE_B)
     trous = [(s.m(2, 3), s.m(3)), (s.m(4, 3), s.m(5)), (s.m(6, 3), s.m(7))]
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='f', nappe='mp')
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='mf', nappe='mp')
     quatre(s, 0, s.longueur, trous=trous)
     seizes(s, celles, t, 2, 'cadb', vel=88, trous=trous)
     basse(s, t, 'cadb', vel=86, trous=trous)
@@ -359,7 +359,7 @@ def B1(s):
     arc.poser(s, s.m(4, 3) + 0.1, impact=True)
     # les cuivres relancent après chaque cassure (la tête diminuée)
     for m in (3, 7):
-        s.joue(trombones, TETE_DIM.octave(-1), a=s.m(m) - 0.5, vel=108)
+        s.joue(trombones, TETE_DIM, a=s.m(m) - 0.5, vel=108)
     s.nuance(trombones, 'ff')
 
 
@@ -449,7 +449,7 @@ def T1(s):
     nuances(s, basse_s='p', kit='p', kick='pp', nappe='mp', piano='f')
     # la pulsation ne s'arrête pas : la grosse caisse douce, le charleston ; la cymbale marque
     # l'arrivée
-    s.note(kit, 'C', 0, 1, vel=82)
+    s.note(kit, 'C', 0, 1, vel=72)
     for b in range(32):
         s.note(kick, 'K', b, 0.25, vel=96)
         s.note(kit, 'H', b + 0.5, 0.25, vel=72)
@@ -507,7 +507,7 @@ def A4(s):
 def B2(s):
     t = temps_de('VI VII VI VII VI VII VI.VI.VII.VII i')
     trous = [(s.m(2, 3), s.m(3)), (s.m(6, 3), s.m(7))]
-    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='mf', trombones='ff',
+    nuances(s, celles='f', basses='f', basse_s='mf', kick='f', kit='mf', caisse_g='f', coups='mp', trombones='ff',
             cors='ff', nappe='mp')
     quatre(s, 0, s.longueur, trous=trous)
     seizes(s, celles, t, 2, 'acbd', vel=88, trous=trous)
@@ -576,7 +576,7 @@ def R(s):
     la nappe), la tête aux trombones, doux, dans le grave ; m. 5 la caisse claire et les
     violoncelles reviennent ; m. 7–8 les toms, la montée : A1 repart."""
     t = temps_de('i i II i i i VI VII')
-    nuances(s, basse_s='mp', basses='p', kick='mp', kit='p', caisse_g='p', trombones='mf', nappe='mp')
+    nuances(s, basse_s='p', basses='p', kick='p', kit='p', caisse_g='p', trombones='mf', nappe='mp')
     s.note(kit, 'C', 0, 1, vel=100)
     for b in range(32):
         s.note(kick, 'K', b, 0.25, vel=100 if b < 16 else 108)
