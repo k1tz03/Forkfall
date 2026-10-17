@@ -460,8 +460,9 @@ function empaqueter(dossier, cles) {
       if (snr < pireSnr) pireSnr = snr;
       sorties.push({ fichier: nom, debut: b.debut, fin: b.fin, de: b.de, a: b.a, octets: mp3.length, snr: +snr.toFixed(1) });
     });
-    // la sonie : celle de la boucle (le contrat du studio : −16 LUFS), la crête : tout ce qui se joue
-    const lufs = intensite(m.w.L, m.w.R, FS, m.B0, m.B1);
+    // la sonie : celle de la boucle (le contrat du studio : −16 LUFS) — ou de l'introduction pour une
+    // musique de film (`sonie_sur: 'intro'` : la boucle n'y est qu'une traîne) ; la crête : tout ce qui se joue
+    const lufs = m.j.sonie_sur === 'intro' ? intensite(m.w.L, m.w.R, FS, 0, m.j.intro.fin) : intensite(m.w.L, m.w.R, FS, m.B0, m.B1);
     const tp = creteVraie(m.w.L.subarray(0, m.B1), m.w.R.subarray(0, m.B1));
     const gainDb = Math.max(-6, Math.min(6, LUFS_CIBLE - lufs));
     if (Math.abs(LUFS_CIBLE - lufs) > 6) console.warn('  ' + cle + ' : ' + lufs.toFixed(1) + ' LUFS, loin de ' + LUFS_CIBLE + ' : le lecteur ne corrige que ±6 dB');

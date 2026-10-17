@@ -451,13 +451,16 @@ def rendre(theme, journal=None, rapide=False):
     # deux passages (le corps qui s'éteint), raccordées en 30 ms après la boucle.
     trois = ligne_de_temps(3, False)
     # la sonie : le gain qui met la boucle (le second passage) à la cible ; on itère sur
-    # un extrait (la boucle et cinq secondes avant elle), c'est la même chaîne
-    a = max(0, b0 - 5 * SR)
-    extrait = trois[a:b1 + SR]
-    gain_db = reglage['cible_lufs'] - dsp.sonie_integree(trois[b0:b1])
+    # un extrait (la boucle et cinq secondes avant elle), c'est la même chaîne. Une musique
+    # de film (`theme.master(sonie_sur='intro')`) se règle sur son introduction : c'est elle
+    # qu'on entend sous les images, la boucle n'est qu'une traîne si le film dure plus
+    r0, r1 = (0, n_intro) if reglage.get('sonie_sur') == 'intro' else (b0, b1)
+    a = max(0, r0 - 5 * SR)
+    extrait = trois[a:r1 + SR]
+    gain_db = reglage['cible_lufs'] - dsp.sonie_integree(trois[r0:r1])
     for _ in range(8):
         y = chaine_master(extrait, reglage, gain_db)
-        l = dsp.sonie_integree(y[b0 - a:b1 - a])
+        l = dsp.sonie_integree(y[r0 - a:r1 - a])
         ecart = reglage['cible_lufs'] - l
         if abs(ecart) < 0.02:
             break
@@ -477,6 +480,9 @@ def rendre(theme, journal=None, rapide=False):
     fin = int(2.0 * SR)
     y[-fin:] *= np.linspace(1, 0, fin, dtype=np.float32)[:, None]
     reperes = _reperes(theme, intro, corps, n_intro, n_corps, y, b0, b1)
+    if reglage.get('sonie_sur') == 'intro':
+        reperes['sonie_sur'] = 'intro'
+        reperes['lufs'] = round(dsp.sonie_integree(y[:n_intro]), 2)
     reperes['duree_rendu_s'] = round(time.time() - t_debut, 1)
     reperes['gain_master_db'] = round(gain_db, 2)
     return y, reperes

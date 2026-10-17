@@ -702,6 +702,12 @@ passage ; la chaîne du master, qui anticipe de quelques millisecondes, traite u
 (raccord en 30 ms après la boucle). Le banc vérifie : la fin du second passage est
 identique au bit à la fin du premier.
 
+**Une musique de film** (un film du cinéma, `film_<id>`) est écrite sous ses images : son
+introduction est la musique du film entier, calée sur ses plans, et son corps n'est qu'une traîne
+douce (`reprise=False`) que le jeu boucle si le film dure plus que prévu. `theme.master(sonie_sur=
+'intro')` règle alors la sonie sur l'introduction (−16 LUFS), pas sur la boucle ; le JSON le dit
+(`sonie_sur: 'intro'`, `lufs` mesuré sur l'introduction), le banc et `musique_audio.js` le lisent.
+
 Côté jeu, un dossier de masters livrés (`<clé>.wav` et `<clé>.json` par thème) s'empaquette d'une
 commande : `node packages/tools/web/musique_audio.js --masters <dossier>` (des MP3 par blocs et le manifeste
 du lecteur, `packages/tools/web/musique/audio/`), puis `--verifier --masters <dossier>` mesure les coutures

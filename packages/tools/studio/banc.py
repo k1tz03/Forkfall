@@ -200,7 +200,9 @@ def analyser(wav, dossier=None):
     d, fn = rep['boucle']['debut'], rep['boucle']['fin']
     boucle = x[d:fn]
     r = {'cle': rep['cle'], 'titre': rep['titre']}
-    r['lufs_boucle'] = round(dsp.sonie_integree(boucle), 2)
+    # une musique de film se règle sur son introduction (`sonie_sur: 'intro'`) : la cible s'y mesure
+    ref = rep['intro'] if rep.get('sonie_sur') == 'intro' else rep['boucle']
+    r['lufs_boucle'] = round(dsp.sonie_integree(x[ref['debut']:ref['fin']]), 2)
     r['lufs_master'] = round(dsp.sonie_integree(x), 2)
     ct = dsp.sonie_court_terme(boucle)
     r['court_terme_max'] = round(float(ct.max()), 1)
