@@ -445,7 +445,7 @@ def V1(s):
     # un fil de contrebasse sous la valse (la basse dès la première mesure)
     basse(s, basses, vel=60, maxi=2)
     # m. 5–8 : la mélodie finie, la main gauche tourne seule et s'éteint (une fenêtre)
-    s.diminuendo(piano_mg, s.m(4), s.m(5), 'f', 'p')
+    s.diminuendo(piano_mg, s.m(4), s.m(5), 'f', 'pp')
     s.diminuendo(basses, s.m(4), s.m(5), 'p', 'pp')
     sonner(s, s.m(8), note='Bb', vel=70)
 
@@ -525,7 +525,7 @@ def K(s):
 def E(s):
     nuances(s, basses='pp', violons2='ppp', piano='f', piano_mg='mp', celles_tenu='p', altos='p', violons='pp')
     arc.poser(s, 0, impact=False, vel=112)
-    s.note(tamtam, 'C4', 0, 8, vel=60)
+    s.note(tamtam, 'C4', 0, 8, vel=54)
     s.note(archet, 'C4', 0.5, 8, vel=72)          # la cymbale frottée : le sifflement d'après
     # la pédale presque muette (mib) : quatre mesures presque vides ; puis le lamento revient
     s.note(basses, 'Eb2', 0, s.m(5, 3), vel=62)
@@ -533,7 +533,7 @@ def E(s):
     s.crescendo(basses, s.m(5, 3), s.m(8, 4), 'p', 'mf')
     s.note(violons2, 'Bb5', s.m(2), 8, vel=50, art='tenu')
     # quelqu'un attend au comptoir vide
-    sonner(s, s.m(3), vel=64, double=True)
+    sonner(s, s.m(3), vel=56, double=True)
     # la tête en valeurs doublées au piano, quand le lamento revient (la mèche sur ♭vi, m. 7 ;
     # elle se tait avant V)
     s.joue(piano, remesure(TETE, [1, 1, 3.9]), a=s.m(6, 3), vel=80)
@@ -634,9 +634,9 @@ def G(s):
 # --- H : six heures (la relance) ------------------------------------------------------------------
 @theme.section('H', mesures=8)
 def H(s):
-    nuances(s, basses='p', celles_tenu='pp', altos='p', piano_mg='f', cor_loin='p', sub='mp')
+    nuances(s, basses='p', celles_tenu='pp', altos='p', piano_mg='f', cor_loin='pp', sub='mp')
     trousseau(s, 0.25, vel=-12)
-    s.note(archet, 'C4', s.m(1, 3), 6, vel=58)
+    s.note(archet, 'C4', s.m(1, 3), 6, vel=46)
     # m. 1–4 : la fenêtre — la pédale de mib, la cymbale frottée, le cor au loin (la menace
     # demeure) ; m. 5–8 : les murs reviennent avec le lamento
     s.note(basses, 'Eb2', 0, s.m(5), vel=74)
@@ -649,8 +649,8 @@ def H(s):
     s.crescendo(celles_tenu, s.m(5), s.m(8, 4), 'pp', 'mp')
     s.crescendo(altos, s.m(5), s.m(8, 4), 'p', 'mf')
     # la mèche au cor lointain, sur la pédale
-    s.joue(cor_loin, MECHE, a=s.m(1, 4), vel=76)
-    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'p', 'pp')
+    s.joue(cor_loin, MECHE, a=s.m(1, 4), vel=64)
+    s.diminuendo(cor_loin, s.m(2), s.m(3, 4), 'pp', 'ppp')
     # le piano reprend la basse du lamento ; la dernière mesure enfle vers la sonnette de A
     for d, l, c in plages(grille_de(s), de=s.m(5)):
         s.note(piano_mg, hauteur(ACCORDS[c][0]) + 12, d, min(l, 2), vel=56)
