@@ -48,8 +48,10 @@
    | 6 | 29,6–38,5| la rue, de l'autre trottoir : la boulangerie, seule allumée ; « Aubérive ·
    |   |          | 2029 / Vingt degrés dedans » | le titre
    Le mouvement réduit : une image par plan (`fixe`). La coupe de 30 s (`montages.court`)
-   garde les six plans, resserrés. La musique : livre_h9 (les cloches de glace, la
-   ventilation), `ville_nuit` en secours.
+   garde les six plans, resserrés. La musique : film_seconde_manche, écrite sous ses images
+   (packages/tools/studio/partitions/film_seconde_manche.py : chaque coupe et chaque fondu sur
+   un premier temps ; rien sous la porte du four ni sous la télévision) ; sinon livre_h9 (les
+   cloches de glace, la ventilation), `ville_nuit` en secours.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function (global) {
   "use strict";
@@ -653,6 +655,7 @@
     titre: "La seconde manche",
     duree: 38.5,
     musique: "livre_h9",
+    musiqueFilm: "film_seconde_manche",
     secours: "ville_nuit",
     couleur: GLACE,
     affiche: 34.2,
