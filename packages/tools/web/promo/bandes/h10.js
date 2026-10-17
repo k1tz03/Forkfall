@@ -26,7 +26,10 @@ module.exports = bandeDeLivre({
     // 4,5 s), sous le carton de lieu du film (0,5 à 5 s, en haut à gauche en portrait, x 76 à 539 :
     // l'aperçu de l'App Store prend sa colonne à gauche pour le garder entier) ; le maçon n'y est pas
     a: { fichier: '${SP}/extraits/premiere_marche.{format}.mp4', de: 0, pose: 2.5, duree: 7.0, xAppstore: -1 },
-    b: { fichier: '${SP}/extraits/match_d_apres.{format}.mp4', de: 0, pose: 3.0, duree: 7.4 },
+    // le plan 4 du film (19,6 à 27 s) : devant la Nord, Nino lève le premier masque, puis la vague
+    // des visages de Gégé — l'extrait de son réalisateur (celui de la liste centrale, le même plan,
+    // n'a pas fini de se tourner)
+    b: { fichier: '${SP}/agents/lot-films-r5/extraits/match_d_apres.{format}.mp4', de: 0, pose: 3.0, duree: 7.4 },
   },
   // le clapet qui sonne à minuit (montrée), puis le maçon de l'escalier nord (glissée)
   cartes: { deux: 'pr.h10.pro6_septembre', trois: 'pr.h10.a1_marche' },
