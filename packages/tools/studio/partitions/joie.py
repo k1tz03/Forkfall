@@ -359,7 +359,7 @@ def V1(s):
     nuances(s, pieds='mf', celles='mf', basses='mf', violons2='mp', altos='mp', cors='ff', clarinettes='mp', flutes='mf',
             harpe='mp', violons='pp', foule='mf')
     # le premier temps marqué : la cymbale, le pied, la basse
-    s.note(cymbales, 'C4', 0, 2, vel=80)
+    s.note(cymbales, 'C4', 0, 2, vel=92)
     basse_dansante(s, t, 1, 16, vel=80)
     contretemps(s, t, 1, 16, vel=74)
     # la batterie de rue : le pied sur 1, le cercle sur les contretemps, les mains légères
