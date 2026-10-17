@@ -624,6 +624,7 @@
     titre: "Lundi, sept heures",
     duree: 29.0,
     musique: "livre_h2",
+    musiqueFilm: "film_lundi_sept_heures",
     secours: "ville_nuit",
     couleur: BLEU,
     affiche: 26.4,
