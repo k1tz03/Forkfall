@@ -23,8 +23,8 @@ LA CARTE (76 à la noire, une mesure = 3,16 s ; le corps boucle : 50 mesures, ~1
                      (aucun instrument) ; l'ARC très loin au premier temps ; la rumeur    2
   D     10 m.  2:11  le retour : le piano, les cordes, le cor : la montée en valeurs
                      doublées sur ♭VI ♭VII | LA MAJEUR ; ré → ré m → la (le dernier
-                     soupir) ; la dernière mesure s'ouvre sur ♭VII (sol) et enfle
-                     jusqu'au raccord (les cordes), où le piano reprend seul      6 → 2 → 4
+                     soupir) ; la dernière mesure s'ouvre sur ♭VII (sol) ; un
+                     souffle, et « la mi » en croches relance le motif               6 → 2
   Le creux : C. L'arc : l'intro et le premier temps de C.
 """
 from moteur.ecriture import *
@@ -338,16 +338,16 @@ def D(s):
             s.note(piano, h, s.m(m), 4, vel=58 if i < 2 else 64)
     s.expression(choeur, [(s.m(7), 'mp'), (s.m(9, 4), 'pp')])
     s.expression(piano, [(s.m(7), 'mp'), (s.m(9, 4), 'p'), (s.m(10, 3), 'mp')])
-    # m. 10 : sol, ouvert, et la relance : les cordes enflent jusqu'au raccord, où le piano
-    # reprend seul le motif (elles s'éteignent sur leur relâche) ; « la mi » au piano
+    # m. 10 : sol, ouvert (les cordes le tiennent à peine) ; un souffle, puis « la mi » dans
+    # son rythme d'origine (deux croches au quatrième temps) : le piano relance le motif
     for h in ('D4', 'G4', 'B4'):
         s.note(piano, h, s.m(10), 4, vel=54)
     for p, notes in ((violons, ('B4', 'D5')), (altos, ('B3', 'D4'))):
         for h in notes:
             s.note(p, h, s.m(10), 4, vel=62)
     for p in (violons, altos, celles, basses):
-        s.expression(p, [(s.m(7), 'mp'), (s.m(9, 4), 'pp'), (s.m(10, 2), 'pp'), (s.longueur, 'mf')])
-    s.joue(piano, ANACROUSE, a=s.m(10, 3), vel=84)
+        s.expression(p, [(s.m(7), 'mp'), (s.m(9, 4), 'pp'), (s.m(10, 2), 'pp'), (s.longueur, 'pp')])
+    s.joue(piano, phrase('anacrouse', TON, octave=4), a=s.m(10, 4), vel=84)
 
 
 theme.forme(intro=['intro'], corps=['A1', 'A2', 'B1', 'B2', 'C', 'D'])
