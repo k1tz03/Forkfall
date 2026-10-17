@@ -566,6 +566,7 @@
     titre: "Trois heures",
     duree: 34.0,
     musique: "livre_h3",
+    musiqueFilm: "film_sirene_trois_heures",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     musiqueDepuis: "pont",
     secours: "sombre",
     couleur: ORANGE,
