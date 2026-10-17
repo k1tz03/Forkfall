@@ -20,8 +20,9 @@ LA CARTE (le corps : 44 mesures, 155 s)
   intro  2 m.        l'ARC à découvert (le néon de la cellule qui saute), la cymbale frottée
                      à l'archet, la pédale de ré ; le cœur entre                     1 → 2
   S1     8 m.  0:00  « la cellule » : le cœur un temps sur deux (grosse caisse étouffée et
-                     timbale sourde accordée sur ré), la pédale, le balancier la – si♭ ;
-                     m. 5 la mèche, fredonnée par une voix seule, au fond            2 → 3
+                     timbale sourde accordée sur ré), la pédale, le métal (cymbale à
+                     l'archet, tam-tam gratté), le balancier la – si♭ ; m. 5 la mèche,
+                     chantée bouche ouverte par une voix seule, au fond            2 → 3
   S2     8 m.  0:28  « l'interrogatoire » : i – ♭vi aux trémolos, la basse sur si♭ ; le
                      cœur à chaque temps ; la tête renversée au cor bouché ; la goutte
                      (piano aigu) ; m. 8 un SILENCE écrit, le cœur seul relance    3 → 4, 0
@@ -31,9 +32,11 @@ LA CARTE (le corps : 44 mesures, 155 s)
   S4     4 m.  1:25  « le silence » (jamais repris) : l'ARC dans le silence, un cœur
                      lointain, le tam-tam gratté                                       1
   S5     8 m.  1:39  « l'aveu » : le piano grave, ré – mi♭ obstinés ; les violoncelles
-                     en pizzicato sur le cœur ; la voix seule, la tête renversée     3 → 4
-  S6     8 m.  2:08  « la nuit » : le choral des cuivres graves, i | ♭vi | ♭II | i ; la
-                     mèche aux cors bouchés ; le roulement de timbales relance S1    4 → 3
+                     en pizzicato sur le cœur ; la voix seule chante la tête
+                     renversée                                                       3 → 4
+  S6     8 m.  2:07  « la nuit » : le choral des cuivres graves, i | ♭vi | ♭II | i ; la
+                     mèche aux cors bouchés ; le métal sur ♭II ; le roulement de
+                     timbales relance S1                                             4 → 3
 """
 from moteur.ecriture import *
 from partitions._fusible import phrase, Arc
