@@ -67,97 +67,102 @@ garde 2,5 à 6 dB d'avance sur le reste, le creux reste à 10 dB du sommet, et l
 coupée sous 200 Hz se suit encore (sa fondamentale domine 70 à 85 % des temps).
 
 Le mélange : la mélodie devant (les cors vers −17 LUFS de piste, la foule tout près),
-l'accompagnement 4 à 8 dB dessous, les nappes une douzaine. Les accords pulsés et le
-« pa » de la fanfare ont leurs pistes (tromp_st, tromb_st) : à vélocité égale, le staccato
-des trompettes du studio sort ~18 dB au-dessus de leur tenu (celui des cors ~5 dB).
+l'accompagnement 4 à 8 dB dessous, les nappes une douzaine. Le motif et l'arc viennent de
+partitions/_fusible.py (les mêmes notes, comparées une à une). Repris sur le studio corrigé
+(des niveaux égaux d'une articulation et d'un registre à l'autre) : la foule du stade
+(`foule`) et la tribune qui frappe dans ses mains (`applaudissements`) remplacent le chœur et
+les claquements ; les accords pulsés et le « pa » reviennent aux trompettes et aux trombones ;
+chaque fader est corrigé de l'opposé de ce que la calibration a changé, mesuré piste par piste
+et section par section contre le mélange d'origine (toutes les pistes à ± 1,6 dB) ; ce qu'un
+seul fader ne rendait pas est dans RETOUCHES ; les quatre voix de l'arc reprennent leur
+équilibre d'origine (la calibration des synthés avait baissé ses voix aiguës de 2 à 4 dB).
 
-Le banc (rendu complet) :
-  boucle −16,02 LUFS · crête −1,20 dBTP · bandes <250 37 % · 250–2k 58 % · 2–6k 4,2 % ·
-  >6k 0,2 % · couture identique au bit, saut −1,83 dB · grave au milieu (corr. 0,894)
-  sections : intro −22,8 · A −19,0 · B −16,9 · C1 −14,4 · creux −20,9 · A2 −17,2 · B2 −15,1 ·
-  C2 −13,6
+Le banc (rendu complet, repris sur le studio corrigé) :
+  boucle −16,01 LUFS · crête −1,20 dBTP · bandes <250 36 % · 250–2k 60 % · 2–6k 3,6 % ·
+  >6k 0,1 % · couture identique au bit, saut −1,05 dB · grave au milieu (corr. 0,884)
+  sections : intro −23,7 · A −18,8 · B −16,7 · C1 −14,4 · creux −20,7 · A2 −17,1 · B2 −15,0 ·
+  C2 −13,7 (avant la reprise : −22,8 · −19,0 · −16,9 · −14,4 · −20,9 · −17,2 · −15,1 · −13,6)
+  au téléphone (mono, 400 Hz–6 kHz) : la mélodie devant de +2,9 dB en C1, +2,5 en C2 ; la basse
+  coupée sous 200 Hz se suit sur 86 % des temps
 """
 from moteur.ecriture import *
+from partitions._fusible import phrase, Arc
 
 theme = Theme('accueil', 'Fusible', bpm=116, mesure='4/4', tonalite='la mineur', graine=1990,
               ville=False, moment="l'écran d'accueil, le départ d'une histoire",
               humeur='la tribune : un stade qui se lève avant une finale')
 
 TON = 'la mineur'
-# une seconde, en temps (116 à la noire) : l'arc s'écrit en millisecondes
+# une seconde, en temps (116 à la noire) : la cymbale qui enfle s'écrit en secondes
 SEC = 116 / 60.0
 
-# --- l'arc : quatre voix de synthèse (des patchs complets, voir moteur/synthe.py) ------
-_ZAP = {'osc': [], 'bruit': 1.0, 'sub': 0.0,
-        'filtre': {'type': 'bande', 'q': 6.0, 'coupure': 261.6, 'suivi': 1.0, 'env': 1.4,
-                   'a': 0.0005, 'd': 0.12, 's': 0.0, 'r': 0.03, 'drive': 1.0},
-        'amp': {'a': 0.0006, 'd': 0.16, 's': 0.0, 'r': 0.04}, 'velocite': 0.4, 'vel_filtre': 0.0}
-_CLIC = {'osc': [], 'bruit': 1.0, 'sub': 0.0,
-         'filtre': {'type': 'bande', 'q': 2.5, 'coupure': 523.2, 'suivi': 1.0, 'env': 0.0,
-                    'a': 0.0005, 'd': 0.01, 's': 1.0, 'r': 0.005},
-         'amp': {'a': 0.0002, 'd': 0.004, 's': 0.0, 'r': 0.004}, 'velocite': 0.6, 'vel_filtre': 0.0}
-_BZZ = {'osc': [{'forme': 'scie', 'niveau': 1.0},
-                {'forme': 'carre', 'niveau': 0.5, 'largeur': 0.2, 'desaccord': 9}],
-        'sub': 0.0,
-        'filtre': {'type': 'bande', 'q': 1.6, 'coupure': 2200.0, 'suivi': 0.0, 'env': 0.5,
-                   'a': 0.001, 'd': 0.05, 's': 0.0, 'r': 0.02, 'drive': 1.0},
-        'amp': {'a': 0.0008, 'd': 0.06, 's': 0.45, 'r': 0.012}, 'velocite': 0.5, 'vel_filtre': 0.0,
-        'drive': 1.5}
-_TON = {'osc': [{'forme': 'sinus', 'niveau': 0.8}, {'forme': 'carre', 'niveau': 0.35, 'largeur': 0.5},
-                {'forme': 'sinus', 'octave': 1, 'niveau': 0.3}],
-        'sub': 0.0,
-        'filtre': {'type': 'echelle', 'coupure': 1500.0, 'resonance': 0.3, 'env': 1.5, 'suivi': 0.0,
-                   'a': 0.001, 'd': 0.4, 's': 0.0, 'r': 0.3, 'drive': 1.0},
-        'amp': {'a': 0.0015, 'd': 1.1, 's': 0.0, 'r': 0.4}, 'velocite': 0.4, 'vel_filtre': 0.0}
-_ARC = {'bus': 'conception', 'humain': 0, 'pan': 0.0, 'profondeur': 0.15, 'salle': 0.16, 'plaque': 0.22}
-arc_zap = theme.piste('arc_zap', 'arpege_synthe', synthe=_ZAP, volume=-3, largeur=0.5,
-                      eq={'passe_haut': 400, 'passe_bas': 9000}, **_ARC)
-arc_clics = theme.piste('arc_clics', 'arpege_synthe', synthe=_CLIC, volume=6, largeur=0.9,
-                        eq={'passe_haut': 600, 'passe_bas': 9000}, **_ARC)
-arc_bzz = theme.piste('arc_bzz', 'arpege_synthe', synthe=_BZZ, volume=-4, largeur=0.4,
-                      eq={'passe_haut': 300, 'passe_bas': 8000}, **_ARC)
-arc_ton = theme.piste('arc_ton', 'arpege_synthe', synthe=_TON, volume=-11, largeur=0.3, **_ARC)
+# --- l'arc, le son-signature : partitions/_fusible.py (ses quatre voix de synthèse et
+# l'impact, accordés sur la tonique ; ses réglages sont ceux d'ici, d'origine) -------
+arc = Arc(theme)
+# la calibration corrigée des synthés a baissé les voix aiguës de l'arc (le claquement, les
+# clics, la note) plus que son grésillement : ses quatre voix reprennent leur équilibre d'origine
+for _voix, _db in ((arc.zap, 4.5), (arc.clics, 3.4), (arc.ton, 2.7), (arc.bzz, 0.8)):
+    _voix.reglages['volume'] = _voix.reglages.get('volume', 0.0) + _db
 
 # --- les cordes ----------------------------------------------------------------------
 violons = theme.piste('violons', volume=-3)                        # arpèges, trémolos, la double octave
-violons2 = theme.piste('violons2', 'violons', pan=-0.22, volume=-2)
-altos = theme.piste('altos', bref=0.18, volume=3)                 # l'ostinato à l'octave, les trémolos
+violons2 = theme.piste('violons2', 'violons', pan=-0.22, volume=-3.8)
+altos = theme.piste('altos', bref=0.18, volume=1.8)                 # l'ostinato à l'octave, les trémolos
 celles = theme.piste('celles', 'violoncelles', bref=0.18, volume=0)   # le moteur
 celles_chant = theme.piste('celles_chant', 'violoncelles', art='tenu', pan=0.25, volume=0)
-basses = theme.piste('basses', 'basses_film', volume=-3)
+basses = theme.piste('basses', 'basses_film', volume=-1.2)
 # --- les cuivres ---------------------------------------------------------------------
-cor_solo = theme.piste('cor_solo', 'cors', unisson=1, pan=-0.4, profondeur=0.9, salle=0.6, volume=-2)
-cors = theme.piste('cors', art='tenu', volume=2)
-trombones = theme.piste('trombones', art='tenu', volume=3)
-tuba = theme.piste('tuba', volume=6)
-trompettes = theme.piste('trompettes', art='tenu', volume=5)
-trompettes2 = theme.piste('trompettes2', 'trompettes', art='tenu', unisson=1, pan=0.4, volume=3)
-# les accords pulsés et le « pa » de la fanfare, à part : à vélocité égale, le staccato des
-# trompettes du studio sort ~18 dB au-dessus de leur tenu, celui des trombones jusqu'à 4 dB
-tromp_st = theme.piste('tromp_st', 'trompettes', art='staccato', bref=0.15, volume=-14)
-tromb_st = theme.piste('tromb_st', 'trombones', art='staccato', bref=0.15, volume=-2)
-braam = theme.piste('braam', volume=-5)
-cuivre_s = theme.piste('cuivre_s', 'cuivre_synthe', volume=-12)
+cor_solo = theme.piste('cor_solo', 'cors', unisson=1, pan=-0.4, profondeur=0.9, salle=0.6, volume=-6.3)
+cors = theme.piste('cors', art='tenu', volume=1.5)
+# (`bref` : les accords pulsés et le « pa », en staccato, ne gardent pas la queue de leur salle)
+trombones = theme.piste('trombones', art='tenu', bref=0.15, volume=0.8)
+tuba = theme.piste('tuba', volume=-4.8)
+trompettes = theme.piste('trompettes', art='tenu', bref=0.15, volume=2.2)
+trompettes2 = theme.piste('trompettes2', 'trompettes', art='tenu', unisson=1, pan=0.4, volume=0)
+braam = theme.piste('braam', volume=-2.4)
+cuivre_s = theme.piste('cuivre_s', 'cuivre_synthe', volume=-14)
 # --- les voix --------------------------------------------------------------------------
-# la foule : un chœur d'hommes à l'unisson, toujours doublé par les cuivres, au fond
-foule = theme.piste('foule', 'choeur', art='aah', profondeur=0.75, largeur=1.1, volume=6.5)
-choeur = theme.piste('choeur', art='ouh', profondeur=0.8, largeur=1.3, volume=-3)
+# la foule du stade (des milliers d'hommes à l'unisson, leur stade, leur rumeur dessous) :
+# « ah » quand elle chante, « o » quand elle fredonne ; toujours doublée par les cuivres
+foule = theme.piste('foule', art='ah', volume=2.8)
+choeur = theme.piste('choeur', art='ouh', profondeur=0.8, largeur=1.3, volume=-6.4)
 # --- le piano (le creux) ---------------------------------------------------------------
-piano = theme.piste('piano', art='pedale', salle=0.34, volume=4)
+piano = theme.piste('piano', art='pedale', salle=0.34, volume=7.5)
 # --- les percussions (les roulements à part : leur crescendo ne touche pas les coups) ----
-timbales = theme.piste('timbales', volume=-1)
-timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=-2)
-taiko = theme.piste('taiko', volume=-7, eq={'passe_haut': 40})
+timbales = theme.piste('timbales', volume=0.1)
+timb_roul = theme.piste('timb_roul', 'timbales', art='roulement', volume=-4.1)
+taiko = theme.piste('taiko', volume=-6, eq={'passe_haut': 40})
 gcaisse = theme.piste('gcaisse', 'grosse_caisse', volume=-4)
 caisse = theme.piste('caisse', 'caisse_claire', volume=-8)
 caisse_roul = theme.piste('caisse_roul', 'caisse_claire', art='roulement', volume=-6)
 suspendue = theme.piste('suspendue', 'cymbale_suspendue', volume=-8)
 cymbales = theme.piste('cymbales', volume=-2)
-mains = theme.piste('mains', 'claps', profondeur=0.6, salle=0.3, plaque=0.12, volume=-6)
+mains = theme.piste('mains', 'applaudissements', volume=-4.7)          # toute la tribune, sur 2 et 4
 tamtam = theme.piste('tam_tam', volume=-2)
 # --- le grain de synthèse --------------------------------------------------------------
-sub = theme.piste('sub', 'sub_synthe', volume=-16)
+sub = theme.piste('sub', 'sub_synthe', volume=-16.9)
 effets = theme.piste('effets', volume=-4)
+
+
+# les retouches par section (dB, en plus du fader et de la nuance) : ce qu'un seul fader ne
+# rend pas après la calibration corrigée (mesuré piste par piste et section par section contre
+# le mélange d'origine) ; chaque piste citée reçoit sa valeur dans CHAQUE section (0 ailleurs)
+RETOUCHES = {
+    'B': {'trompettes': -2.1, 'tuba': -3.4, 'violons': 5.2, 'violons2': -3.1},
+    'B2': {'tuba': -2.6, 'violons': 5.7, 'violons2': -3.0, 'choeur': 2.0},
+    'C2': {'cors': 3.0},
+    'A2': {'cors': 1.3, 'tuba': 3.1, 'trombones': 1.0},
+    'creux': {'basses': -2.6, 'celles': 2.6, 'foule': -2.9, 'timb_roul': 3.0},
+}
+PISTES_RETOUCHEES = sorted({p for d in RETOUCHES.values() for p in d})
+
+
+def retouches(s):
+    """Les retouches de la section, posées au premier temps (une courbe de volume tient
+    jusqu'à l'appel suivant : chaque section pose les siennes)."""
+    for nom_piste in PISTES_RETOUCHEES:
+        s.automation(theme.pistes[nom_piste], 'volume',
+                     [(0, RETOUCHES.get(s.section.nom, {}).get(nom_piste, 0.0))])
 
 
 def nuances(s, **niveaux):
@@ -170,12 +175,13 @@ def nuances(s, **niveaux):
 # =====================================================================================
 # Le matériau
 
-TETE = mel('A3:.5 E4:.5 | F4:3')
-MOTIF = mel('A3:.5 E4:.5 | F4:3 C4:.5 B3:.5 | D4:1 A3:1.75 r:.25')
-REPONSE = mel('A3:.5 E4:.5 | F4:3 G4:.5 A4:.5 | E4:2.75 r:.25')
-MONTEE = mel('A3:.5 E4:.5 | F4:2 G4:2 | A4:4')
-MECHE = mel('A3:.5 E4:.5 | F4:7')
-ANACROUSE = mel('A3:.5 E4:.5')
+# le motif, de partitions/_fusible.py (le matériau commun des vingt thèmes, en degrés)
+TETE = phrase('tete', TON)              # la3 mi4 | fa4
+MOTIF = phrase('motif', TON)            # la3 mi4 | fa4 ── ── do4 si3 | ré4 la3 ── (·)
+REPONSE = phrase('reponse', TON)        # la3 mi4 | fa4 ── ── sol4 la4 | mi4 ── (·)
+MONTEE = phrase('montee', TON)          # la3 mi4 | fa4 ── sol4 ── | la4
+MECHE = phrase('meche', TON)            # la3 mi4 | fa4 (sept temps)
+ANACROUSE = phrase('anacrouse', TON)    # la3 mi4
 # le contre-chant des trompettes (deux voix, en tierces et en quartes) : il bouge quand le
 # motif tient et tient quand le motif bouge ; sa tête a le rythme de « fu-si-BLE »
 CONTRE = mel('r:1 A4:.5 C5:.5 F5:1.5 D5:.5 | E5:2 C5:1 r:1 | r:1 A4:.5 C5:.5 F5:1 G5:1 | A5:2 E5:1 r:1')
@@ -291,20 +297,6 @@ def fondamentales(s, piste, temps, octave, vel=80, art=None, de=0, jusqua=None, 
         s.note(piste, racine(c, octave), d, l, vel=vel, art=art)
 
 
-def arc(s, a, impact=True, vel=118):
-    """L'arc, à la position `a` (en temps) : la mèche qui saute."""
-    for dt, h, v in ((0.0, 'E6', 120), (0.017, 'B5', 100), (0.031, 'G6', 110), (0.058, 'C6', 90),
-                     (0.083, 'F#6', 105), (0.121, 'A5', 80)):
-        s.note(arc_clics, h, a + dt * SEC, 0.004 * SEC, vel=v)
-    for dt, d, v in ((0.0, 0.035, 118), (0.05, 0.028, 100), (0.094, 0.06, 112)):
-        s.note(arc_bzz, 'A2', a + dt * SEC, d * SEC, vel=v)
-    s.note(arc_zap, 'A6', a, 0.18 * SEC, vel=vel)
-    s.note(arc_ton, 'A5', a + 0.004 * SEC, 1.0 * SEC, vel=110)
-    s.note(arc_ton, 'A6', a + 0.004 * SEC, 0.3 * SEC, vel=86)
-    if impact:
-        s.note(effets, 'A1', a, 2, vel=112, art='impact')
-
-
 def cymbale_vers(s, fin, art='monte_4s', vel=96):
     """La cymbale suspendue qui enfle et culmine à `fin` (en temps)."""
     secondes = {'monte_2s': 2.0, 'monte_4s': 4.0, 'monte_7s': 7.0}[art]
@@ -336,7 +328,7 @@ def tribune(s, de, jusqua, vel=100):
     """La tribune : grosse caisse sur 1 et 3, mains sur 2 et 4 (de la mesure `de` jusqu'à
     la position `jusqua`, en temps)."""
     s.batterie(gcaisse, 'K : X . . . . . . . x . . . . . . .', a=s.m(de), jusqua=jusqua, vel=vel)
-    s.batterie(mains, 'CL : . . . . X . . . . . . . X . . .', a=s.m(de), jusqua=jusqua, vel=vel)
+    s.joue(mains, grille('. . . . X . . . . . . . X . . .', 'C4', vel=vel), a=s.m(de), jusqua=jusqua)
 
 
 def la_phrase(s, de, unites, foule_vel=96, cors_vel=110, grave_vel=104, violons_chant=False):
@@ -390,7 +382,8 @@ def pulsations(s, piste, grille_mes, grave, vel=96):
 
 @theme.section('intro', mesures=4)
 def intro(s):
-    arc(s, 0, impact=True, vel=120)
+    retouches(s)
+    arc.poser(s, 0, vel=120)
     nuances(s, cor_solo='mf')
     # la pédale grave : contrebasses, violoncelles, sous-basse, un chœur « ouh » très bas
     s.note(basses, 'A1', 0, 16, vel=72, art='tenu')
@@ -415,6 +408,7 @@ GRILLE_A = ['i', 'i', 'VI', 'i', 'VI', 'i', 'bVI', 'bVII', 'i', 'i', 'VI', 'i', 
 
 @theme.section('A', mesures=16)
 def A(s):
+    retouches(s)
     t = temps_accords(GRILLE_A)
     nuances(s, cors='mf', trombones='mf', tuba='mf', choeur='p', caisse='mf', violons2='pp')
     # le premier temps : le moteur démarre sur un coup (ouvrir à froid)
@@ -470,6 +464,7 @@ GRILLE_B = ['bVI', 'bVII', 'bVI', 'bVII', 'bVI', 'bVII', 'bVI', 'bVII']
 
 @theme.section('B', mesures=8)
 def B(s):
+    retouches(s)
     t = temps_accords(GRILLE_B)
     silence = s.m(8, 4)
     nuances(s, tuba='mp', sub='fff')
@@ -482,10 +477,10 @@ def B(s):
     s.expression(violons, [(0, 'mp'), (s.m(8, 3), 'f')])
     nappe(s, violons2, t, 'C4', vel=80, art='tremolo', jusqua=silence)
     s.expression(violons2, [(0, 'p'), (s.m(8, 3), 'f')])
-    pulsations(s, tromp_st, GRILLE_B, 'A4', vel=76)
-    pulsations(s, tromb_st, GRILLE_B, 'F3', vel=76)
-    s.expression(tromp_st, [(0, 'p'), (s.m(8, 3), 'f')])
-    s.expression(tromb_st, [(0, 'mp'), (s.m(8, 3), 'f')])
+    pulsations(s, trompettes, GRILLE_B, 'A4', vel=76)
+    pulsations(s, trombones, GRILLE_B, 'F3', vel=76)
+    s.expression(trompettes, [(0, 'p'), (s.m(8, 3), 'f')])
+    s.expression(trombones, [(0, 'mp'), (s.m(8, 3), 'f')])
     fondamentales(s, tuba, t, 1, vel=80, jusqua=silence)
     fondamentales(s, sub, t, 1, vel=64, jusqua=silence)
     s.expression(tuba, [(0, 'mp'), (s.m(8, 3), 'f')])
@@ -514,6 +509,7 @@ GRILLE_C1 = ['VI', 'i', 'VI', 'i', 'VI', 'i', 'bVI', 'bVI']
 
 @theme.section('C1', mesures=8)
 def C1(s):
+    retouches(s)
     t = temps_accords(GRILLE_C1)
     silence = s.m(8, 4)
     nuances(s, cors='f', trombones='f', celles_chant='f', foule='f', celles='f', altos='mp', basses='f',
@@ -567,10 +563,11 @@ GRILLE_CREUX = ['i', 'bVI', 'VI75', 'VIIi', 'i', 'bVI', 'bVII', 'i']
 
 @theme.section('creux', mesures=8)
 def creux(s):
+    retouches(s)
     t = temps_accords(GRILLE_CREUX)
     nuances(s, piano='f', choeur='mp', basses='mp', cor_solo='mf', celles='pp')
     # la mèche saute : l'arc, le tam-tam ; puis le piano seul sur le chœur
-    arc(s, 0, impact=True, vel=124)
+    arc.poser(s, 0, vel=124)
     s.note(tamtam, 'C4', 0, 8, vel=96)
     s.note(timbales, 'A2', 0, 1, vel=84)
     # le motif en valeurs doublées, au piano (la mélodie, et l'octave dessous plus douce)
@@ -578,7 +575,7 @@ def creux(s):
     s.joue(piano, lent.octave(1), a=s.m(2) - 2, vel=84)
     s.joue(piano, lent, a=s.m(2) - 2, vel=56)
     # la tribune, au fond, fredonne l'air avec lui (« ouh », en valeurs lentes)
-    s.joue(foule, lent.octave(-1), a=s.m(2) - 2, vel=72, art='ouh')
+    s.joue(foule, lent.octave(-1), a=s.m(2) - 2, vel=72, art='o')
     s.expression(foule, [(0, 'mf'), (s.m(4), 'f'), (s.m(5, 3), 'mf')])
     # la main gauche : la fondamentale et sa quinte (un la1 grave ne passerait pas un
     # petit haut-parleur), puis des accords doux
@@ -611,9 +608,10 @@ DEFILE2 = 'S : X . x x X . x . X x x . X . x x'
 
 @theme.section('A2', mesures=16)
 def A2(s):
+    retouches(s)
     t = temps_accords(GRILLE_A2)
     nuances(s, basses='mf', caisse='mf', tuba='mf', trompettes='mf', trompettes2='mf', cors='mp',
-            trombones='mf', tromb_st='mf', choeur='mp', violons2='p', sub='fff')
+            trombones='mf', choeur='mp', violons2='p', sub='fff')
     s.note(cymbales, 'C4', 0, 2, vel=104)
     s.note(timbales, 'A2', 0, 1, vel=110)
     moteur(s, celles, t, 2, 'deed', vel=84, basse=basses, vel_basse=94)
@@ -634,7 +632,7 @@ def A2(s):
             s.note(tuba, racine(c, 1), b, 1, vel=96, art='staccato')
         else:
             for h in voicing(c, 'E3'):
-                s.note(tromb_st, h, b, 0.5, vel=84)
+                s.note(trombones, h, b, 0.5, vel=84, art='staccato')
     # les trompettes chantent motif et réponse, les cors tiennent l'harmonie
     s.joue(trompettes, MOTIF.octave(1), a=s.m(3) - 1, vel=100)
     s.joue(trompettes, REPONSE.octave(1), a=s.m(5) - 1, vel=102)
@@ -666,6 +664,7 @@ def A2(s):
 # --- B2 : la seconde montée ---------------------------------------------------------------------
 @theme.section('B2', mesures=8)
 def B2(s):
+    retouches(s)
     t = temps_accords(GRILLE_B)
     silence = s.m(8, 4)
     nuances(s, basses='f', tuba='mf', sub='fff')
@@ -680,10 +679,9 @@ def B2(s):
     # le chœur enfle sur les accords (au fond)
     nappe(s, choeur, t, 'C4', vel=84, art='aah', jusqua=silence)
     s.expression(choeur, [(0, 'p'), (s.m(8, 3), 'f')])
-    pulsations(s, tromp_st, GRILLE_B, 'C5', vel=78)
-    pulsations(s, tromb_st, GRILLE_B, 'A3', vel=78)
-    s.expression(tromp_st, [(0, 'p'), (s.m(8, 3), 'mf')])
-    s.expression(tromb_st, [(0, 'mp'), (s.m(8, 3), 'f')])
+    pulsations(s, trompettes, GRILLE_B, 'C5', vel=78)
+    pulsations(s, trombones, GRILLE_B, 'A3', vel=78)
+    s.expression(trompettes, [(0, 'p'), (s.m(8, 3), 'mf')])
     # la tribune appelle la tête (m. 3, 5, 7), de plus en plus fort
     for m, v in ((3, 104), (5, 112), (7, 120)):
         s.joue(cors, TETE, a=s.m(m) - 1, vel=v)
@@ -704,7 +702,7 @@ def B2(s):
     s.note(effets, 'E4', s.m(6), 11, vel=110, art='montee')
     # le silence, « fu-si », et l'arc dedans : l'étincelle allume la mèche (le « BLE » est
     # la fusée ; à froid, C2 ouvre sur son impact)
-    arc(s, silence, impact=False, vel=122)
+    arc.poser(s, silence, impact=False, vel=122)
     s.joue(cors, ANACROUSE, a=silence, vel=112)
     s.joue(trombones, ANACROUSE.octave(-1), a=silence, vel=110)
     s.joue(celles_chant, ANACROUSE.octave(-1), a=silence, vel=104)
@@ -717,11 +715,12 @@ GRILLE_C2 = ['VI', 'i', 'VI', 'i', 'VI', 'i', 'VI', 'i', 'VI', 'i', 'VI', 'i', '
 
 @theme.section('C2', mesures=16)
 def C2(s):
+    retouches(s)
     t = temps_accords(GRILLE_C2)
     nuances(s, cors='f', trombones='f', celles_chant='f', foule='f', violons='f', celles='f', altos='mp',
             basses='f', violons2='mp', choeur='mp', trompettes='mf', trompettes2='mf', tuba='f', sub='fff')
     # la fusée (l'arc a claqué au dernier temps de B2) : l'impact, le braam, les cymbales
-    s.note(effets, 'A1', 0, 2, vel=116, art='impact')
+    s.note(arc.impact, 'A1', 0, 2, vel=116, art='impact')
     s.note(braam, 'F2', 0, 3, vel=127)
     s.note(cymbales, 'C4', 0, 2, vel=124)
     s.note(timbales, 'F2', 0, 1, vel=124)

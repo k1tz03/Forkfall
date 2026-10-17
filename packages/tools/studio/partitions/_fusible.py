@@ -2,7 +2,7 @@
 
 Pas un thème (le nom commence par « _ ») : un module que les partitions importent, pour
 que le motif et le son-signature soient les mêmes d'un thème à l'autre. Ils viennent du
-thème principal, `partitions/accueil.py` (« La tribune »), qui les garde écrits en clair.
+thème principal, `partitions/accueil.py` (« La tribune »), qui les prend ici comme les autres.
 
     from partitions._fusible import phrase, Arc
 
@@ -30,6 +30,12 @@ irréguliers, un grésillement (une scie sur la tonique, toutes ses harmoniques 
 toniques), un bruit en bande étroite qui tombe vers la tonique, une note accordée sur la
 tonique qui s'éteint en une seconde, et un impact grave. On l'entend à découvert : au
 début d'un thème, et deux ou trois fois au plus dans sa boucle.
+
+Depuis la calibration par zones du studio, ses voix aiguës sortent plus bas que son
+grésillement : le thème principal et la famille du stade leur rendent leur équilibre
+d'origine sur leurs pistes (+4,5 dB au claquement `arc.zap`, +3,4 aux clics, +2,7 à la note
+`arc.ton`, +0,8 au grésillement `arc.bzz`, par `reglages['volume']`). Les réglages d'ici ne
+changent pas : les thèmes déjà rendus les gardent.
 """
 from moteur.ecriture import mel
 from moteur.theorie import Tonalite, nom
