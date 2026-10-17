@@ -1042,6 +1042,7 @@
     titre: "Chêne de 1931",
     duree: 36.8,
     musique: "livre_h5",
+    musiqueFilm: "film_chene_1931",
     secours: "sombre",
     couleur: VERT,
     affiche: 22.4,
