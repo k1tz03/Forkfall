@@ -802,6 +802,7 @@
     titre: "La seconde tranche",
     duree: 36.4,
     musique: "livre_h5",
+    musiqueFilm: "film_seconde_tranche",
     secours: "ville_nuit",
     couleur: VERT,
     affiche: 19.4,

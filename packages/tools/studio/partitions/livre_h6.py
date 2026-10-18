@@ -267,15 +267,22 @@ def nappe(s, piste, temps, grave, vel=70, art=None, de=0, jusqua=None):
 TIC, TAC = 'D5', 'G4'
 
 
-def horloge(s, de, a, noire=False, vel=84):
+def dans(t, creux):
+    """Le temps `t` tombe-t-il dans un des creux [(début, fin)] (en temps de la section) ?"""
+    return any(a <= t < b for a, b in creux)
+
+
+def horloge(s, de, a, noire=False, vel=84, creux=(), baisse=18):
     """Le tic-tac de la mesure `de` à la mesure `a` comprise : tic (ré, bloc aigu) sur 1, tac
-    (sol, bloc grave) sur 3 ; `noire` : sur chaque temps (les dernières secondes)."""
+    (sol, bloc grave) sur 3 ; `noire` : sur chaque temps (les dernières secondes) ; dans les
+    `creux` (une phrase à découvert), l'horloge se fait discrète (`baisse` de vélocité)."""
     for m in range(de, a + 1):
         coups = ((1, True), (2, False), (3, True), (4, False)) if noire else ((1, True), (3, False))
         for b, tic in coups:
             t = s.m(m, b)
-            s.note(horloge_bois, 76 if tic else 77, t, 0.25, vel=vel if tic else vel - 8)
-            s.note(horloge_pizz, TIC if tic else TAC, t, 0.25, vel=vel - 4 if tic else vel - 10)
+            v = vel - baisse if dans(t, creux) else vel
+            s.note(horloge_bois, 76 if tic else 77, t, 0.25, vel=v if tic else v - 8)
+            s.note(horloge_pizz, TIC if tic else TAC, t, 0.25, vel=v - 4 if tic else v - 10)
 
 
 # --- la tête-ostinato : 1 5 ♭6 | 1 5 ♭6 | 1 5 en doubles croches, sur l'accord du temps -----------
@@ -286,8 +293,10 @@ GROUPES = [0, 1, 2, 0, 1, 2, 0, 1]
 ACCENTS = 'X x o X x o X x'
 
 
-def tete_ostinato(s, piste, temps, de, a, octave=4, vel=80, derniere=4):
-    """De la mesure `de` à la mesure `a` comprise ; la dernière mesure s'arrête après `derniere` temps."""
+def tete_ostinato(s, piste, temps, de, a, octave=4, vel=80, derniere=4, creux=(), baisse=14):
+    """De la mesure `de` à la mesure `a` comprise ; la dernière mesure s'arrête après `derniere` temps ;
+    sous le chant (`creux`), l'ostinato s'efface d'un cran (`baisse` de vélocité, ≈ −3,5 dB) : au
+    téléphone, ses doubles croches en plein médium couvraient le motif des cors."""
     acc = ACCENTS.split()
     for m in range(de, a + 1):
         nb = derniere if m == a else 4
@@ -299,6 +308,8 @@ def tete_ostinato(s, piste, temps, de, a, octave=4, vel=80, derniere=4):
             x = x if x > q else x + 12
             h = (r, q, x)[GROUPES[i % 8]]
             v = {'X': vel + 18, 'x': vel, 'o': vel - 18}[acc[i % 8]]
+            if dans(t, creux):
+                v -= baisse
             s.note(piste, h, t, 0.25, vel=v)
 
 
@@ -560,16 +571,17 @@ def D(s):
     # LE PREMIER NOM : la batterie cassée, la basse en octaves ; les cors chantent le motif
     t = temps_accords(GRILLE_D)
     nuances(s, celles='mf', basses='mf', violons2='mf', altos='mp', cors='f', tromb_st='mf', trombones='f',
-            batterie='mf', pedale='p', sub='mf', violons='mp')
+            batterie='mf', pedale='p', sub='mf', violons='mp', violons_chant='mf')
     s.note(cymbales, 'C4', 0, 2, vel=96)
     s.note(timbales, 'D2', 0, 1, vel=104)
+    chant = [(0, 8), (15, 24), (31, 40), (47, 56)]      # où le motif chante (en temps)
     horloge(s, 1, 14, vel=78)
     horloge(s, 15, 15, noire=True, vel=84)
     casse(s, 1, 15, orchestre=False)
     moteur(s, celles, t, 1, 15, octave=2, figs='abcb', vel=78)
     basse_octaves(s, [basses], t, 1, 15, vel=86, pedale_h='D2', sans_saut=('bII',))
-    tete_ostinato(s, violons2, t, 1, 15, octave=4, vel=74)
-    tete_ostinato(s, altos, t, 1, 15, octave=3, vel=70)
+    tete_ostinato(s, violons2, t, 1, 15, octave=4, vel=74, creux=chant)
+    tete_ostinato(s, altos, t, 1, 15, octave=3, vel=70, creux=chant)
     s.note(pedale, 'D2', 0, 60, vel=66)
     s.note(sub, 'D2', 0, 60, vel=60)
     # le motif aux cors (m. 1–2, 5–6), aux trombones (m. 9–10), aux cors encore, les violons à
@@ -580,11 +592,15 @@ def D(s):
     chante(cors, s.m(5) - 1)
     chante(trombones, s.m(9) - 1, -1, 106)
     chante(cors, s.m(13) - 1, 0, 108)
+    # au téléphone, le chant passe par les violons qui le doublent (sol4–mi♭5, dans la bande)
+    s.joue(violons_chant, sans_anacrouse(MOTIF).octave(1), a=0, vel=84)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(5) - 1, vel=84)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(9) - 1, vel=86)
     s.joue(violons_chant, MOTIF.octave(1), a=s.m(13) - 1, vel=90)
     for m in (3, 4, 7, 8, 11, 12):
         piques(s, tromb_st, t, m, m, grave='D3', vel=92,
                rythme='X . . X . . X . . . X . X . . .' if t[(m - 1) * 4] != 'V' else 'X . . X . . X . . . X . . . . .')
-    tete_ostinato(s, violons, t, 9, 15, octave=5, vel=68)
+    tete_ostinato(s, violons, t, 9, 15, octave=5, vel=68, creux=chant)
     s.crescendo(violons, s.m(9), s.m(15, 4), 'p', 'mf')
     fax_chant(s, t, 1, 15, motif='x x . x . . x x x . x . x x . x', vel=70)
     cymbale_vers(s, s.m(16), 'monte_2s', vel=96)
@@ -600,13 +616,14 @@ def D(s):
 def E(s):
     # LA PAGE BLANCHE, la fenêtre : l'horloge, un souffle de papier, la réponse du fax très loin ;
     # la tête renversée au violoncelle seul
-    nuances(s, celles_chant='mp', harmonique='mp', sub='p', pedale='pp')
-    horloge(s, 1, 8, vel=78)
+    nuances(s, celles_chant='mf', harmonique='p', sub='p', pedale='pp')
+    # sous les deux phrases du violoncelle, l'horloge se fait discrète (elle partageait sa bande)
+    horloge(s, 1, 8, vel=78, creux=[(12, 28)])
     s.note(papier, 'C5', s.m(2), 3 * SEC, vel=60)
-    s.note(fax_ton, 'C7', s.m(3), 6, vel=70)
+    s.note(fax_ton, 'C7', s.m(3), 4, vel=70)
     s.joue(celles_chant, RENVERSE.octave(1), a=s.m(5) - 1, vel=80)    # sol4 do4 si3 : le violoncelle tendu
     s.joue(celles_chant, RENVERSE.octave(1), a=s.m(7) - 1, vel=76)
-    s.note(harmonique, 'D6', s.m(5), 16, vel=64)
+    s.note(harmonique, 'D6', s.m(7, 4), 5, vel=64)       # après la seconde phrase du violoncelle
     # la pédale, à peine, dès la première mesure (la section peut ouvrir le morceau)
     s.note(pedale, 'D2', 0, 32, vel=54)
     s.note(sub, 'D2', 0, 32, vel=46)
@@ -647,9 +664,10 @@ def G(s):
     horloge(s, 1, 16, vel=78)
     casse(s, 1, 16, motifs=(CASSE_B, CASSE_B2), orchestre=False)
     moteur(s, celles, t, 1, 16, octave=2, figs='bcab', vel=80, basse=basses, vel_basse=90)
-    tete_ostinato(s, violons2, t, 1, 16, octave=4, vel=76)
-    tete_ostinato(s, altos, t, 1, 16, octave=3, vel=72)
-    tete_ostinato(s, violons, t, 9, 16, octave=5, vel=70)
+    chant = [(19, 28), (51, 60)]
+    tete_ostinato(s, violons2, t, 1, 16, octave=4, vel=76, creux=chant)
+    tete_ostinato(s, altos, t, 1, 16, octave=3, vel=72, creux=chant)
+    tete_ostinato(s, violons, t, 9, 16, octave=5, vel=70, creux=chant)
     s.crescendo(violons, s.m(9), s.m(16, 4), 'p', 'mf')
     fax_chant(s, t, 1, 16, motif='x . x x . x x . x . x x . x x .', vel=74)
     for d, l, c in plages(t):
@@ -674,14 +692,15 @@ def V(s):
     # mèche, la basse en octaves (doublée par la sous-basse) ; le motif aux cors et trombones (m. 6–7)
     t = temps_accords(GRILLE_V)
     nuances(s, celles='mf', basses='mf', violons2='mf', altos='mf', violons='mp', cors='f', trombones='f',
-            tromp_st='mf', batterie='mf', sub='mf')
+            tromp_st='mf', batterie='mf', sub='mf', violons_chant='mf')
+    chant = [(4, 28)]           # la longue ligne des cors (m. 2–5), puis le motif (m. 6–7)
     s.note(timbales, 'G2', 0, 1, vel=100)
     horloge(s, 1, 8, vel=80)
     casse(s, 1, 8, motifs=(CASSE_B2, CASSE_B), orchestre=True)
     moteur(s, celles, t, 1, 8, octave=2, figs='cabc', vel=82)
     basse_octaves(s, [basses], t, 1, 8, vel=88)
-    tete_ostinato(s, violons2, t, 1, 8, octave=4, vel=78)
-    tete_ostinato(s, altos, t, 1, 8, octave=3, vel=74)
+    tete_ostinato(s, violons2, t, 1, 8, octave=4, vel=78, creux=chant)
+    tete_ostinato(s, altos, t, 1, 8, octave=3, vel=74, creux=chant)
     for d, l, c in plages(t):
         s.note(sub, racine(c, 1, 'E1'), d, l, vel=60)
     for m in (2, 4):
@@ -689,8 +708,9 @@ def V(s):
     s.joue(cors, mel('G4:4 | A4:4 | Bb4:8'), a=s.m(2), vel=92)
     s.joue(cors, MOTIF, a=s.m(6) - 1, vel=106)
     s.joue(trombones, MOTIF.octave(-1), a=s.m(6) - 1, vel=104)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(6) - 1, vel=88)
     nappe(s, violons, t, 'D5', vel=64, art='tremolo')
-    s.crescendo(violons, 0, s.m(8, 4), 'p', 'mf')
+    s.crescendo(violons, 0, s.m(8, 4), 'pp', 'p')
     fax_chant(s, t, 1, 8, motif='x x . x x . x x x . x x . x x .', vel=76)
     roulement(s, timb_roul, 'D2', s.m(8), s.m(8, 3), 'mp', 'f', vel=92)
     s.joue(cors, ANAC, a=s.m(8, 4), vel=104)
@@ -705,7 +725,8 @@ def H(s):
     # 23 H 58 : le palier ; le motif en diminution (violons, flûtes) contre les cors à leur vitesse
     t = temps_accords(GRILLE_H)
     nuances(s, cors='f', violons='mf', flutes='mf', violons2='mf', altos='mf', celles='f', basses='f',
-            tromb_st='f', batterie='f', sub='mf', trombones='f')
+            tromb_st='f', batterie='f', sub='mf', trombones='f', violons_chant='mf')
+    chant = [(0, 8), (11, 20), (19, 28)]
     s.note(cymbales, 'C4', 0, 2, vel=110)
     s.note(timbales, 'Eb2', 0, 1, vel=110)
     horloge(s, 1, 6, vel=80)
@@ -713,8 +734,8 @@ def H(s):
     casse(s, 1, 7, motifs=(CASSE_B, CASSE_B2), orchestre=True)
     moteur(s, celles, t, 1, 7, octave=2, figs='abca', vel=84)
     basse_octaves(s, [basses], t, 1, 7, vel=90)
-    tete_ostinato(s, violons2, t, 1, 7, octave=4, vel=78)
-    tete_ostinato(s, altos, t, 1, 7, octave=3, vel=74)
+    tete_ostinato(s, violons2, t, 1, 7, octave=4, vel=78, creux=chant)
+    tete_ostinato(s, altos, t, 1, 7, octave=3, vel=74, creux=chant)
     for d, l, c in plages(t[:28]):
         s.note(sub, racine(c, 1, 'E1'), d, l, vel=62)
     s.joue(cors, sans_anacrouse(MOTIF), a=0, vel=108)
@@ -722,7 +743,8 @@ def H(s):
     s.joue(cors, MOTIF, a=s.m(5) - 1, vel=110)
     for m in range(1, 7):
         d = DIM.octave(2) if m > 1 else sans_anacrouse(DIM, 0.5).octave(2)
-        s.joue(violons, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=86)
+        # la diminution est un chant : elle passe sur la piste des violons qui chantent (piqué)
+        s.joue(violons_chant, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=86, art='staccato')
         s.joue(flutes, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=80)
     piques(s, tromb_st, t, 1, 7, grave='D3', vel=96, rythme='X . . X . . X . . . . . . . . .')
     fax_chant(s, t, 1, 7, vel=78)
@@ -761,30 +783,33 @@ def J(s):
     # LE PETIT : la pédale revient ; le motif aux cors, puis en canon (violons en diminution)
     t = temps_accords(GRILLE_J)
     nuances(s, celles='mf', basses='mf', violons2='mf', altos='mf', cors='f', trombones='f', batterie='mf',
-            pedale='p', sub='mf', violons='mf', tromb_st='mf', trompettes='f')
+            pedale='p', sub='mf', violons='mf', tromb_st='mf', trompettes='f', violons_chant='mf')
+    chant = [(0, 12), (16, 28), (32, 44), (44, 50.5), (56, 60)]     # dès la mesure de l'anacrouse
     s.note(timbales, 'D2', 0, 1, vel=100)
     horloge(s, 1, 16, vel=78)
     casse(s, 1, 16, orchestre=False)
     moteur(s, celles, t, 1, 16, octave=3, figs='pqpq', vel=80, pedale_h='D3', basse=basses, vel_basse=88,
            basse_octave=2)
-    tete_ostinato(s, violons2, t, 1, 16, octave=4, vel=76)
-    tete_ostinato(s, altos, t, 1, 16, octave=3, vel=72)
+    tete_ostinato(s, violons2, t, 1, 16, octave=4, vel=76, creux=chant)
+    tete_ostinato(s, altos, t, 1, 16, octave=3, vel=72, creux=chant)
     s.note(pedale, 'D2', 0, 64, vel=68)
     s.note(sub, 'D2', 0, 64, vel=60)
     s.joue(cors, MOTIF, a=s.m(2) - 1, vel=104)
-    # m. 6–7 : le canon des vitesses (cors à leur vitesse, violons en diminution)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(2) - 1, vel=84)
+    # m. 6–7 : le canon des vitesses (cors à leur vitesse, violons en diminution, piqués)
     s.joue(cors, MOTIF, a=s.m(6) - 1, vel=106)
     for m in (6, 7):
-        s.joue(violons, DIM.octave(2), a=s.m(m) - 0.5, vel=84)
-    # m. 10–11 : trombones et cors à l'octave ; les trompettes appellent la tête
+        s.joue(violons_chant, DIM.octave(2), a=s.m(m) - 0.5, vel=84, art='staccato')
+    # m. 10–11 : trombones et cors à l'octave, les violons au-dessus ; les trompettes appellent la tête
     s.joue(cors, MOTIF, a=s.m(10) - 1, vel=108)
     s.joue(trombones, MOTIF.octave(-1), a=s.m(10) - 1, vel=106)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(10) - 1, vel=88)
     s.joue(trompettes, TETE.octave(1), a=s.m(13) - 1, vel=100)
     s.joue(trompettes, TETE.coupe(0, 2.5).octave(1), a=s.m(15, 2), vel=104)
     for m in (4, 8, 12, 14):
         piques(s, tromb_st, t, m, m, grave='D3', vel=92,
                rythme='X . . X . . X . . . X . . . . .' if m == 12 else 'X . . X . . X . . . X . X . . .')
-    tete_ostinato(s, violons, t, 12, 16, octave=5, vel=72)
+    tete_ostinato(s, violons, t, 12, 16, octave=5, vel=72, creux=chant)
     s.crescendo(violons, s.m(12), s.m(16, 4), 'mp', 'f')
     fax_chant(s, t, 9, 16, vel=74)
     cymbale_vers(s, s.m(17), 'monte_4s', vel=100)
@@ -799,8 +824,9 @@ def T(s):
     # LE TAPIS VERT : l'arrière-salle du Terminus ; le motif en canon, les trombones (sur ♭VI) puis
     # les cors une mesure plus tard (sur ♭II) : l'écho d'une table à l'autre ; la batterie, le fax
     t = temps_accords(GRILLE_T)
-    nuances(s, celles='f', basses='f', violons2='mf', altos='mf', trombones='f', cors='f', batterie='f',
-            sub='mf', violons='mf', timbales='mf')
+    # le canon ne laisse pas de place : l'ostinato un cran plus bas toute la section
+    nuances(s, celles='f', basses='f', violons2='mp', altos='mp', trombones='f', cors='f', batterie='f',
+            sub='mf', violons='mp', timbales='mf', violons_chant='mf')
     s.note(timbales, 'Eb2', 0, 1, vel=104)
     horloge(s, 1, 8, vel=80)
     casse(s, 1, 8, motifs=(CASSE_A2, CASSE_B), orchestre=True)
@@ -812,8 +838,10 @@ def T(s):
     for d, l, c in plages(t):
         s.note(sub, racine(c, 1, 'E1'), d, l, vel=62)
     s.joue(trombones, sans_anacrouse(MOTIF).octave(-1), a=0, vel=104)
+    s.joue(violons_chant, sans_anacrouse(MOTIF).octave(1), a=0, vel=84)     # deux octaves au-dessus
     s.joue(cors, MOTIF, a=s.m(3) - 1, vel=104)
     s.joue(trombones, MOTIF.octave(-1), a=s.m(5) - 1, vel=106)
+    s.joue(violons_chant, MOTIF.octave(1), a=s.m(5) - 1, vel=86)
     s.joue(cors, MOTIF, a=s.m(7) - 1, vel=106)
     fax_chant(s, t, 1, 8, vel=78)
     roulement(s, timb_roul, 'D2', s.m(8), s.m(9), 'mf', 'f', vel=94)
@@ -826,27 +854,30 @@ GRILLE_K = ['i', 'bII', 'i', 'bII', 'i', 'bII', 'V-5', 'i']
 def K(s):
     # LE TERMINUS : le palier le plus dense : la tête partout, les trompettes, ♭II sur la pédale
     t = temps_accords(GRILLE_K)
-    nuances(s, celles='f', basses='f', violons='f', violons2='f', altos='f', trompettes='f', trombones='f',
-            tromb_st='f', batterie='f', sub='mf', cors='f', timbales='f')
+    nuances(s, celles='f', basses='f', violons='mp', violons2='mf', altos='mf', trompettes='ff', trombones='f',
+            tromb_st='f', batterie='f', sub='mf', cors='ff', timbales='f', violons_chant='mf')
+    appels = [(3, 5.5), (11, 13.5), (19, 21.5), (24, 31)]     # les appels des trompettes
     s.note(cymbales, 'C4', 0, 2, vel=112)
     s.note(timbales, 'D2', 0, 1, vel=112)
     horloge(s, 1, 8, vel=82)
     casse(s, 1, 8, motifs=(CASSE_B, CASSE_B2), orchestre=True, relance=True)
     moteur(s, celles, t, 1, 8, octave=3, figs='pqpq', vel=86, pedale_h='D3')
     basse_octaves(s, [basses], t, 1, 8, vel=92, pedale_h='D2', sans_saut=('bII',))
-    tete_ostinato(s, violons, t, 1, 8, octave=5, vel=80)
-    tete_ostinato(s, violons2, t, 1, 8, octave=4, vel=80)
+    tete_ostinato(s, violons, t, 1, 8, octave=5, vel=80, creux=appels)
+    tete_ostinato(s, violons2, t, 1, 8, octave=4, vel=80, creux=appels)
     tete_ostinato(s, altos, t, 1, 8, octave=3, vel=76)
     s.note(sub, 'D2', 0, 32, vel=64)
     for m in (1, 3, 5):
         s.joue(trompettes, TETE.coupe(0, 2.5).octave(1), a=s.m(m, 4), vel=104)
     s.joue(trompettes, mel('A4:4 | Bb4:3'), a=s.m(7), vel=100)
-    s.joue(cors, mel('Bb3:4 | C4:4 | Bb3:4 | C4:4 | Bb3:4 | C4:4 | A3:4 | Bb3:3'), a=0, vel=96)
+    # les cors tiennent leurs tierces une octave plus haut (si♭4–do5 : dans la bande du téléphone)
+    s.joue(cors, mel('Bb4:4 | C5:4 | Bb4:4 | C5:4 | Bb4:4 | C5:4 | A4:4 | Bb4:3'), a=0, vel=96)
+    s.joue(violons_chant, mel('Bb4:4 | C5:4 | Bb4:4 | C5:4 | Bb4:4 | C5:4 | A4:4 | Bb4:3'), a=0, vel=82)
     for m in range(1, 9):
         s.note(timbales, 'D2', s.m(m), 1, vel=96)
         s.note(timbales, 'D2', s.m(m, 3.5), 0.5, vel=84)
     piques(s, tromb_st, t, 1, 7, grave='D3', vel=98)
-    fax_chant(s, t, 1, 8, motif='x x x x x x x x x x x x x x x x', vel=76)
+    fax_chant(s, t, 1, 8, motif='x x x x x x x x x x x x x x x x', vel=64)
     # les trois appels de L, chacun à sa vitesse : les trombones (élargi), les cors, les violons
     s.joue(trombones, ANAC.augmente(2).octave(-1), a=s.m(8, 3), vel=106)
     s.note(effets, 'G3', s.m(7), 8, vel=104, art='montee')
@@ -863,7 +894,8 @@ def L(s):
     # MINUIT MOINS DEUX : les trois vitesses du motif ensemble ; la coupure
     t = temps_accords(GRILLE_L)
     nuances(s, cors='ff', trombones='ff', violons='f', flutes='f', violons2='f', altos='f', celles='f',
-            basses='f', batterie='f', sub='mf', trompettes='f', tromb_st='f')
+            basses='f', batterie='f', sub='mf', trompettes='f', tromb_st='f', violons_chant='f')
+    chant = [(0, 8), (11, 20), (19, 28)]
     s.note(cymbales, 'C4', 0, 2, vel=120)
     s.note(timbales, 'Eb2', 0, 1, vel=118)
     horloge(s, 1, 4, vel=84)
@@ -871,8 +903,8 @@ def L(s):
     casse(s, 1, 7, motifs=(CASSE_B, CASSE_B2), orchestre=True)
     moteur(s, celles, t, 1, 7, octave=2, figs='abca', vel=88)
     basse_octaves(s, [basses], t, 1, 7, vel=94)
-    tete_ostinato(s, violons2, t, 1, 7, octave=4, vel=80)
-    tete_ostinato(s, altos, t, 1, 7, octave=3, vel=76)
+    tete_ostinato(s, violons2, t, 1, 7, octave=4, vel=80, creux=chant)
+    tete_ostinato(s, altos, t, 1, 7, octave=3, vel=76, creux=chant)
     for d, l, c in plages(t[:28]):
         s.note(sub, racine(c, 1, 'E1'), d, l, vel=66)
     # les trois vitesses : les trombones élargis (quatre mesures), les cors (deux), les violons et
@@ -884,7 +916,7 @@ def L(s):
     s.joue(trompettes, mel('Eb5:4 | Eb5:2 F5:2'), a=s.m(5), vel=104)
     for m in range(1, 7):
         d = DIM.octave(2) if m > 1 else sans_anacrouse(DIM, 0.5).octave(2)
-        s.joue(violons, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=90)
+        s.joue(violons_chant, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=90, art='staccato')
         s.joue(flutes, d, a=s.m(m) - 0.5 if m > 1 else 0, vel=84)
     tete_ostinato(s, violons, t, 7, 7, octave=5, vel=84)
     piques(s, tromb_st, t, 5, 7, grave='D3', vel=100, rythme='X . . X . . X . . . . . X . . .')

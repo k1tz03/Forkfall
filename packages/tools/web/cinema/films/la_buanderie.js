@@ -318,6 +318,7 @@
     titre: "La buanderie",
     duree: 31.6,
     musique: "livre_h6",
+    musiqueFilm: "film_la_buanderie",
     secours: "suspense",
     couleur: VIOLET,
     affiche: 12.6,

@@ -408,6 +408,7 @@
     titre: "Papier thermique",
     duree: 32.4,
     musique: "livre_h6",
+    musiqueFilm: "film_papier_thermique",
     secours: "ville_nuit",
     couleur: VIOLET,
     affiche: 24.0,
