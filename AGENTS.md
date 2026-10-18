@@ -30,7 +30,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
 | Moteur | Dart pur, déterministe, 250 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
-| Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
+| Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, la **charte d'écriture** (`docs/bible/charte_histoire.md`), la **bible des voix** (`docs/bible/voix.md` : qui parle comment) et l'**audit des textes** (`docs/bible/audit_textes.md`, octobre 2026) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
 | Musique | la bande du studio : vingt thèmes joués par de vrais instruments et vingt musiques de films, rendus hors ligne (`packages/tools/studio`), en MP3 dans le jeu ; la synthèse en secours — voir « La bande du studio » |
 | Durée | une partie ≈ **2 h** par livre pour un lecteur moyen (1 h 35 à 3 h selon le lecteur et le livre ; 4 h et plus quand une carrière des livres 3 ou 4 déborde), dont près des trois quarts en ville — `docs/balance/duree_partie.md`, `packages/tools/bin/duree.dart`, `packages/tools/web/joueur_presse.js` |
@@ -632,7 +632,11 @@ peut être tirée, avec quel poids.
 **On écrit des scènes, pas des répliques à tic** : la charte d'écriture
 (`docs/bible/charte_histoire.md`) passe avant le § 3.1 du README de la bible. Un geste,
 un objet, une question qui engage ; une graine plantée qui revient trois à dix cartes plus
-tard ; jamais une formule qui revient d'une carte à l'autre. Les événements sombres sont
+tard ; jamais une formule qui revient d'une carte à l'autre. Chacun parle selon la bible des
+voix (`docs/bible/voix.md`) : à l'oral, le « ne » tombe chez la plupart, les écrits restent
+écrits ; les gestes de remplissage que l'audit des textes a retirés du jeu (« sans un mot »,
+« hoche la tête », « comme si »… : `docs/bible/audit_textes.md`) sont une erreur du lint,
+partout dans le bundle. Les événements sombres sont
 des arcs `kind: evenement` avec un `lieu:` et le tag `sombre` (catalogue : charte § 5) ;
 le metteur en scène en arme deux par saison au plus, jamais à moins de cinq cartes
 d'écart.
@@ -694,6 +698,11 @@ des rendus de la ville, avec une couleur par histoire (voir « L'accueil » plus
 sont les prochains à rejoindre la ville.
 
 ## Ce qui reste connu et ouvert
+
+- Les textes : l'audit d'octobre 2026 a récrit ce qu'on voit le plus (les gens de la ville, les
+  introductions et les scènes jouées, la première heure de chaque livre, les fins, les
+  conversations) ; les cartes au-delà de la première heure gardent leur « ne » écrit, et les
+  incohérences d'histoire relevées attendent l'auteur (`docs/bible/audit_textes.md` § 6).
 
 - Les scènes jouées : le vestiaire tient lieu de stade (pas de pièce pour les tribunes ni le local
   du kop) ; une scène `drapeau` se joue juste après sa carte, elle ne saute pas dans le temps ; une

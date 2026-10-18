@@ -100,6 +100,14 @@ const List<String> kBlacklist = [
   'ronaldo', 'zidane', 'guardiola', 'mourinho', 'raiola', 'infantino', 'coupe du monde',
 ];
 
+/// Les gestes de remplissage que l'audit des textes a retirés du jeu (octobre 2026,
+/// docs/bible/audit_textes.md) : un geste propre au personnage, ou rien.
+final RegExp kGestesDeRemplissage = RegExp(
+    r"sans un mot|hochen?t? la tête|sans lever les yeux|à voix haute|\bne (dit|répond) rien\b|"
+    r"pour la première fois|sans rien dire|(^|[.!?»] )(Il|Elle) attend\.|tout le monde a compris|"
+    r"\bcomme si\b|comme s'ils?\b",
+    caseSensitive: false);
+
 /// Les mots d'une manchette qui affirment une descente, une montée ou un
 /// titre : la manchette doit lire `bilan.outcome` (l'issue que le Verdict
 /// appliquera), jamais le rang seul (18e de Division 2 = lanterne, pas
@@ -991,6 +999,25 @@ void main() {
       errors.add('fin « $eid » : « cause: $cause » demande un `end: $eid` (carte, set-piece ou étape) ; seule une jauge la pose');
     }
   }
+
+  // Les gestes de remplissage (docs/bible/audit_textes.md) : l'audit des textes les a
+  // retirés de tout le bundle, cartes, ville, fins, Unes ; ils ne reviennent pas.
+  void gestes(Object? x, String where) {
+    if (x is Map) {
+      final id = x['id'];
+      for (final e in x.entries) {
+        gestes(e.value, id == null ? '$where.${e.key}' : '$id/${e.key}');
+      }
+    } else if (x is List) {
+      for (final v in x) {
+        gestes(v, where);
+      }
+    } else if (x is String) {
+      final m = kGestesDeRemplissage.firstMatch(x);
+      if (m != null) errors.add('$where: geste de remplissage « ${m[0]} » (docs/bible/audit_textes.md)');
+    }
+  }
+  gestes(bundle, 'bundle');
 
   stdout.writeln('Lint : ${cards.length} cartes, ${arcs.length} arcs, ${errors.length} erreurs, ${warnings.length} avertissements.');
   for (final w in warnings.take(60)) {
