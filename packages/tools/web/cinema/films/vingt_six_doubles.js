@@ -750,6 +750,7 @@
     titre: "Vingt-six doubles",
     duree: 37.0,
     musique: "livre_h7",
+    musiqueFilm: "film_vingt_six_doubles",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     secours: "ville_nuit",
     couleur: ROSE,
     affiche: 26.3,
