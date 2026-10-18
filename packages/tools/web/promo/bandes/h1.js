@@ -71,7 +71,9 @@ module.exports = {
 
   montages: {
     long: {
-      musique: { theme: 'livre_h1', morceaux: [{ depuis: null, de: 0, a: 12 }, { depuis: 'creux', de: 0, a: 8 }, { depuis: 'B3', de: 0, a: 10 }], fondu: { sortie: 2.6 } },
+      musique: { theme: 'livre_h1', morceaux: [{ depuis: null, de: 0, a: 12 }, { depuis: 'creux', de: 0, a: 8 }, { depuis: 'B3', de: 0, a: 10 }], fondu: { sortie: 2.6 },
+        // le master du studio : le chant, le creux du masque (H), le sommet « trois mille visages » (G)
+        studio: { morceaux: [{ depuis: null, de: 0, a: 12 }, { depuis: 'H', de: 0, a: 8 }, { depuis: 'G', de: 0, a: 10 }] } },
       plans: [
         // l'intro : le cadre au mur, la photo, le visage gratté (le titre du film vient après : on coupe
         // avant) — puis la ville
@@ -106,7 +108,8 @@ module.exports = {
       ],
     },
     court: {
-      musique: { theme: 'livre_h1', morceaux: [{ depuis: null, de: 0, a: 4 }, { depuis: 'B3', de: 0, a: 10 }], fondu: { sortie: 2.0 } },
+      musique: { theme: 'livre_h1', morceaux: [{ depuis: null, de: 0, a: 4 }, { depuis: 'B3', de: 0, a: 10 }], fondu: { sortie: 2.0 },
+        studio: { morceaux: [{ depuis: null, de: 0, a: 4 }, { depuis: 'G', de: 0, a: 10 }] } },
       plans: [
         { duree: '2m', source: { moment: 'h1_intro', de: 0.4 }, legende: { titre: '1990. Tu reviens à Aubérive', sous: 'sous le nom de ta mère' } },
         { duree: '2m', source: { moment: 'h1_photo', de: 0.25 }, legende: { titre: 'La photo de 1974', sous: 'un visage gratté au couteau', position: 'bas' } },

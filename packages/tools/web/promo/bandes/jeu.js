@@ -96,7 +96,9 @@ module.exports = {
   // ─── les montages ─────────────────────────────────────────────────────────────
   montages: {
     long: {
-      musique: { theme: 'accueil', morceaux: [{ depuis: null, de: 0, a: 29 }], fondu: { sortie: 2.6 } },
+      musique: { theme: 'accueil', morceaux: [{ depuis: null, de: 0, a: 29 }], fondu: { sortie: 2.6 },
+        // le master du studio : l'introduction et la tribune (A), la montée (B), le sommet (C2)
+        studio: { morceaux: [{ depuis: null, de: 0, a: 12 }, { depuis: 'B', de: 0, a: 8 }, { depuis: 'C2', de: 0, a: 9 }] } },
       plans: [
         // l'amorce : la mèche, la nappe, la boîte à musique
         { duree: '2m', source: { moment: 'nuit_ville', de: 0.2 }, cadre: VILLE, entree: 'noir', transition: 0.3,
@@ -136,7 +138,8 @@ module.exports = {
     },
     // l'aperçu de l'App Store : 886 × 1920, 29 s, rien que le jeu (le film en est : il se joue dans le jeu)
     court: {
-      musique: { theme: 'accueil', morceaux: [{ depuis: null, de: 16, a: 30 }], fondu: { entree: 0.4, sortie: 2.0 } },
+      musique: { theme: 'accueil', morceaux: [{ depuis: null, de: 16, a: 30 }], fondu: { entree: 0.4, sortie: 2.0 },
+        studio: { morceaux: [{ depuis: 'B', de: 0, a: 6 }, { depuis: 'C2', de: 0, a: 8 }] } },
       plans: [
         { duree: '2m', source: { moment: 'carte_photo', de: 0.25 }, legende: { titre: 'Une carrière de football', sous: 'racontée comme un roman noir', position: 'bas' } },   // en bas : le haut de la carte se lit
         { duree: '2m', source: { moment: 'nuit_ville', de: 0.2 }, legende: { titre: 'Aubérive se souvient', sous: 'de chaque geste, de chaque dette' } },
