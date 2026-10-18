@@ -434,6 +434,7 @@
     titre: "Un sapin dans la Rive",
     duree: 33.5,
     musique: "livre_h2",
+    musiqueFilm: "film_sapin_dans_la_rive",
     secours: "sombre",
     couleur: BLEU,
     affiche: 31.4,
