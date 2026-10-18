@@ -33,33 +33,33 @@ gens:
     activites: [banquier, placement, banquier_president, banque_decouvert]
     climat:
       bas:
-        - {si: "role == joueur", texte: "« Votre compte passe dans le rouge le 28, et le club vous paie le 30. Deux jours par mois, vous vivez à crédit chez moi. Je les compte. »"}
+        - {si: "role == joueur", texte: "« Votre compte passe au rouge le 28, et le club ne vous paie que le 30. Deux jours par mois, cher ami, vous vivez à crédit chez nous. La banque les a tous notés. »"}
         - {si: "role == president", texte: "« La trésorerie tient jusqu'au virement de la Ligue, pas un jour de plus. Après, nous parlerons de ce que vous avez mis en caution. Je l'ai sous les yeux. »"}
         - {si: "role == selectionneur", texte: "« Les notes de frais de la Fédération passent ici en dernier. Ce mois-ci, elles ne passent plus. Vos déplacements, vous les avancerez de votre poche. »"}
         - "« Le compte du club a passé le 28 dans le rouge. Le président m'a appelé deux fois avant neuf heures. La deuxième fois, je n'ai pas décroché. »"
       moyen:
-        - {si: "role == joueur", texte: "« Votre compte respire. Il ne chante pas : il respire. Ne lui demandez rien avant le 5. »"}
-        - {si: "role == president", texte: "« La trésorerie passera l'hiver si la Coupe vous laisse un huitième de finale. Je ne parie pas. J'ai fait le calcul, c'est différent. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération règle ses notes à soixante jours. Ni plus vite ni plus lentement. Chez nous, c'est ce qu'on appelle la santé. »"}
+        - {si: "role == joueur", texte: "« Votre compte respire, cher ami. Ne lui demandez pas de chanter, et surtout rien avant le 5. »"}
+        - {si: "role == president", texte: "« La trésorerie passera l'hiver, à condition que la Coupe vous mène jusqu'en huitième de finale. Le calcul est sur mon bureau, si vous souhaitez le voir. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération règle ses notes à soixante jours, au jour près, depuis des années. La banque n'en demande pas davantage. »"}
         - "« Le virement de la Ligue tombe le 29, les salaires partent le 30. Une nuit entre les deux. Ce mois-ci, la nuit suffit. »"
       haut:
-        - {si: "role == joueur", texte: "« Vous avez de l'argent qui dort. L'argent qui dort finit par ronfler, et le fisc a l'oreille fine. Passez me voir avant lui. »"}
+        - {si: "role == joueur", texte: "« Vous avez de l'argent qui dort sur votre compte, cher ami. Le fisc a l'oreille fine. Passez donc me voir avant lui. »"}
         - {si: "role == president", texte: "« Trois mois de trésorerie positive. Je n'avais pas vu ça depuis 1974. J'ai rangé le dossier du club dans le tiroir du milieu, plus celui du bas. »"}
-        - {si: "role == selectionneur", texte: "« Le sponsor de la Fédération a payé d'avance, en une fois. Quand on paie d'avance, c'est qu'on achète quelque chose pour plus tard. »"}
+        - {si: "role == selectionneur", texte: "« Le sponsor de la Fédération a réglé l'année d'avance, en un seul virement. Qu'achète-t-il pour plus tard ? La banque ne pose pas la question. »"}
         - "« Le compte du club est créditeur. Le président est venu déposer lui-même, un mardi, en costume, pour que le caissier le voie. »"
     repliques:
       - {lien: 0, texte: "Il range son stylo plume dans un étui qui claque. « Nous ne nous connaissons pas. La banque vous connaît, elle, à partir d'un certain montant. »"}
       - {lien: 1, texte: "« Pas ce fauteuil-là. Celui-là, c'est pour les gens qui viennent demander. Vous, vous venez parler : prenez la chaise. »"}
-      - {lien: 1, si: "francs < 0", texte: "Il regarde ta chemise de compte sans l'ouvrir. « Le rouge se voit à travers le carton, vous savez. Il se sent au poids. »"}
+      - {lien: 1, si: "francs < 0", texte: "Il soupèse ta chemise de compte sans l'ouvrir. « Le rouge se voit à travers le carton, cher ami. Inutile d'ouvrir. »"}
       - {lien: 2, texte: "Il ouvre un agenda de cuir où chaque page ne porte qu'une ligne, au crayon. « Les montants, je les retiens. Ce que j'écris, ce sont les jours où quelqu'un m'a menti. »"}
-      - {lien: 2, si: "flag(histoire_h5)", texte: "« Vous avez le droit de me détester. La banque ne s'en formalise pas. Moi, un peu ; alors je souris pour deux, et je prends votre manteau. »"}
-      - {lien: 3, texte: "« Si un jour on vous tend une caution, n'importe laquelle, appelez-moi avant de déboucher votre stylo. Avant. Après, je ne suis plus votre banquier : je suis le leur. »"}
+      - {lien: 2, si: "flag(histoire_h5)", texte: "Il prend lui-même ton manteau et le suspend. « Détestez-moi si vous voulez. La banque ne s'en formalise pas. Moi, un peu. »"}
+      - {lien: 3, texte: "« On vous tendra une caution, un jour. Quelle qu'elle soit, appelez-moi avant de déboucher votre stylo. Après, je ne suis plus votre banquier : je suis le leur. »"}
       - {lien: -1, texte: "La secrétaire dit qu'il est en rendez-vous. Par la porte vitrée, tu le vois seul à son bureau, qui tourne sa cuillère dans une tasse vide."}
       - {lien: -2, texte: "« Votre dossier est chez mon adjoint. » Il n'a pas d'adjoint. Il te regarde le chercher des yeux dans le couloir."}
     tuyaux:
       - id: dorian_1977
         si: "flag(histoire_h1) && flag(h1_vitrine) && !flag(h1_photo_1977) && !flag(h1_pacte_coffre) && !flag(h1_coffre_defi)"
-        texte: "« 1977 : Vaubourg retire vingt-deux mille francs en liquide. Le même mois, la papetière en dépose vingt-deux mille, en billets neufs. Je ne rapproche rien. J'additionne. »"
+        texte: "« En 1977, Vaubourg retire vingt-deux mille francs en liquide. Le même mois, la papetière en dépose vingt-deux mille, en billets neufs. Je vous donne les dates. Le reste ne regarde pas la banque. »"
         effets: {set: [h1_photo_1977]}
       - id: dorian_coupe
         si: "flag(histoire_h3)"
@@ -94,14 +94,14 @@ gens:
     activites: [banquier_ds, banque_pret, banque_conseiller]
     climat:
       bas:
-        - {si: "role == joueur", texte: "« Votre compte a deux prélèvements de plus que de rentrées. Le logiciel l'a mis « à surveiller ». Je le surveillais déjà ; ça fait doublon. »"}
+        - {si: "role == joueur", texte: "« Votre compte a deux prélèvements de plus que de rentrées. Le logiciel l'a classé “à surveiller”. Je le surveillais avant lui. »"}
         - {si: "role == president", texte: "« Trésorerie du club : jusqu'en février. Le siège m'a demandé la liste de vos garanties. Je l'ai faite au crayon, pour pouvoir gommer. »"}
-        - {si: "role == selectionneur", texte: "« La carte de la Fédération a été refusée deux fois au restaurant, la semaine dernière. Un plafond, rien de grave. Les plafonds, on les baisse avant de fermer. »"}
+        - {si: "role == selectionneur", texte: "« La carte de la Fédération a été refusée deux fois au restaurant, la semaine dernière. Un plafond, rien de grave. Mais c'est la Fédération qui l'a baissé, pas nous. »"}
         - "« Les salaires du club partent le 30, les droits télé arrivent le 5. Entre les deux, le compte dort dans le rouge, et moi je dors mal. »"
       moyen:
-        - {si: "role == joueur", texte: "« Votre compte est propre. Pas riche : propre. Dans votre métier, c'est déjà une réputation. »"}
+        - {si: "role == joueur", texte: "« Votre compte n'est pas riche, mais il est propre. Pas une ligne que je ne sache expliquer. »"}
         - {si: "role == president", texte: "« Six mois de trésorerie devant vous. Le siège ne m'appelle plus le lundi. Il m'appelle le jeudi, comme pour tout le monde. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération paie ses hôtels à trente jours et ses billets à la commande. Elle a les moyens de ses voyages. Pas ceux de ses rêves. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération paie ses hôtels à trente jours et ses billets à la commande. Aucun découvert depuis que je tiens le dossier. »"}
         - "« Le club rembourse sa ligne de crédit le 5, sans retard. Personne ne m'en félicite : c'est à ça qu'on reconnaît que ça va. »"
       haut:
         - {si: "role == joueur", texte: "« Vous avez un excédent. Trois personnes m'ont déjà demandé si vous cherchiez à placer. Je leur ai répondu que vous lisiez vos relevés. »"}
@@ -109,12 +109,12 @@ gens:
         - {si: "role == selectionneur", texte: "« Le sponsor de la Fédération a viré l'année entière en janvier. Les moyens sont là. Reste à savoir ce qu'il a acheté avec. »"}
         - "« Le compte du club est créditeur, et le président m'a demandé un relevé sur papier. Il veut l'encadrer, je crois. »"
     repliques:
-      - {lien: 0, texte: "Il se lève à moitié, se rassoit, tourne son écran vers toi. « Loïc Vernhes, conseiller. Vous avez des questions ; moi, j'ai vos relevés. On commence par lesquels ? »"}
-      - {lien: 1, texte: "« Je ne regarde jamais les montants en premier. Les libellés d'abord. Un montant ment, un libellé se trahit. »"}
+      - {lien: 0, texte: "Il se lève à moitié, se rassoit, tourne son écran vers toi. « Loïc Vernhes, conseiller. J'ai sorti vos relevés des trois derniers mois. On commence par lequel ? »"}
+      - {lien: 1, texte: "Il fait défiler tes relevés du stylo, sans regarder la colonne de droite. « Les libellés d'abord. Les montants, après. »"}
       - {lien: 2, texte: "Il imprime une page, la plie en trois et la glisse dans une enveloppe à fenêtre. « Pour vous. Sur papier, ça ne se met pas à jour tout seul. »"}
       - {lien: 2, si: "flag(histoire_h10)", texte: "« Le 2 septembre ? J'étais de permanence. Il y a des lignes qu'on tape vite, pour ne pas les lire. Celle-là, je l'ai lue. »"}
       - {lien: 3, texte: "« Si une ligne vous gêne un jour, venez avant le 2 du mois. Après le 2, elle est archivée, et même moi je ne la retrouve qu'avec un formulaire. »"}
-      - {lien: -1, texte: "Il te reçoit avec le directeur d'agence assis derrière lui, qui ne dit rien et prend des notes."}
+      - {lien: -1, texte: "Il te reçoit avec le directeur d'agence assis derrière lui, qui prend des notes dans un carnet à spirale."}
     tuyaux:
       - id: vernhes_jf
         si: "flag(histoire_h6) && saison >= 2"
@@ -122,14 +122,14 @@ gens:
         effets: {var: {h6_indices: "+1"}}
       - id: vernhes_four
         si: "flag(histoire_h9)"
-        texte: "« Le prêt du four Marçais est toujours au nom de Kévin. Marie-Jo n'a pas voulu qu'on change le nom. Chaque 10 du mois, la banque prélève un garçon de vingt-cinq ans, et je signe. »"
+        texte: "« Le prêt du four Marçais est toujours au nom de Kévin. Marie-Jo n'a pas voulu qu'on change le nom. Le 10 de chaque mois, je valide un prélèvement sur le compte d'un garçon de vingt-cinq ans. »"
       - id: vernhes_tazi
         si: "flag(histoire_h10)"
         texte: "« Le 2 septembre, à la même minute que votre ligne, Rive Capital a soldé un autre compte : Tazi, maçonnerie. Huit ans de traites d'une bétonnière. Deux lignes, un seul ordre. »"
     service:
       lien: 3
       label: "Un livret oublié"
-      texte: "Vernhes fait pivoter l'écran : un livret d'épargne à ton nom, ouvert il y a longtemps par quelqu'un de ta famille, jamais réclamé. « Les intérêts ont travaillé sans vous. Je clôture ? »"
+      texte: "Vernhes fait pivoter l'écran vers toi. Un livret d'épargne à ton nom, ouvert il y a longtemps par quelqu'un de ta famille, jamais réclamé. « Les intérêts ont couru sans vous. Je clôture ? »"
       effets: {var: {ville_francs: "+400"}}
     on_relation:
       3: vi.vernhes.procuration
@@ -147,24 +147,24 @@ gens:
     activites: [infirmerie, cabinet_soins, cabinet_infiltration, cabinet_dossier, cabinet_examen, cabinet_visite]
     repliques:
       - {lien: 0, texte: "Il lève les yeux de sa fiche sans lever la tête. « Asseyez-vous. Ou restez debout, si vous voulez qu'on fasse vite. »"}
-      - {lien: 1, texte: "« Le genou, l'épaule, le cœur : ça se soigne. Le sommeil, non. Je ne soigne pas ce que je ne peux pas radiographier. »"}
+      - {lien: 1, texte: "« Un genou, une épaule, je sais les radiographier. Le sommeil, non. Pour le sommeil, je n'ai que des conseils, et personne ne les suit. »"}
       - {lien: 2, texte: "Il sort ta fiche de l'armoire, la lit, la remet à sa place. « Rien de neuf. C'est la meilleure phrase que j'écris de la semaine. »"}
-      - {lien: 2, si: "role == joueur", texte: "« Votre cheville a quatre ans de plus que vous. Ménagez-la le lundi : c'est le jour où elle se souvient du samedi. »"}
+      - {lien: 2, si: "role == joueur", texte: "« Votre cheville a quatre ans de plus que vous. Ménagez-la le lundi : c'est le lundi qu'elle gonfle, deux jours après le match. »"}
       - {lien: 2, si: "role == entraineur", texte: "« Trois de vos joueurs dorment mal. Je ne donne pas les noms. Vous les voyez bâiller pendant la causerie, comme moi. »"}
-      - {lien: 3, texte: "« Les visites du jeudi soir, je ne les note nulle part. Si un jour vous avez besoin d'un jeudi, vous avez un jeudi. »"}
+      - {lien: 3, texte: "« Le jeudi soir, je ne note pas mes visites. Il vous faut un jeudi ? Venez après sept heures, par la cour. »"}
       - {lien: -1, texte: "Il te tend un numéro d'attente, le 14, alors que la salle est vide."}
       - {lien: -2, texte: "« Le docteur ne reçoit que sur rendez-vous », dit une plaque neuve sur la porte. Il l'a vissée lui-même, de travers."}
     tuyaux:
       - id: sabatier_wagon
         si: "flag(histoire_h2) && flag(h2_wagon_vu) && !flag(h2_doc_wagon) && !flag(h2_feu)"
-        texte: "« Votre homme du wagon tousse jusqu'au quai, je l'entends depuis la gare. Jeudi, je passerai par les voies avec ma sacoche. On ne regarde pas un médecin qui marche. »"
+        texte: "« Votre homme du wagon tousse jusqu'au quai, je l'entends depuis la gare. Jeudi, je passerai par les voies avec ma sacoche, comme pour une visite à domicile. »"
         effets: {set: [h2_doc_wagon]}
       - id: sabatier_radios
         si: "flag(histoire_h4)"
-        texte: "« Sur chacune de vos radios du genou, depuis 1984, j'écris la même date en marge, au crayon gras. Vous ne l'avez jamais lue. Le jour où vous la lirez, nous en reparlerons. »"
+        texte: "« Sur chacune de vos radios du genou, depuis 1984, j'écris la même date en marge, au crayon gras. Vous ne l'avez jamais lue. Lisez-la, et revenez me voir. »"
       - id: sabatier_cachets
         si: "role == entraineur"
-        texte: "« Votre milieu défensif prend pour dormir des cachets que je ne lui ai pas prescrits. Je ne vous ai rien dit. Vous l'avez vu bâiller, c'est tout. »"
+        texte: "« Votre milieu défensif prend pour dormir des cachets que je ne lui ai pas prescrits. Je ne vous ai rien dit. Vous l'avez vu bâiller pendant la causerie. »"
         effets: {jauges: {vestiaire: 1}}
     service:
       lien: 3
@@ -183,10 +183,10 @@ gens:
     activites: [cabinet_selection, cabinet_recrue, cabinet_arrets, cabinet_pouls]
     repliques:
       - {lien: 0, texte: "Il se lève, ouvre la fenêtre, se rassoit. « Pardon. Je n'ai pas dormi ici, mais presque. Qu'est-ce qui ne va pas, chez vous ? »"}
-      - {lien: 1, texte: "« Votre montre en sait plus que moi sur vos nuits. Elle ne ment pas. Elle vend, c'est tout. »"}
+      - {lien: 1, texte: "« Votre montre en sait plus que moi sur vos nuits. Et elle ne se trompe pas. Vous dormez comment, d'après vous ? »"}
       - {lien: 2, texte: "Il retourne une feuille de résultats face contre le bureau. « Les chiffres sont bons. Je les retourne quand même : on ne sait jamais qui entre. »"}
       - {lien: 2, si: "flag(histoire_h8)", texte: "« Mes patients dorment trois heures et me réclament la grande boîte. Je la leur donne. Puis je note l'heure à laquelle ils me l'ont demandée. »"}
-      - {lien: 3, texte: "« Si un jour vous voulez qu'une fiche dise autre chose, venez le soir. Le soir, j'écris plus petit. »"}
+      - {lien: 3, texte: "« Vous voulez qu'une fiche dise autre chose ? Venez le soir. Le soir, j'écris plus petit. »"}
       - {lien: -1, texte: "Il te reçoit la porte ouverte, et parle assez fort pour la salle d'attente."}
     tuyaux:
       - id: ober_kerdal
@@ -212,19 +212,19 @@ gens:
     froid: ["te masse sans parler", "te renvoie vers le médecin", "a rayé ton nom de son cahier"]
     activites: [cabinet_kine, cabinet_dos]
     repliques:
-      - {lien: 0, texte: "« Sur le ventre. Ne me racontez rien : votre dos va me le dire, et il ment moins bien que vous. »"}
-      - {lien: 1, texte: "Elle passe ses mains sous l'eau chaude du lavabo avant de commencer. « Les mains froides, c'est pour les gens qu'on n'aime pas. Vous, je ne sais pas encore. »"}
+      - {lien: 0, texte: "« Sur le ventre. Me racontez rien, votre dos va me le dire. Il ment moins bien que vous. »"}
+      - {lien: 1, texte: "Elle passe ses mains sous l'eau chaude du lavabo avant de commencer. « Les mains froides, c'est pour les gens qu'on aime pas. Vous, je sais pas encore. »"}
       - {lien: 2, texte: "« Vous dormez sur le côté gauche, vous portez votre sac à droite, et vous vous inquiétez le mercredi. Ça se sent dans les trapèzes. »"}
-      - {lien: 2, si: "annee >= 2030", texte: "« Je masse des gens dont j'ai massé les parents. Les dos se transmettent, vous savez. Les mauvaises nouvelles aussi. »"}
-      - {lien: 3, texte: "« Si un soir ça ne va pas, la clé est sous le pot de géranium. Pas celle du cabinet : celle de la salle d'attente. Il y a un canapé. »"}
+      - {lien: 2, si: "annee >= 2030", texte: "« Je masse les enfants de gens que j'ai massés. Même dos, même vertèbre qui coince. Respire. »"}
+      - {lien: 3, texte: "« Si un soir ça va pas, la clé est sous le pot de géranium. Pas celle du cabinet, celle de la salle d'attente. Y a un canapé. »"}
       - {lien: -1, texte: "Elle te masse en silence, plus fort que nécessaire, les yeux sur l'horloge au-dessus de la porte."}
     tuyaux:
       - id: rouvier_lettre
         si: "flag(histoire_h10) && annee <= 2038"
-        texte: "« Gégé ne verra pas le printemps, et il le sait. Il m'a confié une lettre cachetée à la cire, et le jour où vous devrez l'ouvrir. Je ne vous dis pas le jour. »"
+        texte: "« Gégé verra pas le printemps, il le sait. Il m'a confié une lettre cachetée à la cire, avec le jour où vous devrez l'ouvrir. Le jour, je vous le dis pas. »"
       - id: rouvier_capitaine
         si: "role == entraineur"
-        texte: "« Votre capitaine vient me voir le mardi, en cachette du staff. Ce n'est pas sa cuisse qui le gêne : c'est le banc. Il y était samedi, il y pense encore. »"
+        texte: "« Votre capitaine vient me voir le mardi, en cachette du staff. C'est pas sa cuisse qui le gêne, c'est le banc. Il y était samedi. »"
         effets: {jauges: {vestiaire: 1}}
     service:
       lien: 3
@@ -249,12 +249,12 @@ gens:
     activites: [pharmacie_conseil, pharmacie_ordonnance, pharmacie_balance, pharmacie_vitamines, pharmacie_trousse, pharmacie_tisane]
     repliques:
       - {lien: 0, texte: "Il remonte sa montre, la porte à son oreille, puis te regarde. « C'est pour une douleur neuve, ou pour une vieille qu'on a laissée traîner ? »"}
-      - {lien: 1, texte: "« Je connais tous les joueurs de la ville. Pas par leurs buts : par leurs ordonnances. Les buts, c'est votre affaire. »"}
+      - {lien: 1, texte: "« Je connais tous les joueurs de la ville par leurs ordonnances. Leurs buts, je les lis dans L'Écho, comme tout le monde. »"}
       - {lien: 1, si: "eveil >= 5", texte: "« Vous avez des yeux de quatre heures du matin. Je ne vous vends rien : allez dormir, et revenez me dire que je me suis trompé. »"}
-      - {lien: 2, texte: "Il pose une boîte sur le comptoir, en reprend la moitié. « Quatre jours, pas huit. Au cinquième, ce n'est plus vous qui prenez le cachet : c'est lui qui vous prend. »"}
+      - {lien: 2, texte: "Il pose une boîte sur le comptoir et en retire la moitié des plaquettes. « Quatre jours, pas huit. Au cinquième, vous ne dormirez plus sans. »"}
       - {lien: 2, si: "jour == jeu", texte: "Il ferme à dix-huit heures pile, le jeudi, et roule sa blouse dans un sac de sport. « Le jeudi, j'ai mon cercle. Des cartes, entre gens de bien. »"}
       - {lien: 3, texte: "« Ce que vous achetez chez moi ne sort pas d'ici. Ma femme non plus ne le sait pas, et elle sait tout. »"}
-      - {lien: -1, texte: "Il lit ton ordonnance à voix haute, lentement, pour la cliente qui attend derrière toi."}
+      - {lien: -1, texte: "Il lit ton ordonnance en articulant chaque ligne, assez fort pour la cliente qui attend derrière toi."}
       - {lien: -2, texte: "« Rupture de stock », dit-il, sans regarder le rayon où la boîte est rangée, bien en vue."}
     tuyaux:
       - id: cassagne_cardiologue
@@ -293,21 +293,21 @@ gens:
     activites: [pharmacie_sommeil, pharmacie_croix]
     repliques:
       - {lien: 0, texte: "Il scanne la boîte deux fois, la première pour rien. « Le système plante quand il pleut. Mon père disait la même chose de ses genoux. »"}
-      - {lien: 1, texte: "« Mon père connaissait les gens par leurs ordonnances. Moi, je les connais par leurs applications. C'est moins poli, et plus exact. »"}
-      - {lien: 2, texte: "Il remonte la manche de sa blouse : au poignet, une vieille montre arrêtée. « Celle de mon père. Je ne la remonte pas. Elle donne l'heure d'avant, ça me suffit. »"}
-      - {lien: 3, texte: "« Si vous avez besoin de quelque chose qu'il ne faut pas noter, passez à l'heure du déjeuner. Le logiciel déjeune aussi. »"}
+      - {lien: 1, texte: "« Aujourd'hui, j'ai vos applications sur mon écran avant d'avoir votre ordonnance. C'est pas très poli. Mais c'est exact. »"}
+      - {lien: 2, texte: "Il remonte la manche de sa blouse sur une vieille montre arrêtée. « Celle de mon père. Je la remonte pas. Elle donne l'heure d'avant, ça me va. »"}
+      - {lien: 3, texte: "« Si vous avez besoin d'un truc qu'il faut pas noter, passez entre midi et deux. Le logiciel aussi, il déjeune. »"}
       - {lien: -1, texte: "« Votre ordonnance, s'il vous plaît. » Il la lit deux fois, puis la photographie avec son téléphone."}
     tuyaux:
       - id: cassagne_fils_boites
         si: "flag(histoire_h8)"
-        texte: "« Le docteur Ober commande trente boîtes de somnifères chaque premier lundi. Pas pour lui : pour le club. La facture part chez Almadis. Je le sais, c'est moi qui l'imprime. »"
+        texte: "« Le docteur Ober commande trente boîtes de somnifères chaque premier lundi. C'est pas pour lui, c'est pour le club. La facture part chez Almadis. C'est moi qui l'imprime. »"
       - id: cassagne_fils_gege
         si: "flag(histoire_h10) && annee <= 2038"
-        texte: "« Gégé vient chercher ses boîtes chaque mois et les laisse sur le comptoir, après avoir payé. Il dit qu'il veut que le compte soit juste, pas qu'il dure. »"
+        texte: "« Gégé vient tous les mois. Il paie ses boîtes, et il les laisse sur le comptoir. Il dit qu'il veut être en règle, pas durer. »"
     service:
       lien: 3
       label: "Une vraie nuit de sommeil"
-      texte: "Thibault te tend une tisane en sachet et garde ta montre dans son tiroir jusqu'à demain. « Ce soir, personne ne saura que vous avez dormi. Même pas elle. »"
+      texte: "Thibault te tend une tisane en sachet et garde ta montre dans son tiroir jusqu'à demain. « Ce soir, personne saura que vous avez dormi. Même pas elle. »"
       effets: {var: {h8_nuits: "-1"}, jauges: {vestiaire: 1}}
     on_relation:
       3: vi.cassagne_fils.garde
@@ -324,28 +324,28 @@ gens:
     activites: [hotel_registre, hotel_cles, hotel_journal, hotel_messages, hotel_cabine_livres, hotel_cognac]
     climat:
       bas:
-        - {si: "role == selectionneur", texte: "« Les gens de la Fédération ont pris leurs chambres au deuxième, côté cour. Côté cour, c'est quand on ne veut pas être vu en train de partir. »"}
+        - {si: "role == selectionneur", texte: "« Les gens de la Fédération ont pris leurs chambres au deuxième, côté cour. Côté cour, on peut partir à l'aube sans traverser le hall. »"}
         - {si: "role == president", texte: "« Vos actionnaires ont dîné au petit salon sans vous. Ils ont laissé le pourboire des gens qui ne reviendront pas. »"}
         - {si: "role == joueur", texte: "« Le club a réservé trois chambres pour des joueurs à l'essai. À votre poste, si j'ai bien lu les fiches. »"}
         - "« Le président a dîné ici avec un homme que je ne connais pas. Ils ont parlé de vous au dessert. On ne parle de quelqu'un au dessert que pour le remplacer. »"
       moyen:
-        - {si: "role == selectionneur", texte: "« La Fédération réserve à la semaine, pas au mois. Ni confiance ni défiance : de la comptabilité. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération réserve à la semaine, pas au mois. Ses comptables le veulent ainsi, je crois. »"}
         - {si: "role == president", texte: "« Vos actionnaires ont pris le petit déjeuner ensemble, et la même confiture. Chez eux, c'est bon signe. »"}
-        - {si: "role == joueur", texte: "« Le club loge ses recrues ici, et vous en ville. Personne ne parle de vous au bar. C'est ce qu'on appelle la paix. »"}
+        - {si: "role == joueur", texte: "« Le club loge ses recrues ici, et vous en ville. Au bar, votre nom ne revient pas. Je tends l'oreille, pourtant. »"}
         - "« Le président a pris sa table habituelle, dos au mur, et le plat du jour. Un homme inquiet demande la carte. »"
       haut:
         - {si: "role == selectionneur", texte: "« Le président de la Fédération a demandé la suite au balcon sur la Rive. Il compte être photographié avec vous. »"}
-        - {si: "role == president", texte: "« Vos actionnaires ont réservé le grand salon pour juin. Ils veulent une fête. On ne fête pas un président qu'on s'apprête à remercier. »"}
+        - {si: "role == president", texte: "« Vos actionnaires ont réservé le grand salon en juin, pour une fête. Ils m'ont demandé quel était votre vin. »"}
         - {si: "role == joueur", texte: "« Le club a réservé le salon du haut pour une signature. Le champagne de la maison, pas celui des mariages. J'imagine que c'est la vôtre. »"}
         - "« Le président a offert le cognac à toute la salle, hier soir, et il a dit votre nom deux fois. Il ne l'avait jamais fait pour votre prédécesseur. »"
     repliques:
-      - {lien: 0, texte: "Il pose la clé sur le comptoir, le numéro tourné vers lui. « Ici, les chambres n'ont pas de numéro pour les autres. Vous restez combien de nuits ? »"}
+      - {lien: 0, texte: "Il pose la clé sur le comptoir, le numéro tourné vers lui. « Votre numéro ne regarde que vous et moi. Combien de nuits resterez-vous ? »"}
       - {lien: 1, texte: "« Le hall sent la cire parce que je cire. Les gens de la Capitale croient que c'est le bois ; je ne les détrompe pas. »"}
-      - {lien: 1, si: "jour == sam", texte: "Un mariage au grand salon, des rubans sur les rampes. Escande compte les invités à voix basse. « Cent douze. Ils en ont annoncé cent. Les douze, c'est l'histoire. »"}
+      - {lien: 1, si: "jour == sam", texte: "Un mariage au grand salon, des rubans sur les rampes. Escande suit les invités du bout de son stylo. « Cent douze. On m'en avait annoncé cent. J'aimerais bien connaître les douze. »"}
       - {lien: 2, texte: "Il baisse la voix sans baisser la tête. « Au deuxième, côté cour, un homme qui paie en liquide et ne mange jamais ici. Je vous le dis parce que vous ne l'avez pas demandé. »"}
-      - {lien: 2, si: "role == selectionneur", texte: "« Votre groupe a commandé du lait chaud à minuit, trois soirs cette semaine. Des hommes qui demandent du lait chaud ont peur, ou froid. Ici, il ne fait pas froid. »"}
+      - {lien: 2, si: "role == selectionneur", texte: "« Votre groupe a commandé du lait chaud à minuit, trois soirs cette semaine. Les radiateurs marchent, pourtant. Je les ai fait vérifier. »"}
       - {lien: 3, texte: "« Si un soir vous ne voulez pas rentrer chez vous, la 14 n'existe pas sur le registre. Elle a un lit, une fenêtre sur la Rive, et pas de téléphone. »"}
-      - {lien: -1, texte: "« Votre nom ? » Il le connaît. Il l'écrit quand même, lettre par lettre, en le lisant à voix haute."}
+      - {lien: -1, texte: "« Votre nom ? » Il le connaît. Il l'écrit quand même, lettre par lettre, en l'épelant pour tout le hall."}
     tuyaux:
       - id: escande_standard
         si: "flag(histoire_h7) && flag(h7_rance_mort) && !flag(h7_appel_trois)"
@@ -356,7 +356,7 @@ gens:
         texte: "« Le petit salon est réservé tous les mardis à dix-huit heures, depuis votre arrivée. La note est réglée par un coursier de la Banque Aubérivoise, en enveloppe. Les noms, je ne les ai pas. »"
       - id: escande_delegue
         si: "role == selectionneur && !flag(histoire_h9)"
-        texte: "« Le délégué de la Fédération a réservé jusqu'à la fin du mois, sans date de départ. On ne réserve pas sans date de départ pour un match amical. »"
+        texte: "« Le délégué de la Fédération a réservé jusqu'à la fin du mois, sans date de départ. Pour un match amical, c'est long. »"
     service:
       lien: 3
       label: "Une chambre sans nom"
@@ -380,19 +380,19 @@ gens:
     activites: [hotel_casiers, hotel_bar]
     climat:
       bas:
-        - {si: "role == selectionneur", texte: "« La Fédération a réservé ses chambres au tarif remboursable. On prend le remboursable quand on n'est pas sûr de venir. Ou de rester. »"}
-        - {si: "role == president", texte: "« Vos actionnaires ont dîné ici sans vous, et ils ont demandé des additions séparées. Les gens qui vont se séparer commencent par l'addition. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération a réservé au tarif remboursable. Annulation possible jusqu'à la veille, dix-huit heures. »"}
+        - {si: "role == president", texte: "« Vos actionnaires ont dîné ici sans vous. Additions séparées. »"}
         - {si: "role == joueur", texte: "« Le club a logé deux joueurs à l'essai au troisième. À votre poste. Ils commandent le même petit déjeuner que vous, je le vois sur les fiches. »"}
         - "« Le président a dîné avec un agent, de ceux qui gardent leur manteau à table. Votre nom est revenu au café. Au café, c'est rarement bon. »"
       moyen:
-        - {si: "role == selectionneur", texte: "« La Fédération a pris la salle de réunion pour la journée, rien de plus. Pas de dîner, pas de discours. Le calme des gens qui attendent un résultat. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération a pris la salle de réunion pour la journée. Pas de dîner, pas de discours. Du café et de l'eau plate. »"}
         - {si: "role == president", texte: "« Vos actionnaires ont laissé la salle de réunion en ordre. Personne n'a rayé personne sur le tableau blanc. Je vérifie toujours. »"}
         - {si: "role == joueur", texte: "« Le club a réservé les chambres des recrues pour l'été. Aucune à votre poste. Dormez tranquille, et dormez ailleurs qu'au bar. »"}
         - "« Le président a réservé sa table habituelle pour samedi, et il ne l'a pas annulée. À ce stade de la saison, c'est déjà de la fidélité. »"
       haut:
-        - {si: "role == selectionneur", texte: "« Le président de la Fédération a réservé la suite au balcon pour la finale, sans demander le prix. On ne prend pas une suite pour serrer la main d'un perdant. »"}
+        - {si: "role == selectionneur", texte: "« Le président de la Fédération a réservé la suite au balcon pour le soir de la finale. Sans demander le prix. »"}
         - {si: "role == president", texte: "« Vos actionnaires ont commandé du champagne au salon, à votre nom. Ils m'ont demandé si vous aimiez le brut. J'ai dit oui, pour vous faire gagner du temps. »"}
-        - {si: "role == joueur", texte: "« Le club a réservé la terrasse pour une signature, et on m'a demandé votre pointure, pour des chaussons. On n'offre pas de chaussons à quelqu'un qui part. »"}
+        - {si: "role == joueur", texte: "« Le club a réservé la terrasse pour une signature. On m'a aussi demandé votre pointure, pour des chaussons de la maison. »"}
         - "« Le président a offert le dîner au staff, ici, mardi. Il a porté un toast à votre nom, debout, et il a fini son verre. »"
     repliques:
       - {lien: 0, texte: "Il tape ton nom sur une tablette, l'efface, le retape. « Mon père écrivait dans un registre. Moi, j'ai une base de données. Elle oublie moins, et elle se tait moins. »"}
@@ -400,7 +400,7 @@ gens:
       - {lien: 1, texte: "« Le salon est devenu un bar. Mon père dit que c'est la fin de l'hôtel. Il y boit son cognac tous les soirs, au même tabouret. »"}
       - {lien: 2, texte: "« Au deuxième, une chambre au nom d'une société de nettoyage. Je ne connais aucune société de nettoyage qui dorme à l'hôtel. »"}
       - {lien: 3, texte: "« Si une nuit vous voulez disparaître, je désactive votre carte à minuit et je la réactive à six heures. Entre les deux, l'hôtel ne sait pas où vous êtes. »"}
-      - {lien: -1, texte: "« Vous avez une réservation ? » Il le demande en souriant, devant le hall vide."}
+      - {lien: -1, texte: "« Avez-vous une réservation ? » Il le demande en souriant, devant le hall vide."}
     tuyaux:
       - id: escande_fils_liste
         si: "flag(histoire_h9)"
@@ -428,11 +428,11 @@ gens:
     froid: ["te fait attendre à la porte", "ne te reconnaît plus", "a vendu ta page"]
     activites: [club_coupe, club_alcove, club_rideau]
     repliques:
-      - {lien: 0, texte: "Elle ne se lève pas : elle te regarde dans le miroir derrière le bar. « Ici, on n'a pas de nom. Vous avez déjà oublié le vôtre, ou je vous aide ? »"}
+      - {lien: 0, texte: "Elle ne se lève pas et te regarde dans le miroir derrière le bar. « Votre nom, vous le laissez au vestiaire avec le manteau. Ou voulez-vous que je vous aide ? »"}
       - {lien: 1, texte: "« L'encre violette, c'est pour les dettes. La noire, pour les dates. Je n'ai jamais eu besoin d'une troisième couleur. »"}
-      - {lien: 1, si: "flag(rep_nuit)", texte: "« On dit en ville que vous êtes un oiseau de nuit. Chez moi, les oiseaux de nuit paient comptant et partent avant l'aube. Vous partez avant l'aube ? »"}
+      - {lien: 1, si: "flag(rep_nuit)", texte: "« On dit en ville que vous êtes un oiseau de nuit. Les miens paient comptant et s'en vont avant l'aube. Vous aussi ? »"}
       - {lien: 2, texte: "« Avant le Rideau, je lavais les maillots du club. Je reconnais encore les hommes à leur odeur de lessive ratée. »"}
-      - {lien: 2, si: "jour == jeu", texte: "« Le jeudi, mes clients portent des masques. Pas par honte : par politesse. On ne regarde pas un homme qui vient se reposer de son nom. »"}
+      - {lien: 2, si: "jour == jeu", texte: "« Le jeudi, mes clients portent des masques. Ils se connaissent tous ; le masque leur évite de se saluer. »"}
       - {lien: 3, texte: "« Si un soir il vous faut une sortie, la porte de derrière donne sur la ruelle des teinturiers. Elle n'a pas de poignée non plus. On frappe deux fois, puis une. »"}
       - {lien: -1, texte: "L'homme en costume de la porte dit que c'est complet. Derrière lui, la salle est vide, et Madame Irène écrit."}
     tuyaux:
@@ -444,7 +444,7 @@ gens:
     service:
       lien: 3
       label: "Une avance sans page"
-      texte: "Madame Irène sort des billets de la caisse et ne les écrit nulle part. « Pas de page, pas d'encre. Je ne fais crédit qu'une fois : c'est celle-ci. Un matin, je vous demanderai une heure. »"
+      texte: "Madame Irène sort des billets de la caisse et ne les écrit nulle part. « Pas de page, pas d'encre. Un matin, je vous demanderai une heure. »"
       effets: {var: {ville_francs_sales: "+800"}}
       dette: true
 
@@ -463,8 +463,8 @@ gens:
     froid: ["te fait payer d'avance", "te place près de la porte", "a vendu une photo de toi"]
     activites: [club_vestiaire, club_lise]
     repliques:
-      - {lien: 0, texte: "Elle t'enlève ton manteau elle-même, comme au temps où elle tenait le vestiaire. « Ma tante jugeait les gens à leur doublure. Moi, je les juge tous pareil. »"}
-      - {lien: 1, texte: "« Ma tante écrivait à l'encre violette. Moi, au crayon. On croit que c'est pour gommer. C'est pour que ça ne se voie pas à travers la page. »"}
+      - {lien: 0, texte: "Elle t'enlève ton manteau elle-même, comme au temps où elle tenait le vestiaire, et le suspend sans regarder la doublure. « Celui du maire est au crochet d'à côté. »"}
+      - {lien: 1, texte: "Elle note ta consommation au crayon, en appuyant à peine. « L'encre traverse la page. Le crayon, on ne le lit pas au verso. »"}
       - {lien: 2, texte: "Elle pose devant toi un verre que tu n'as pas commandé. « Offert par la table du fond. Elle ne veut pas que vous sachiez qui. Je vous le dis quand même : moi. »"}
       - {lien: 3, texte: "« Les négatifs de la maison sont dans une boîte à chaussures, chez quelqu'un que je ne vous nommerai pas. Il y en a de vous. Bientôt, il n'y en aura plus. »"}
       - {lien: -1, texte: "« Votre table ? » Elle consulte un carnet vide. « Il faudra attendre. Le vestiaire est plein, lui aussi. »"}
@@ -474,7 +474,7 @@ gens:
         texte: "« Votre stagiaire si poli est passé jeudi, seul. Il voulait savoir si la maison gardait ses négatifs. Je lui ai dit que non. En partant, il a dit merci, monsieur, à ma barmaid. »"
         effets: {var: {h6_indices: "+1"}}
       - id: lise_banquette
-        texte: "« Le jeudi, la banquette du fond est réservée au nom d'un autre club. Ils ne viennent pas boire. Ils viennent voir qui, chez vous, vient ici, et avec qui. »"
+        texte: "« Le jeudi, la banquette du fond est réservée au nom d'un autre club. Ils prennent une carafe d'eau et regardent qui, chez vous, vient ici, et avec qui. »"
     service:
       lien: 3
       label: "Une photo qui brûle"
@@ -497,35 +497,35 @@ gens:
     activites: [agence_visiter, agence_terrain, agence_loger, agence_photo, agence_cafe, agence_villa]
     climat:
       bas:
-        - {si: "role == joueur", texte: "« Vous m'avez demandé le prix d'un studio, la semaine dernière. Un joueur qui regarde les studios vient de regarder son relevé. »"}
+        - {si: "role == joueur", texte: "« Vous m'avez demandé le prix d'un studio, la semaine dernière. Votre banquier avait dû téléphoner avant. »"}
         - {si: "role == president", texte: "« Le club a mis en vente l'appartement de fonction de la rue des Lilas. Discrètement : à mon nom, pas au vôtre. Les gens lisent quand même. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération a résilié la villa du stage d'été, trois mois de préavis payés d'un coup. On paie d'un coup quand on ne compte pas revenir. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération a résilié la villa du stage d'été, trois mois de préavis payés d'un coup. Ils ne m'ont pas demandé de la garder pour l'an prochain. »"}
         - "« Le club a rendu deux appartements de joueurs ce mois-ci, préavis payé. Quand un club rend des clés, c'est qu'il compte ses sous à voix haute. »"
       moyen:
-        - {si: "role == joueur", texte: "« Vous louez, vous n'achetez pas. À votre place, je ferais pareil. Ici, une maison, c'est une promesse de rester. »"}
-        - {si: "role == president", texte: "« Le terrain du parking nord vaut ce qu'il valait l'an passé. Ce qui veut dire que personne ne vous attend encore au tournant. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération reloue la même villa pour le stage, même prix, mêmes dates. On ne change rien quand on n'a ni argent à perdre ni argent à montrer. »"}
+        - {si: "role == joueur", texte: "« Vous louez, vous n'achetez pas. Je ferais pareil, à votre place, tant que le club ne vous a pas prolongé. »"}
+        - {si: "role == president", texte: "« Le terrain du parking nord vaut ce qu'il valait l'an passé. Personne ne m'a encore appelée pour le faire estimer. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération reloue la même villa pour le stage, aux mêmes dates. Elle n'a pas discuté le prix. »"}
         - "« Le club loue les mêmes appartements que l'an dernier, aux mêmes prix, et il paie le 5. Chez moi, ça s'appelle un bon locataire. »"
       haut:
         - {si: "role == joueur", texte: "« Trois promoteurs m'ont demandé si vous cherchiez une villa sur les hauteurs. Ils savent avant vous ce que vous gagnez. Moi aussi. »"}
-        - {si: "role == president", texte: "« Un fonds m'a demandé le prix des maisons autour du stade. On ne fait ça qu'avec un club qui a de l'argent. Celui qui en manque, on attend qu'il vende. »"}
+        - {si: "role == president", texte: "« Un fonds m'a demandé le prix des maisons autour du stade. Pour acheter, pas pour attendre que vous vendiez. »"}
         - {si: "role == selectionneur", texte: "« La Fédération a réservé la villa du stage pour deux ans, et la maison du gardien en plus. Elle a de l'argent, ou elle veut qu'on le croie. »"}
         - "« Le club m'a demandé trois maisons avec jardin pour des recrues. Avec jardin, ce sont des familles. Une famille, c'est un contrat qui dure. »"
     repliques:
       - {lien: 0, texte: "« Un café ? » Elle le dit une fois, la main déjà sur la cafetière. « Asseyez-vous du côté de la vitrine. Je veux voir ce que vous regardez. »"}
       - {lien: 1, texte: "« Je n'ai jamais vendu une maison à quelqu'un qui regardait le jardin. Ceux qui achètent regardent la fenêtre de la cuisine. Vous regardiez quoi ? »"}
-      - {lien: 1, si: "annee >= 2014", texte: "« Ma petite-fille fait ses devoirs dans l'arrière-boutique. Elle veut tout savoir des vues. Je lui apprends d'abord les murs : on ne vend pas une vue qui tombe. »"}
+      - {lien: 1, si: "annee >= 2014", texte: "« Ma petite-fille fait ses devoirs dans l'arrière-boutique. Elle veut tout savoir des vues. Je lui apprends d'abord les étages : au premier, un arbre suffit à boucher une vue. »"}
       - {lien: 2, texte: "Elle soulève la cloche de verre de la maquette et pose le doigt sur un petit lac. « Ici, il y aura de l'eau. Pour l'instant, c'est votre parking. »"}
       - {lien: 2, si: "flag(histoire_h5)", texte: "« Le terrain du stade n'appartient pas à qui vous croyez. Je ne vous dis pas à qui. Je vous dis seulement que je lui ai déjà envoyé une plaquette. »"}
       - {lien: 3, texte: "« S'il vous faut un jour un toit sans bail, j'ai des clés qui ne sont dans aucun registre. Chez nous, on appelle ça des visites. »"}
-      - {lien: -1, texte: "Elle te tend la liste des annonces de Valdorne, sans un mot, et retourne à sa maquette."}
+      - {lien: -1, texte: "Elle te tend la liste des annonces de Valdorne, du bout des doigts, et retourne à sa maquette."}
     tuyaux:
       - id: tessandier_pavillon
         si: "flag(histoire_h3)"
         texte: "« Le pavillon des Lilas que Monsieur Fardelli vous montre ? Il l'a déjà réservé trois fois, pour trois mères. Il ne l'achète jamais. Il fait signer des promesses. »"
       - id: tessandier_onze
         si: "flag(histoire_h5)"
-        texte: "« Onze appartements vendus sur quarante, dont six le même jour, à la même société, par le même notaire. Je ne vends pas onze appartements. J'en vends cinq. »"
+        texte: "« Onze appartements vendus sur quarante, dont six le même jour, à la même société, par le même notaire. Moi, j'en ai vendu cinq. Les six autres se sont vendus sans moi. »"
       - id: tessandier_bail
         texte: "« Votre propriétaire veut vendre au printemps. Il ne vous l'a pas dit ; il me l'a dit à moi. Vous avez le temps de faire une offre, ou de partir sans qu'on vous voie partir. »"
     service:
@@ -546,38 +546,38 @@ gens:
     activites: [agence_maquette, agence_vue]
     climat:
       bas:
-        - {si: "role == joueur", texte: "« Vous avez cherché un studio à Valdorne, en ligne, à deux heures du matin. Le site me prévient. On ne cherche un studio la nuit qu'après avoir lu son compte. »"}
-        - {si: "role == president", texte: "« Quelqu'un a fait estimer les murs du club, la semaine dernière, par une agence de la Capitale. On n'estime pas ce qu'on compte garder. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération a renoncé au chalet du stage. Le propriétaire m'a appelée : il a encore les draps. On laisse les draps quand on n'a plus les moyens de revenir. »"}
+        - {si: "role == joueur", texte: "« Vous avez cherché un studio à Valdorne sur le site, à deux heures du matin. Je reçois une alerte. Votre banquier aussi, j'imagine. »"}
+        - {si: "role == president", texte: "« Quelqu'un a fait estimer les murs du club la semaine dernière, par une agence de la Capitale. Pas par nous. Je me demande bien qui a payé. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération a laissé tomber le chalet du stage. Le proprio m'a appelée : ils ont même pas repris leurs draps. »"}
         - "« Le club a rendu les clés de trois appartements de joueurs en septembre. On rend des clés en juin. En septembre, c'est qu'on a peur. »"
       moyen:
-        - {si: "role == joueur", texte: "« Vous louez au mois. Ma grand-mère disait : un joueur qui loue a raison ; un joueur qui achète a un agent. »"}
-        - {si: "role == president", texte: "« Les murs du club valent ce qu'ils valaient en janvier. Les fonds tournent autour, mais ils tournent autour de tout le monde. »"}
-        - {si: "role == selectionneur", texte: "« La Fédération a reloué le même chalet, aux mêmes dates, faute de mieux. C'est rassurant, si on aime les habitudes. »"}
+        - {si: "role == joueur", texte: "« Vous louez au mois. Ma grand-mère vous aurait dit que vous avez raison, et que c'est toujours l'agent qui fait acheter. »"}
+        - {si: "role == president", texte: "« Les murs du club valent ce qu'ils valaient en janvier. Les fonds tournent autour, mais bon, ils tournent autour de tout le monde. »"}
+        - {si: "role == selectionneur", texte: "« La Fédération a reloué le même chalet, aux mêmes dates. Faute de mieux, je pense. Ils ont pas négocié. »"}
         - "« Le club paie ses loyers le 5, à l'heure, et personne ne m'appelle pour négocier. L'année dernière, à cette date, on m'appelait. »"
       haut:
-        - {si: "role == joueur", texte: "« Trois agences de la Capitale m'ont demandé si vous cherchiez une vue. On ne pose cette question qu'aux gens qui peuvent la payer deux fois. »"}
-        - {si: "role == president", texte: "« On me demande le prix des toits autour du stade, au mètre carré. Les fonds ne tournent qu'autour des clubs qui ont de l'argent à dépenser. »"}
+        - {si: "role == joueur", texte: "« Trois agences de la Capitale m'ont demandé si vous cherchiez une vue. Elles connaissent votre salaire mieux que moi. »"}
+        - {si: "role == president", texte: "« On me demande le prix des toits autour du stade, au mètre carré. Trois fonds en une semaine. Ça se sait, que vous avez de l'argent à dépenser. »"}
         - {si: "role == selectionneur", texte: "« La Fédération a réservé le grand chalet pour deux saisons, et le parking avec. Elle a des moyens neufs. Reste à voir pour quoi faire. »"}
         - "« Le club cherche des maisons avec jardin, pour des recrues qui viennent en famille. Une famille, chez moi, c'est quelqu'un qui compte rester. »"
     repliques:
       - {lien: 0, texte: "Elle te serre la main sans quitter son écran. « Clémence Tessandier. Oui, la petite-fille. Le café est en libre-service, comme le reste. »"}
       - {lien: 1, texte: "« Les gens n'achètent plus une maison, ils achètent la photo de la maison. Ma grand-mère disait que c'était déjà le cas en 1990. »"}
       - {lien: 2, texte: "Elle te montre sur sa tablette un toit-terrasse, puis zoome sur la ligne d'horizon. « De là, on voit le stade. Dans cinq ans, on verra ce qu'il y aura à sa place. »"}
-      - {lien: 2, si: "flag(histoire_h10)", texte: "« La troisième tranche se vend sur plan, à des gens qui ne sont jamais venus à {ville}. Ils achètent une promesse de terrain. Je vends les promesses ; je ne les signe pas. »"}
+      - {lien: 2, si: "flag(histoire_h10)", texte: "« La troisième tranche se vend sur plan, à des gens qui ont jamais mis les pieds à {ville}. Je vends la promesse. La signature, c'est pas moi. »"}
       - {lien: 3, texte: "« S'il vous faut disparaître une semaine, j'ai un appartement témoin. Meublé, chauffé, et personne n'y témoigne. »"}
       - {lien: -1, texte: "Elle te fait patienter sur le canapé de l'entrée, sous une photo de sa grand-mère, qui te regarde aussi."}
     tuyaux:
       - id: clemence_terrasse
         si: "flag(histoire_h9) && flag(h9_cles_gardees)"
-        texte: "« Le dernier étage du quai, avec la terrasse : ses clés dorment chez vous. Le loyer, lui, arrive quand même, le premier du mois, d'un compte que je n'ai pas le droit de vous nommer. »"
+        texte: "« Le dernier étage du quai, avec la terrasse, ses clés sont chez vous. Et le loyer tombe quand même, le premier du mois, d'un compte que j'ai pas le droit de vous nommer. »"
       - id: clemence_clause
         si: "flag(histoire_h10)"
-        texte: "« Page onze du contrat de la troisième tranche, une clause : « terrain libéré au 1er juillet 2040 ». Le vôtre. Je l'ai lue deux fois. On ne me l'a fait signer qu'une. »"
+        texte: "« Page onze du contrat de la troisième tranche, y a une clause : “terrain libéré au 1er juillet 2040”. Le vôtre. Je l'ai lue deux fois. On me l'a fait signer qu'une. »"
     service:
       lien: 3
       label: "Une commission d'apporteur"
-      texte: "Clémence glisse un chèque dans une plaquette : une commission d'apporteur, sur une vente que tu n'as pas faite. « Vous m'avez donné un nom, un jour, sans le savoir. Ça se paie. »"
+      texte: "Clémence glisse dans une plaquette un chèque de commission d'apporteur, pour une vente que tu n'as pas faite. « Vous m'avez donné un nom, un jour, sans le savoir. Ça se paie. »"
       effets: {var: {ville_francs: "+500"}}
 
   # ═══════════════════════════════════════════════════════════════ LA MAIRIE
@@ -597,7 +597,7 @@ gens:
     activites: [mairie_papiers, mairie_conseil, mairie_registres]
     repliques:
       - {lien: 0, texte: "Il se lève, regarde tes chaussures, puis ton visage. « Votre nom, s'il vous plaît. Je le demande à tout le monde. Je ne l'écris jamais. »"}
-      - {lien: 1, texte: "« Je suis entré ici en 1962, avec la chaîne. Elle pèse plus lourd qu'à l'époque. Ce n'est pas la chaîne qui a changé. »"}
+      - {lien: 1, texte: "« Je suis entré ici en 1962, avec la chaîne. Elle me paraît plus lourde chaque année. Le bijoutier jure qu'il n'y a pas touché. »"}
       - {lien: 1, si: "flag(histoire_h5)", texte: "« Mireille, aux archives, me fait monter son café à dix heures, depuis 1971. Elle le boit froid. Je le lui monte chaud quand même. »"}
       - {lien: 2, texte: "« Les conseillers montent l'escalier deux à deux quand ils vont voter oui. Pour voter non, ils prennent l'ascenseur, pour ne croiser personne. »"}
       - {lien: 2, si: "jour == mar", texte: "« Conseil à seize heures. Écoutez les chaussures dans l'escalier : les neuves, c'est l'opposition. Elle s'en achète avant chaque séance. »"}
@@ -607,7 +607,7 @@ gens:
     tuyaux:
       - id: marsillac_mireille
         si: "flag(histoire_h5) && saison >= 2 && !flag(h5_mireille) && !flag(h5_copie_cadastre)"
-        texte: "« Une donation ne se range jamais au nom de celui qui donne. Mireille, aux archives, la range au nom du maire qui l'a signée. Cherchez un maire, pas un terrain. »"
+        texte: "« Mireille, aux archives, range les donations au nom du maire qui les a signées, jamais au nom de celui qui donne. Cherchez le maire. Le terrain viendra avec. »"
         effets: {set: [h5_mireille]}
       - id: marsillac_marge
         si: "flag(histoire_h5) && flag(h5_copie_cadastre) && !flag(h5_bastide_1976)"
@@ -642,10 +642,10 @@ gens:
     activites: [mairie_listes, mairie_maire_ds, mairie_maire_selection, mairie_accueil]
     repliques:
       - {lien: 0, texte: "Elle te tend un formulaire avant que tu aies parlé. « Le 12-B. Tout le monde vient pour le 12-B, même ceux qui croient venir pour autre chose. »"}
-      - {lien: 1, texte: "« Marsillac reconnaissait les gens à leurs chaussures. Moi, à leur stylo. Ceux qui empruntent le mien reviennent toujours. »"}
+      - {lien: 1, texte: "Elle te prête son stylo bleu, le capuchon mâchonné. « Rendez-le-moi en partant. Ceux qui l'oublient reviennent toujours, avec un autre formulaire. »"}
       - {lien: 2, texte: "Elle baisse la voix sans cesser de taper. « Le conseil de mardi a un point dix-sept qui n'est pas sur l'ordre du jour imprimé. Il est sur le mien. »"}
-      - {lien: 2, si: "jour == ven", texte: "« Trois mariages cet après-midi. Je fais les trois. Au troisième, je pleure toujours. Ce n'est pas l'émotion, c'est la fatigue, mais personne ne fait la différence. »"}
-      - {lien: 3, texte: "« Si un jour votre dossier doit passer avant les autres, il passera. Les piles, c'est moi qui les fais, et je ne les fais pas par date. »"}
+      - {lien: 2, si: "jour == ven", texte: "« Trois mariages cet après-midi, je fais les trois. Au troisième, je pleure, toujours. Les familles m'envoient des dragées. »"}
+      - {lien: 3, texte: "« Votre dossier doit passer avant les autres ? Il passera. Les piles, c'est moi qui les fais, et pas par date. »"}
       - {lien: -1, texte: "Elle te donne un ticket numéroté. Il n'y a personne dans la file ; elle appelle quand même les numéros d'avant."}
     tuyaux:
       - id: sarrazy_jeudi
@@ -678,28 +678,28 @@ gens:
     froid: ["te fait payer d'avance", "te sert en terrasse", "a mis ton nom sur l'ardoise du mur"]
     activites: [comptoir, cafe_conseillers, cafe_cafes_conseil, cafe_vitre, cafe_tele]
     repliques:
-      - {lien: 0, texte: "Il essuie le comptoir à l'endroit exact où tu allais poser le coude. « Un café, un journal, ou un conseiller ? On sert les trois, mais pas à la même heure. »"}
-      - {lien: 1, texte: "« La majorité prend un crème, l'opposition un noir serré. Le jour où un conseiller change de tasse, je le sais avant le vote. »"}
-      - {lien: 1, si: "serie_d >= 1", texte: "« Samedi, on a perdu. Ce matin, au comptoir, personne n'a dit votre nom. C'est pire que s'ils l'avaient dit. »"}
-      - {lien: 2, texte: "Il penche la tête vers la table du fond. « Celui-là signe les permis depuis vingt ans. Il paie toujours en pièces, pour qu'on ne voie pas son portefeuille. »"}
-      - {lien: 2, si: "tranche == soir", texte: "Il retourne les chaises sur les tables, sauf une. « Le soir, il ne reste que ceux qui n'ont pas envie de rentrer. Les meilleurs clients. Les plus tristes aussi. »"}
+      - {lien: 0, texte: "Il essuie le comptoir à l'endroit exact où tu allais poser le coude. « Un crème ou un noir ? Le journal est sur le zinc. Les conseillers, c'est après onze heures. »"}
+      - {lien: 1, texte: "« La majorité prend un crème, l'opposition un noir serré. Hier, y en a un qui a changé de tasse. Vous verrez au vote. »"}
+      - {lien: 1, si: "serie_d >= 1", texte: "« Samedi, on a perdu. Ce matin, au comptoir, votre nom, personne l'a dit. Pas une fois. »"}
+      - {lien: 2, texte: "Il penche la tête vers la table du fond. « Celui-là signe les permis depuis vingt ans. Il paie toujours en pièces, pour qu'on voie pas son portefeuille. »"}
+      - {lien: 2, si: "tranche == soir", texte: "Il retourne les chaises sur les tables, sauf une. « Le soir, il reste que ceux qui veulent pas rentrer. Je leur laisse une chaise. Celle-là, c'est la vôtre. »"}
       - {lien: 3, texte: "« La table du fond, si vous voulez parler sans être entendu : elle est sous la télé. La télé, je la monte quand vous levez la main. »"}
       - {lien: -1, texte: "Il pose ton café en terrasse, dehors, sous la pluie. « La salle est pleine. » Elle ne l'est pas."}
     tuyaux:
       - id: lacanal_creme
         si: "flag(histoire_h6) && saison >= 2"
-        texte: "« Votre stagiaire prend un crème ici le mardi, à vingt-trois heures trente. Puis il part à pied vers le club-house, fermé à cette heure-là. Il a une clé : je l'ai entendue tinter. »"
+        texte: "« Votre stagiaire prend un crème ici le mardi, à vingt-trois heures trente. Après, il part à pied vers le club-house, qui est fermé à cette heure-là. Il a une clé, je l'ai entendue tinter. »"
         effets: {var: {h6_indices: "+1"}}
       - id: lacanal_lambert
         si: "flag(histoire_h5)"
-        texte: "« Lambert prend son café ici le jeudi à sept heures, seul, avant les autres. C'est la seule heure où il ne vote avec personne. Après, il s'assoit à côté du maire. »"
+        texte: "« Lambert prend son café ici le jeudi à sept heures, seul, avant les autres. C'est la seule heure où il vote avec personne. Après, il s'assoit à côté du maire. »"
       - id: lacanal_reverbere
         si: "flag(histoire_h3)"
-        texte: "« Les deux hommes du réverbère, devant chez votre mère ? Ils prennent un café ici à six heures, avant d'aller dormir. Hier, ils parlaient de votre page. Elle a changé de main, disaient-ils. »"
+        texte: "« Les deux hommes du réverbère, devant chez votre mère ? Ils prennent un café ici à six heures, avant d'aller dormir. Hier, ils parlaient de votre page. Elle a changé de main, qu'ils disaient. »"
     service:
       lien: 3
       label: "La table du fond"
-      texte: "Lacanal pose un carton « Réservé » sur la table du fond et monte le son de la télé. « Pour une heure, vous n'existez pas, ni vos invités. Je ne sers que des cafés noirs. »"
+      texte: "Lacanal pose un carton « Réservé » sur la table du fond et monte le son de la télé. « Pendant une heure, vous existez pas, ni vos invités. Je sers que des noirs. »"
       effets: {jauges: {direction: 2}}
     on_relation:
       3: vi.lacanal.soucoupe
@@ -720,10 +720,10 @@ gens:
     froid: ["te donne le journal de la veille", "souligne ton nom en rouge", "a prêté ta table à un journaliste"]
     activites: [cafe_journaux, cafe_crayon]
     repliques:
-      - {lien: 0, texte: "Il plie L'Écho en quatre, une seule phrase soulignée au crayon. « Une par jour. Je ne choisis pas la plus importante. Je choisis celle qui ment le mieux. »"}
-      - {lien: 1, texte: "« J'ai été le garçon de Lacanal pendant dix ans. Lui savait qui prenait un crème. Moi, je sais qui lit la page sept. »"}
-      - {lien: 2, texte: "Il retourne le journal vers toi : une phrase sur le club, page trois, soulignée. « Celle-là a été écrite par quelqu'un qui boit ici. Je reconnais les virgules. »"}
-      - {lien: 2, si: "flag(histoire_h9)", texte: "« Le conseiller du ministère commande toujours deux cafés. Le deuxième, c'est pour vous, même quand vous ne venez pas. Il le boit froid, en partant. »"}
+      - {lien: 0, texte: "Il plie L'Écho en quatre, une seule phrase soulignée au crayon. « Une par jour. Celle qui ment le mieux. »"}
+      - {lien: 1, texte: "« Dix ans garçon chez Lacanal. J'ai appris à regarder par-dessus les épaules, à quelle page les gens s'arrêtent. »"}
+      - {lien: 2, texte: "Il retourne le journal vers toi, page trois, une phrase sur le club soulignée. « Celui qui a écrit ça boit ici. Je reconnais les virgules. »"}
+      - {lien: 2, si: "flag(histoire_h9)", texte: "« Le conseiller du ministère commande toujours deux cafés. Le deuxième, c'est pour vous, même quand vous venez pas. Il le boit froid, en partant. »"}
       - {lien: 3, texte: "« Le livreur de L'Écho passe à cinq heures. Si vous êtes là à cinq heures, vous lisez demain avant tout le monde. Je fais le café pour deux. »"}
       - {lien: -1, texte: "Il te donne le journal de la veille, déjà souligné, et sert ton café dans une tasse ébréchée."}
     tuyaux:
@@ -731,11 +731,11 @@ gens:
         si: "flag(histoire_h10)"
         texte: "« Nino vient ici le premier du mois, en manteau de ville, jamais en écharpe. Il aligne des colonnes de chiffres sur une serviette, puis il la plie et l'emporte. »"
       - id: ouardi_jeudi
-        texte: "« Le correspondant de L'Écho s'assoit au comptoir le jeudi à onze heures. Ce qu'il entend le jeudi paraît le samedi, page trois. Le jeudi, parlez fort, ou ne parlez pas. »"
+        texte: "« Le correspondant de L'Écho s'assoit au comptoir le jeudi à onze heures. Ce qu'il entend le jeudi paraît le samedi, page trois. Le jeudi, parlez fort, ou alors taisez-vous. »"
     service:
       lien: 3
       label: "L'Écho de demain"
-      texte: "Kamel pose sur le comptoir L'Écho de demain, encore tiède de la camionnette, une phrase soulignée deux fois. « Une journée d'avance. Ne la dépensez pas en une fois. »"
+      texte: "Kamel pose sur le comptoir L'Écho de demain, encore tiède de la camionnette, une phrase soulignée deux fois. « Une journée d'avance. La dépensez pas d'un coup. »"
       effets: {jauges: {direction: 1, tribunes: 1}}
     on_relation:
       3: vi.ouardi.exemplaires
@@ -761,23 +761,23 @@ gens:
       - {lien: 1, texte: "« Je baptise les enfants du kop en bordeaux, ça les calme. Les parents chantent faux, mais ils chantent tous. »"}
       - {lien: 1, si: "serie_d >= 1", texte: "« On a prié pour vous, dimanche. Pas en chaire : au fond, avec les anciens. Ils ont demandé un miracle. Je leur ai conseillé un défenseur. »"}
       - {lien: 2, texte: "« On se confesse le mercredi pour les péchés de la semaine, le samedi pour ceux du match. Le samedi, j'entends beaucoup parler de l'arbitre. »"}
-      - {lien: 2, si: "jour == sam", texte: "Il ferme l'église à quatorze heures pile, l'écharpe déjà nouée. « Les âmes attendront la fin du match. Elles ont l'habitude : elles attendent depuis toujours. »"}
-      - {lien: 3, texte: "« Si un jour vous avez un papier à cacher, la sacristie a un tiroir que même l'évêque n'ouvre pas. Il y a mes chaussettes dedans. Personne ne fouille des chaussettes. »"}
+      - {lien: 2, si: "jour == sam", texte: "Il ferme l'église à quatorze heures pile, l'écharpe déjà nouée. « Les âmes attendront la fin du match. Le bon Dieu aussi, il a l'habitude. »"}
+      - {lien: 3, texte: "« Vous avez un papier à cacher ? La sacristie a un tiroir que même l'évêque ouvre pas. Y a mes chaussettes dedans. Personne fouille dans des chaussettes. »"}
       - {lien: -1, texte: "Il te serre la main à la sortie de la messe, comme à tout le monde, en regardant déjà la personne suivante."}
     tuyaux:
       - id: brousse_bertin
         si: "flag(histoire_h4) && flag(h4_quatorze_mai) && !flag(h4_tombe_inconnue)"
-        texte: "« Jules Bertin ? Je l'ai enterré en 1983, quatre-vingt-un ans, personne derrière le cercueil. Deux ans après, un homme est venu demander où il était. Il cherchait une tombe, pas un mort. »"
+        texte: "« Jules Bertin ? Je l'ai enterré en 1983, quatre-vingt-un ans, personne derrière le cercueil. Deux ans après, un homme est venu demander où il était. L'allée, le numéro. Pas qui c'était. »"
         effets: {set: [h4_tombe_inconnue]}
       - id: brousse_cierge
         si: "flag(histoire_h1)"
         texte: "« Depuis 1975, un cierge brûle chaque mois pour H. R. D'abord payé par un vieux du kop ; depuis l'hiver 89, par son fils. Même écharpe, même pièce de dix francs. »"
       - id: brousse_mariages
-        texte: "« Le samedi des mariages, regardez qui ne vient pas. Ici, un absent à un mariage, c'est une brouille ; deux, un héritage ; trois, une élection. »"
+        texte: "« Le samedi des mariages, regardez qui vient pas. Un absent, c'est une brouille. Deux, c'est un héritage. Trois, c'est qu'il y a une élection. »"
     service:
       lien: 3
       label: "Garder un document"
-      texte: "Le père Brousse plie ton papier en quatre et le glisse dans le tiroir aux chaussettes de la sacristie. « Ici, il ne craint ni le feu ni la police. Seulement les mites. »"
+      texte: "Le père Brousse plie ton papier en quatre et le glisse dans le tiroir aux chaussettes de la sacristie. « Là, il craint ni le feu ni la police. Juste les mites. »"
       effets: {jauges: {direction: 2}}
     on_relation:
       3: vi.brousse.parabole
@@ -797,10 +797,10 @@ gens:
     froid: ["te salue en passant", "oublie ton prénom", "ne t'attend plus"]
     activites: [eglise_messe_tard, eglise_villages]
     repliques:
-      - {lien: 0, texte: "Il retire son casque de scooter sur le parvis et le pose sur le bénitier. « Pardon, je viens de Saint-Aubin-des-Prés. Ou j'y vais. À cette heure-ci, je ne sais plus. »"}
-      - {lien: 1, texte: "« Six paroisses, six clochers, six chorales. Dans cinq, on chante faux. Ici, on chante faux mais fort. C'est la seule où l'on applaudit. »"}
+      - {lien: 0, texte: "Il retire son casque de scooter sur le parvis et le pose sur le bénitier. « Pardon, je viens de Saint-Aubin-des-Prés. Ou j'y vais. À cette heure-ci, je sais plus. »"}
+      - {lien: 1, texte: "« Six paroisses, six chorales. Partout ça chante faux. À Saint-Aubin, au moins, ça chante fort, et à la fin on applaudit. »"}
       - {lien: 2, texte: "« Dans les villages, on parle de votre club comme d'un parent qui a mal tourné. On le critique, et on vient à la messe avec son écharpe. »"}
-      - {lien: 3, texte: "« S'il vous faut un jour qu'on prie pour vous dans six villages à la fois, dites-le-moi le samedi. Le dimanche, je fais passer le mot de clocher en clocher. »"}
+      - {lien: 3, texte: "« Vous voulez qu'on prie pour vous dans six villages à la fois ? Dites-le-moi le samedi. Le dimanche, je fais passer le mot de clocher en clocher. »"}
       - {lien: -1, texte: "Il te serre la main à la sortie, puis la suivante, puis la suivante, sans s'arrêter sur la tienne."}
     tuyaux:
       - id: rakoto_jetons
@@ -832,9 +832,9 @@ gens:
     activites: [loge_registre, loge_poele, loge_cles, loge_allees]
     repliques:
       - {lien: 0, texte: "Il trempe sa plume avant que tu aies passé la grille. « Vous venez voir qui ? Je ne demande pas pour savoir. Je demande pour l'écrire. »"}
-      - {lien: 1, texte: "« Les familles viennent le dimanche, les veuves le mardi, et les remords le jeudi soir, quand il fait sombre. Je ferme à six heures ; je laisse la petite grille. »"}
-      - {lien: 1, si: "jour == dim", texte: "Il balaie l'allée centrale contre le vent. « Le dimanche, ils piétinent tout. Le lundi, je rends les allées aux morts. »"}
-      - {lien: 2, texte: "Il tourne son registre vers toi sans le lâcher. « De 1951 à aujourd'hui. Les vivants s'intéressent aux morts. Jamais à ceux qui viennent les voir. »"}
+      - {lien: 1, texte: "« Les familles viennent le dimanche, les veuves le mardi, et le jeudi soir, quand il fait sombre, ceux qui ne veulent pas qu'on les voie. Je ferme à six heures ; je laisse la petite grille. »"}
+      - {lien: 1, si: "jour == dim", texte: "Il balaie l'allée centrale contre le vent. « Le dimanche, ils piétinent tout. Le lundi, je ratisse. »"}
+      - {lien: 2, texte: "Il tourne son registre vers toi sans le lâcher. « De 1951 à aujourd'hui. On me demande le nom des morts. Ceux qui viennent les voir, jamais. Ils sont là aussi, colonne de droite. »"}
       - {lien: 2, si: "flag(histoire_h4)", texte: "« Le 14 mai, il y a toujours une ligne à votre nom, depuis 1985. Je l'écris avant que vous arriviez. Vous êtes la seule personne qui vienne à l'heure. »"}
       - {lien: 3, texte: "« S'il vous faut un jour avoir été ici à une heure où vous n'y étiez pas, mon registre a une ligne pour ça. Une seule. Je ne m'en suis jamais servi. »"}
       - {lien: -1, texte: "« Nom, prénom, pour qui. » Il écrit sans te regarder, et souligne l'heure deux fois."}
@@ -844,7 +844,7 @@ gens:
         texte: "« La plaque sans nom ? Je ne sais pas qui paie. Je sais qui vient : un homme en écharpe, aux Rameaux, avec du buis. Il essuie le marbre une fois, jamais deux. »"
         effets: {set: [h1_plaque_qui]}
       - id: abel_veuves
-        texte: "« Les veuves du mardi savent tout ce qui se passe au club : leurs maris en parlaient, elles écoutaient. Asseyez-vous le mardi sur le banc du robinet. Elles parlent aux bancs. »"
+        texte: "« Les veuves du mardi savent tout du club. Leurs maris en parlaient, elles écoutaient. Asseyez-vous le mardi sur le banc du robinet : elles y remplissent leurs arrosoirs, et ça bavarde. »"
         effets: {jauges: {tribunes: 1}}
     service:
       lien: 3
@@ -868,10 +868,10 @@ gens:
     activites: [loge_fenetre, loge_cafe]
     repliques:
       - {lien: 0, texte: "Il retire ses gants de travail pour te serrer la main, puis les remet. « J'ai creusé ici pour Monsieur Abel pendant vingt ans. Maintenant, je tiens son registre. Je creuse moins. »"}
-      - {lien: 1, texte: "« Allée des Ifs, cent douze pas. Carré ancien, deux cent trois. Les gens se perdent ici parce qu'ils comptent les tombes. Il faut compter ses pas. »"}
-      - {lien: 2, texte: "Il verse le café du poêle dans deux tasses dépareillées. « La nuit, il y a toujours quelqu'un. Je ne ferme plus la petite grille : on l'escaladait, et on cassait les rosiers. »"}
-      - {lien: 3, texte: "« Si un soir il vous faut entrer après l'heure, frappez trois coups à la vitre de la loge. Je ne demande jamais qui. Je l'écris le lendemain, si vous voulez. »"}
-      - {lien: -1, texte: "Il te tend le registre et un stylo, sans un mot, et attend que tu signes."}
+      - {lien: 1, texte: "« Allée des Ifs, cent douze pas. Carré ancien, deux cent trois. Vous cherchez qui ? Je vous y mène, c'est plus simple. »"}
+      - {lien: 2, texte: "Il verse le café du poêle dans deux tasses dépareillées. « La nuit, y a toujours quelqu'un. La petite grille, je la ferme plus. Ils l'escaladaient, et ils cassaient les rosiers. »"}
+      - {lien: 3, texte: "« Un soir, s'il vous faut entrer après l'heure, frappez trois coups à la vitre de la loge. Je demande jamais qui. Je l'écris le lendemain, si vous voulez. »"}
+      - {lien: -1, texte: "Il te tend le registre et un stylo, et ne bouge plus tant que tu n'as pas signé."}
     tuyaux:
       - id: taillandier_pilier
         si: "flag(histoire_h7) && flag(h7_rance_mort)"
@@ -881,11 +881,11 @@ gens:
         texte: "« Le cercueil du petit Marçais est arrivé avec un papier d'Al-Dorado collé sur le bois, en deux langues : interdit d'ouvrir. Je l'ai recopié dans le registre, mot pour mot. »"
       - id: taillandier_allee
         si: "flag(histoire_h10)"
-        texte: "« Gégé a acheté sa concession en 2036. Il a choisi la seule allée d'où l'on ne voit pas la Rive. Il m'a dit : « Je l'ai assez vue debout. » »"
+        texte: "« Gégé a acheté sa concession en 2036. Il a pris la seule allée d'où on voit pas la Rive. Il m'a dit : “Je l'ai assez vue debout.” »"
     service:
       lien: 3
       label: "La grille après l'heure"
-      texte: "Taillandier t'ouvre la petite grille à minuit et la referme derrière toi. « Une heure. Cette nuit, la grille ne s'est pas ouverte, et je n'ai vu personne. »"
+      texte: "Taillandier t'ouvre la petite grille à minuit et la referme derrière toi. « Une heure. Cette nuit, la grille s'est pas ouverte, et j'ai vu personne. »"
       effets: {jauges: {direction: 1, tribunes: 1}}
     on_relation:
       3: vi.taillandier.berline
@@ -899,7 +899,7 @@ activites:
     lieu: banque
     objet: bureau_banquier
     label: "Le bureau du conseiller"
-    texte: "Loïc Vernhes tourne son écran vers toi et lit tes libellés un par un, sans un mot sur les montants. À la fin, il éteint l'écran, pour que tu le regardes, lui."
+    texte: "Loïc Vernhes tourne son écran vers toi et lit tes libellés un par un, sans jamais citer un montant. À la fin, il éteint l'écran, pour que tu le regardes, lui."
     avec: vernhes
     habitude: travail
     si: "annee >= 2003"
@@ -939,7 +939,7 @@ activites:
     lieu: cabinet
     objet: table_examen
     label: "Faire craquer ton dos"
-    texte: "Nadia Rouvier pose ses deux mains à plat entre tes omoplates. « Inspirez. » Un craquement, comme une branche sous la neige. « Voilà. Ça, c'était mardi dernier. »"
+    texte: "Nadia Rouvier pose ses deux mains à plat entre tes omoplates. « Respire. » Un craquement sec, entre les vertèbres. « Voilà. Ça, c'était mardi dernier. »"
     textes:
       - "Elle cherche le nœud sous ton épaule, le trouve, appuie jusqu'à ce que tu cesses de respirer. « Respirez, maintenant. » Il fond comme du beurre."
       - "Elle te fait asseoir, te prend la tête à deux mains et la tourne, lentement, à gauche. « Vous regardez toujours du même côté. Regardez l'autre. »"
@@ -1022,7 +1022,7 @@ activites:
     lieu: agence
     objet: maquette
     label: "Visiter une villa des Hauts"
-    texte: "Madame Tessandier ouvre les volets d'une villa des Hauts, un par un, comme on lève un rideau de théâtre. La Rive en bas, le stade au loin. « Ne regardez pas les murs. Regardez ça. »"
+    texte: "Madame Tessandier ouvre les volets d'une villa des Hauts un par un, en commençant par le salon. La Rive en bas, le stade au loin. « Ne regardez pas les murs. Regardez ça. »"
     textes:
       - "Une villa des Hauts, piscine bâchée, salon vide. Madame Tessandier te laisse avec la baie vitrée et attend dans la voiture. Elle sait que la vue vend mieux qu'elle."
     avec: tessandier
@@ -1111,7 +1111,7 @@ activites:
     lieu: loge
     objet: poele
     label: "Le café du poêle"
-    texte: "Taillandier verse le café du poêle dans deux tasses dépareillées. Par la vitre de la loge, vous regardez passer les veuves du mardi et ceux qui ne viennent que le jeudi soir."
+    texte: "Taillandier réchauffe le café sur le poêle de la loge. Par la vitre, vous regardez passer les veuves du mardi et ceux qui ne viennent que le jeudi soir."
     textes:
       - "Le poêle ronfle. Taillandier compte à voix basse les pas d'un visiteur dans l'allée des Ifs. « Cent douze. Il est arrivé. » Il ne dit pas où ; il le sait."
     avec: taillandier
@@ -1135,7 +1135,7 @@ scenes:
     jours: [lun, mar, mer, jeu, ven]
     qui: dorian
     si: "relation.dorian >= 1 && annee <= 1994"
-    texte: "Une machine neuve dans le mur de la banque, un ruban rouge devant. Dorian, ciseaux en main : « Elle donne de l'argent sans regarder personne. L'Écho veut une photo. Vous tirez le premier billet ? »"
+    texte: "Une machine neuve dans le mur de la banque, un ruban rouge devant. Dorian a les ciseaux. « Elle distribue l'argent sans regarder personne. L'Écho veut sa photo. Voulez-vous tirer le premier billet ? »"
     choix:
       - label: "Je tire le premier billet"
         reponse: "Le flash part au moment où la machine avale ta carte. La photo paraît quand même, légendée « Le progrès ». Dorian l'a encadrée dans son bureau, à l'envers."
@@ -1151,7 +1151,7 @@ scenes:
     jours: [ven]
     qui: dorian
     si: "relation.dorian >= 2 && annee >= 1999 && annee <= 2002"
-    texte: "Pot de départ à la banque : la secrétaire de Dorian, trente ans de maison. Au vestiaire, elle te glisse une enveloppe. « Ses rendez-vous, de 1969 à hier. Lui retient tout. Moi, j'écrivais. »"
+    texte: "Pot de départ pour la secrétaire de Dorian, trente ans de banque. Au vestiaire, elle te glisse une enveloppe. « Ses rendez-vous, de 1969 à hier. Lui, il retient tout de tête. Moi, j'écrivais. »"
     choix:
       - label: "Je la garde"
         reponse: "Elle sourit comme on rend une clé. Le lundi suivant, Dorian te reçoit sans te faire attendre, et ne te demande jamais pourquoi."
@@ -1166,7 +1166,7 @@ scenes:
     tranches: [soir]
     qui: dorian
     si: "relation.dorian <= -2 && annee <= 2002"
-    texte: "Une lettre recommandée de la Banque Aubérivoise : on réexamine tes engagements. En bas, à la main, l'écriture de Dorian : « Rien de personnel. Tout est daté. »"
+    texte: "Une lettre recommandée de la Banque Aubérivoise t'informe qu'on réexamine tes engagements. En bas, à la main, de l'écriture de Dorian : « Rien de personnel. Tout est daté. »"
     choix:
       - label: "J'irai le voir demain"
         reponse: "Il te reçoit debout, ta lettre déjà photocopiée sur son bureau. « Vous voilà. C'est noté aussi. » Il ne te propose pas la chaise."
@@ -1214,7 +1214,7 @@ scenes:
     tranches: [soir]
     qui: vernhes
     si: "relation.vernhes <= -2 && annee >= 2003"
-    texte: "Une enveloppe à fenêtre, sans en-tête : la photocopie d'une seule ligne de ton compte, surlignée au jaune. Au dos, au crayon : « Archivée. Pas effacée. »"
+    texte: "Une enveloppe à fenêtre, sans en-tête. Dedans, la photocopie d'une seule ligne de ton compte, surlignée au jaune, et au dos, au crayon : « Archivée. Pas effacée. »"
     choix:
       - label: "Je vais à la banque"
         reponse: "Vernhes te reçoit devant le directeur d'agence et ne parle que du taux. La ligne, il ne la regarde pas ; toi, tu ne regardes qu'elle."
@@ -1275,7 +1275,7 @@ scenes:
     tranches: [aprem]
     qui: ober
     si: "relation.ober >= 2 && annee >= 2009"
-    texte: "Derrière le paravent du cabinet, un lit de camp, une couverture pliée au carré, un réveil. Ober referme le paravent. « Ma femme croit que je fais des gardes. Vous lui direz quoi, si elle demande ? »"
+    texte: "Derrière le paravent du cabinet, un lit de camp, une couverture pliée au carré, un réveil. Ober referme le paravent. « Ma femme croit que je fais des gardes. Que lui direz-vous, si elle demande ? »"
     choix:
       - label: "Que vous faites des gardes"
         reponse: "« Merci. » Il remet le réveil sur cinq heures dix. « L'heure où je me lève pour rentrer, qu'elle m'entende arriver. »"
@@ -1323,7 +1323,7 @@ scenes:
     tranches: [matin]
     qui: cassagne
     si: "relation.cassagne >= 1 && annee >= 2011 && annee <= 2012"
-    texte: "Devant sa vitrine, Cassagne remonte sa montre une dernière fois et la donne à son fils. Puis, à toi : « Il reprend lundi. Vous lui direz ce que je vous ai vendu, en vingt ans ? »"
+    texte: "Devant sa vitrine, Cassagne remonte sa montre une dernière fois et la donne à son fils. Puis, à toi : « Il reprend lundi. Lui direz-vous ce que je vous ai vendu, en vingt ans ? »"
     choix:
       - label: "On recommence à zéro"
         reponse: "Thibault range la montre dans sa poche sans la mettre. Le lundi, il te demande ton nom, poliment, comme on le demande à quelqu'un qu'on découvre."
@@ -1338,7 +1338,7 @@ scenes:
     tranches: [matin]
     qui: cassagne
     si: "relation.cassagne <= -2 && annee <= 2012"
-    texte: "Quand tu entres, la file d'attente se retourne. La pharmacienne vient de raconter, à voix haute, ce que tu as acheté en janvier. Cassagne ne la reprend pas."
+    texte: "Quand tu entres, la file d'attente se retourne. La pharmacienne vient de raconter, assez fort pour toute la file, ce que tu as acheté en janvier. Cassagne remonte sa montre et laisse dire."
     choix:
       - label: "Je fais la queue"
         reponse: "Huit personnes, huit regards. À ton tour, Cassagne te sert sans un mot, et ajoute un échantillon que tu n'as pas demandé : un somnifère."
@@ -1370,7 +1370,7 @@ scenes:
     tranches: [aprem]
     qui: cassagne_fils
     si: "relation.cassagne_fils >= 2 && annee >= 2013"
-    texte: "Thibault vide le bureau de son père. Au fond d'un tiroir, un masque de soie noire plié dans un mouchoir brodé F. C. « Vous savez ce que c'est. Vous êtes la seule personne à qui je peux le demander. »"
+    texte: "Thibault vide le bureau de son père. Au fond d'un tiroir, un masque de soie noire plié dans un mouchoir brodé F. C. « Vous savez ce que c'est, vous. Y a que vous à qui je peux le demander. »"
     choix:
       - label: "C'était pour le jeudi"
         reponse: "Il hoche la tête longtemps, puis range le masque dans le tiroir et ferme à clé. « Il disait qu'il jouait aux cartes. Il ne savait pas jouer. »"
@@ -1402,7 +1402,7 @@ scenes:
     tranches: [aprem]
     qui: escande
     si: "relation.escande >= 2 && annee >= 2013 && annee <= 2015"
-    texte: "Escande regarde son fils visser un boîtier noir à côté de chaque porte. « Des cartes à la place des clés. Il dit que c'est l'avenir. Les clés, je les mets où ? »"
+    texte: "Escande regarde son fils visser un boîtier noir à côté de chaque porte. « Des cartes à la place des clés. Il dit que c'est l'avenir. Les clés, où voulez-vous que je les mette ? »"
     choix:
       - label: "À la cave, en ordre"
         reponse: "Il les range une à une sur un panneau de bois, à la cave, dans l'ordre des chambres. La 14 y est aussi, à son crochet, sans numéro."
@@ -1418,7 +1418,7 @@ scenes:
     qui: escande
     si: "flag(dette_escande)"
     rejouable: true
-    texte: "Escande t'attend dans le hall, un photographe à côté de lui. « Un client de la Capitale veut une photo avec vous, pour son bureau. C'est un bon client. C'est le sourire que je vous avais demandé. »"
+    texte: "Escande t'attend dans le hall, un photographe à côté de lui. « Un client de la Capitale voudrait une photo avec vous, pour son bureau. Un bon client. Voilà le sourire que je vous avais demandé. »"
     choix:
       - label: "Je souris"
         reponse: "Flash, poignée de main, dédicace. Trois semaines plus tard, la photo paraît dans un journal de la Capitale, au-dessus d'un article sur l'immobilier."
@@ -1449,7 +1449,7 @@ scenes:
     tranches: [matin]
     qui: irene
     si: "relation.irene >= 2 && annee <= 2002"
-    texte: "Au carré des jeunes, Madame Irène change l'eau d'un vase : Paul, 1956-1977, un ballon gravé. « Arrière, en réserve. Il conduisait mal. Vous voulez savoir qui lui avait prêté la voiture ? »"
+    texte: "Au carré des jeunes, Madame Irène change l'eau du vase de Paul, 1956-1977, un ballon gravé sur la pierre. « Arrière, en réserve. Il conduisait mal. Voulez-vous savoir qui lui prêtait la voiture ? »"
     choix:
       - label: "Qui ?"
         reponse: "« Moi. » Elle redresse les glaïeuls. « Je ne fais jamais crédit deux fois. La première, c'était à lui. »"
@@ -1528,7 +1528,7 @@ scenes:
     tranches: [aprem]
     qui: tessandier
     si: "relation.tessandier >= 2 && annee >= 2008 && annee <= 2025"
-    texte: "Madame Tessandier soulève la cloche de la maquette : la résine a jauni, le petit lac a pris la couleur du thé. « Personne ne l'a jamais construite. Je la nettoie, ou je la laisse jaunir ? »"
+    texte: "Madame Tessandier soulève la cloche de la maquette. La résine a jauni, et le petit lac a pris la couleur du thé. « Personne ne l'a jamais construite. Je la nettoie, ou je la laisse jaunir ? »"
     choix:
       - label: "Laissez-la jaunir"
         reponse: "Elle remet la cloche et l'essuie de sa manche. Les passants s'arrêtent devant la vitrine pour rire du lac couleur de thé. Le kop en fait une chanson."
@@ -1544,7 +1544,7 @@ scenes:
     jours: [mer]
     qui: tessandier
     si: "relation.tessandier >= 1 && annee >= 2012 && annee <= 2018"
-    texte: "Dans l'arrière-boutique, une gamine fait ses devoirs au dos d'une plaquette. « Ma petite-fille. Elle doit décrire sa ville en dix lignes. Vous lui dites quoi, vous ? »"
+    texte: "Dans l'arrière-boutique, une gamine fait ses devoirs au dos d'une plaquette. « Ma petite-fille. Elle doit décrire sa ville en dix lignes. Que lui diriez-vous, vous ? »"
     choix:
       - label: "Le stade, un samedi"
         reponse: "Clémence écrit « le bruit », rature, écrit « la Rive ». Sa grand-mère lit par-dessus son épaule et ne corrige rien."
@@ -1592,7 +1592,7 @@ scenes:
     jours: [mar]
     qui: marsillac
     si: "relation.marsillac >= 2 && annee >= 2001 && annee <= 2002"
-    texte: "Dernier conseil de Marsillac, quarante ans de maison. Il ôte sa chaîne d'huissier et te la tend. « Personne ne m'a dit à qui la rendre. Vous la portez jusqu'au grand bureau ? »"
+    texte: "Dernier conseil de Marsillac, quarante ans de maison. Il ôte sa chaîne d'huissier et te la tend. « Personne ne m'a dit à qui la rendre. La porterez-vous jusqu'au grand bureau ? »"
     choix:
       - label: "Je la porte"
         reponse: "Elle pèse plus lourd qu'elle n'en a l'air. Dans le couloir, les conseillers s'écartent sans savoir pourquoi. Au grand bureau, on te la prend des mains, et on te serre la main à sa place."
@@ -1607,7 +1607,7 @@ scenes:
     tranches: [matin]
     qui: marsillac
     si: "relation.marsillac >= 1 && annee <= 2002"
-    texte: "Marsillac te retient au pied de l'escalier. « Vos chaussures ont la boue du parking nord. Le parking nord, tout le monde voudrait l'acheter, ces temps-ci. Vous étiez où ? »"
+    texte: "Marsillac te retient au pied de l'escalier. « Vos chaussures ont la boue du parking nord. Le parking nord, tout le monde voudrait l'acheter, ces temps-ci. Où étiez-vous ? »"
     choix:
       - label: "Au parking nord"
         reponse: "« Bien. » Il sort une brosse d'un tiroir et te la tend. « Là-haut, ils regardent les pieds. Moi, je les nettoie. »"
@@ -1639,7 +1639,7 @@ scenes:
     tranches: [soir]
     qui: lacanal
     si: "relation.lacanal >= 2 && annee <= 2013"
-    texte: "Lacanal décroche une ardoise du mur : trois ans de cafés d'un conseiller, le nom à moitié effacé. « Il est mort dimanche. La famille ne paiera pas. J'efface, ou j'envoie à la mairie ? »"
+    texte: "Lacanal décroche du mur une ardoise, trois ans de cafés d'un conseiller dont le nom est à moitié effacé. « Il est mort dimanche. La famille paiera pas. J'efface, ou j'envoie la note à la mairie ? »"
     choix:
       - label: "Effacez"
         reponse: "Il passe l'éponge une seule fois, lentement, de gauche à droite. Puis il raccroche l'ardoise vide au même clou, comme une photo."
@@ -1654,7 +1654,7 @@ scenes:
     tranches: [soir]
     qui: lacanal
     si: "relation.lacanal >= 1 && annee >= 2012 && annee <= 2013"
-    texte: "Lacanal compte la caisse devant Kamel, son garçon depuis dix ans. « Il veut racheter. Il n'a pas l'argent, il a les clients. Vous me conseillez quoi ? »"
+    texte: "Lacanal compte la caisse devant Kamel, son garçon depuis dix ans. « Il veut racheter. Il a pas l'argent, il a les clients. Vous me conseillez quoi ? »"
     choix:
       - label: "Vendez-lui"
         reponse: "Ils signent sur le comptoir. Kamel souligne une ligne du contrat, par habitude. Lacanal lui laisse son torchon, plié en quatre."
@@ -1669,7 +1669,7 @@ scenes:
     tranches: [matin]
     qui: ouardi
     si: "relation.ouardi >= 2 && annee >= 2014"
-    texte: "Kamel taille son crayon au couteau, au-dessus de la poubelle. « Ce matin, je n'ai rien souligné. La première fois en dix ans. Rien ne mentait, ou tout. Vous lisez, vous ? »"
+    texte: "Kamel taille son crayon au couteau, au-dessus de la poubelle. « Ce matin, j'ai rien souligné. En dix ans, ça m'était jamais arrivé. Vous l'avez lu, vous, le journal ? »"
     choix:
       - label: "Soulignez mon nom"
         reponse: "Il le trouve page trois et trace un trait net, d'une marge à l'autre. « Voilà. Aujourd'hui, c'est vous qui mentez le mieux. »"
@@ -1685,7 +1685,7 @@ scenes:
     tranches: [aprem]
     qui: brousse
     si: "relation.brousse >= 2 && annee <= 2009"
-    texte: "Le père Brousse tient une bassine sous une fuite de la nef. « La toiture fuit sur saint Aubin, pile sur sa tête. L'évêché dit d'attendre. Le saint, lui, n'attend plus. »"
+    texte: "Le père Brousse tient une bassine sous une fuite de la nef. « Ça fuit sur saint Aubin, pile sur la tête. L'évêché dit d'attendre. Lui, il a déjà de la mousse sur l'oreille. »"
     choix:
       - label: "Je paie les couvreurs"
         francs: -400
@@ -1718,7 +1718,7 @@ scenes:
     jours: [dim]
     qui: rakoto
     si: "relation.rakoto >= 2 && annee >= 2010"
-    texte: "Dimanche, sept heures. Le scooter du père Rakoto refuse de démarrer devant l'église. « Trois messes avant midi, et le car ne passe pas le dimanche. Vous avez une voiture ? »"
+    texte: "Dimanche, sept heures. Le scooter du père Rakoto refuse de démarrer devant l'église. « Trois messes avant midi, et le car passe pas le dimanche. Vous avez une voiture ? »"
     choix:
       - label: "Montez"
         reponse: "Trois villages, trois parvis, trois chorales qui chantent faux. Au troisième, une vieille dame te bénit à sa place. Il rit tout le retour."
@@ -1749,7 +1749,7 @@ scenes:
     tranches: [matin]
     qui: abel
     si: "relation.abel >= 2 && annee >= 2000 && annee <= 2001"
-    texte: "Abel arrive à la dernière page de son registre, celui de 1951. « Il m'en faut un neuf. La mairie dit que les registres, c'est fini. Vous m'en achetez un, ou j'arrête d'écrire ? »"
+    texte: "Abel arrive à la dernière page de son registre, celui de 1951. « Il m'en faut un neuf. La mairie dit que les registres, c'est fini. M'en offrirez-vous un, ou dois-je arrêter d'écrire ? »"
     choix:
       - label: "Je vous en achète un"
         francs: -150
@@ -1765,7 +1765,7 @@ scenes:
     tranches: [matin]
     qui: abel
     si: "relation.abel >= 1 && phase == hiver && annee <= 2001"
-    texte: "Le robinet du cimetière a gelé ; Abel casse la glace du seau d'un coup de talon. « Les familles vont venir avec leurs fleurs, et pas d'eau. Vous m'aidez à porter des bidons ? »"
+    texte: "Le robinet du cimetière a gelé ; Abel casse la glace du seau d'un coup de talon. « Les familles vont venir avec leurs fleurs, et pas d'eau. M'aiderez-vous à porter des bidons ? »"
     choix:
       - label: "Je porte"
         reponse: "Six bidons de la loge au carré ancien. Une veuve te remercie comme on remercie un fossoyeur. Abel écrit ton heure, et ajoute : « bidons »."
@@ -1796,7 +1796,7 @@ scenes:
     tranches: [matin]
     qui: passante
     si: "flag(rep_soin)"
-    texte: "Une vieille dame t'arrête devant la pharmacie, une boîte de tisane à la main. « On dit que vous vous ménagez. Mon mari ne s'est jamais ménagé : il est au cimetière. Prenez ça. »"
+    texte: "Une vieille dame t'arrête devant la pharmacie, une boîte de tisane à la main. « Paraît que vous vous ménagez. Mon mari, il s'est jamais ménagé. Il est au cimetière. Prenez ça. »"
     choix:
       - label: "Je la prends"
         reponse: "Verveine, tilleul, et une étiquette écrite à la main : « Pour la personne du club qui dort. » Ce soir-là, tu dors comme on ne dort plus depuis l'enfance."
@@ -1825,7 +1825,7 @@ scenes:
     tranches: [aprem]
     qui: ancien
     si: "flag(rep_foi)"
-    texte: "Un ancien t'attend devant l'église, le chapeau à la main. « On dit que vous êtes fidèle. Ma femme est morte jeudi. Elle aurait voulu quelqu'un du club à son enterrement. »"
+    texte: "Un ancien t'attend devant l'église, le chapeau à la main. « Paraît que vous venez à la messe. Ma femme est morte jeudi. Elle aurait voulu quelqu'un du club à l'enterrement. »"
     choix:
       - label: "J'y serai"
         reponse: "Mardi, dix heures. Tu restes au fond. À la sortie, il te serre la main devant toute la famille ; la famille, après, serre la tienne, un par un."
@@ -1884,7 +1884,7 @@ paroles:
   - qui: ancien
     sujet: toi
     si: "flag(rep_soin)"
-    texte: "Il paraît que vous dormez huit heures. À votre âge, moi, je dormais quatre heures et je courais douze kilomètres. J'ai eu trois infarctus."
+    texte: "Paraît que vous dormez huit heures. À votre âge, je dormais quatre heures et je courais douze kilomètres. Trois infarctus, j'ai eu."
   - qui: passante
     sujet: toi
     si: "flag(rep_soin)"
@@ -1900,7 +1900,7 @@ paroles:
   - qui: passante
     sujet: toi
     si: "flag(rep_foi)"
-    texte: "Vous étiez à l'enterrement du vieux de la rue des Teinturiers, il paraît. Il n'avait plus personne. Il aurait été content : il détestait le club."
+    texte: "Vous étiez à l'enterrement du vieux de la rue des Teinturiers, il paraît. Il avait plus personne. Il aurait été content : il détestait le club."
   - qui: enfant
     sujet: toi
     si: "flag(rep_foi)"
@@ -1908,7 +1908,7 @@ paroles:
   - qui: commercant
     sujet: toi
     si: "flag(rep_luxe)"
-    texte: "Avec votre montre, vous pourriez m'acheter la boutique. Ne le faites pas : je n'aurais plus rien à regarder passer."
+    texte: "Avec votre montre, vous pourriez m'acheter la boutique. Le faites pas, hein. J'aurais plus rien à regarder passer."
   - qui: passant
     sujet: toi
     si: "flag(rep_luxe)"
