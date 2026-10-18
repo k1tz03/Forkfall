@@ -110,7 +110,7 @@
           for (var k = 0; k < 3; k++) { bs[k].textContent = "⚀⚁⚂⚃⚄⚅".charAt(j.d[k] - 1); bs[k].classList.add("roule"); (function (b) { setTimeout(function () { b.classList.remove("roule"); }, 260); })(bs[k]); }
           var s = j.d.slice().sort().join(""), v = s === "124" ? 4 : (j.d[0] === j.d[1] && j.d[1] === j.d[2]) ? 2 : (s === "123" || s === "234" || s === "345" || s === "456") ? 1.5 : 0;
           if (v === 4 || j.n >= 3) {
-            var ph = v === 4 ? "Quatre, deux, un. Le patron essuie le comptoir sans un mot et pousse les billets." : v === 2 ? "Un brelan. Au comptoir, quelqu'un siffle." : v === 1.5 ? "Une suite. Ça rembourse, à peine." : "Rien. La piste de feutre garde ta mise.";
+            var ph = v === 4 ? "Quatre, deux, un. Le patron essuie le comptoir et pousse les billets vers toi." : v === 2 ? "Un brelan. Au comptoir, quelqu'un siffle." : v === 1.5 ? "Une suite. Ça rembourse, à peine." : "Rien. La piste de feutre garde ta mise.";
             act.hidden = true;
             setTimeout(function () { if (JEU === j) resultat(j, v > 0, v, ph); }, 420);
           } else act.textContent = "Relancer (" + (3 - j.n) + ")";

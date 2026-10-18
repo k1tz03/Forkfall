@@ -97,7 +97,7 @@
 
   // ─── les pochettes qu'on gagne en jouant : un lien qui monte d'un cran, un service rendu
   var ALBUM_MOTS = {
-    lien: ["{n} te glisse une pochette dans la poche, sans rien dire.", "{n} te tend une pochette fermée. Pour l'album.", "Une pochette de {n}, encore scellée."],
+    lien: ["{n} te glisse une pochette dans la poche de ta veste.", "{n} te tend une pochette fermée. Pour l'album.", "Une pochette de {n}, encore scellée."],
     service: ["{n} ajoute une pochette au service.", "Avec le service, {n} te laisse une pochette sur le comptoir.", "{n} pousse une pochette vers toi, du bout du doigt."]
   };
   // au plus `cadeaux.<raison>` par carrière (album.yaml) ; `delai` : après les mots du palier

@@ -70,7 +70,7 @@
     ],
     // quelqu'un se ferme : léger, moyen, fort
     froid: [
-      ["{N} ne l'oubliera pas.", "{N} a noté. Sans rien dire.", "{N} n'a pas aimé.", "{N} garde ça pour plus tard.", "{N} te regardera de travers.", "{N} s'en souviendra. Pas pour te remercier.", "{N} a pris ça de travers.", "{N} fait le compte."],
+      ["{N} ne l'oubliera pas.", "{N} l'a noté quelque part.", "{N} n'a pas aimé.", "{N} garde ça pour plus tard.", "{N} te regardera de travers.", "{N} s'en souviendra. Pas pour te remercier.", "{N} a pris ça de travers.", "{N} fait le compte."],
       ["{N} ne te le pardonnera pas.", "{N} a rayé ton nom de sa liste.", "{N} ne t'attendra plus.", "Entre {N} et toi, ça s'est fermé.", "{N} ne te fera plus de cadeau."],
       ["{N} te le fera payer.", "{N} est contre toi, désormais.", "{N} ne te le pardonnera jamais.", "{N} est dans l'autre camp, maintenant.", "Entre {N} et toi, c'est la guerre."]
     ],
