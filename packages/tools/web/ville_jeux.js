@@ -89,10 +89,10 @@
         if (j.tape) { j.x.strokeStyle = "#E0164B"; j.x.lineWidth = 1; j.x.beginPath(); j.x.moveTo(j.vx - 7, j.vy); j.x.lineTo(j.vx + 7, j.vy); j.x.moveTo(j.vx, j.vy - 7); j.x.lineTo(j.vx, j.vy + 7); j.x.stroke(); }
       },
     },
-    // LE 421 : trois dés, trois lancers ; on garde ce qu'on veut. 4-2-1 paie quatre fois.
+    // LE 421 : trois dés, trois lancers ; on garde ce qu'on veut. On joue pour l'honneur, jamais pour de l'argent.
     des: {
       sansToile: true,
-      regle: "Trois dés, trois lancers. Touche un dé pour le garder. 4-2-1 paie quatre fois la mise, un brelan deux fois, une suite une fois et demie.",
+      regle: "Trois dés, trois lancers. Touche un dé pour le garder. Il faut sortir le 4-2-1, un brelan ou une suite.",
       debut: function (j) {
         j.d = [0, 0, 0]; j.garde = [false, false, false]; j.n = 0;
         var box = j.el.querySelector(".v-jeu-des"); box.hidden = false; box.innerHTML = "";
@@ -110,7 +110,7 @@
           for (var k = 0; k < 3; k++) { bs[k].textContent = "⚀⚁⚂⚃⚄⚅".charAt(j.d[k] - 1); bs[k].classList.add("roule"); (function (b) { setTimeout(function () { b.classList.remove("roule"); }, 260); })(bs[k]); }
           var s = j.d.slice().sort().join(""), v = s === "124" ? 4 : (j.d[0] === j.d[1] && j.d[1] === j.d[2]) ? 2 : (s === "123" || s === "234" || s === "345" || s === "456") ? 1.5 : 0;
           if (v === 4 || j.n >= 3) {
-            var ph = v === 4 ? "Quatre, deux, un. Le patron essuie le comptoir et pousse les billets vers toi." : v === 2 ? "Un brelan. Au comptoir, quelqu'un siffle." : v === 1.5 ? "Une suite. Ça rembourse, à peine." : "Rien. La piste de feutre garde ta mise.";
+            var ph = v === 4 ? "Quatre, deux, un. Le patron écrit ton nom à la craie, en haut de l'ardoise." : v === 2 ? "Un brelan. Au comptoir, quelqu'un siffle." : v === 1.5 ? "Une suite. De justesse, mais ça compte." : "Rien. Le patron ramasse les dés et te ressert.";
             act.hidden = true;
             setTimeout(function () { if (JEU === j) resultat(j, v > 0, v, ph); }, 420);
           } else act.textContent = "Relancer (" + (3 - j.n) + ")";
@@ -149,7 +149,7 @@
     // LES CARTES : plus haut que le donneur, trois manches.
     cartes: {
       sansToile: true,
-      regle: "Plus haut que le donneur. Trois manches : deux pour emporter la mise.",
+      regle: "Plus haut que le donneur. Trois manches : deux pour gagner.",
       debut: function (j) {
         j.m = 0; j.g = 0; var box = j.el.querySelector(".v-jeu-des"); box.hidden = false; box.innerHTML = '<div class="v-cartes"><span class="toi">?</span><span class="lui">?</span></div>';
         var act = j.el.querySelector(".v-jeu-action"); act.textContent = "Tirer"; act.hidden = false;
@@ -161,7 +161,7 @@
           j.m++; if (a > b) j.g++;
           box.querySelector(".toi").textContent = V[a]; box.querySelector(".lui").textContent = V[b];
           j.el.querySelector(".v-jeu-score").textContent = "Manche " + j.m + " : " + (a > b ? "à toi." : "au donneur.") + " (" + j.g + " – " + (j.m - j.g) + ")";
-          if (j.g >= 2 || j.m - j.g >= 2 || j.m >= 3) { act.hidden = true; var gg = j.g >= 2; setTimeout(function () { if (JEU === j) resultat(j, gg, j.g, gg ? "Le donneur pousse les billets sous le cendrier, vers toi." : "Le donneur ramasse. Personne ne te regarde partir."); }, 600); }
+          if (j.g >= 2 || j.m - j.g >= 2 || j.m >= 3) { act.hidden = true; var gg = j.g >= 2; setTimeout(function () { if (JEU === j) resultat(j, gg, j.g, gg ? "Le donneur jette ses cartes et te tend la main par-dessus le cendrier." : "Le donneur ramasse. Personne ne te regarde partir."); }, 600); }
         };
       },
     },

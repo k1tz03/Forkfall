@@ -3010,13 +3010,12 @@
     return remplir(a.texte || "");
   }
   function finirActivite(a, cle, res) {
-    var mise = a.francs || 0, gain = 0;
-    // les jeux d'argent paient la mise : le 421 selon la combinaison, les cartes au double
-    if (res && res.gagne && mise < 0 && (a.jeu === "des" || a.jeu === "cartes")) gain = Math.round(-mise * (a.jeu === "des" ? res.score : 2));
-    S.francs += mise + gain;
+    // une partie ne rapporte jamais d'argent : ce qu'elle coûte est le verre ou la place à la table,
+    // gagnée ou perdue (miser l'argent du jeu sur le hasard serait du jeu d'argent simulé, docs/sortie.md)
+    S.francs += a.francs || 0;
     S.jourFaits[a.id] = (S.jourFaits[a.id] || 0) + 1;
     // une variante du texte, tour à tour ; après un jeu, ce que la partie a donné
-    var texte = res ? res.phrase + (gain ? " (+" + argent(gain) + ")" : "") : varianteDe(a);
+    var texte = res ? res.phrase : varianteDe(a);
     if (a.special) {
       var sp = faireSpecial(a, cle, texte);
       if (sp === true) { majHud(); sauver(); return; }
