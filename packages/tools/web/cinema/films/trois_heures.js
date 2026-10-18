@@ -315,6 +315,7 @@
     titre: "Trois heures",
     duree: 35.0,
     musique: "livre_h8",
+    musiqueFilm: "film_trois_heures",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     secours: "ville_nuit",
     couleur: CYAN,
     affiche: 11.6,
