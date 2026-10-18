@@ -389,9 +389,11 @@ function decouper(m) {
   const avant = FONDU + MARGE + 512, apres = MARGE + 512;
   const grille = (x) => Math.max(0, Math.floor(x / GRILLE) * GRILLE);
   // l'introduction (et la tête du premier passage) : un bloc, ou deux quand elle est longue et qu'il reste un
-  // fichier — le premier, court, est tout ce que la première note attend (téléchargé, décodé)
+  // fichier — le premier, court, est tout ce que la première note attend (téléchargé, décodé). La musique
+  // d'un film (sa sonie sur l'introduction) reste d'un bloc : le lecteur des films la demande d'avance, et
+  // un fichier de moins par film tient la version publiée sous ses 511 fichiers
   const blocs = [];
-  if (entree.h > PREMIER.long * FS && K + 2 <= FICHIERS_MAX) {
+  if (m.j.sonie_sur !== 'intro' && entree.h > PREMIER.long * FS && K + 2 <= FICHIERS_MAX) {
     const c0 = Math.round(PREMIER.court * FS);
     blocs.push({ de: 0, a: c0, debut: 0, fin: c0 + apres }, { de: c0, a: entree.h, debut: grille(c0 - avant), fin: entree.h + apres });
   } else blocs.push({ de: 0, a: entree.h, debut: 0, fin: entree.h + apres });
