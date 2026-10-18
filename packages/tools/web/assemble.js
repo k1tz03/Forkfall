@@ -65,7 +65,7 @@ const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_film.js', 'v
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js', 'preview_eclair.js', 'preview_film.js'];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js', 'preview_eclair.js', 'preview_film.js', 'preview_avis.js'];
 // ville_film.js enveloppe ces quatre fonctions de ville_cinema.js (les portes des scènes
 // jouées, que les films prennent aussi) : un renommage doit casser l'assemblage, pas les films
 const PORTES_DES_FILMS = ['cineDeCarte', 'cineDeDrapeau', 'cineIntro', 'jouerCine'];
@@ -160,6 +160,12 @@ function parseArgs(argv) {
     // le gzip comme fichier (l'artefact publié) ; il compresse lui-même au transfert, et demarrage.js lit
     // tel quel un bundle qui ne commence pas par l'en-tête gzip
     else if (a === '--contenu-json') opts.contenuJson = true;
+    // la page d'une version de bêta (docs/sortie/beta.md) : son numéro, à l'accueil et dans l'avis des testeurs ;
+    // l'adresse du formulaire des retours (modifiable ensuite dans la page : <meta name="fusible-retours">)
+    else if (a === '--version') opts.version = argv[++i];
+    else if (a === '--retours') opts.retours = argv[++i];
+    // l'adresse publique de la page, base des liens de défi (l'artefact publié : son URL claude.ai)
+    else if (a === '--lien') opts.lien = argv[++i];
     else if (a.startsWith('--engine=')) opts.engine = a.slice(9);
     else if (a.startsWith('--out=')) opts.out = a.slice(6);
     else if (a === '-h' || a === '--help') {
@@ -402,9 +408,20 @@ function musiqueEnregistree(versDossier) {
 /// packages/tools/web/pwa/ (pwa/genere.js les tire de l'accueil).
 const TITRE_PARTAGE = 'Fusible — une carrière de football à Aubérive';
 const DESCRIPTION = 'Aubérive, 1990 → 2050. Dix histoires, une ville en pixel art, des cartes qu\'on glisse à gauche ou à droite — et des fins qu\'on n\'avoue pas.';
-function teteHtml(communUrl) {
+// les balises que la page lit d'elle-même : le lien des défis (preview_partage.js), la version et le
+// formulaire des retours d'une bêta (preview_avis.js) ; une bêta garde la balise des retours, même vide
+function balisesPage(opts) {
+  const a = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  const l = [];
+  if (opts.lien) l.push('<meta name="fusible-lien" content="' + a(opts.lien) + '">');
+  if (opts.version) l.push('<meta name="fusible-version" content="' + a(opts.version) + '">');
+  if (opts.version || opts.retours) l.push('<meta name="fusible-retours" content="' + a(opts.retours || '') + '">');
+  return l;
+}
+function teteHtml(communUrl, opts) {
   const a = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   return [
+    ...balisesPage(opts),
     // le contenu commun part dès la première ligne lue : il arrive pendant que la page se
     // lit (demarrage.js reprend cette promesse) ; une erreur est la sienne, pas celle de la page
     '<script>window.FUSIBLE_COMMUN = window.fetch ? window.fetch(' + JSON.stringify(communUrl) + ') : null; if (window.FUSIBLE_COMMUN) window.FUSIBLE_COMMUN.catch(function () {});</script>',
@@ -531,7 +548,7 @@ function main() {
   const blocContenu = contenuHtml(contenu, dossier, moteurUrl);
   const communUrl = blocContenu.communUrl;
   tpl = tpl.split('__CONTENU__').join(blocContenu.html);
-  tpl = tpl.split('__TETE__').join(dossier ? teteHtml(communUrl) : '');
+  tpl = tpl.split('__TETE__').join(dossier ? teteHtml(communUrl, opts) : balisesPage(opts).join('\n'));
   tpl = tpl.split('__ENGINE_JS__').join(dossier ? '/* le moteur : ' + moteurUrl + ' (demarrage.js le charge) */' : safeEngine);
   tpl = tpl.split('__ART_JS__').join(safeArt);
   tpl = tpl.split('__AUDIO_JS__').join(safeAudio);

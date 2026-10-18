@@ -1,0 +1,314 @@
+<title>Fusible</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Fusible, ta carrière de football en roman noir : dix livres de 1990 à 2050, une carte, un choix, et une ville en pixels qui se souvient. Bientôt sur iPhone et Android.">
+<meta property="og:title" content="Fusible">
+<meta property="og:description" content="Ta carrière de football, en roman noir. Dix livres de 1990 à 2050, une ville en pixels qui se souvient.">
+<meta property="og:image" content="images/apercu.jpg">
+<meta property="og:type" content="website">
+<!-- À remplir avant la mise en ligne (README.md) : le lien du formulaire de la bêta, l'éditeur et le
+     contact des mentions légales, les comptes des réseaux (adresses séparées par des espaces). -->
+<meta name="fusible-beta" content="">
+<meta name="fusible-editeur" content="">
+<meta name="fusible-contact" content="">
+<meta name="fusible-reseaux" content="">
+<style>
+/* La vitrine : une colonne, la porte d'Aubérive de nuit, puis les dix cartouches de l'accueil du jeu,
+   tracées au pixel, ombres dures, une seule couleur d'accent ; chaque livre garde la sienne pour son heure. */
+:root{
+  --encre:#120E1C;     /* l'encre de prune, le fond de l'accueil du jeu */
+  --panneau:#1C1630;   /* la cartouche */
+  --trait:#352B52;     /* les bords tracés au pixel */
+  --ombre:#06040B;     /* l'ombre portée, dure */
+  --creme:#F6E9CF;     /* le texte */
+  --lavande:#CBC1E2;   /* le texte second */
+  --brume:#A79CC4;     /* les légendes */
+  --or:#FFC94D;        /* l'accent : la mèche */
+  --pix:"Jersey 15","DejaVu Sans Mono",ui-monospace,monospace;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;
+  color-scheme:dark;
+}
+@font-face{font-family:"Jersey 15";font-style:normal;font-weight:400;font-display:swap;
+  src:url(data:font/woff2;base64,__JERSEY_WOFF2__) format("woff2")}
+*{box-sizing:border-box}
+html{background:var(--encre)}
+body{background:var(--encre);color:var(--creme);font:16px/1.65 var(--mono);font-synthesis:none;
+  -webkit-text-size-adjust:100%;overflow-x:hidden}
+img,video{max-width:100%;display:block}
+a{color:var(--or)}
+:focus-visible{outline:3px solid var(--or);outline-offset:3px}
+.col{max-width:1080px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--pix);font-weight:400;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+.sur{font:13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.14em;color:var(--brume)}
+
+/* LA PORTE : le panorama de nuit qui défile, comme l'accueil du jeu */
+.porte{position:relative;isolation:isolate;overflow:hidden;border-bottom:2px solid var(--trait)}
+.porte::before{content:"";position:absolute;inset:0;z-index:-2;background:url(images/panorama_nuit.webp) center 40%/cover no-repeat;
+  image-rendering:pixelated;animation:defile 90s ease-in-out infinite alternate}
+.porte::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(18,14,28,.35) 0%,rgba(18,14,28,.55) 45%,var(--encre) 100%)}
+@keyframes defile{from{background-position:20% 40%}to{background-position:80% 40%}}
+.porte .col{padding-block:clamp(56px,11vw,128px) clamp(40px,7vw,80px);display:grid;gap:22px;justify-items:start}
+.titre{font-size:clamp(76px,17vw,176px);letter-spacing:.02em;color:var(--creme);text-shadow:5px 5px 0 var(--ombre)}
+.meche{display:block;width:clamp(120px,26vw,260px);height:8px;background:var(--or);box-shadow:4px 4px 0 var(--ombre);margin-top:6px}
+.devise{font-family:var(--pix);font-size:clamp(26px,4.6vw,40px);line-height:1.1;color:var(--creme);text-shadow:3px 3px 0 var(--ombre)}
+.chapeau{max-width:58ch;color:var(--lavande);text-shadow:0 1px 0 var(--ombre)}
+.boutons{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px}
+.bouton{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:10px 20px;font:22px/1 var(--pix);
+  text-decoration:none;border:2px solid var(--ombre);box-shadow:4px 4px 0 var(--ombre);transition:transform .08s,box-shadow .08s}
+.bouton:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ombre)}
+.bouton.plein{background:var(--or);color:var(--encre)}
+.bouton.creux{background:rgba(18,14,28,.7);color:var(--creme);border-color:var(--creme)}
+.bouton[aria-disabled="true"]{background:var(--panneau);color:var(--brume);border-color:var(--trait);cursor:default}
+
+section{padding-block:clamp(48px,8vw,88px)}
+.tete{display:grid;gap:10px;margin-bottom:28px;max-width:62ch}
+.tete h2{font-size:clamp(36px,6vw,56px)}
+.tete p{color:var(--lavande)}
+
+/* LA BANDE-ANNONCE */
+.ecran{border:2px solid var(--trait);box-shadow:6px 6px 0 var(--ombre);background:var(--ombre);aspect-ratio:16/9;width:100%}
+.ecran video{width:100%;height:100%;object-fit:cover}
+
+/* LES CHIFFRES : ce qu'il y a dans la boîte */
+.chiffres{display:flex;flex-wrap:wrap;gap:12px 34px;margin-top:30px;padding:18px 20px;background:var(--panneau);
+  border:2px solid var(--trait);box-shadow:4px 4px 0 var(--ombre)}
+.chiffres div{display:grid}
+.chiffres b{font:400 40px/1 var(--pix);color:var(--or);font-variant-numeric:tabular-nums}
+.chiffres span{font-size:13px;color:var(--brume);letter-spacing:.06em}
+
+/* LES DIX LIVRES : les cartouches de l'accueil */
+.livres{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,310px),1fr));gap:22px}
+.livre{display:grid;grid-template-rows:auto 1fr;background:var(--panneau);border:2px solid var(--trait);
+  box-shadow:5px 5px 0 var(--ombre);min-width:0}
+.livre figure{position:relative;margin:0;border-bottom:2px solid var(--trait)}
+.livre figure img{width:100%;aspect-ratio:16/9;object-fit:cover;image-rendering:pixelated}
+.heure{position:absolute;left:10px;bottom:10px;padding:4px 9px 3px;font:24px/1 var(--pix);color:var(--c);
+  background:var(--ombre);border:2px solid var(--c);letter-spacing:.04em}
+.livre .corps{display:grid;gap:8px;align-content:start;padding:16px 18px 20px}
+.livre .num{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brume)}
+.livre h3{font-size:30px;color:var(--creme)}
+.livre .role{font-size:13.5px;color:var(--c)}
+.livre .pitch{font-size:14.5px;line-height:1.6;color:var(--lavande)}
+
+/* AUBÉRIVE, ENTRE DEUX CARTES */
+.ville{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
+.ville figure{margin:0;display:grid;gap:14px;align-content:start}
+.ville img{width:100%;max-width:300px;border:2px solid var(--trait);box-shadow:5px 5px 0 var(--ombre)}
+.ville figcaption{display:grid;gap:6px;max-width:34ch}
+.ville figcaption b{font:400 24px/1.1 var(--pix);color:var(--creme)}
+.ville figcaption span{font-size:14.5px;color:var(--lavande)}
+@media (max-width:720px){
+  .ville{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding-bottom:12px;
+    margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px))) calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+    padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+  .ville figure{flex:0 0 72%;scroll-snap-align:start}
+}
+.aussi{margin-top:30px;max-width:62ch;color:var(--lavande)}
+
+/* LA BÊTA */
+.beta{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:start;padding:clamp(22px,4vw,36px);
+  background:var(--panneau);border:2px solid var(--or);box-shadow:6px 6px 0 var(--ombre)}
+.beta h2{font-size:clamp(36px,6vw,56px)}
+.beta .texte{display:grid;gap:14px}
+.beta .texte p{color:var(--lavande)}
+.beta ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.beta li{display:grid;grid-template-columns:14px 1fr;gap:12px;align-items:baseline}
+.beta li::before{content:"";width:10px;height:10px;background:var(--or);box-shadow:2px 2px 0 var(--ombre);transform:translateY(1px)}
+.beta .note{font-size:13px;color:var(--brume)}
+@media (max-width:760px){.beta{grid-template-columns:1fr}}
+
+footer{border-top:2px solid var(--trait);padding-block:32px 40px;color:var(--brume);font-size:13px}
+footer .col{display:grid;gap:12px}
+footer .marque{font:28px/1 var(--pix);color:var(--creme)}
+footer .reseaux{display:flex;flex-wrap:wrap;gap:16px}
+footer .reseaux:empty{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  .porte::before{animation:none}
+  .bouton{transition:none}
+}
+</style>
+
+<header class="porte">
+  <div class="col">
+    <p class="sur">Un jeu de cartes et une ville, sur téléphone</p>
+    <h1 class="titre">FUSIBLE<span class="meche" aria-hidden="true"></span></h1>
+    <p class="devise">Ta carrière de football, en roman noir.</p>
+    <p class="chapeau">Dix livres, de 1990 à 2050, dans un pays qui n'existe pas. Une carte, un choix : tu glisses à gauche ou à droite. Entre deux cartes, tu vis à Aubérive, et la ville n'oublie rien de ce que tu y fais.</p>
+    <div class="boutons">
+      <a class="bouton plein" id="lienBeta" href="#beta">Rejoindre la bêta</a>
+      <a class="bouton creux" href="#bande-annonce">Voir la bande-annonce</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="bande-annonce">
+    <div class="col">
+      <div class="tete">
+        <p class="sur">Une minute</p>
+        <h2>La bande-annonce</h2>
+      </div>
+      <div class="ecran">
+        <video controls playsinline preload="metadata" poster="images/affiche.jpg">
+          <source src="bande-annonce.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="chiffres" aria-label="Ce qu'il y a dans le jeu">
+        <div><b>10</b><span>livres, de 1990 à 2050</span></div>
+        <div><b>123</b><span>fins à trouver</span></div>
+        <div><b>3 988</b><span>cartes écrites</span></div>
+        <div><b>39</b><span>pièces où entrer</span></div>
+        <div><b>20</b><span>courts films</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="livres">
+    <div class="col">
+      <div class="tete">
+        <p class="sur">Choisis par où entrer</p>
+        <h2>Dix livres, dix carrières</h2>
+        <p>Chaque livre est une histoire complète, avec ses fins, qui se joue en deux heures environ. Tu y es entraîneur, joueur, président, directeur sportif ou sélectionneur ; la ville, elle, reste la même, et se souvient des carrières d'avant.</p>
+      </div>
+      <div class="livres" id="listeLivres"></div>
+    </div>
+  </section>
+
+  <section id="ville">
+    <div class="col">
+      <div class="tete">
+        <p class="sur">Aubérive</p>
+        <h2>Entre deux cartes, la ville</h2>
+        <p>Tu marches, tu entres, tu bois un café avec qui tu veux. Chaque geste compte : un lien qui se noue, une dette, un tuyau qu'on te glisse au comptoir.</p>
+      </div>
+      <div class="ville">
+        <figure>
+          <img src="images/02.webp" width="480" height="1040" loading="lazy" alt="La rue de nuit à Aubérive, avec l'enseigne du Lavoir et le héros devant la porte.">
+          <figcaption><b>Une ville qui se souvient</b><span>Les gens retiennent ce que tu fais pour eux, et ce que tu leur dois.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="images/04.webp" width="480" height="1040" loading="lazy" alt="Le match du samedi à la Rive : le jeu s'arrête, deux gestes à choisir.">
+          <figcaption><b>Le samedi, cinq secondes</b><span>À la Rive, le match s'arrête sur une action. Deux gestes, cinq secondes pour choisir.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="images/05.webp" width="480" height="1040" loading="lazy" alt="L'intérieur d'un bar, ses habitués, et une réplique du patron.">
+          <figcaption><b>Pousse la porte</b><span>Trente-neuf pièces, leurs habitués, et quelqu'un qui te reconnaît toujours.</span></figcaption>
+        </figure>
+      </div>
+      <p class="aussi">Et vingt courts films en 3D, une bande originale jouée par de vrais instruments, un album de vignettes à compléter d'une carrière à l'autre, et Le Fusible : dix minutes, quatre jauges, un défi par jour.</p>
+    </div>
+  </section>
+
+  <section id="beta">
+    <div class="col">
+      <div class="beta">
+        <div class="texte">
+          <p class="sur">Avant la sortie</p>
+          <h2>La bêta</h2>
+          <p>Fusible sort bientôt sur iPhone et Android. Avant, on cherche des joueuses et des joueurs pour y jouer et nous dire ce qui coince, ce qui ennuie, ce qui marche.</p>
+          <p class="note" id="noteBeta">Inscription gratuite. Ton adresse ne sert qu'à t'envoyer la bêta et à te prévenir de la sortie.</p>
+        </div>
+        <div class="texte">
+          <ul>
+            <li>Ton nom au générique du jeu.</li>
+            <li>Le titre « Membre fondateur », dans le jeu.</li>
+            <li>Le jeu offert à sa sortie.</li>
+          </ul>
+          <a class="bouton plein" id="boutonBeta" href="#beta">Je m'inscris</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="col">
+    <p class="marque">FUSIBLE</p>
+    <div class="reseaux" id="reseaux"></div>
+    <p>Fusible est une fiction. Les villes, les clubs, les compétitions, les journaux et les personnes du jeu sont inventés ; toute ressemblance avec des clubs, des personnes ou des compétitions existants serait fortuite.</p>
+    <p id="mentions">Mentions légales à compléter avant la mise en ligne.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Les dix livres : l'heure et la couleur de chaque cartouche viennent de la table HISTOIRES du jeu
+  // (packages/tools/web/preview_template.html), l'accroche du postulat (content/postulats.yaml).
+  var LIVRES = [
+    { id: "promu", t: "Trois mille visages", r: "Entraîneur", a: 1990, d: 1, h: "DIMANCHE", c: "#FF5A4E",
+      p: "Ils t'aiment. Ils feront ce que tu n'oses pas faire. Avec ton visage." },
+    { id: "interimaire", t: "Le Sapin en carton", r: "Entraîneur intérimaire", a: 1990, d: 2, h: "LUNDI", c: "#6FB0E8",
+      p: "Une berline grise sur la place d'un autre. Le lundi, son répondeur parle." },
+    { id: "pepite", t: "La Sirène", r: "Joueur, dix-neuf ans", a: 1990, d: 2, h: "16:00", c: "#FF9A3C",
+      p: "L'usine ferme à Noël, et tu es la dernière chose que cette ville fabrique. Tout le monde veut te vendre ; la nuit, la sirène de l'usine morte hurle pour les gamins qui tombent." },
+    { id: "fin_de_contrat", t: "La Route de la Rive", r: "Joueur en fin de contrat", a: 1990, d: 1, h: "02:40", c: "#FFD84D",
+      p: "Chaque 14 mai, des chrysanthèmes sur une tombe de 1984. Cet automne, la photo de la montée arrive par morceaux." },
+    { id: "geant_dechu", t: "La Maquette", r: "Président", a: 1999, d: 2, h: "MAR. 18:00", c: "#7ED37E",
+      p: "Deux titres au mur, un dépôt de bilan au greffe, et toi. Dans une vitrine, le stade rétrécit chaque mois ; chaque mardi à dix-huit heures, une voix sans nom appelle." },
+    { id: "vendre_trente", t: "23 h 58", r: "Directrice sportive", a: 2003, d: 1, h: "23:58", c: "#B49BFF",
+      p: "Un fax sans en-tête, une photo de 1999, trente millions par an. Le papier blanchit en six mois." },
+    { id: "apres_fiasco", t: "Chambre 12", r: "Sélectionneur", a: 2011, d: 0, h: "02:10", c: "#FF79B0",
+      p: "En 2010, le bus n'est jamais descendu. À l'hôtel de la Rive, vingt-six doubles pendent au tableau des clés ; la troisième nuit, quelqu'un demande celui de la 12." },
+    { id: "le_modele", t: "L'Oreillette", r: "Directeur sportif", a: 2024, d: 1, h: "06:10", c: "#4FE3FF",
+      p: "Un club dans un tableur, et dans ton oreille, la voix d'un mort qui choisit qui vendre." },
+    { id: "mondial_hiver", t: "Vingt degrés dedans", r: "Sélectionneuse", a: 2029, d: 0, h: "14:10", c: "#DDEFFF",
+      p: "Un cercueil scellé arrive de l'étranger, et la mère du mort pétrit ton pain. Le Mondial se joue sous un dôme, à vingt degrés dedans ; ton capitaine veut y porter un brassard noir." },
+    { id: "escalier_ferme", t: "Les Deux Téléphones", r: "Présidente", a: 2037, d: 2, h: "00:00", c: "#FFB547",
+      p: "Le téléphone du bureau est pour la ville ; le clapet dans ta veste, pour ceux qui ont payé ta campagne. En 2040, une loi ferme l'escalier : monte, ou fais semblant." }
+  ];
+  var liste = document.getElementById("listeLivres");
+  LIVRES.forEach(function (l, i) {
+    var art = document.createElement("article");
+    art.className = "livre";
+    art.style.setProperty("--c", l.c);
+    var div = l.d ? " · Division " + l.d : " · l'équipe nationale";
+    art.innerHTML =
+      '<figure><img loading="lazy" width="640" height="360" alt=""><span class="heure"></span></figure>' +
+      '<div class="corps"><p class="num"></p><h3></h3><p class="role"></p><p class="pitch"></p></div>';
+    var img = art.querySelector("img");
+    img.src = "images/couv_" + l.id + ".webp";
+    img.alt = "Le lieu du livre « " + l.t + " », en pixels.";
+    art.querySelector(".heure").textContent = l.h;
+    art.querySelector(".num").textContent = "Livre " + (i + 1) + " · " + l.a;
+    art.querySelector("h3").textContent = l.t;
+    art.querySelector(".role").textContent = l.r + div;
+    art.querySelector(".pitch").textContent = l.p;
+    liste.appendChild(art);
+  });
+
+  function meta(nom) {
+    var m = document.querySelector('meta[name="' + nom + '"]');
+    return m ? (m.getAttribute("content") || "").trim() : "";
+  }
+  // le formulaire de la bêta : tant qu'il n'existe pas, les boutons le disent
+  var lien = meta("fusible-beta");
+  var bouton = document.getElementById("boutonBeta");
+  if (/^https:\/\//.test(lien)) {
+    [bouton, document.getElementById("lienBeta")].forEach(function (a) {
+      a.href = lien; a.target = "_blank"; a.rel = "noopener";
+    });
+  } else {
+    bouton.textContent = "Inscriptions bientôt";
+    bouton.setAttribute("aria-disabled", "true");
+    bouton.addEventListener("click", function (e) { e.preventDefault(); });
+    document.getElementById("noteBeta").textContent = "Les inscriptions ouvrent très bientôt, ici même.";
+  }
+  // les mentions légales et les réseaux
+  var editeur = meta("fusible-editeur"), contact = meta("fusible-contact");
+  if (editeur) {
+    var m = document.getElementById("mentions");
+    m.textContent = "Éditeur : " + editeur + (contact ? ". Contact : " + contact + "." : ".");
+  }
+  var res = meta("fusible-reseaux").split(/\s+/).filter(function (u) { return /^https:\/\//.test(u); });
+  var bloc = document.getElementById("reseaux");
+  res.forEach(function (u) {
+    var a = document.createElement("a");
+    a.href = u; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = u.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "");
+    bloc.appendChild(a);
+  });
+})();
+</script>
