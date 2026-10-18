@@ -313,13 +313,14 @@ def s5(s):
 # --- la traîne : le corps, que le jeu boucle seulement si le film dure plus ------------------------
 @theme.section('traine', mesures=2, bpm=60, reprise=False)
 def traine(s):
-    """Ré grave et mi♭ (la mèche sur la dominante), tenus ; chaque note déborde de deux temps."""
+    """Ré grave et mi♭ (la mèche sur la dominante), tenus ; ils entrent au deuxième temps et débordent de trois :
+    la boucle repart sur leur fin, au même niveau (la couture)."""
     for p, v in ((pedale, 'pp'), (cor_bouche, 'pp'), (harmonique, 'ppp')):
         s.nuance(p, v, 0)
     d = s.longueur + 2
-    s.note(pedale, 'D2', 0, d, vel=50)
-    s.note(cor_bouche, 'Eb4', 0, d, vel=60)
-    s.note(harmonique, 'D6', 0, d, vel=46)
+    s.note(pedale, 'D2', 1, d, vel=50)
+    s.note(cor_bouche, 'Eb4', 1, d, vel=60)
+    s.note(harmonique, 'D6', 1, d, vel=46)
 
 
 theme.forme(intro=ORDRE, corps=['traine'])
