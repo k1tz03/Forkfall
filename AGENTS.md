@@ -613,7 +613,7 @@ La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RES
 musique se tait quand la page est cachée (`audio.js`). **Pour l'artefact publié** (qui ne sert pas
 le `.gz` comme fichier), on assemble avec `--contenu-json` : les bundles de `contenu/` sortent en JSON
 non compressé (l'hôte compresse au transfert, `demarrage.js` lit tel quel un bundle sans en-tête
-gzip), on ajoute `<meta name="fusible-lien" content="<l'URL de l'artefact>">` (les liens de défi), et
+gzip), on passe `--lien <l'URL de l'artefact>` (la balise `fusible-lien`, base des liens de défi), et
 l'on publie avec `capabilities: {db: {rules: [jour, jour/{self}, eclair, eclair/{self}]}, user: {},
 downloads: true}` ; les fichiers de `ville/` ne changent pas d'une version à l'autre et restent en place.
 Ceux de `musique/` non plus, tant qu'un thème ne change pas (leur nom est leur empreinte) : des MP3
@@ -700,8 +700,11 @@ sont les prochains à rejoindre la ville.
 ## Ce qui reste connu et ouvert
 
 - **La sortie** (`docs/sortie.md`) : le jeu est prêt à ≈ 90 %, le produit à ≈ 60 % (octobre 2026).
-  Le plan, les décisions qui attendent le porteur (les mises du 421 et des cartes, le modèle
-  économique, les écrans de jeu), la bêta et où trouver ses testeurs.
+  Le plan, les décisions (les mises retirées, le jeu payant à 1,99 €), la bêta et où trouver ses
+  testeurs (`docs/sortie/` : le nom, les réseaux, le kit de la bêta). Une version de bêta s'assemble
+  avec `assemble.js --version "Bêta 0.1" --retours <formulaire>` : l'accueil porte son numéro et
+  « Donner mon avis » (`preview_avis.js`, un rapport que le joueur copie lui-même) ; la page
+  publique du jeu est `packages/tools/web/vitrine/`.
 - Les textes : l'audit d'octobre 2026 a récrit ce qu'on voit le plus (les gens de la ville, les
   introductions et les scènes jouées, la première heure de chaque livre, les fins, les
   conversations) ; les cartes au-delà de la première heure gardent leur « ne » écrit, et les
