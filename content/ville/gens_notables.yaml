@@ -243,7 +243,7 @@ gens:
     tranches: [matin, aprem]
     annees: [1990, 2012]
     reseau: sante
-    trace: "Cassagne a glissé un échantillon dans ton sac, sans rien dire."
+    trace: "Cassagne a glissé un échantillon dans ton sac, avec la monnaie."
     paliers: ["te sert avant la file", "te dit ce que prennent les autres", "se tairait pour toi"]
     froid: ["te sert après la file", "lit ton ordonnance à voix haute", "a parlé de toi à sa femme"]
     activites: [pharmacie_conseil, pharmacie_ordonnance, pharmacie_balance, pharmacie_vitamines, pharmacie_trousse, pharmacie_tisane]
@@ -500,7 +500,7 @@ gens:
         - {si: "role == joueur", texte: "« Vous m'avez demandé le prix d'un studio, la semaine dernière. Votre banquier avait dû téléphoner avant. »"}
         - {si: "role == president", texte: "« Le club a mis en vente l'appartement de fonction de la rue des Lilas. Discrètement : à mon nom, pas au vôtre. Les gens lisent quand même. »"}
         - {si: "role == selectionneur", texte: "« La Fédération a résilié la villa du stage d'été, trois mois de préavis payés d'un coup. Ils ne m'ont pas demandé de la garder pour l'an prochain. »"}
-        - "« Le club a rendu deux appartements de joueurs ce mois-ci, préavis payé. Quand un club rend des clés, c'est qu'il compte ses sous à voix haute. »"
+        - "« Le club a rendu deux appartements de joueurs ce mois-ci, préavis payé. Quand un club rend des clés, c'est qu'il compte ses sous. »"
       moyen:
         - {si: "role == joueur", texte: "« Vous louez, vous n'achetez pas. Je ferais pareil, à votre place, tant que le club ne vous a pas prolongé. »"}
         - {si: "role == president", texte: "« Le terrain du parking nord vaut ce qu'il valait l'an passé. Personne ne m'a encore appelée pour le faire estimer. »"}
@@ -997,7 +997,7 @@ activites:
     label: "Un verre au bar du salon"
     texte: "Valère Escande a fait du salon un bar : lumière basse, tabourets de cuir, une carte sans prix. Il te sert sans demander, et note ton verre sur une ardoise, pas dans l'ordinateur."
     textes:
-      - "Au bar du salon, un homme de la Capitale parle fort au téléphone. Valère baisse la musique d'un cran, pour que tu entendes mieux. Il ne dit rien ; il essuie un verre."
+      - "Au bar du salon, un homme de la Capitale parle fort au téléphone. Valère baisse la musique d'un cran, pour que tu entendes mieux. Il essuie un verre."
     avec: escande_fils
     habitude: luxe
     si: "annee >= 2020"
@@ -1281,7 +1281,7 @@ scenes:
         reponse: "« Merci. » Il remet le réveil sur cinq heures dix. « L'heure où je me lève pour rentrer, qu'elle m'entende arriver. »"
         effets: {relation: {ober: 1}}
       - label: "La vérité"
-        reponse: "Il replie le lit de camp et le range dans l'armoire des radios. Le soir, pour la première fois depuis des mois, la lumière du cabinet s'éteint à vingt heures."
+        reponse: "Il replie le lit de camp et le range dans l'armoire des radios. Le soir, la lumière du cabinet s'éteint à vingt heures ; ça n'était pas arrivé depuis des mois."
         effets: {relation: {ober: -1}, jauges: {vestiaire: 1}}
 
   - id: nota.rouvier.main
@@ -1329,7 +1329,7 @@ scenes:
         reponse: "Thibault range la montre dans sa poche sans la mettre. Le lundi, il te demande ton nom, poliment, comme on le demande à quelqu'un qu'on découvre."
         effets: {relation: {cassagne_fils: 1}}
       - label: "Je lui dirai tout"
-        reponse: "Cassagne hoche la tête. « Alors dites-lui aussi, pour le jeudi. Moi, je n'ai jamais su comment. » Il ôte sa blouse et la plie sur le comptoir."
+        reponse: "Cassagne s'appuie au comptoir. « Alors dites-lui aussi, pour le jeudi. Moi, je n'ai jamais su comment. » Il ôte sa blouse et la plie sur le comptoir."
         effets: {relation: {cassagne: 1}}
 
   - id: nota.cassagne.froid
@@ -1341,10 +1341,10 @@ scenes:
     texte: "Quand tu entres, la file d'attente se retourne. La pharmacienne vient de raconter, assez fort pour toute la file, ce que tu as acheté en janvier. Cassagne remonte sa montre et laisse dire."
     choix:
       - label: "Je fais la queue"
-        reponse: "Huit personnes, huit regards. À ton tour, Cassagne te sert sans un mot, et ajoute un échantillon que tu n'as pas demandé : un somnifère."
+        reponse: "Huit personnes, huit regards. À ton tour, Cassagne te sert sans bonjour, et ajoute un échantillon que tu n'as pas demandé : un somnifère."
         effets: {jauges: {tribunes: -1}}
       - label: "Je ressors"
-        reponse: "Tu vas jusqu'à la pharmacie de Valdorne, quarante minutes de route. Le pharmacien de là-bas connaît ton nom, lui aussi. Il ne dit rien, mais il le connaît."
+        reponse: "Tu vas jusqu'à la pharmacie de Valdorne, quarante minutes de route. Le pharmacien de là-bas connaît ton nom, lui aussi. Il ne le prononce pas, mais il le connaît."
         effets: {jauges: {tribunes: -1, vestiaire: -1}}
 
   - id: nota.cassagne.dette
@@ -1361,7 +1361,7 @@ scenes:
         reponse: "À vingt-deux heures, ton téléphone sonne. Tu réponds qu'il vient de partir. La pharmacienne te remercie trop poliment, et raccroche la première."
         effets: {clear: [dette_cassagne], jauges: {tribunes: -1}}
       - label: "Je ne mens pas pour vous"
-        reponse: "Il reprend le sac sans un mot. Le lendemain, ta boîte habituelle est « en commande », et elle le restera."
+        reponse: "Il reprend le sac et le pose sous le comptoir. Le lendemain, ta boîte habituelle est « en commande », et elle le restera."
         effets: {clear: [dette_cassagne], relation: {cassagne: -2}}
 
   - id: nota.cassagne_fils.masque
@@ -1373,7 +1373,7 @@ scenes:
     texte: "Thibault vide le bureau de son père. Au fond d'un tiroir, un masque de soie noire plié dans un mouchoir brodé F. C. « Vous savez ce que c'est, vous. Y a que vous à qui je peux le demander. »"
     choix:
       - label: "C'était pour le jeudi"
-        reponse: "Il hoche la tête longtemps, puis range le masque dans le tiroir et ferme à clé. « Il disait qu'il jouait aux cartes. Il ne savait pas jouer. »"
+        reponse: "Il regarde le masque longtemps, puis le range dans le tiroir et ferme à clé. « Il disait qu'il jouait aux cartes. Il ne savait pas jouer. »"
         effets: {relation: {cassagne_fils: 1}}
       - label: "Je ne sais pas"
         reponse: "« Tant mieux. » Il le jette dans le bac des médicaments périmés, celui qu'on incinère. Il ne te regarde pas pendant qu'il le fait."
@@ -1408,7 +1408,7 @@ scenes:
         reponse: "Il les range une à une sur un panneau de bois, à la cave, dans l'ordre des chambres. La 14 y est aussi, à son crochet, sans numéro."
         effets: {relation: {escande: 1}}
       - label: "Écoutez votre fils"
-        reponse: "Il donne le trousseau à Valère sans un mot. Le soir, tu le vois au salon, une clé à la main, qu'il retourne entre ses doigts sans la regarder."
+        reponse: "Il donne le trousseau à Valère. Le soir, tu le vois au salon, une clé à la main, qu'il retourne entre ses doigts sans la regarder."
         effets: {relation: {escande_fils: 1}}
 
   - id: nota.escande.dette
@@ -1424,7 +1424,7 @@ scenes:
         reponse: "Flash, poignée de main, dédicace. Trois semaines plus tard, la photo paraît dans un journal de la Capitale, au-dessus d'un article sur l'immobilier."
         effets: {clear: [dette_escande], jauges: {tribunes: -1}}
       - label: "Pas de photo"
-        reponse: "Escande raccompagne le photographe sans un mot. Sur le registre, la 14 a désormais un nom : le tien, au crayon."
+        reponse: "Escande raccompagne le photographe jusqu'au trottoir. Sur le registre, la 14 a désormais un nom : le tien, au crayon."
         effets: {clear: [dette_escande], relation: {escande: -2}}
 
   - id: nota.escande_fils.panneau
@@ -1486,7 +1486,7 @@ scenes:
         reponse: "Elle prend ton bras dans l'allée centrale, devant les familles du dimanche. Au carré des jeunes, elle pose les glaïeuls et te rend ton bras. « Quittes. »"
         effets: {clear: [dette_irene], jauges: {direction: -1}}
       - label: "Pas devant tout le monde"
-        reponse: "Elle hoche la tête, comme on range une dette dans la bonne colonne. Elle part seule, les glaïeuls contre la poitrine, et ne se retourne pas."
+        reponse: "Elle ferme son sac, comme on range une dette dans la bonne colonne. Elle part seule, les glaïeuls contre la poitrine, et ne se retourne pas."
         effets: {clear: [dette_irene], relation: {irene: -2}}
 
   - id: nota.lise.encrier
@@ -1534,7 +1534,7 @@ scenes:
         reponse: "Elle remet la cloche et l'essuie de sa manche. Les passants s'arrêtent devant la vitrine pour rire du lac couleur de thé. Le kop en fait une chanson."
         effets: {jauges: {tribunes: 1}, relation: {tessandier: -1}}
       - label: "Nettoyez-la"
-        reponse: "Elle y passe l'après-midi, au pinceau, arbre par arbre. Le soir, le lac est bleu. Elle ne dit rien, mais elle te refait un café, le deuxième."
+        reponse: "Elle y passe l'après-midi, au pinceau, arbre par arbre. Le soir, le lac est bleu. Elle ne commente pas, mais elle te refait un café, le deuxième."
         effets: {relation: {tessandier: 1}}
 
   - id: nota.tessandier.devoirs
@@ -1645,7 +1645,7 @@ scenes:
         reponse: "Il passe l'éponge une seule fois, lentement, de gauche à droite. Puis il raccroche l'ardoise vide au même clou, comme une photo."
         effets: {relation: {lacanal: 1}}
       - label: "Envoyez à la mairie"
-        reponse: "La mairie paie au bout de six mois, sans un mot. Le jour du virement, Lacanal offre la tournée, et personne ne sait à quoi l'on trinque."
+        reponse: "La mairie paie au bout de six mois, sans une excuse. Le jour du virement, Lacanal offre la tournée, et personne ne sait à quoi l'on trinque."
         effets: {jauges: {tribunes: 1}}
 
   - id: nota.lacanal.vente
@@ -1724,7 +1724,7 @@ scenes:
         reponse: "Trois villages, trois parvis, trois chorales qui chantent faux. Au troisième, une vieille dame te bénit à sa place. Il rit tout le retour."
         effets: {jauges: {tribunes: 1}, relation: {rakoto: 1}}
       - label: "Pas ce matin"
-        reponse: "Il hoche la tête, sort son téléphone et dit la première messe en vidéo, devant douze paroissiens qui ne l'entendent pas."
+        reponse: "Il sort son téléphone et dit la première messe en vidéo, devant douze paroissiens qui ne l'entendent pas."
         effets: {relation: {rakoto: -1}}
 
   - id: nota.rakoto.tiroir

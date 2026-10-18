@@ -143,7 +143,7 @@ setpieces:
       left: "Celui pour signer"
       right: "Gardez les deux"
       answer_left: "Promesse publique : {objectif}. Il range l'autre stylo dans sa poche intérieure, capuchon fermé."
-      answer_right: "Il les remet tous les deux dans son plumier, sans un mot."
+      answer_right: "Il les remet tous les deux dans son plumier et le referme."
     - roles: [president]
       text: "{patron} fait glisser une seule feuille sur la table du conseil, une ligne surlignée : {objectif_min}. « Le conseil la signe en septembre. Avec votre nom à côté, ou sans ? »"
       left: "Avec mon nom"
@@ -158,7 +158,7 @@ setpieces:
       left: "Je le dis aux micros"
       right: "Aucun chiffre en public"
       answer_left: "Il te pousse vers les caméras et reste en retrait, la main sur la portière."
-      answer_right: "Il hoche la tête. Le Congrès lira ton silence dans le communiqué du soir."
+      answer_right: "Il range ses papiers. Le Congrès lira ton silence dans le communiqué du soir."
     - roles: [selectionneur]
       when: "season == 1 && flag('bilan_manque')"
       text: "{patron} a fait souligner au crayon rouge, par le juriste, la ligne de l'objectif et l'article neuf : « L'an dernier, la ligne n'a pas tenu. Cette année, {objectif_min}. Vous la re-signez ? »"
@@ -177,7 +177,7 @@ setpieces:
     # Sans époque (Berthomier s'arrête en 2008) : la nomination, puis les janviers d'après.
     - roles: [selectionneur]
       when: "season == 0"
-      text: "Ta nomination tient sur une page, que {patron} lit à voix haute devant trois journalistes. À la dernière ligne, il s'arrête : « Objectif, {objectif_min}. Vous le dites vous-même ? »"
+      text: "Ta nomination tient sur une page, que {patron} lit devant trois journalistes. À la dernière ligne, il s'arrête : « Objectif, {objectif_min}. Vous le dites vous-même ? »"
       left: "Je le dis moi-même"
       right: "Je n'ai rien à ajouter"
       answer_left: "Promesse publique : {objectif}. Les trois stylos écrivent en même temps."
@@ -230,7 +230,7 @@ setpieces:
       left: "Les recevoir un par un"
     - roles: [ds]
       when: "world.rang >= 15 && season in [1, 3, 5, 7, 9]"
-      text: "Trêve, et le club dans le rouge. Sur ton bureau, le président a laissé le numéro d'un entraîneur libre, au dos d'une carte de restaurant, sans un mot."
+      text: "Trêve, et le club dans le rouge. Sur ton bureau, le président a laissé le numéro d'un entraîneur libre, au dos d'une carte de restaurant."
       left: "Ranger la carte"
     - roles: [ds]
       when: "world.rang >= 15"
@@ -481,7 +481,7 @@ setpieces:
       left: "Coup d'envoi"
     - roles: [president]
       when: "world.division >= 2 && season == 0"
-      text: "GRAND MATCH. Un stade de deuxième division plein pour la première fois depuis des années. Le guichetier a vendu certaines places debout deux fois."
+      text: "GRAND MATCH. Un stade de deuxième division plein, ce qu'on n'avait pas vu depuis des années. Le guichetier a vendu certaines places debout deux fois."
       left: "Coup d'envoi"
     # Les saisons impaires ont leur annonce.
     - roles: [president]
@@ -529,7 +529,7 @@ setpieces:
       right: "Qu'il entre"
     - roles: [ds]
       when: "relation.aulard <= -1"
-      text: "{minute}e minute · {score}. Le président a quitté sa loge pour venir s'asseoir à côté de toi. Il ne dit rien. Il attend que tu fasses quelque chose."
+      text: "{minute}e minute · {score}. Le président a quitté sa loge pour venir s'asseoir à côté de toi. Il croise les bras et attend que tu fasses quelque chose."
       left: "Je ne bouge pas"
       right: "Je descends au bord"
     # Les saisons impaires ont leur Grand Match : sans elles, les trois mêmes temps forts revenaient chaque année.
@@ -663,7 +663,7 @@ setpieces:
       text: "Vaubourg t'appelle au coup de sifflet, puis rappelle cinq minutes après : « Ton attaquant a couru pour deux. Maintenant, je veux savoir combien il vaut, et à qui. »"
       left: "Il n'est pas à vendre"
       right: "Je fais une estimation"
-      answer_left: "Il raccroche sans dire au revoir. Dans le couloir, l'entraîneur lève le pouce vers toi, sans un mot."
+      answer_left: "Il raccroche sans dire au revoir. Dans le couloir, l'entraîneur lève le pouce vers toi."
       answer_right: "Tu dis un chiffre. Le lendemain, il est dans la Gazette, arrondi au-dessus."
     - roles: [ds]
       when: "vars.gm_won == 0 && flag('salaires_retard') && year < 2008"
@@ -686,8 +686,8 @@ setpieces:
       text: "À la sortie des loges, l'entraîneur adverse te serre la main un peu trop longtemps : « Ton milieu, je le prends en juin, s'il est à vendre. Il l'est ? »"
       left: "Il ne l'est pas"
       right: "Tout l'est, en juin"
-      answer_left: "Il te lâche la main en souriant, comme si tu venais de dire un prix."
-      answer_right: "Il hoche la tête. Le lendemain, son président appelle le tien."
+      answer_left: "Il te lâche la main en souriant ; il a entendu un prix."
+      answer_right: "Il te serre la main. Le lendemain, son président appelle le tien."
     - roles: [ds]
       when: "vars.gm_won == 1"
       text: "Dans le couloir, l'entraîneur sort du vestiaire trempé de champagne : « Tes deux recrues, ce soir… Je retire ce que j'ai dit en août. Pas tout. »"
@@ -745,8 +745,8 @@ setpieces:
       text: "L'entraîneur sort du vestiaire, la feuille de match roulée dans le poing : « Ils attendent de savoir si {pg, select, f{la présidente} other{le président}} descend. Là-haut, les actionnaires aussi. »"
       left: "Je descends les voir"
       right: "Je monte au conseil"
-      answer_left: "Tu entres sans un mot et tu t'assois avec eux. L'entraîneur referme la porte derrière toi."
-      answer_right: "Là-haut, on te sert un verre et on te montre le score sur un écran, comme si tu l'avais manqué."
+      answer_left: "Tu entres et tu t'assois avec eux. L'entraîneur referme la porte derrière toi."
+      answer_right: "Là-haut, on te sert un verre et on te montre le score sur un écran, au cas où tu l'aurais manqué."
     # ---- Sélectionneur
     - roles: [selectionneur]
       when: "vars.gm_won == 1 && relation.legruet >= 1 && year < 2008"
@@ -988,7 +988,7 @@ setpieces:
     # Sans époque : le vestiaire qui se tait, le planning d'août.
     - roles: [ds]
       when: "gauges.vestiaire < 35"
-      text: "Juillet. Le capitaine t'envoie une carte postale de vacances, sans un mot au dos, juste sa signature. L'an dernier, il avait rempli la carte jusqu'au bord."
+      text: "Juillet. Le capitaine t'envoie une carte postale de vacances, avec juste sa signature au dos. L'an dernier, il avait rempli la carte jusqu'au bord."
       left: "La punaiser"
     - roles: [ds]
       when: "season >= 2"
