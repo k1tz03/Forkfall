@@ -699,6 +699,9 @@ sont les prochains à rejoindre la ville.
 
 ## Ce qui reste connu et ouvert
 
+- **La sortie** (`docs/sortie.md`) : le jeu est prêt à ≈ 90 %, le produit à ≈ 60 % (octobre 2026).
+  Le plan, les décisions qui attendent le porteur (les mises du 421 et des cartes, le modèle
+  économique, les écrans de jeu), la bêta et où trouver ses testeurs.
 - Les textes : l'audit d'octobre 2026 a récrit ce qu'on voit le plus (les gens de la ville, les
   introductions et les scènes jouées, la première heure de chaque livre, les fins, les
   conversations) ; les cartes au-delà de la première heure gardent leur « ne » écrit, et les
