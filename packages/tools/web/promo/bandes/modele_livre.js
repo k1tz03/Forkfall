@@ -7,11 +7,14 @@
      · id, livre (le postulat), index (son rang, 0 à 9), titre, ligne, accent (HISTOIRES) ;
      · theme (musique/livre_h<N>.js) ; sans `morceaux`, la musique part du début du thème
        et dure ~60 s (des mesures entières) ; avec, on choisit ses sections (musique.js) ;
-     · extraits : les deux extraits du réalisateur (cinema/tournage.js --de a --a b --formats
+       `studio.morceaux`, celles du master du studio (--musique-studio : les barres viennent
+       alors du master, et la bande s'y recale d'elle-même) ;
+     · extraits : les deux extraits du film (cinema/tournage.js --de a --a b --formats
        16x9,9x16,4x5 → <film>.<format>.mp4 dans $SP/agents/<branche>/extraits/ ; les branches :
-       lot-films-r1 livres 1–2, r2 livres 3–4, r3 5–6, r4 7–8, r5 9–10) ; `de`, d'où partir dans
-       l'extrait ; `pose`, la seconde de l'image fixe des captures ; `duree`, si l'extrait ne
-       fait pas 7 s ;
+       lot-films-r1 livres 1–2, r2 livres 3–4, r3 5–6, r4 7–8, r5 9–10 ; ou dans $SP/extraits/,
+       la liste du coordinateur) ; `de`, d'où partir dans l'extrait ; `pose`, la seconde de
+       l'image fixe des captures ; `duree`, ce que l'extrait dure après `de` (7 s par défaut) ;
+       `deCourt`, d'où l'aperçu de l'App Store le prend ;
      · cartes.deux, cartes.trois : le début de l'id de deux cartes du livre que le moteur
        atteint en jouant à gauche (`simulate.dart --trace <graine> --postulat <index>
        --seasons 1` les liste dans l'ordre) — une scène forte, puis un choix ;

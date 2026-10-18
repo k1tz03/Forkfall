@@ -38,11 +38,33 @@ function images(duree, M) {
   const v = +m[1], s = m[2] === 'm' ? v * M : m[2] === 't' ? v * M / 4 : v;
   return s * FPS;
 }
-function calculer(plans, M, total) {
+// les plans dans le temps de la musique. `mus` : la mesure M (secondes), ou la musique montée
+// (musique.js : `barres`, le temps de chaque barre — un master du studio change de tempo d'une
+// section à l'autre) ; un plan en mesures va de barre en barre, un « 3t » compte des quarts de mesure
+function calculer(plans, mus, total) {
+  const M = typeof mus === 'number' ? mus : mus.mesure;
+  const B = typeof mus === 'object' && mus && mus.barres && mus.barres.length > 1 ? mus.barres : null;
+  // secondes ↔ mesures (fractionnaires), sur les barres ; au-delà, au pas de la dernière mesure
+  const enMesures = (s) => {
+    if (!B) return s / M;
+    let k = 0;
+    while (k < B.length - 2 && B[k + 1] <= s) k++;
+    return k + (s - B[k]) / (B[k + 1] - B[k]);
+  };
+  const enSecondes = (x) => {
+    if (!B) return x * M;
+    const k = Math.max(0, Math.min(B.length - 2, Math.floor(x)));
+    return B[k] + (x - k) * (B[k + 1] - B[k]);
+  };
   const out = [];
   let t = 0;   // en images, non arrondi : la somme des mesures tombe juste
   plans.forEach((p, i) => {
-    const n = p.duree === 'reste' ? total * FPS - t : images(p.duree, M);
+    let n;
+    if (p.duree === 'reste') n = total * FPS - t;
+    else if (B && /^\s*\d+(?:\.\d+)?\s*[mt]\s*$/.test(String(p.duree))) {
+      const v = parseFloat(p.duree), x = enMesures(t / FPS) + (/m\s*$/.test(String(p.duree)) ? v : v / 4);
+      n = enSecondes(x) * FPS - t;
+    } else n = images(p.duree, M);
     const a = Math.round(t), b = Math.round(t + n);
     out.push(Object.assign({}, p, { i, debut: a, fin: b, n: b - a }));
     t += n;
@@ -128,7 +150,14 @@ async function rendrePlan(ctx, p, fmt, pre, post) {
     de = parFormat(src.de, fmt) || 0;
   }
   if (entree && !fs.existsSync(entree)) throw new Error('plan ' + p.i + ' : source absente ' + entree);
-  if (entree) { const s = C.ffprobe(entree).streams.find((x) => x.codec_type === 'video'); sw = s.width; sh = s.height; }
+  if (entree) {
+    const pr = C.ffprobe(entree), s = pr.streams.find((x) => x.codec_type === 'video');
+    sw = s.width; sh = s.height;
+    // une source trop courte pour son plan (une musique plus lente que prévu) : la dernière image
+    // tient — on le dit, pour retourner le moment ou recouper le plan
+    const manque = n / FPS * vitesse - (+pr.format.duration - Math.max(0, de - pre / FPS * vitesse));
+    if (manque > 0.07) C.journal('  (plan ' + (p.i + 1) + ', ' + fmt + ' : « ' + (src.moment || src.film) + ' » manque de ' + manque.toFixed(2) + ' s ; sa dernière image tient)');
+  }
   // (le dessin compte aussi : la fabrique du carton, celle des légendes — un carton retouché se refait)
   const dessin = (src.carton && S.cartons[src.carton] ? String(S.cartons[src.carton]) : '') + (leg ? String(S.legende) + S.CSS_LEGENDE : '');
   const cle = C.empreinte({ p: Object.assign({}, p, { i: 0, debut: 0, fin: 0 }), fmt, pre, post, entree, mt: entree ? fs.statSync(entree).mtimeMs : 0, acc: ctx.accent,
@@ -249,7 +278,7 @@ async function monter(cfg, o) {
       const mt = cfg.montages[nom];
       if (!mt) throw new Error('le format ' + fmt + ' demande le montage « ' + nom + ' », absent');
       const mus = MU.monterMusique(mt.musique || cfg.musique, path.join(travail, 'musique'), nom);
-      const plans = calculer(mt.plans, mus.mesure, mus.duree);
+      const plans = calculer(mt.plans, mus, mus.duree);
       const totalImages = plans[plans.length - 1].fin, attendu = Math.round(mus.duree * FPS);
       if (Math.abs(totalImages - attendu) > 1) throw new Error('le montage « ' + nom + ' » dure ' + (totalImages / FPS).toFixed(2) + ' s, la musique ' + mus.duree.toFixed(2) + ' s : un plan « reste » à la fin, ou des mesures justes');
       const F = C.FORMATS[fmt];
@@ -287,20 +316,23 @@ function decoupage(cfg) {
   const lignes = [];
   for (const [nom, mt] of Object.entries(cfg.montages || {})) {
     const mus = mt.musique || cfg.musique;
-    const bpm = MU.bpmDe(mus.theme), M = 240 / bpm;
-    const morceaux = mus.morceaux && mus.morceaux.length ? mus.morceaux : [{ depuis: null, de: 0, a: mus.mesures || 30 }];
-    const total = morceaux.reduce((s, m) => s + m.a - m.de, 0) * M;
+    // la carte des mesures de la source qui servira (le master du studio s'il est là, sinon le banc)
+    const k = MU.carteMusique(mus);
+    const total = k.duree;
     const formats = Object.keys(cfg.formats || {}).filter((f) => cfg.formats[f] === nom);
-    lignes.push('## ' + cfg.id + ' · ' + nom + ' (' + formats.join(', ') + ') — ' + total.toFixed(2) + ' s, « ' + mus.theme + ' » ' + bpm + ' bpm, ' +
-      morceaux.map((m) => (m.depuis || 'début') + ' [' + m.de + '–' + m.a + '[').join(' + '));
-    for (const p of calculer(mt.plans, M, total)) {
+    lignes.push('## ' + cfg.id + ' · ' + nom + ' (' + formats.join(', ') + ') — ' + total.toFixed(2) + ' s, « ' + mus.theme + ' » ' +
+      (k.source === 'studio' ? 'le master du studio (' + k.master.wav + '), ' + k.bpm + ' bpm au début du corps' : 'le banc, ' + k.bpm + ' bpm') + ', ' +
+      k.morceaux.map((m) => (m.depuis || 'début') + ' [' + m.de + '–' + m.a + '[').join(' + '));
+    for (const p of calculer(mt.plans, k, total)) {
       const s = p.source || {};
       const src = s.moment ? 'jeu : ' + s.moment + (s.de && s.de.pose ? ' (' + s.de.avant + ' s avant la pose « ' + s.de.pose + ' »)' : '') :
         s.film ? 'film : ' + s.film + ' à ' + (+s.de || 0).toFixed(2) + ' s' : s.carton ? 'carton : ' + s.carton : 'noir';
       const L = p.legende ? [p.legende.titre, p.legende.sous].filter(Boolean).join(' / ') :
         s.carton ? [s.livre && s.livre.titre, s.livre && s.livre.ligne, s.titre, s.sous, s.phrase, s.carton === 'fin' ? 'FUSIBLE' : null, s.disponibilite].filter(Boolean).join(' / ').replace(/\n/g, ' ') : '—';
       const cad = p.cadre ? ' [' + Object.entries(p.cadre).map(([f, v]) => f + ' ' + (typeof v === 'string' ? v : v.mode)).join(', ') + ']' : '';
-      lignes.push(String(p.i + 1).padStart(2) + ' | ' + (p.debut / FPS).toFixed(2) + '–' + (p.fin / FPS).toFixed(2) + ' s | ' + Math.round(p.n / FPS / M) + ' m | ' +
+      // les mesures du plan, comptées sur les barres de la musique
+      const mes = k.barres.filter((b) => b > p.debut / FPS + 0.02 && b <= p.fin / FPS + 0.02).length;
+      lignes.push(String(p.i + 1).padStart(2) + ' | ' + (p.debut / FPS).toFixed(2) + '–' + (p.fin / FPS).toFixed(2) + ' s | ' + mes + ' m | ' +
         src + cad + ' | ' + (p.entree && p.entree !== 'coupe' ? p.entree + ' · ' : '') + L);
     }
   }

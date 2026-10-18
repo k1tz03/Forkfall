@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   LA BANDE DU LIVRE 8 — « L'Oreillette », une minute (bandes/_livre.js).
+   La promesse, sans le secret : 2024, soixante-douze matchs par saison, un club qui est une
+   ligne dans le tableur d'un fonds ; dans ton oreille, le modèle, qui choisit qui acheter et
+   qui vendre, et parle avec la voix de l'homme qui l'a construit ; « Vendez Kerdal avant
+   lundi » ; la nuit, le stade vide s'allume tout seul. Ce qui reste au livre : ce qui arrive à
+   ceux qu'il nomme, d'où vient la voix, si elle est dans l'oreillette ou en toi.
+   Les films : « Six heures dix » (le premier jour : la bâche de la Nord, VOLLAIRE, L'ENFANT DU
+   QUAI) et « Trois heures » (les projecteurs, la pelouse vide). On ne voit jamais le héros.
+   La musique : livre_h8, ou son master du studio (--musique-studio).
+   ═══════════════════════════════════════════════════════════════════════════ */
+'use strict';
+const bandeDeLivre = require('./_livre');
+
+module.exports = bandeDeLivre({
+  id: 'h8',
+  livre: 'le_modele', index: 7, graine: 4242,
+  titre: "L'Oreillette", ligne: 'Livre 8 · Directeur sportif · 2024', accent: '#4FE3FF',
+  heros: { prenom: 'Olivier', nom: 'Nkolo', genre: 'm' },
+  theme: 'livre_h8',
+  extraits: {
+    // la bâche de la Nord, longée lettre après lettre : VOLLAIRE, L'ENFANT DU QUAI (la capture : « VOLLA »)
+    a: { fichier: '${SP}/extraits/six_heures_dix.{format}.mp4', de: 0, pose: 0.3, duree: 6.5 },
+    // la baie dans le noir, les quatre pylônes d'un coup (1 s) ; puis le stade vide, allumé, quelqu'un
+    // au bout de la touche (dès 4,4 s : la capture, à 5 s)
+    b: { fichier: '${SP}/extraits/trois_heures.{format}.mp4', de: 0, pose: 5.0, duree: 6.83 },
+  },
+  // « Vendez Vollaire » sous la bâche de la Nord (montrée), puis « Vendez Kerdal avant lundi » (glissée)
+  cartes: { deux: 'ds.h8.a1_vollaire', trois: 'ds.h8.a2_fin_de_cycle' },
+  lieux: { jour: 'boutique', nuit: 'friche' },
+  legendes: {
+    promesse: { titre: 'Aubérive, 2024', sous: 'soixante-douze matchs par saison' },
+    intro: { titre: 'Un club, une ligne de tableur', sous: 'et une voix dans ton oreille' },
+    carte: { titre: 'Le modèle choisit', sous: 'qui acheter, qui vendre, qui faire jouer' },
+    ville: { titre: 'Il parle avec la voix', sous: "de l'homme qui l'a construit" },
+    // (la suite de la bâche vient juste après « Vendez Vollaire » : elle se lit seule)
+    objet: undefined,
+    nuit: { titre: "La nuit, le stade s'allume", sous: 'tout seul' },
+    choix: { titre: '« Vendez Kerdal avant lundi. »' },
+    fin: { titre: "Ce qu'il prédit arrive." },
+    carte2Ecran: '« Vendez Vollaire. »',
+    villeEcran: 'Aubérive, 2024',
+    objetEcran: 'Une bâche de vingt mètres sur la Nord',
+    // (la capture de la nuit montre la friche, son feu : pas le stade)
+    nuitEcran: 'Tu dors deux heures par nuit',
+    finEcran: "À trois heures, le stade vide s'allume",
+  },
+  // (l'aperçu de l'App Store n'a pas la ville du jour : la voix y passe sur la bâche)
+  legendesCourt: { objet: { titre: 'Il parle avec la voix', sous: "de l'homme qui l'a construit" } },
+});
