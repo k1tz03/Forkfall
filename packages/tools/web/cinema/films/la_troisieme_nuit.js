@@ -570,6 +570,7 @@
     titre: "La troisième nuit",
     duree: 35.5,
     musique: "livre_h7",
+    musiqueFilm: "film_la_troisieme_nuit",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     secours: "ville_nuit",
     couleur: ROSE,
     affiche: 8.6,
