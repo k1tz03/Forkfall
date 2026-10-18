@@ -9,6 +9,65 @@ et les règles qui les gardent écoutables pendant deux heures. Le code : `packa
 (le moteur, les instruments, la grammaire) et `packages/tools/web/musique/*.js` (un fichier par
 thème). On écoute sans haut-parleur avec le banc (`banc_son.js`) et le juke-box.
 
+## 0. La bande du studio (octobre 2026) : ce qui joue d'abord
+
+> « La bande son ne me convient absolument pas. […] Crée-toi cette bande son iconique. »
+> (le porteur, après la synthèse noire)
+
+Les vingt thèmes de ce document ont été réécrits pour de vrais instruments et rendus hors ligne
+par le studio (`packages/tools/studio/`, son manuel : `docs/design/studio.md`). Les partitions
+sont `packages/tools/studio/partitions/<clé>.py` ; les masters, empaquetés en MP3 par
+`musique_audio.js`, jouent dans le jeu (`packages/tools/web/musique/audio/`). La synthèse décrite
+dans la suite de ce document reste le secours : elle joue quand un enregistrement manque.
+
+**La direction.** Trois thèmes principaux ont été proposés au porteur ; il a pris « La tribune » :
+un stade qui chante. Le motif « fu-si-BLE » (1 5 | ♭6 : la quinte, puis la sixte mineure tenue, la
+mèche qui ne se résout pas) et ses phrases (la tête, le motif, la réponse, la montée, la mèche,
+l'anacrouse), et l'arc — le son-signature, six micro-clics, un grésillement, une note accordée sur la
+tonique, un impact — sont dans `partitions/_fusible.py`, communs aux vingt thèmes ; chaque thème
+les habille dans son mode (éolien, dorien, phrygien, majeur, lydien). L'orchestre d'abord, les
+synthés seulement comme grain.
+
+| clé | titre | ton, tempo | ce qu'on entend |
+|---|---|---|---|
+| `accueil` | Fusible | la mineur, 116 | la tribune chante le motif, la fanfare, l'arc ; la foule et les applaudissements du stade |
+| `livre_h1` | Trois mille masques | ré mineur, 120 | la foule chante sur le tambour, la fanfare municipale, le sommet « trois mille visages » |
+| `livre_h2` | Le Répondeur | si mineur, 88 | le répondeur du bureau, le message |
+| `livre_h3` | Seize heures | mi phrygien, 124 | la sirène de seize heures |
+| `livre_h4` | La Route de la Rive | fa ♯ mineur, 104 | les lampadaires qui passent : une harpe, un arpège |
+| `livre_h5` | La Maquette | do majeur, 96 | une fanfare qui perd un pupitre à chaque passage |
+| `livre_h6` | 23 h 58 | sol mineur, 132 | l'horloge du fax, l'ostinato |
+| `livre_h7` | Chambre 12 | mi ♭ mineur, 76 | à 2 h 10, des pas dans le couloir, une porte |
+| `livre_h8` | L'Oreillette | la dorien, 110 | la voix d'un mort dans l'oreillette |
+| `livre_h9` | Vingt degrés dedans | fa majeur, 100 | les cloches de glace du dôme, le motif renversé |
+| `livre_h10` | Deux téléphones | sol mineur, 116 | les deux téléphones : le fixe pour la ville, l'autre |
+| `ville_jour` | Promenade | sol dorien, 98 | une guitare qui marche, un siffleur, un orage au milieu |
+| `ville_nuit` | Néons | ré éolien, 82 | un piano électrique, une contrebasse, une trompette bouchée au loin |
+| `decouverte` | Les Quartiers | fa lydien, 108 | une harpe qui monte, des cloches, le cor en plus lumineux |
+| `joie` | La Montée | do majeur, 120 | la fanfare dans la rue, le motif en majeur, les pieds et les mains |
+| `match` | La Rive | la mineur, 124 | la tribune chante sur son tambour, le but bascule en la majeur |
+| `sombre` | Garde à vue | ré mineur, 68 | un cœur, le métal frotté, une voix seule, des silences écrits |
+| `suspense` | Les Douze Pages | si ♭ mineur, 100 → 120 | une horloge sur le demi-ton de la mèche, une montée qui ne finit pas |
+| `enerve` | Court-circuit | mi phrygien, 150 | la batterie, les cordes en rafale, les coupures où l'arc claque |
+| `fin` | Le Dernier Tour | la mineur → majeur, 76 | le piano seul au ralenti, le chœur, le stade de 2050 de très loin |
+
+Les boucles durent de 2 min 35 (le stade, la tension) à 4 min 20 (la ville) ; des fenêtres presque
+muettes (`reprise=False`) reposent l'oreille dans les thèmes de ville, et le jeu n'y reprend pas.
+
+**Les films.** Chacun des vingt films a sa musique, `partitions/film_<id>.py`, écrite sous ses
+images : une section par plan, à son tempo et à sa mesure, chaque coupe sur un premier temps (à
+quelques millisecondes), rien sous les bruits du film (une porte, une sirène, un sifflet), la texture
+amincie sous la réplique. `theme.master(sonie_sur='intro')` : l'introduction a la durée du film et
+porte la sonie ; le corps est une traîne douce, pour une pause. Le film la joue (`musiqueFilm`)
+quand le jeu l'a ; sinon son thème de livre, depuis une section (`musique`, `musiqueDepuis`).
+
+**Ce qui reste faible** (mesuré par les compositeurs, au banc et au « téléphone » : la bande
+400 Hz–6 kHz en mono) : très peu d'air au-dessus de 6 kHz (0 à 0,9 % de l'énergie : les
+échantillons sont sombres) ; « Les Douze Pages » (la tête au niveau des cordes, deux phrases) et
+« Court-circuit » (la tête de B2, −7 dB) passent mal au téléphone ; « Vingt degrés dedans » C3 et
+« Néons » A et B2 perdent quelques décibels dans la bande du téléphone ; la traîne des deux films du
+livre 7 est un peu large dans le grave. Un thème se refait seul : sa partition, un rendu, `musique_audio.js`.
+
 ## 1. Le son du groupe
 
 De la synthé noire et moite, celle qui rejouait les années quatre-vingt avec une cassette fatiguée :

@@ -32,6 +32,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
+| Musique | la bande du studio : vingt thèmes joués par de vrais instruments et vingt musiques de films, rendus hors ligne (`packages/tools/studio`), en MP3 dans le jeu ; la synthèse en secours — voir « La bande du studio » |
 | Durée | une partie ≈ **2 h** par livre pour un lecteur moyen (1 h 35 à 3 h selon le lecteur et le livre ; 4 h et plus quand une carrière des livres 3 ou 4 déborde), dont près des trois quarts en ville — `docs/balance/duree_partie.md`, `packages/tools/bin/duree.dart`, `packages/tools/web/joueur_presse.js` |
 
 ## Les dix histoires (où on en est)
@@ -435,8 +436,34 @@ Ce que la ville porte en plus des cartes :
   toi ; les affaires en second onglet). Un nouveau visage ne prend pas un mot des réservoirs de
   noms (`content/names/fr.yaml`) : `build_content` le refuse, sinon toutes les carrières figées
   changeraient.
-- **La musique** (`packages/tools/web/audio.js`, le moteur ; `packages/tools/web/musique/<clé>.js`,
-  un fichier par thème ; la bible et le guide du compositeur : `docs/design/bande_originale.md`) :
+- **La bande du studio** (octobre 2026 ; `packages/tools/studio/partitions/<clé>.py`, le studio :
+  `docs/design/studio.md`, la bande : `docs/design/bande_originale.md` § 0). La bande de synthèse
+  « ne me convient absolument pas » (le porteur) : il la voulait iconique, grandiloquente, unique.
+  Elle est rejouée par de vrais instruments (échantillons libres, l'orchestre, la foule du stade, les
+  applaudissements), écrite note à note et rendue hors ligne par le studio, à −16 LUFS sur la boucle,
+  la couture exacte. Le thème principal, « Fusible », est « La tribune » (choisi par le porteur entre
+  trois) : une tribune qui chante, en la mineur, le motif « fu-si-BLE » (1 5 | ♭6, la mèche qui ne se
+  résout pas) ; le motif et l'arc (le son-signature, un claquement électrique) sont communs aux vingt
+  thèmes (`partitions/_fusible.py`), chacun les habille dans son mode. Les vingt thèmes gardent leurs
+  clés et leurs moments (§ 4 de la bible) : « Fusible », un par livre (« Trois mille masques », « Le
+  Répondeur », « Seize heures », « La Route de la Rive », « La Maquette », « 23 h 58 », « Chambre 12 »,
+  « L'Oreillette », « Vingt degrés dedans », « Deux téléphones »), « Promenade », « Néons », « Les
+  Quartiers », « La Montée », « La Rive » (la tribune chante le motif, le but bascule en majeur),
+  « Garde à vue », « Les Douze Pages », « Court-circuit », « Le Dernier Tour ». **Les films ont leur
+  musique** : vingt partitions `film_<id>` écrites sous leurs images, une section par plan, chaque
+  coupe sur un temps (`theme.master(sonie_sur='intro')` : l'introduction est le film, à −16 LUFS ; une
+  traîne douce pour une pause) ; le film la joue (`musiqueFilm`) quand le jeu l'a, son thème de livre
+  sinon. Les masters (`<clé>.wav` 24 bits et `.json`, hors du dépôt) passent par
+  `node packages/tools/web/musique_audio.js --masters <dossier>`, qui les empaquette en MP3 dans
+  `packages/tools/web/musique/audio/` (commité) ; la synthèse (plus bas) reste le secours : le fichier
+  seul, hors ligne, un fichier qui manque. Refaire un master : `cd packages/tools/studio && python3
+  rendre.py partitions/<clé>.py --out <dossier> --banc` (une minute de calcul par minute de musique,
+  sous le verrou des rendus quand d'autres tournent). Ce qui reste faible : peu d'air au-dessus de
+  6 kHz (0 à 0,9 % de l'énergie, des échantillons sombres), et deux ou trois sections où la mélodie
+  passe à peine devant au téléphone (la bible, § 0).
+- **La musique de synthèse** (le secours de la bande du studio ; `packages/tools/web/audio.js`, le
+  moteur ; `packages/tools/web/musique/<clé>.js`, un fichier par thème ; la bible et le guide du
+  compositeur : `docs/design/bande_originale.md`) :
   des thèmes NOIRS écrits note à note et synthétisés (aucun fichier son) — de la synthé noire et
   moite qui rejoue les années quatre-vingt sur une cassette fatiguée, parce que la première
   partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. **Les vingt
