@@ -26,7 +26,7 @@ cards:
     right:
       label: "Je dois descendre"
       effects: {tribunes: "-", direction: "+", outcome: pressee}
-      answer: "« Descendez. On descend toujours. » Elle reverse son café dans le thermos sans en perdre une goutte, et regarde le match."
+      answer: "« Descendez. Le club aussi, il descend souvent. » Elle reverse son café dans le thermos sans en perdre une goutte, et regarde le match."
 
   # Étape 2 — la grille, le lendemain du feu (tirée par le feu, A4). Les deux
   # sorties mènent au témoin de la friche, la saison suivante.
@@ -39,15 +39,15 @@ cards:
     when: "flag('h5_tribune_est_brulee')"
     tone: leger
     once: true
-    text: "Le lendemain du feu. Paulette fouille les cendres de la grille du bout de sa canne et ramasse un morceau de fonte : ENFANTS DU. « Le reste a fondu. Les mots, ça fond à combien de degrés ? »"
+    text: "Le lendemain du feu, Paulette fouille les cendres de la grille du bout de sa canne et ramasse un morceau de fonte où on lit ENFANTS DU. « Le reste a fondu. Les mots, ça fond à combien de degrés ? »"
     left:
       label: "Je vous raccompagne"
       effects: {tribunes: "+", relation: {paulette: 1}, set: [h5_fonte], schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
-      answer: "En chemin, elle dit : « Le petit Vallin, à la friche, a vu quelqu'un cette nuit-là. Personne ne lui demande jamais rien. »"
+      answer: "En chemin, elle dit : « Le petit Vallin, à la friche, il a vu quelqu'un cette nuit-là. On lui demande jamais rien, à lui. »"
     right:
       label: "Je ferai reconstruire"
       effects: {caisse: "-", direction: "+", set: [h5_fonte, h5_reconstruction_promise], schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
-      answer: "« En bois ? » Elle glisse la fonte dans son sac. « Demandez au petit Vallin, à la friche. Lui était dehors, cette nuit. »"
+      answer: "« En bois ? » Elle glisse la fonte dans son sac. « Demandez au petit Vallin, à la friche. Lui, il était dehors, cette nuit. »"
 
   # Variante : la plaque avait été déposée en octobre, sur ordre du Conseil.
   - id: pr.h5.14b.grille_plaque
@@ -63,11 +63,11 @@ cards:
     left:
       label: "Elle est au grenier"
       effects: {tribunes: "+", relation: {paulette: 1}, schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
-      answer: "« Elle a eu plus de chance que la 14B. » En partant : « Le petit Vallin, à la friche, a vu quelqu'un. Demandez-lui. »"
+      answer: "« Elle a eu plus de chance que la 14B. » En partant : « Le petit Vallin, à la friche, il a vu quelqu'un. Demandez-lui. »"
     right:
       label: "Je ne savais pas"
       effects: {direction: "+", relation: {paulette: -1}, schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
-      answer: "« Personne ne sait jamais rien, ici. Sauf le petit Vallin, à la friche. Lui, il était dehors, cette nuit-là. »"
+      answer: "« Personne sait jamais rien, dans ce club. Sauf le petit Vallin, à la friche. Lui, il était dehors, cette nuit-là. »"
 
   # ============================================================== LE CONSEIL
   # Étape 1 — le jeudi (tirée par le premier mardi, A2). Bréhaut a le fax
@@ -81,15 +81,15 @@ cards:
     when: "flag('h5_conseil_entendu')"
     tone: strategique
     once: true
-    text: "Jeudi matin. Titi Bréhaut a déjà le fax de Halvenne : cent mille francs pour Oudart, vingt-deux ans, le seul gardien sous contrat. « Ils ont appelé avant toi. Je signe ? »"
+    text: "Jeudi matin. Titi Bréhaut a déjà le fax de Halvenne, cent mille francs pour Oudart, vingt-deux ans, le seul gardien sous contrat. « Ils ont appelé avant toi. Je signe ? »"
     left:
       label: "Signe"
       effects: {caisse: "++", vestiaire: "--", set: [h5_oudart_vendu], outcome: obei, react: [{card: pr.h5.re.vukic_oudart, if: "!seen('pr.h5.re.vukic_oudart')"}]}
-      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. Il n'y a pas de suivant : Vukić prend le gamin des moins de dix-neuf ans."
+      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. De suivant, il n'y en a pas, alors Vukić fait monter le gamin des moins de dix-neuf ans."
     right:
       label: "Oudart reste"
       effects: {vestiaire: "+", caisse: "-", set: [h5_oudart_garde], outcome: refuse}
-      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, comme si quelqu'un regardait par-dessus son épaule."
+      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, avec un coup d'œil vers la porte."
 
   # Variante du combiné raccroché : « Tu as raccroché mardi » (h5_raccroche).
   - id: pr.h5.ordres.jeudi_raccroche
@@ -101,15 +101,15 @@ cards:
     when: "flag('h5_conseil_entendu')"
     tone: strategique
     once: true
-    text: "Jeudi matin. Titi Bréhaut a le fax de Halvenne : cent mille francs pour Oudart, le seul gardien sous contrat. « Tu as raccroché mardi. Eux, non : ils m'ont appelé avant toi. Je signe ? »"
+    text: "Jeudi matin. Titi Bréhaut a le fax de Halvenne, cent mille francs pour Oudart, le seul gardien sous contrat. « T'as raccroché mardi. Eux, non. Ils m'ont appelé avant toi. Je signe ? »"
     left:
       label: "Signe"
       effects: {caisse: "++", vestiaire: "--", set: [h5_oudart_vendu], outcome: obei, react: [{card: pr.h5.re.vukic_oudart, if: "!seen('pr.h5.re.vukic_oudart')"}]}
-      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. Il n'y a pas de suivant : Vukić prend le gamin des moins de dix-neuf ans."
+      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. De suivant, il n'y en a pas, alors Vukić fait monter le gamin des moins de dix-neuf ans."
     right:
       label: "Oudart reste"
       effects: {vestiaire: "+", caisse: "-", set: [h5_oudart_garde], outcome: refuse}
-      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, comme si quelqu'un regardait par-dessus son épaule."
+      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, avec un coup d'œil vers la porte."
 
   # Étape 2 — la plaque de fonte. Le Conseil la veut avant samedi.
   - id: pr.h5.ordres.plaque_obei
@@ -127,7 +127,7 @@ cards:
     right:
       label: "La plaque reste"
       effects: {direction: "-", set: [h5_plaque_restee], outcome: refuse}
-      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées. Il n'a rien demandé à personne. Personne ne sait qui a commencé."
+      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées, alors qu'il n'a rien demandé à personne. Il en noue une de plus, la sienne."
 
   # Variante du mot dicté : tu avais dicté « Conseil » à Vukić, et la voix le dit comme son cahier l'écrit (h5_conseil_ecrit).
   - id: pr.h5.ordres.plaque_conseil
@@ -137,7 +137,7 @@ cards:
     lieu: bureau
     tone: strategique
     once: true
-    text: "Mardi, dix-huit heures. « Ici le Conseil. » Tu l'entends comme Vukić l'a écrit : entre guillemets. « Bien, pour le gardien. Faites déposer la plaque de la grille Est avant samedi. Nous rappellerons. »"
+    text: "Mardi, dix-huit heures. « Ici le Conseil. » Tu entends les guillemets du cahier de Vukić. « Bien, pour le gardien. Faites déposer la plaque de la grille Est avant samedi. Nous rappellerons. »"
     left:
       label: "Je la fais déposer"
       effects: {tribunes: "-", relation: {gege: -1}, set: [h5_plaque_deposee], outcome: obei, react: [{card: pr.h5.re.gege_trous, if: "!seen('pr.h5.re.gege_trous')"}]}
@@ -145,7 +145,7 @@ cards:
     right:
       label: "La plaque reste"
       effects: {direction: "-", set: [h5_plaque_restee], outcome: refuse}
-      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées. Il n'a rien demandé à personne. Personne ne sait qui a commencé."
+      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées, alors qu'il n'a rien demandé à personne. Il en noue une de plus, la sienne."
 
   - id: pr.h5.ordres.plaque
     roles: [president]
@@ -210,7 +210,7 @@ cards:
     lieu: buvette
     tone: strategique
     once: true
-    text: "Local du kop, sous la Nord. Gégé tient une boîte à chaussures pleine d'abonnements payés. « Ils ont payé la saison, {toi}. Dis-moi que personne ne part au mercato d'hiver, et je le dis au virage. »"
+    text: "Local du kop, sous la Nord. Gégé tient une boîte à chaussures pleine d'abonnements payés. « Ils ont payé la saison, {toi}. Tu me dis que personne part en janvier, et moi, je le dis au virage. »"
     left:
       label: "Personne ne part"
       effects: {tribunes: "+", vestiaire: "+", relation: {gege: 1}, set: [h5_mot_donne]}
@@ -218,7 +218,7 @@ cards:
     right:
       label: "Je ne promets rien"
       effects: {tribunes: "-", direction: "+", set: [h5_mot_refuse], outcome: refuse}
-      answer: "« Au moins, tu ne mens pas. » Il referme la boîte. Le samedi, la Nord chante un quart d'heure de moins, chronométré."
+      answer: "« Au moins, tu mens pas. » Il referme la boîte. Le samedi, la Nord chante un quart d'heure de moins, chronométré."
 
   - id: pr.h5.kop.janvier
     roles: [president]
@@ -310,7 +310,7 @@ cards:
     right:
       label: "Ferme ce cahier"
       effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}
-      answer: "Il le ferme. Il le range dans la poche intérieure de son blouson, contre lui, comme un portefeuille plein."
+      answer: "Il le ferme et le range dans la poche intérieure de son blouson, la main à plat dessus."
 
   # Variante du mot dicté : « Conseil », de ta main, en face de chaque mardi (h5_conseil_ecrit).
   - id: pr.h5.dapres.cahier_conseil
@@ -322,7 +322,7 @@ cards:
     when: "flag('h5_conseil_entendu') && (season >= 1 || slot >= 7)"
     tone: leger
     once: true
-    text: "Terrain annexe, sous les thuyas. Vukić ouvre son cahier à la page des mardis. « Dix-huit heures cinq, Titi au téléphone de la buvette. Six mardis. En face de chacun, j'ai écrit ton mot : Conseil. »"
+    text: "Terrain annexe, sous les thuyas. Vukić ouvre son cahier à la page des mardis. « Dix-huit heures cinq, Titi au téléphone de la buvette. Six mardis. En face de chacun, ton mot à toi, “Conseil”. »"
     left:
       label: "Montre-moi"
       effects: {vestiaire: "+", relation: {vukic: 1}, set: [h5_cahier_lu]}
@@ -330,7 +330,7 @@ cards:
     right:
       label: "Ferme ce cahier"
       effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}
-      answer: "Il le ferme. Il le range dans la poche intérieure de son blouson, contre lui, comme un portefeuille plein."
+      answer: "Il le ferme et le range dans la poche intérieure de son blouson, la main à plat dessus."
 
   - id: pr.h5.dapres.titi
     roles: [president]
