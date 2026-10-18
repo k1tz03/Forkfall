@@ -433,7 +433,9 @@ function empaqueter(dossier, cles) {
   for (const cle of cles) {
     const t0 = Date.now();
     const m = lireMaster(dossier, cle);
-    if (jeu && !fs.existsSync(path.join(ICI, 'musique', cle + '.js'))) console.warn('  ' + cle + ' : pas un thème du jeu (musique/' + cle + '.js absent) : la page ne le demandera pas, le juke-box le montrera');
+    // la musique d'un film (film_<id>) n'a pas de synthèse : le lecteur des films la demande
+    // (`musiqueFilm`), elle est dans THEMES dès que le manifeste la nomme
+    if (jeu && !/^film_/.test(cle) && !fs.existsSync(path.join(ICI, 'musique', cle + '.js'))) console.warn('  ' + cle + ' : pas un thème du jeu (musique/' + cle + '.js absent) : la page ne le demandera pas, le juke-box le montrera');
     const { entree, blocs, premierBoucle } = decouper(m);
     for (const f of fs.readdirSync(SORTIE)) if (f.startsWith(cle + '.') && /\.mp3$/.test(f)) fs.rmSync(path.join(SORTIE, f));
     const sorties = [];
