@@ -18,6 +18,7 @@ module.exports = bandeDeLivre({
   titre: '23 h 58', ligne: 'Livre 6 · Directrice sportive · 2003', accent: '#B49BFF',
   heros: { prenom: 'Martine', nom: 'Estève', genre: 'f' },
   theme: 'livre_h6',
+  musiqueMarge: 4.4,   // l'AAC relevait les crêtes de ce master de 2,4 dB : −0,5 dBTP au lieu de −1
   extraits: {
     // l'horloge du bureau qui passe à 23 h 58, puis le fax qui sort sa page (dès 2,3 s)
     a: { fichier: '${SP}/extraits/papier_thermique.{format}.mp4', de: 0, pose: 5.6, duree: 7.4, deCourt: 2.4 },

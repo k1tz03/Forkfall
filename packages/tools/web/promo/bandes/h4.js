@@ -19,6 +19,7 @@ module.exports = bandeDeLivre({
   titre: 'La Route de la Rive', ligne: 'Livre 4 · Joueur · 1990', accent: '#FFD84D',
   heros: { prenom: 'Yves', nom: 'Barège', genre: 'm' },
   theme: 'livre_h4',
+  musiqueMarge: 4.4,   // l'AAC relevait les crêtes de ce master de 2,4 dB : −0,5 dBTP au lieu de −1
   extraits: {
     // le pont de pierre d'en haut, puis par le pare-brise : la mobylette au bout ; le titre du film
     // (« Deux heures ») entre à 2,6 s

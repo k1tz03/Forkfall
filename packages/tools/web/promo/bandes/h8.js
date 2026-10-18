@@ -18,6 +18,7 @@ module.exports = bandeDeLivre({
   titre: "L'Oreillette", ligne: 'Livre 8 · Directeur sportif · 2024', accent: '#4FE3FF',
   heros: { prenom: 'Olivier', nom: 'Nkolo', genre: 'm' },
   theme: 'livre_h8',
+  musiqueMarge: 4.4,   // l'AAC relevait les crêtes de ce master de 2,4 dB : −0,5 dBTP au lieu de −1
   extraits: {
     // la bâche de la Nord, longée lettre après lettre : VOLLAIRE, L'ENFANT DU QUAI (la capture : « VOLLA »)
     a: { fichier: '${SP}/extraits/six_heures_dix.{format}.mp4', de: 0, pose: 0.3, duree: 6.5 },

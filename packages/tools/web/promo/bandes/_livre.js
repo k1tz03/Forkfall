@@ -75,8 +75,11 @@ module.exports = function bandeDeLivre(P) {
   const debutCourt = (studio ? S.debutCourt : P.debutCourt) || 0;
   const morceauxCourt = (studio ? S.morceauxCourt : P.morceauxCourt) ||
     [{ depuis: null, de: debutCourt, a: debutCourt + MU.mesuresPour(P.theme, DUREE_COURT, { de: debutCourt, auPlus: true }) }];
-  const musiqueLong = { theme: P.theme, morceaux, fondu: { sortie: 2.6 } };
-  const musiqueCourt = { theme: P.theme, morceaux: morceauxCourt, fondu: { sortie: 2.0 } };
+  // `musiqueMarge` : la crête des échantillons tenue plus bas sous la vraie crête visée (dB, 2,6 par
+  // défaut, lib/musique.js) quand l'AAC des livrables relève davantage les crêtes de ce master
+  const marge = P.musiqueMarge == null ? {} : { marge: P.musiqueMarge };
+  const musiqueLong = Object.assign({ theme: P.theme, morceaux, fondu: { sortie: 2.6 } }, marge);
+  const musiqueCourt = Object.assign({ theme: P.theme, morceaux: morceauxCourt, fondu: { sortie: 2.0 } }, marge);
   const B = MU.carteMusique(musiqueLong).barres, Bc = MU.carteMusique(musiqueCourt).barres;
   const visees = P.visees || [3.5, 4.5, 4, 4.5, 4, 3.5, 4.5, 4, 3.5, 3.5, 3.5, 6.5];
   const n = enMesures(visees, B), nc = enMesures([4, 4, 4, 4, 4, 4, 4], Bc);
