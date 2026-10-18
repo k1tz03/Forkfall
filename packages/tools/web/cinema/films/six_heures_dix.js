@@ -351,6 +351,7 @@
     titre: "Six heures dix",
     duree: 37.0,
     musique: "livre_h8",
+    musiqueFilm: "film_six_heures_dix",       // la musique écrite sous ses images (le studio) ; sinon le thème du livre
     secours: "ville_jour",
     couleur: CYAN,
     affiche: 24.5,
