@@ -52,7 +52,7 @@ cards:
     right:
       label: "Je m'en vais"
       effects: {vestiaire: "+", direction: "--", relation: {sauvan: -1}, set: [h9_cafe_parti], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
-      answer: "Ton café reste plein. Il paie les deux et note quelque chose au dos du ticket, avant de le plier. Un nom, peut-être."
+      answer: "Ton café reste plein. Il paie les deux et note quelque chose au dos du ticket, puis le range dans son portefeuille."
 
   - id: sl.h9.a1_cafe_listes
     roles: [selectionneur]
@@ -115,15 +115,15 @@ cards:
     lieu: domicile
     tone: strategique
     once: true
-    text: "Vingt-deux heures. Près de l'ordinateur de Sacha, ouvert à la page six, le coursier pose un écrin : une montre en or gravée DÔME 2030. La carte : « À {pg, select, f{Madame} other{Monsieur}} {nom}. »"
+    text: "Vingt-deux heures. Près de l'ordinateur de Sacha, ouvert à la page six, le coursier pose un écrin. Une montre en or gravée DÔME 2030, une carte : « À {pg, select, f{Madame} other{Monsieur}} {nom}. »"
     left:
       label: "Je la renvoie"
       effects: {tribunes: "+", direction: "-", set: [h9_montre_renvoyee]}
-      answer: "Il referme l'écrin d'un coup sec. En partant, il jette un œil à l'écran de l'ordinateur ; il ne lit pas, il retient."
+      answer: "Il referme l'écrin d'un coup sec. En partant, il jette un œil à l'écran de l'ordinateur, une seconde de trop."
     right:
       label: "Je la garde"
       effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_montre_gardee], var: {cadeau_montre_or: "+1"}, react: {card: sl.h9.re.sacha_montre, if: "relation.sacha_fille >= 0"}}
-      answer: "Tu poses la montre sur l'écran, à la page six, sans y penser. Puis tu y penses, et tu la déplaces sur le buffet."
+      answer: "Tu poses la montre sur le clavier, devant la page six. Une minute après, tu la déplaces sur le buffet."
 
   - id: sl.h9.a2_montre_pays
     roles: [selectionneur]
@@ -150,15 +150,15 @@ cards:
     speaker: mariejo
     tone: strategique
     once: true
-    text: "Par-dessus les baguettes, Marie-Jo te tend une enveloppe au tampon doré : le rapport de l'émirat, traduit par le ministère. « Malaise, à l'intérieur du Dôme, 14 h 10. » « Lisez-le-moi. »"
+    text: "Par-dessus les baguettes, Marie-Jo te tend une enveloppe au tampon doré, le rapport de l'émirat traduit par le ministère. Une ligne, « malaise, à l'intérieur du Dôme, 14 h 10 ». « Lisez-le-moi. »"
     left:
       label: "Je le lui lis"
       effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_rapport_lu], react: {card: sl.h9.re.mariejo_rapport}}
-      answer: "Tu lis « malaise » deux fois, parce qu'elle te le demande. Elle répète « à l'intérieur ». C'est tout, pour la matinée."
+      answer: "Tu lis « malaise » deux fois, parce qu'elle te le demande. Elle répète « à l'intérieur », puis sert le client suivant."
     right:
       label: "Je le montre à Sacha"
       effects: {vestiaire: "+", relation: {sacha_fille: 1}, set: [h9_rapport_sacha]}
-      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils ne sont pas dedans. Ils sont sur le toit. »"
+      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils sont pas dedans. Ils sont sur le toit. »"
 
   - id: sl.h9.a3_rapport_irai
     roles: [selectionneur]
@@ -175,7 +175,7 @@ cards:
     right:
       label: "Je le montre à Sacha"
       effects: {vestiaire: "+", relation: {sacha_fille: 1}, set: [h9_rapport_sacha]}
-      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils ne sont pas dedans. Ils sont sur le toit. »"
+      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils sont pas dedans. Ils sont sur le toit. »"
 
   # A4 · La seconde manche — créneau 16, la veille du barrage aller
   - id: sl.h9.a4_manche
@@ -185,11 +185,11 @@ cards:
     speaker: mariejo
     tone: leger
     once: true
-    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain. « La chemise avait deux manches. Une pour le capitaine. L'autre, je ne sais pas à qui elle est. »"
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain. « La chemise avait deux manches. Une pour le capitaine. L'autre, je sais pas à qui elle est. »"
     left:
       label: "Je la prends"
       effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
-      answer: "Tu la plies dans la poche intérieure de ta veste, contre ton contrat. Elle sent le fournil, et autre chose, de plus loin."
+      answer: "Tu la plies dans la poche intérieure de ta veste, contre ton contrat. Elle sent le fournil, et un peu la lessive."
     right:
       label: "Gardez-la"
       effects: {vestiaire: "+", set: [h9_manche_gardee]}
@@ -258,7 +258,7 @@ cards:
     lieu: vestiaire
     tone: strategique
     once: true
-    text: "La semaine du barrage. Sauvan te tend un papier plié : « Au retour, le ministre souhaite descendre au vestiaire à la mi-temps. » Au crayon, en bas : aucun brassard sur la photo."
+    text: "La semaine du barrage, Sauvan te tend un papier plié. « Au retour, le ministre souhaite descendre au vestiaire à la mi-temps. » En bas, au crayon, une ligne : aucun brassard sur la photo."
     left:
       label: "Le vestiaire est fermé"
       effects: {vestiaire: "++", direction: "--", relation: {sauvan: -1}, set: [h9_vestiaire_ferme], react: {card: sl.h9.re.sauvan_vestiaire}}
