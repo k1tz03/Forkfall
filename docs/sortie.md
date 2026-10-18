@@ -5,16 +5,52 @@ Le verdict du test de préparation (18 octobre 2026) : le jeu est prêt à **≈
 dans la direction de la ville, des tests avec de vraies personnes, le juridique, la vitrine. Le
 teasing peut commencer une fois le nom sécurisé, sans date et sans montrer les écrans de carte.
 
-## Les décisions qui attendent le porteur
+## Les décisions
 
-- **Les mises** du 421, des cartes et du tiercé (`ville_jeux.js`, `activites_commerces.yaml`) :
-  miser l'argent du jeu sur du hasard est du jeu d'argent simulé, que
-  `docs/brainstorm/08-monetisation-marche-juridique.md` interdit (la cible : PEGI 12, Apple 13+).
-  Proposition : on joue pour un verre, un tuyau, la gloire du comptoir.
-- **Le modèle économique** : le plan (`08`, § 8.2) dit premium à 2,99 € et une démo web gratuite ;
-  la version web publiée contient aujourd'hui tout le jeu.
-- **La direction des écrans de jeu** (la carte, la fin, les panneaux) : trois maquettes à choisir.
-- **Les incohérences d'histoire** : `docs/bible/audit_textes.md` § 6.
+- **Les mises : retirées** (18 octobre 2026). Une partie de 421 ou de cartes ne rapporte plus
+  d'argent ; ce qu'elle coûte est le verre ou la place à la table (`ville.js`, `finirActivite`).
+  Au comptoir, on joue pour l'honneur ; le tripot et le fumoir de l'Impérial n'ont plus de partie,
+  la nuit s'y perd toujours. Le jeu d'argent simulé aurait porté la classification au-delà de la
+  cible (PEGI 12, Apple 13+).
+- **Le modèle : payant**, sans achat dans le jeu. Le porteur veut **1 € par jeu vendu** : le prix
+  est **1,99 €** (plus bas).
+- **En attente** : la direction des écrans de jeu (trois maquettes à choisir) ; les incohérences
+  d'histoire (`docs/bible/audit_textes.md` § 6) ; une démo gratuite ou non (la page publiée sur
+  claude.ai contient tout le jeu : elle sert de bêta, elle ne restera pas ouverte après la sortie).
+
+## Le prix
+
+Le store reverse sa part sur le prix **hors TVA** ; la TVA est celle du pays de l'acheteur (20 %
+en France, 21 % en Belgique, jusqu'à 27 % dans l'Union). La commission est de 15 % pour un
+développeur qui gagne moins d'un million de dollars par an (le programme des petites entreprises
+d'Apple, auquel il faut s'inscrire ; chez Google, automatiquement sur le premier million). Dans
+l'Union européenne, Apple propose aussi d'autres conditions, entre 10 et 20 % selon l'option : à
+choisir au moment de signer.
+
+| Prix | France, 15 % | France, 30 % | TVA 27 %, 15 % |
+|---|---:|---:|---:|
+| 0,99 € | 0,70 € | 0,58 € | 0,66 € |
+| 1,49 € | 1,06 € | 0,87 € | 1,00 € |
+| **1,99 €** | **1,41 €** | **1,16 €** | **1,33 €** |
+| 2,99 € | 2,12 € | 1,74 € | 2,00 € |
+
+À 1,49 €, le compte n'y est qu'au taux réduit et en France. **À 1,99 €, chaque vente rapporte plus
+d'un euro dans tous les cas**, et il reste environ 1,06 € une fois retirés 25 % de cotisations et
+d'impôt (le taux exact dépend du statut : l'URSSAF ou un comptable le donne).
+
+## Où on en est (les tâches 1 à 7)
+
+1. **Le nom** : le premier tri ne trouve ni jeu ni marque « Fusible » ; la vérification officielle
+   et le dossier de dépôt sont dans `docs/sortie/nom.md`.
+2. **La page du jeu** : `packages/tools/web/vitrine/` (aperçu publié sur claude.ai) ; à remplir
+   avant la mise en ligne : le formulaire, l'éditeur, le contact, les comptes.
+3. **Le kit des réseaux** : `docs/sortie/reseaux.md`, seize posts sur huit semaines, leurs textes.
+4. **Les mises** : retirées.
+5. **La bêta autonome** : `assemble.js --version --retours --lien` ; vérifiée hors de claude.ai ; la
+   page du jeu publiée est en « Bêta 0.1 ».
+6. **« Donner mon avis »** : `preview_avis.js`, sur l'accueil et l'écran de fin d'une bêta.
+7. **Le kit du bêta-testeur** : `docs/sortie/beta.md` (les formulaires, les messages, les
+   consignes, le tableau de tri, les vagues).
 
 ## Le plan, dans l'ordre
 
