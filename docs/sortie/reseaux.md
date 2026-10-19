@@ -1,5 +1,8 @@
 # Les réseaux : le kit des teasers
 
+Le compte X (@fusiblegame) a son guide et ses deux premières semaines de posts, images et vidéos comprises :
+`docs/sortie/x.md`, rendus par `packages/tools/web/promo/reseaux/x_kit.js`.
+
 ## Les règles
 
 - **Pas de date, pas de prix** tant que les fiches des stores n'existent pas.
