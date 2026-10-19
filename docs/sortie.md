@@ -38,6 +38,33 @@ choisir au moment de signer.
 d'un euro dans tous les cas**, et il reste environ 1,06 € une fois retirés 25 % de cotisations et
 d'impôt (le taux exact dépend du statut : l'URSSAF ou un comptable le donne).
 
+## La note sur les stores
+
+Le porteur veut qu'une fenêtre propose, de temps à autre, de noter le jeu. Apple n'accepte que sa
+propre fenêtre (SKStoreReviewController), que le système montre trois fois par an au plus ; Google
+interdit de poser une question avant ou pendant la sienne (« Tu aimes le jeu ? »), de la recouvrir ou
+de la changer, et la limite par un quota. La fenêtre est donc toujours celle du téléphone ;
+`preview_noter.js` choisit seulement le moment :
+
+- au retour à l'accueil après la fin d'un livre (pas du mode éclair), jamais pendant une carte, un film
+  ou un match ;
+- si le joueur a joué deux jours différents et quarante-cinq minutes ;
+- au plus une fois tous les soixante jours, trois fois en tout ;
+- plus jamais après qu'il a touché « Noter sur l'App Store » (ou « sur Google Play ») sur l'accueil, le
+  lien toujours présent vers la fiche du jeu.
+
+Hors de l'application (le web, la bêta), rien ne s'affiche. **Ce que l'application doit poser**, avant
+que la page ne se charge (la tâche de l'emballage iOS et Android) :
+
+```js
+window.FusibleNatif = {
+  plateforme: "ios",       // ou "android"
+  demanderNote() { … },    // la fenêtre du système : requestReview (iOS), l'in-app review (Google Play)
+  ouvrirFiche() { … }      // la fiche du jeu : https://apps.apple.com/app/id<id>?action=write-review,
+                           // ou market://details?id=<paquet>
+};
+```
+
 ## Où on en est (les tâches 1 à 7)
 
 1. **Le nom** : le premier tri ne trouve ni jeu ni marque « Fusible » ; la vérification officielle

@@ -704,7 +704,9 @@ sont les prochains à rejoindre la ville.
   testeurs (`docs/sortie/` : le nom, les réseaux, le kit de la bêta). Une version de bêta s'assemble
   avec `assemble.js --version "Bêta 0.1" --retours <formulaire>` : l'accueil porte son numéro et
   « Donner mon avis » (`preview_avis.js`, un rapport que le joueur copie lui-même) ; la page
-  publique du jeu est `packages/tools/web/vitrine/`.
+  publique du jeu est `packages/tools/web/vitrine/`. La note sur les stores (`preview_noter.js`) : la
+  fenêtre du téléphone, demandée au retour d'une fin de livre par `window.FusibleNatif.demanderNote()`,
+  que l'application iOS ou Android doit poser (le contrat : `docs/sortie.md`, « La note sur les stores »).
 - Les textes : l'audit d'octobre 2026 a récrit ce qu'on voit le plus (les gens de la ville, les
   introductions et les scènes jouées, la première heure de chaque livre, les fins, les
   conversations) ; les cartes au-delà de la première heure gardent leur « ne » écrit, et les
