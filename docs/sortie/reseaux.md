@@ -1,7 +1,9 @@
 # Les réseaux : le kit des teasers
 
 Le compte X (@fusiblegame) a son guide et ses deux premières semaines de posts, images et vidéos comprises :
-`docs/sortie/x.md`, rendus par `packages/tools/web/promo/reseaux/x_kit.js`.
+`docs/sortie/x.md`, rendus par `packages/tools/web/promo/reseaux/x_kit.js`. Le compte Instagram a les siens,
+carrousels et Reels, et de quoi tenir jusqu'à la sixième semaine : `docs/sortie/instagram.md`, rendus par
+`instagram_kit.js` (les deux kits partagent `reseaux/commun.js`).
 
 ## Les règles
 
